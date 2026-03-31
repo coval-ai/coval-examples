@@ -1,0 +1,9 @@
+[project]
+  subdomain = "YOUR_PROJECT_ID"
+
+[agent]
+  # Remove this section after first deploy — lk agent deploy will populate it
+  # id = "CA_..."
+
+[build]
+  image = "YOUR_DOCKER_HUB_USERNAME/your-livekit-agent:latest"
