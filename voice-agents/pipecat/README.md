@@ -52,8 +52,6 @@ pcc secrets set your-pipecat-secrets \
   COVAL_API_KEY=... \
   OPENAI_API_KEY=... \
   DEEPGRAM_API_KEY=... \
-  CARTESIA_API_KEY=... \
-  CARTESIA_VOICE_ID=... \
   DAILY_API_KEY=...
 ```
 

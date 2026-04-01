@@ -254,7 +254,7 @@ def _build_spans(message: dict, call: dict) -> list[dict]:
     duration_s = message.get("durationSeconds", 60)
     call_end_ns = call_start_ns + int(duration_s * 1_000_000_000)
 
-    trace_id = uuid.uuid4().hex + uuid.uuid4().hex[:8]
+    trace_id = uuid.uuid4().hex  # 32 hex chars = 16 bytes = valid OTLP trace ID
     conv_span_id = format(uuid.uuid4().int & 0xFFFFFFFFFFFFFFFF, "016x")
 
     spans: list[dict] = []
@@ -307,10 +307,11 @@ def _build_spans(message: dict, call: dict) -> list[dict]:
             next_role = messages[i + 1].get("role", "") if i + 1 < len(messages) else ""
             finish_reason = "tool_calls" if next_role == "tool_calls" else "stop"
 
-            # LLM gets first 0.6s of the turn (synthetic — Vapi doesn't expose real LLM timing)
-            llm_ttfb = 0.6
+            # LLM gets first 0.6s of the turn (synthetic — Vapi doesn't expose real LLM timing).
+            # Clamp to span_end_ns so very short turns don't produce a negative-duration TTS span.
             llm_span_id = format(uuid.uuid4().int & 0xFFFFFFFFFFFFFFFF, "016x")
-            llm_end_ns = span_start_ns + int(llm_ttfb * 1_000_000_000)
+            llm_end_ns = min(span_end_ns, span_start_ns + int(0.6 * 1_000_000_000))
+            llm_ttfb = round((llm_end_ns - span_start_ns) / 1_000_000_000, 4)
 
             spans.append(_make_span(
                 trace_id, llm_span_id, conv_span_id,
@@ -412,7 +413,7 @@ async def vapi_webhook(request: Request):
             handler = _MOCK_TOOLS.get(name)
             if handler:
                 result = handler(args)
-                logger.info(f"  Tool call: {name}({args}) → {result[:80]}")
+                logger.info(f"  Tool call handled: name={name} call_id={tc.get('id', '')}")
             else:
                 result = json.dumps({"error": f"Unknown tool: {name}"})
                 logger.warning(f"  Unknown tool: {name}")

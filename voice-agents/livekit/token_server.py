@@ -11,7 +11,7 @@ from flask import Flask, request, jsonify
 from livekit.api import AccessToken, VideoGrants
 from dotenv import load_dotenv
 
-load_dotenv(".env.local")
+load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("token-server")
 
@@ -44,10 +44,7 @@ def generate_token():
     room_name = data.get("room_name", "default-room")
     participant_name = data.get("participant_name", "participant")
 
-    logger.info(f"=== Token Request ===")
-    logger.info(f"Room: {room_name}")
-    logger.info(f"Participant: {participant_name}")
-    logger.info(f"Full request body: {data}")
+    logger.info(f"Token request: room={room_name} participant={participant_name}")
 
     # Create access token
     token = AccessToken(
@@ -89,7 +86,7 @@ if __name__ == "__main__":
     print("LiveKit Token Server for Coval Integration")
     print("=" * 50)
     print(f"LiveKit URL: {LIVEKIT_URL}")
-    print(f"API Key: {LIVEKIT_API_KEY}")
+    print(f"API key configured: {bool(LIVEKIT_API_KEY)}")
     print(f"Token endpoint: http://localhost:8888/token")
     print("=" * 50)
-    app.run(host="0.0.0.0", port=8888, debug=True)
+    app.run(host="0.0.0.0", port=8888, debug=False)

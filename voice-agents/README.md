@@ -22,7 +22,7 @@ Three reference implementations for adding OpenTelemetry tracing to voice agents
 
 All three agents require:
 
-```
+```bash
 COVAL_API_KEY=<your Coval API key>
 ```
 
