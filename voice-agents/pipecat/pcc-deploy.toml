@@ -1,0 +1,15 @@
+agent_name = "your-pipecat-agent"
+
+# Docker image: rebuild with `docker buildx build --platform linux/arm64 --load -t YOUR_DOCKER_HUB_USERNAME/coval-pipecat-agent:latest .`
+# then push: `docker push YOUR_DOCKER_HUB_USERNAME/coval-pipecat-agent:latest`
+# then redeploy: `pcc deploy --force --no-credentials`
+image = "YOUR_DOCKER_HUB_USERNAME/coval-pipecat-agent:latest"
+
+# Secrets created via: pcc secrets set --skip your-pipecat-secrets KEY=value ...
+secret_set = "your-pipecat-secrets"
+
+[scaling]
+# min_agents = 1 keeps one warm pod always ready — eliminates ~10 min cold start from scale-to-zero.
+# The Coval simulator's 60s idle timeout is not long enough to survive a cold start, so 0 breaks sims.
+min_agents = 1
+max_agents = 5
