@@ -23,7 +23,8 @@ Span schema (SIM-328 + SIM-329 attributes)
 ──────────────────────────────────────────
   conversation (root)
     ├── stt          stt.transcription, metrics.ttfb, stt.confidence
-    │     └── stt.provider.vapi    stt.providerName, stt.confidence, metrics.ttfb
+    │     ├── stt.provider.vapi       stt.providerName, stt.confidence, metrics.ttfb
+    │     └── stt.provider_selection  stt.selectedProvider, stt.providerType
     ├── llm          metrics.ttfb, llm.finish_reason
     ├── tts          metrics.ttfb
     └── tool_call    tool.name, tool.call_id, tool.arguments, tool.result
@@ -289,8 +290,8 @@ def _build_spans(message: dict, call: dict) -> list[dict]:
                     "stt.confidence": 0.95,
                 },
             ))
-            # SIM-329: provider sub-span showing per-provider attempt.
-            # Demonstrates the convention for agents with multi-provider fallback chains.
+            # SIM-329: provider sub-spans showing per-provider attempt convention.
+            # Demonstrates the pattern for agents with multi-provider fallback chains.
             provider_span_id = format(uuid.uuid4().int & 0xFFFFFFFFFFFFFFFF, "016x")
             spans.append(_make_span(
                 trace_id, provider_span_id, span_id,  # parent = stt span
@@ -299,6 +300,17 @@ def _build_spans(message: dict, call: dict) -> list[dict]:
                     "stt.providerName": "vapi",
                     "stt.confidence": 0.95,
                     "metrics.ttfb": round(ttfb, 4),
+                },
+            ))
+            # Provider selection sub-span — records which provider was chosen and why.
+            selection_span_id = format(uuid.uuid4().int & 0xFFFFFFFFFFFFFFFF, "016x")
+            sel_end_ns = span_start_ns + int(0.01 * 1_000_000_000)  # 10ms selection decision
+            spans.append(_make_span(
+                trace_id, selection_span_id, span_id,  # parent = stt span
+                "stt.provider_selection", span_start_ns, sel_end_ns,
+                {
+                    "stt.selectedProvider": "vapi",
+                    "stt.providerType": "hosted_platform",
                 },
             ))
 

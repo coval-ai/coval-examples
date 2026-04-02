@@ -324,10 +324,11 @@ async def my_agent(ctx: agents.JobContext):
             participant.kind == rtc.ParticipantKind.PARTICIPANT_KIND_SIP
             or participant.identity.startswith("sip_")
         )
-        print(f"[coval] participant joined: kind={participant.kind} is_sip={is_sip}")
+        print(f"[coval] participant joined: identity={participant.identity} kind={participant.kind} is_sip={is_sip}")
         if not is_sip:
             return
         attrs = participant.attributes or {}
+        print(f"[coval] SIP participant attrs: {dict(attrs)}")
         sim_id = (
             attrs.get("sip.h.X-Coval-Simulation-Id")
             or attrs.get("X-Coval-Simulation-Id")
@@ -337,12 +338,12 @@ async def my_agent(ctx: agents.JobContext):
         )
         if sim_id and _coval_exporter:
             _coval_exporter.set_simulation_id(sim_id)
-            print(f"[coval] tracing active for simulation")
+            print(f"[coval] tracing active from SIP participant attr: {sim_id}")
         else:
-            print(f"[coval] SIP participant joined but no simulation ID found")
+            print(f"[coval] SIP participant joined but no simulation ID found in attrs: {list(attrs.keys())}")
 
     # Check participants already in the room (SIP caller joins before agent connects).
-    print(f"[coval] existing participants: {len(ctx.room.remote_participants)}")
+    print(f"[coval] existing participants: {[p.identity for p in ctx.room.remote_participants.values()]}")
     for _p in ctx.room.remote_participants.values():
         _extract_sim_id_from_participant(_p)
 
