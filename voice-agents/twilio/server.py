@@ -64,7 +64,6 @@ app = FastAPI(title="Twilio ConversationRelay Agent")
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 COVAL_API_KEY = os.environ.get("COVAL_API_KEY", "")
-COVAL_SIMULATION_ID_OVERRIDE = os.environ.get("COVAL_SIMULATION_ID", "")
 
 COVAL_TRACES_URL = "https://api.coval.dev/v1/traces"
 SERVICE_NAME = "twilio-voice-agent"
@@ -646,8 +645,6 @@ async def conversationrelay_websocket(websocket: WebSocket):
                 call_start_epoch_seconds = time.time()
                 if call_sid:
                     simulation_id = _pop_pending_sim_id()
-                    if not simulation_id and COVAL_SIMULATION_ID_OVERRIDE:
-                        simulation_id = COVAL_SIMULATION_ID_OVERRIDE
                     logger.info(
                         f"Call setup: callSid={call_sid} "
                         f"from={event.get('from', '')} "
@@ -717,7 +714,7 @@ async def conversationrelay_websocket(websocket: WebSocket):
         elif not simulation_id:
             logger.warning(
                 f"No sim_id for callSid={call_sid} — skipping trace export. "
-                "Configure pre_call_webhook_url on your Coval agent, or set COVAL_SIMULATION_ID."
+                "Configure pre_call_webhook_url on your Coval agent to enable trace correlation."
             )
 
 

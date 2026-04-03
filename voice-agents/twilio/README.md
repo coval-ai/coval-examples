@@ -64,7 +64,6 @@ conversation (root)   call.duration_seconds
 | `COVAL_API_KEY` | Coval API key — used to authenticate `/register-simulation` and export traces | Yes |
 | `TWILIO_ACCOUNT_SID` | Twilio account SID | Yes (for webhook validation, optional in dev) |
 | `TWILIO_AUTH_TOKEN` | Twilio auth token | Yes (for webhook validation, optional in dev) |
-| `COVAL_SIMULATION_ID` | Static fallback simulation ID for manual one-off testing | No |
 
 ## Local development
 
