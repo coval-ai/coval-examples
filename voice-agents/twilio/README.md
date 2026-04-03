@@ -27,6 +27,8 @@ Twilio Programmable Voice routes calls over PSTN, which strips all custom SIP he
 
 Before placing each simulation call, Coval will POST `{"simulation_output_id": "..."}` to `/register-simulation`. The server queues these IDs FIFO and pops the oldest one when the next call arrives. IDs expire after 5 minutes if unused.
 
+> **Note:** The FIFO queue is stored in-memory. This works correctly only with a single server instance. Running multiple replicas will cause simulation IDs registered on one instance to be unavailable on others. For multi-instance deployments, replace the queue with a shared store (Redis, etc.) or use a load balancer with session affinity.
+
 See the [Coval docs](https://docs.coval.dev/guides/simulations/twilio-conversationrelay) for full setup instructions.
 
 ## OTel span schema

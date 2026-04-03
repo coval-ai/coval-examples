@@ -33,7 +33,7 @@ Coval injects a simulation ID into each call so it can correlate spans with the 
 
 ## OTel span schema
 
-All three agents emit spans following the same Coval schema:
+All four agents emit spans following the same Coval schema:
 
 | Span name | Key attributes |
 |-----------|----------------|

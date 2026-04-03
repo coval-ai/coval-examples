@@ -52,6 +52,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, Header, HTTPException, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse, Response
 from openai import AsyncOpenAI
+from twilio.request_validator import RequestValidator
 
 load_dotenv(".env.local")
 
@@ -64,6 +65,8 @@ app = FastAPI(title="Twilio ConversationRelay Agent")
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 COVAL_API_KEY = os.environ.get("COVAL_API_KEY", "")
+TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID", "")
+TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN", "")
 
 COVAL_TRACES_URL = "https://api.coval.dev/v1/traces"
 SERVICE_NAME = "twilio-voice-agent"
@@ -269,7 +272,7 @@ def _make_span(
     }
 
 
-def _send_spans(spans: list[dict], simulation_id: str) -> None:
+async def _send_spans(spans: list[dict], simulation_id: str) -> None:
     payload = {
         "resourceSpans": [
             {
@@ -288,12 +291,13 @@ def _send_spans(spans: list[dict], simulation_id: str) -> None:
         ]
     }
     try:
-        resp = httpx.post(
-            COVAL_TRACES_URL,
-            json=payload,
-            headers={"x-api-key": COVAL_API_KEY, "X-Simulation-Id": simulation_id},
-            timeout=30,
-        )
+        async with httpx.AsyncClient() as client:
+            resp = await client.post(
+                COVAL_TRACES_URL,
+                json=payload,
+                headers={"x-api-key": COVAL_API_KEY, "X-Simulation-Id": simulation_id},
+                timeout=30,
+            )
         if resp.is_success:
             logger.info(f"Exported {len(spans)} spans for sim {simulation_id}")
         else:
@@ -340,7 +344,7 @@ def _build_spans_from_turns(
     if not turns:
         return []
 
-    trace_id = uuid.uuid4().hex + uuid.uuid4().hex[:8]
+    trace_id = uuid.uuid4().hex
     call_start_ns = int(call_start_epoch_seconds * 1_000_000_000)
     call_end_ns = call_start_ns + int(call_duration_seconds * 1_000_000_000)
     conv_span_id = format(uuid.uuid4().int & 0xFFFFFFFFFFFFFFFF, "016x")
@@ -492,17 +496,27 @@ async def _stream_llm_response(
 
                 delta = choice.delta
 
+                # Record TTFB on the first delta, whether it carries content or tool calls
+                if not first_token_sent and (delta.content or delta.tool_calls):
+                    llm_ttfb_seconds = time.monotonic() - prompt_received_at_monotonic
+                    first_token_sent = True
+
                 if delta.content:
-                    if not first_token_sent:
-                        llm_ttfb_seconds = time.monotonic() - prompt_received_at_monotonic
-                        first_token_sent = True
                     assistant_content += delta.content
                     try:
                         await websocket.send_text(
                             json.dumps({"type": "text", "token": delta.content, "last": False})
                         )
                     except Exception:
-                        return  # WebSocket closed mid-stream
+                        # WebSocket closed mid-stream — preserve accumulated content
+                        if assistant_content:
+                            turns.append(TurnRecord(
+                                role="assistant",
+                                content=assistant_content,
+                                seconds_from_start=turn_start_sfs,
+                                llm_ttfb_seconds=llm_ttfb_seconds,
+                            ))
+                        return
 
                 if delta.tool_calls:
                     for tool_call_chunk in delta.tool_calls:
@@ -543,6 +557,14 @@ async def _stream_llm_response(
                 seconds_from_start=turn_start_sfs,
                 llm_ttfb_seconds=llm_ttfb_seconds,
             ))
+        elif finish_reason == "tool_calls" and tool_calls_accumulator:
+            # Tool-only turn: no text, but we still need an LLM span with real TTFB
+            turns.append(TurnRecord(
+                role="assistant",
+                content="",
+                seconds_from_start=turn_start_sfs,
+                llm_ttfb_seconds=llm_ttfb_seconds,
+            ))
 
         if finish_reason != "tool_calls" or not tool_calls_accumulator:
             break
@@ -561,7 +583,7 @@ async def _stream_llm_response(
                 args = {}
 
             result = _handle_tool(accumulated["name"], args)
-            logger.info(f"Tool: {accumulated['name']}({args}) → {result[:80]}")
+            logger.info(f"Tool call: {accumulated['name']} (args and result redacted)")
 
             has_error = False
             try:
@@ -672,6 +694,10 @@ async def conversationrelay_websocket(websocket: WebSocket):
 
                 if current_llm_task and not current_llm_task.done():
                     current_llm_task.cancel()
+                    try:
+                        await current_llm_task
+                    except (asyncio.CancelledError, Exception):
+                        pass
 
                 current_llm_task = asyncio.create_task(
                     _stream_llm_response(
@@ -688,6 +714,10 @@ async def conversationrelay_websocket(websocket: WebSocket):
                 logger.info("Interrupt — cancelling in-progress LLM response")
                 if current_llm_task and not current_llm_task.done():
                     current_llm_task.cancel()
+                    try:
+                        await current_llm_task
+                    except (asyncio.CancelledError, Exception):
+                        pass
 
             # ── dtmf: keypad input (not used) ──────────────────────────────────
             elif event_type == "dtmf":
@@ -705,14 +735,16 @@ async def conversationrelay_websocket(websocket: WebSocket):
             current_llm_task.cancel()
             try:
                 await current_llm_task
-            except (asyncio.CancelledError, Exception):
+            except asyncio.CancelledError:
                 pass
+            except Exception as exc:
+                logger.warning(f"LLM task ended with unexpected error: {exc}")
 
         if simulation_id and COVAL_API_KEY and turns:
             call_duration_seconds = time.time() - call_start_epoch_seconds
             spans = _build_spans_from_turns(turns, call_start_epoch_seconds, call_duration_seconds)
             logger.info(f"Exporting {len(spans)} spans from {len(turns)} turns for sim {simulation_id}")
-            _send_spans(spans, simulation_id)
+            await _send_spans(spans, simulation_id)
         elif not simulation_id:
             logger.warning(
                 f"No sim_id for callSid={call_sid} — skipping trace export. "
@@ -730,6 +762,14 @@ async def twilio_webhook(request: Request):
     The ConversationRelay WebSocket URL is built from the request Host header so
     this works transparently in both local (ngrok) and Fly.io environments.
     """
+    if TWILIO_AUTH_TOKEN:
+        validator = RequestValidator(TWILIO_AUTH_TOKEN)
+        form_data = dict(await request.form())
+        url = str(request.url)
+        twilio_signature = request.headers.get("X-Twilio-Signature", "")
+        if not validator.validate(url, form_data, twilio_signature):
+            raise HTTPException(status_code=403, detail="Invalid Twilio signature")
+
     host = request.headers.get("host", "")
     ws_url = f"wss://{host}/ws"
 
@@ -771,6 +811,11 @@ async def register_simulation(
     simulation_output_id = body.get("simulation_output_id", "")
     if not simulation_output_id:
         raise HTTPException(status_code=400, detail="simulation_output_id is required")
+
+    # Deduplicate: ignore if this sim_id is already queued
+    if any(sid == simulation_output_id for sid, _ in _pending_sim_ids):
+        logger.info(f"Sim ID already pending, ignoring duplicate: {simulation_output_id}")
+        return JSONResponse({"status": "ok", "queued": len(_pending_sim_ids)})
 
     _pending_sim_ids.append((simulation_output_id, time.time()))
     logger.info(
