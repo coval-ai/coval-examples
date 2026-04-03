@@ -80,7 +80,9 @@ ngrok http 8000
 
 Then set your Twilio phone number's Voice webhook to `https://<ngrok-id>.ngrok.io/webhook`.
 
-## Deploy to Fly.io
+## Deploy
+
+The server is a standard FastAPI/uvicorn app and can be deployed anywhere that serves public HTTPS traffic — Fly.io, Railway, Render, AWS, GCP, etc. A `Dockerfile` and `fly.toml` are included if you want to use Fly.io:
 
 ```bash
 # Create the app (first time only — choose a unique name)
