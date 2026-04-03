@@ -184,6 +184,8 @@ TOOLS = [
 
 
 def _handle_tool(name: str, args: dict) -> str:
+    # These are mock implementations returning hardcoded data.
+    # Replace with your real business logic.
     if name == "lookup_appointment":
         return json.dumps({
             "appointment_id": "APT-20240407-001",
