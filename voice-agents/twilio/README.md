@@ -20,7 +20,7 @@ Twilio Programmable Voice routes calls over PSTN, which strips all custom SIP he
 
 ```json
 {
-  "pre_call_webhook_url": "https://your-agent.fly.dev/register-simulation",
+  "pre_call_webhook_url": "https://your-agent.example.com/register-simulation",
   "pre_call_webhook_headers": {"x-api-key": "<COVAL_API_KEY>"}
 }
 ```
@@ -102,7 +102,7 @@ fly deploy
 
 In the [Twilio console](https://console.twilio.com/), navigate to your phone number and set:
 
-- **Voice webhook (A call comes in):** `https://<your-app>.fly.dev/webhook` — POST
+- **Voice webhook (A call comes in):** `https://<your-deployed-server>/webhook` — POST
 
 ## Coval agent setup
 
@@ -110,7 +110,7 @@ In the Coval dashboard, open your agent's settings and add to the agent metadata
 
 ```json
 {
-  "pre_call_webhook_url": "https://<your-app>.fly.dev/register-simulation",
+  "pre_call_webhook_url": "https://<your-deployed-server>/register-simulation",
   "pre_call_webhook_headers": {"x-api-key": "<COVAL_API_KEY>"}
 }
 ```

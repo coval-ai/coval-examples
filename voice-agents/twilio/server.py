@@ -760,7 +760,7 @@ async def register_simulation(
     correlate traces with the right simulation output.
 
     Example:
-        curl -X POST https://your-agent.fly.dev/register-simulation \\
+        curl -X POST https://your-deployed-server/register-simulation \\
           -H "x-api-key: <COVAL_API_KEY>" \\
           -H "Content-Type: application/json" \\
           -d '{"simulation_output_id": "<sim_output_id>"}'
