@@ -2,7 +2,7 @@
 
 A FastAPI webhook server that handles Twilio Programmable Voice calls via ConversationRelay, calls OpenAI for responses, and builds OpenTelemetry spans post-hoc at call end, then exports them to Coval.
 
-Unlike real-time agents (Pipecat, LiveKit), spans are reconstructed from a turn log accumulated during the call. LLM TTFB is real (measured from the moment Twilio sends the transcription to the moment the first token is sent back). STT and TTS TTFBs are synthetic — Twilio handles those providers internally without exposing per-utterance timing.
+Spans are reconstructed from a turn log accumulated during the call — the same post-hoc approach used by the Vapi example, rather than emitting spans inline as Pipecat and LiveKit do. LLM TTFB is real (measured from the moment Twilio sends the transcription to the moment the first token is sent back). STT and TTS TTFBs are synthetic — Twilio handles those providers internally without exposing per-utterance timing.
 
 ## How it works
 
@@ -42,9 +42,11 @@ conversation (root)   call.duration_seconds
   tool_call_result    tool.name, tool.call_id, tool.result
 ```
 
-`metrics.ttfb` on `llm` is real — measured from when the "prompt" event arrives to when the first text token is sent to Twilio. STT and TTS TTFBs are synthetic because Twilio handles those providers internally and does not expose per-utterance timing.
+`metrics.ttfb` on `llm` is real — measured from when the "prompt" event arrives to when the first text token is sent to Twilio.
 
-`stt.confidence` is synthetic (0.95). Twilio's ConversationRelay does not expose per-utterance ASR confidence scores.
+`metrics.ttfb` on `stt` and `tts` is **synthetic** — a meaningful limitation. Twilio manages those providers internally and does not expose per-utterance timing to the application. Values are estimated from turn durations rather than measured. Do not use these for latency analysis.
+
+`stt.confidence` is **synthetic** (0.95) — Twilio's ConversationRelay does not expose per-utterance ASR confidence scores.
 
 `llm.finish_reason` is `"tool_calls"` when the model invoked tools during the turn, otherwise `"stop"`.
 

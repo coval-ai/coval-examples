@@ -15,9 +15,9 @@ Three reference implementations for adding OpenTelemetry tracing to voice agents
 
 **Vapi** — you are already on Vapi and want the simplest possible integration. No pipeline changes required; spans are reconstructed from the webhook payload after the call ends. The trade-off is that stt.confidence is synthetic (Vapi does not expose per-utterance ASR confidence).
 
-**Pipecat** — you want real-time spans and are using or open to Pipecat Cloud. Pipecat's frame processor model makes it straightforward to instrument STT, LLM, and TTS stages inline. Provides real Deepgram confidence values.
+**Pipecat** — you want spans emitted inline during the call and are using or open to Pipecat Cloud. Pipecat's frame processor model makes it straightforward to instrument STT, LLM, and TTS stages as frames flow through the pipeline. Provides real Deepgram confidence values and real STT/TTS TTFBs.
 
-**LiveKit** — you want real-time spans and prefer LiveKit's SIP dispatch model with the LiveKit Agents SDK. Uses LiveKit's metrics events rather than frame processors.
+**LiveKit** — you want spans emitted inline during the call and prefer the LiveKit Agents SDK. Uses LiveKit's metrics events rather than frame processors. Provides real STT/TTS TTFBs.
 
 **Twilio** — you are using Twilio Programmable Voice with ConversationRelay and want the simplest integration. Spans are built post-hoc from a turn log at call end. LLM TTFB is real; STT and TTS TTFBs are synthetic (Twilio handles those providers internally). Because Twilio routes over PSTN and strips SIP headers, trace correlation uses a pre-call webhook instead of `X-Coval-Simulation-Id`.
 
@@ -46,7 +46,9 @@ Vapi and Twilio also emit `conversation` (root), `tool_call`, and `tool_call_res
 
 `stt.confidence` is the real Deepgram confidence value in Pipecat (from `frame.result.channel.alternatives[0].confidence`) and synthetic 0.95 in Vapi, LiveKit, and Twilio.
 
-`metrics.ttfb` on `llm` is real in Twilio (measured wall-clock from prompt receipt to first token sent). STT and TTS TTFBs in Twilio are synthetic — Twilio manages those providers internally.
+`metrics.ttfb` on `stt` and `tts` is real in Pipecat and LiveKit. In Vapi and Twilio it is **synthetic** — a meaningful limitation: Vapi and Twilio manage STT and TTS providers internally and do not expose per-utterance timing, so these values are estimated from turn durations rather than measured. Do not rely on them for latency analysis.
+
+`metrics.ttfb` on `llm` is real in all four implementations.
 
 `llm.finish_reason` is `"tool_calls"` when the LLM invoked tools during the turn, otherwise `"stop"`.
 
