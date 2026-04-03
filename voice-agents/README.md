@@ -50,7 +50,7 @@ Vapi and Twilio also emit `conversation` (root), `tool_call`, and `tool_call_res
 
 `metrics.ttfb` on `llm` is real in all four implementations.
 
-`llm.finish_reason` is `"tool_calls"` when the LLM invoked tools during the turn, otherwise `"stop"`.
+`llm.finish_reason` is `"tool_calls"` when the LLM invoked tools during the turn, otherwise `"stop"`. In Vapi and Twilio this is inferred from the turn/message sequence rather than read directly from the API response — other finish reasons (`"length"`, `"content_filter"`) are not captured and would appear as `"stop"`.
 
 ## Coval docs
 

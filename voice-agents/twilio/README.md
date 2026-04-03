@@ -48,7 +48,7 @@ conversation (root)   call.duration_seconds
 
 `stt.confidence` is **synthetic** (0.95) — Twilio's ConversationRelay does not expose per-utterance ASR confidence scores.
 
-`llm.finish_reason` is `"tool_calls"` when the model invoked tools during the turn, otherwise `"stop"`.
+`llm.finish_reason` is inferred from the turn log: `"tool_calls"` if the next turn is a tool call, otherwise `"stop"`. Only these two values are possible — other OpenAI finish reasons (`"length"`, `"content_filter"`) are not captured and would appear as `"stop"`.
 
 ## Prerequisites
 
