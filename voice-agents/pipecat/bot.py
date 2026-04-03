@@ -489,6 +489,8 @@ TOOLS = [
 ]
 
 
+# These are mock implementations returning hardcoded data.
+# Replace with your real business logic.
 async def tool_lookup_appointment(function_name, tool_call_id, args, llm, context, result_callback):
     import json
     await result_callback(json.dumps({
