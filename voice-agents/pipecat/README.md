@@ -33,7 +33,7 @@ tts                     metrics.ttfb
 
 `stt.confidence` is the real Deepgram value from `frame.result.channel.alternatives[0].confidence`, with a fallback to synthetic 0.95.
 
-`llm.finish_reason` is `"tool_calls"` when `FunctionCallsStartedFrame` is observed before `LLMFullResponseEndFrame`, otherwise `"stop"`.
+`llm.finish_reason` is `"tool_calls"` when `FunctionCallsStartedFrame` is observed before `LLMFullResponseEndFrame`, otherwise `"stop"`. Only these two values are possible — other finish reasons (`"length"`, `"content_filter"`) are not surfaced by Pipecat's frame events and would appear as `"stop"`.
 
 ## Prerequisites
 

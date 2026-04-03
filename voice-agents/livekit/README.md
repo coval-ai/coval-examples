@@ -10,7 +10,7 @@ The agent registers event handlers on the `AgentSession` to observe timing metri
 - `metrics_collected` — emits `stt`, `llm`, and `tts` spans from `STTMetrics`, `LLMMetrics`, and `TTSMetrics` events
 - `function_tools_executed` — flushes the pending LLM span with `llm.finish_reason = "tool_calls"`
 
-LLM spans are deferred: each `LLMMetrics` event buffers a pending span that is flushed either when `TTSMetrics` fires (finish_reason `"stop"`) or when `function_tools_executed` fires (finish_reason `"tool_calls"`).
+LLM spans are deferred: each `LLMMetrics` event buffers a pending span that is flushed either when `TTSMetrics` fires (finish_reason `"stop"`) or when `function_tools_executed` fires (finish_reason `"tool_calls"`). Only these two values are possible — other finish reasons (`"length"`, `"content_filter"`) are not surfaced by LiveKit's metrics events and would appear as `"stop"`.
 
 A `DynamicCovalExporter` buffers all spans until the simulation ID is known, then flushes them.
 

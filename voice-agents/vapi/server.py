@@ -109,6 +109,8 @@ def _tool(name: str):
     return decorator
 
 
+# These are mock implementations returning hardcoded data.
+# Replace with your real business logic.
 @_tool("lookup_appointment")
 def _lookup_appointment(args: dict) -> str:
     return json.dumps({

@@ -230,6 +230,8 @@ You have access to tools — use them when relevant:
 - get_lab_results: retrieve lab test results (note: currently offline for maintenance)""",
         )
 
+    # These are mock implementations returning hardcoded data.
+    # Replace with your real business logic.
     @function_tool()
     async def lookup_appointment(self, patient_name: str) -> str:
         """Look up a patient's upcoming appointment.

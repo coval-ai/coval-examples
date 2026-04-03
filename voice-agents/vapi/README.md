@@ -2,7 +2,7 @@
 
 A FastAPI webhook server that receives Vapi webhook events and builds OpenTelemetry spans post-hoc from the end-of-call-report payload, then exports them to Coval.
 
-Unlike real-time agents (Pipecat, LiveKit), this approach requires no changes to your Vapi assistant configuration — the server intercepts call lifecycle events and reconstructs the span tree from Vapi's artifact messages.
+Unlike agents that emit spans inline during the call (Pipecat, LiveKit), this approach requires no changes to your Vapi assistant configuration — the server intercepts call lifecycle events and reconstructs the span tree from Vapi's artifact messages.
 
 ## How it works
 
@@ -34,9 +34,11 @@ conversation (root)   call.ended_reason, call.duration_seconds
   tool_call_result    tool.name, tool.call_id, tool.result
 ```
 
-`stt.confidence` is synthetic (0.95). Vapi does not expose per-utterance ASR confidence in the end-of-call-report webhook. Real-time agents like Pipecat can emit the true Deepgram value.
+`stt.confidence` is **synthetic** (0.95). Vapi does not expose per-utterance ASR confidence in the end-of-call-report webhook.
 
-`llm.finish_reason` is derived from the message sequence: `"tool_calls"` when an LLM turn is immediately followed by a `tool_calls` message, otherwise `"stop"`.
+`metrics.ttfb` on `stt` and `tts` is **synthetic** — a meaningful limitation. Vapi reconstructs spans post-hoc from the end-of-call-report; per-utterance timing is not available. Do not use these values for latency analysis.
+
+`llm.finish_reason` is inferred from the message sequence: `"tool_calls"` when an LLM turn is immediately followed by a `tool_calls` message, otherwise `"stop"`. Only these two values are possible — other finish reasons (`"length"`, `"content_filter"`) are not captured and would appear as `"stop"`.
 
 ## Prerequisites
 
@@ -60,7 +62,9 @@ COVAL_API_KEY=... VAPI_ASSISTANT_ID=... uvicorn server:app --port 8000 --reload
 
 Expose your local server with ngrok or a similar tool, then set the webhook URL in Vapi.
 
-## Deploy to Fly.io
+## Deploy
+
+The server is a standard FastAPI/uvicorn app and can be deployed anywhere that serves public HTTPS traffic — Fly.io, Railway, Render, AWS, GCP, etc. A `Dockerfile` and `fly.toml` are included if you want to use Fly.io:
 
 ```bash
 # Set secrets
@@ -70,7 +74,7 @@ fly secrets set COVAL_API_KEY=... VAPI_ASSISTANT_ID=...
 fly deploy
 ```
 
-After deploying, configure two webhook URLs in Vapi to point at `https://<your-app>.fly.dev/webhook`:
+After deploying, configure two webhook URLs in Vapi to point at `https://<your-deployed-server>/webhook`:
 
 1. The phone number's **Server URL** — handles `assistant-request` events (returns the assistant ID for inbound calls)
 2. The assistant's **Server URL** — handles `tool-calls` and `end-of-call-report` events
@@ -79,7 +83,7 @@ After deploying, configure two webhook URLs in Vapi to point at `https://<your-a
 
 In the Vapi dashboard:
 
-- Phone number settings → Server URL: `https://<your-app>.fly.dev/webhook`
-- Assistant settings → Server URL: `https://<your-app>.fly.dev/webhook`
+- Phone number settings → Server URL: `https://<your-deployed-server>/webhook`
+- Assistant settings → Server URL: `https://<your-deployed-server>/webhook`
 
 Both URLs can be the same endpoint — the server routes by `message.type`.
