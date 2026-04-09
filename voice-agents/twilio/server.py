@@ -38,19 +38,25 @@ Deploy to Fly.io
 """
 
 import asyncio
+from collections import deque
+from dataclasses import dataclass
 import json
 import logging
 import os
 import time
-import uuid
-from collections import deque
-from dataclasses import dataclass
 from typing import Optional
+import uuid
 
-import httpx
 from dotenv import load_dotenv
-from fastapi import FastAPI, Header, HTTPException, Request, WebSocket, WebSocketDisconnect
-from fastapi.responses import JSONResponse, Response
+from fastapi import FastAPI
+from fastapi import Header
+from fastapi import HTTPException
+from fastapi import Request
+from fastapi import WebSocket
+from fastapi import WebSocketDisconnect
+from fastapi.responses import JSONResponse
+from fastapi.responses import Response
+import httpx
 from openai import AsyncOpenAI
 from twilio.request_validator import RequestValidator
 
@@ -76,24 +82,34 @@ openai_client = AsyncOpenAI(api_key=OPENAI_API_KEY)
 
 # ── Simulation ID pre-registration ────────────────────────────────────────────
 
-# Stores (simulation_output_id, registered_at_epoch_seconds) tuples.
-# Consumed FIFO when a call arrives. Entries expire after 5 minutes.
-_pending_sim_ids: deque[tuple[str, float]] = deque()
+# Stores (simulation_output_id, from_number, registered_at_epoch_seconds) tuples.
+# Consumed by matching caller ID when a call arrives. Entries expire after 5 minutes.
+_pending_sim_ids: deque[tuple[str, str, float]] = deque()
 _SIM_ID_TTL_SECONDS = 300
 
 
-def _pop_pending_sim_id() -> Optional[str]:
-    """Return the oldest non-expired pending simulation ID, or None."""
+def _pop_pending_sim_id(caller_id: str = "") -> Optional[str]:
+    """Return the simulation ID matching the caller, or the oldest non-expired one."""
     now = time.time()
+    # Purge expired entries
     while _pending_sim_ids:
-        sim_id, registered_at_epoch_seconds = _pending_sim_ids[0]
+        sim_id, from_number, registered_at_epoch_seconds = _pending_sim_ids[0]
         if now - registered_at_epoch_seconds > _SIM_ID_TTL_SECONDS:
             _pending_sim_ids.popleft()
             logger.warning(f"Discarded expired pending sim ID: {sim_id}")
         else:
             break
+
+    # Try to match by caller ID first (reliable with multiple concurrent sims)
+    for i, (sim_id, from_number, _) in enumerate(_pending_sim_ids):
+        if from_number and caller_id and from_number == caller_id:
+            del _pending_sim_ids[i]
+            logger.info(f"Matched sim ID {sim_id} by caller ID {caller_id}")
+            return sim_id
+
+    # Fall back to FIFO if no caller ID match
     if _pending_sim_ids:
-        sim_id, _ = _pending_sim_ids.popleft()
+        sim_id, _, _ = _pending_sim_ids.popleft()
         return sim_id
     return None
 
@@ -668,10 +684,11 @@ async def conversationrelay_websocket(websocket: WebSocket):
                 call_sid = event.get("callSid") or event.get("callsid")
                 call_start_epoch_seconds = time.time()
                 if call_sid:
-                    simulation_id = _pop_pending_sim_id()
+                    caller_id = event.get("from", "")
+                    simulation_id = _pop_pending_sim_id(caller_id)
                     logger.info(
                         f"Call setup: callSid={call_sid} "
-                        f"from={event.get('from', '')} "
+                        f"from={caller_id} "
                         f"sim_id={simulation_id or 'none'}"
                     )
 
@@ -798,11 +815,9 @@ async def register_simulation(
     calls this endpoint (via pre_call_webhook_url) before each simulation to
     correlate traces with the right simulation output.
 
-    Example:
-        curl -X POST https://your-deployed-server/register-simulation \\
-          -H "x-api-key: <COVAL_API_KEY>" \\
-          -H "Content-Type: application/json" \\
-          -d '{"simulation_output_id": "<sim_output_id>"}'
+    The payload includes from_number (Coval's caller ID) which is used to match
+    the registered simulation to the incoming call, enabling reliable correlation
+    even with multiple agent replicas or concurrent simulations.
     """
     if not COVAL_API_KEY or x_api_key != COVAL_API_KEY:
         raise HTTPException(status_code=401, detail="Invalid API key")
@@ -812,14 +827,17 @@ async def register_simulation(
     if not simulation_output_id:
         raise HTTPException(status_code=400, detail="simulation_output_id is required")
 
+    from_number = body.get("from_number", "")
+
     # Deduplicate: ignore if this sim_id is already queued
-    if any(sid == simulation_output_id for sid, _ in _pending_sim_ids):
+    if any(sid == simulation_output_id for sid, _, _ in _pending_sim_ids):
         logger.info(f"Sim ID already pending, ignoring duplicate: {simulation_output_id}")
         return JSONResponse({"status": "ok", "queued": len(_pending_sim_ids)})
 
-    _pending_sim_ids.append((simulation_output_id, time.time()))
+    _pending_sim_ids.append((simulation_output_id, from_number, time.time()))
     logger.info(
         f"Registered pending sim ID: {simulation_output_id} "
+        f"from_number: {from_number} "
         f"(queue depth: {len(_pending_sim_ids)})"
     )
     return JSONResponse({"status": "ok", "queued": len(_pending_sim_ids)})
