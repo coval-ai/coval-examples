@@ -119,3 +119,34 @@ In the Coval dashboard, open your agent's settings and add to the agent metadata
 ```
 
 This tells Coval to notify your agent before each simulation call with the simulation output ID, enabling trace correlation despite PSTN stripping SIP headers.
+
+## Live monitoring with async audio (production pattern)
+
+The example above uses Coval **simulations** — calls Coval places to your agent for evaluation. If instead you want to evaluate **real production calls** your agent handles from real users, use Coval's Conversations API. Twilio Programmable Voice recording URLs are finalized asynchronously (~60 seconds after call end), which is a problem for multi-replica deployments where the agent container may be terminated before the URL is available.
+
+The recommended pattern is a two-call submission:
+
+1. At call end, `POST /v1/conversations:submit` with the transcript only. You get a `conversation_id` synchronously and text metrics start running.
+2. When Twilio finalizes the recording URL, `PATCH /v1/conversations/{conversation_id}` with `audio_url`. Audio metrics then run as a second wave.
+
+```bash
+# 1. Submit transcript at call end
+curl -X POST https://api.coval.dev/v1/conversations:submit \
+  -H 'x-api-key: $COVAL_API_KEY' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "transcript": [...],
+    "agent_id": "...",
+    "external_conversation_id": "'"$TWILIO_CALL_SID"'"
+  }'
+
+# 2. Once the recording URL is ready (poll Twilio, or use a recording-status callback)
+curl -X PATCH https://api.coval.dev/v1/conversations/${CONVERSATION_ID} \
+  -H 'x-api-key: $COVAL_API_KEY' \
+  -H 'Content-Type: application/json' \
+  -d '{"audio_url": "'"$TWILIO_RECORDING_URL"'"}'
+```
+
+Each wave fires its own webhook. Audio can only be attached once per conversation — a repeat PATCH returns `409 ALREADY_EXISTS`.
+
+See the [`PATCH /v1/conversations/{conversation_id}`](https://docs.coval.dev/api-reference/v1/conversations/conversations/attach-audio-to-conversation) reference for the full API contract.
