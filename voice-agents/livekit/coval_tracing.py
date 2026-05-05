@@ -71,9 +71,10 @@ class DynamicCovalExporter(SpanExporter):
             timeout=self._timeout_seconds,
         )
         if self._buffer:
-            print(f"[coval] flushing {len(self._buffer)} buffered spans")
-            self._inner.export(self._buffer)
+            spans_to_flush = list(self._buffer)
             self._buffer.clear()
+            print(f"[coval] flushing {len(spans_to_flush)} buffered spans")
+            self._inner.export(spans_to_flush)
 
     def export(self, spans: Sequence[ReadableSpan]) -> SpanExportResult:
         if self._inner:
