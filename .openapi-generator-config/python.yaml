@@ -1,0 +1,13 @@
+# openapi-generator-cli config for the Python SDK.
+# https://openapi-generator.tech/docs/generators/python
+#
+# Generator: python (modern, pydantic v2-based)
+
+packageName: coval_sdk
+projectName: coval-sdk
+packageVersion: "0.1.0"
+packageUrl: "https://github.com/coval-ai/coval-examples"
+library: urllib3
+generateSourceCodeOnly: false
+hideGenerationTimestamp: true
+disallowAdditionalPropertiesIfNotPresent: false

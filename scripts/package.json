@@ -1,0 +1,16 @@
+{
+  "name": "coval-sdk-codegen-scripts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Scripts that bundle Coval's per-resource OpenAPI specs and run codegen for the TypeScript + Python SDKs.",
+  "scripts": {
+    "bundle": "node bundle-spec.mjs",
+    "generate": "bash generate-sdks.sh"
+  },
+  "dependencies": {
+    "@redocly/cli": "1.34.6",
+    "@hey-api/openapi-ts": "0.84.4",
+    "yaml": "2.6.1"
+  }
+}

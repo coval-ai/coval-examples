@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "coval-sdk"
+version = "0.1.0"
+description = "Typed Python client for the Coval evaluation platform API."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Coval", email = "support@coval.dev" }]
+requires-python = ">=3.9"
+keywords = ["coval", "voice-ai", "evaluation", "openapi", "sdk"]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "urllib3 >= 2.1.0, < 3.0.0",
+    "python-dateutil >= 2.8.2",
+    "pydantic >= 2.0",
+    "typing-extensions >= 4.7.1",
+]
+
+[project.urls]
+Homepage = "https://docs.coval.dev/api-reference"
+Repository = "https://github.com/coval-ai/coval-examples"
+Issues = "https://github.com/coval-ai/coval-examples/issues"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["coval_sdk*"]
