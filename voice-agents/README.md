@@ -37,12 +37,13 @@ All four agents emit spans following the same Coval schema:
 
 | Span name | Key attributes |
 |-----------|----------------|
-| `stt` | `stt.transcription`, `metrics.ttfb`, `stt.confidence` |
+| `stt` | `transcript`, `metrics.ttfb`, `stt.confidence` |
 | `stt.provider.<name>` | `stt.providerName`, `stt.confidence`, `metrics.ttfb` |
 | `llm` | `metrics.ttfb`, `llm.finish_reason` |
 | `tts` | `metrics.ttfb` |
+| `llm_tool_call` | `function.name`, `tool_call_id`, `function.arguments` |
 
-Vapi and Twilio also emit `conversation` (root), `tool_call`, and `tool_call_result` spans.
+Vapi and Twilio also emit `conversation` (root) and `tool_call_result` spans.
 
 `stt.confidence` is the real Deepgram confidence value in Pipecat (from `frame.result.channel.alternatives[0].confidence`) and synthetic 0.95 in Vapi, LiveKit, and Twilio.
 

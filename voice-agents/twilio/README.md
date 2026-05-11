@@ -35,13 +35,13 @@ See the [Coval docs](https://docs.coval.dev/guides/simulations/twilio-conversati
 
 ```
 conversation (root)   call.duration_seconds
-  stt                 stt.transcription, metrics.ttfb (synthetic), stt.confidence (synthetic 0.95)
+  stt                 transcript, metrics.ttfb (synthetic), stt.confidence (synthetic 0.95)
     stt.provider.twilio  stt.providerName, stt.confidence, metrics.ttfb
     stt.provider_selection
   llm                 metrics.ttfb (real), llm.finish_reason
   tts                 metrics.ttfb (synthetic 0.1s)
-  tool_call           tool.name, tool.call_id, tool.arguments
-  tool_call_result    tool.name, tool.call_id, tool.result
+  llm_tool_call       function.name, tool_call_id, function.arguments
+  tool_call_result    function.name, tool_call_id, tool.result
 ```
 
 `metrics.ttfb` on `llm` is real — measured from when the "prompt" event arrives to when the first text token is sent to Twilio.

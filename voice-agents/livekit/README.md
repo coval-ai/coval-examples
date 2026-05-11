@@ -29,7 +29,7 @@ Fallback: set `COVAL_SIMULATION_ID` in the environment for local dev or non-SIP 
 ## OTel span schema
 
 ```
-stt                     stt.transcription, metrics.ttfb, stt.confidence (synthetic 0.95)
+stt                     transcript, metrics.ttfb, stt.confidence (synthetic 0.95)
   stt.provider.deepgram stt.providerName, stt.confidence, metrics.ttfb
 llm                     metrics.ttfb, llm.finish_reason,
                         gen_ai.usage.input_tokens, gen_ai.usage.output_tokens
