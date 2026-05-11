@@ -137,9 +137,11 @@ function errorMiddleware(): Middleware {
       const requestId =
         response.headers.get('x-request-id') ??
         response.headers.get('x-amzn-requestid') ??
+        getErrorField(body, 'request_id') ??
         undefined;
+      const errorMessage = getErrorField(body, 'message');
       const message =
-        (typeof body === 'object' && body !== null && 'message' in body && body.message) ||
+        errorMessage ||
         response.statusText ||
         `Coval API error ${response.status}`;
       throw new CovalApiError({
@@ -148,9 +150,27 @@ function errorMiddleware(): Middleware {
         url: context.url,
         method: (context.init.method ?? 'GET').toUpperCase(),
         body,
-        code: typeof body === 'object' && body !== null && 'code' in body ? (body.code as string) : undefined,
+        code: getErrorField(body, 'code'),
         requestId,
       });
     },
   };
+}
+
+function getErrorField(
+  body: unknown,
+  field: 'message' | 'code' | 'request_id',
+): string | undefined {
+  if (!isRecord(body)) return undefined;
+  const direct = body[field];
+  if (typeof direct === 'string') return direct;
+  const nested = body.error;
+  if (isRecord(nested) && typeof nested[field] === 'string') {
+    return nested[field];
+  }
+  return undefined;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
 }

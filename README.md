@@ -6,17 +6,31 @@
   <img src="coval-logo.png" alt="Coval Logo" width="200">
 </p>
 
-Python code examples for integrating with Coval's API.
+SDKs and examples for integrating with Coval's API.
 
 ## Examples
 
+### TypeScript SDK
+
+Typed TypeScript client generated from Coval's OpenAPI specs with a small
+hand-written wrapper for auth, retries, pagination, and typed errors.
+
+[View TypeScript SDK](./typescript-sdk)
+
+### Python SDK
+
+Generated Python client for Coval's OpenAPI specs. This package is currently
+demo-grade and intentionally lighter than the TypeScript SDK wrapper.
+
+[View Python SDK](./python-sdk)
+
 ### Upload Conversations
 
-[View upload-conversations examples →](./upload-conversations)
+[View upload-conversations examples](./upload-conversations)
 
 ### Launch Runs
 
-[View launch-runs examples →](./launch-runs)
+[View launch-runs examples](./launch-runs)
 
 ## Documentation
 

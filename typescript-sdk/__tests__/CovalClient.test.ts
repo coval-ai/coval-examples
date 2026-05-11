@@ -39,9 +39,11 @@ describe('CovalApiError', () => {
     const fakeFetch = vi.fn(async () => {
       return new Response(
         JSON.stringify({
-          message: 'agent not found',
-          code: 'NOT_FOUND',
-          request_id: 'req-abc',
+          error: {
+            message: 'agent not found',
+            code: 'NOT_FOUND',
+            request_id: 'req-abc',
+          },
         }),
         {
           status: 404,
