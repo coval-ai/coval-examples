@@ -1,0 +1,24 @@
+node_modules/
+dist/
+*.tgz
+*.log
+
+# TypeScript SDK build output
+typescript-sdk/dist/
+typescript-sdk/node_modules/
+typescript-sdk/*.tgz
+
+# Python SDK build artifacts
+python-sdk/.venv/
+python-sdk/**/*.egg-info/
+python-sdk/build/
+python-sdk/dist/
+python-sdk/__pycache__/
+**/__pycache__/
+**/*.egg-info/
+
+# Scripts deps
+scripts/node_modules/
+
+# Existing Python example dirs may have their own
+.DS_Store

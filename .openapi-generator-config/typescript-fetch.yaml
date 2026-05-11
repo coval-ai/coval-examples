@@ -1,0 +1,18 @@
+# openapi-generator-cli config for the TypeScript SDK
+# https://openapi-generator.tech/docs/generators/typescript-fetch
+#
+# We re-export the generated client from typescript-sdk/src/index.ts and wrap
+# it in a hand-written CovalClient that adds auth/retry/pagination/error handling.
+
+npmName: "@covalai/sdk-generated"
+npmVersion: "0.1.0"
+supportsES6: true
+withInterfaces: true
+useSingleRequestParameter: true
+modelPropertyNaming: original
+paramNaming: camelCase
+typescriptThreePlus: true
+withoutRuntimeChecks: false
+# Models live alongside apis; keep import paths short for the wrapper to consume.
+modelPackage: models
+apiPackage: apis

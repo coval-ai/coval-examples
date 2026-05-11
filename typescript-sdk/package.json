@@ -1,0 +1,59 @@
+{
+  "name": "@covalai/sdk",
+  "version": "0.1.0",
+  "description": "Typed TypeScript client for the Coval evaluation platform API.",
+  "license": "MIT",
+  "author": "Coval <support@coval.dev>",
+  "homepage": "https://docs.coval.dev/api-reference",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coval-ai/coval-examples.git",
+    "directory": "typescript-sdk"
+  },
+  "bugs": {
+    "url": "https://github.com/coval-ai/coval-examples/issues"
+  },
+  "keywords": [
+    "coval",
+    "voice-ai",
+    "evaluation",
+    "openapi",
+    "sdk"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./generated": {
+      "types": "./dist/generated/index.d.ts",
+      "import": "./dist/generated/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "example:list-agents": "tsx examples/list-agents.ts",
+    "example:submit-conversation": "tsx examples/submit-conversation.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "tsx": "4.19.2",
+    "typescript": "5.6.3",
+    "vitest": "2.1.8"
+  }
+}
