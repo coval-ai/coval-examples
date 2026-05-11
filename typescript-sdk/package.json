@@ -1,5 +1,5 @@
 {
-  "name": "@covalai/sdk",
+  "name": "@coval/sdk",
   "version": "0.1.0",
   "description": "Typed TypeScript client for the Coval evaluation platform API.",
   "license": "MIT",
