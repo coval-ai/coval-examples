@@ -10,6 +10,7 @@ typescript-sdk/*.tgz
 
 # Python SDK build artifacts
 python-sdk/.venv/
+python-sdk/venv/
 python-sdk/**/*.egg-info/
 python-sdk/build/
 python-sdk/dist/
