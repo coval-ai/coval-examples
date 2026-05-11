@@ -26,12 +26,12 @@ This key is present in all webhook event types, so the server captures it on the
 
 ```
 conversation (root)   call.ended_reason, call.duration_seconds
-  stt                 stt.transcription, metrics.ttfb, stt.confidence (synthetic 0.95)
+  stt                 transcript, metrics.ttfb, stt.confidence (synthetic 0.95)
     stt.provider.vapi stt.providerName, stt.confidence, metrics.ttfb
   llm                 metrics.ttfb, llm.finish_reason
   tts                 metrics.ttfb
-  tool_call           tool.name, tool.call_id, tool.arguments
-  tool_call_result    tool.name, tool.call_id, tool.result
+  llm_tool_call       function.name, tool_call_id, function.arguments
+  tool_call_result    function.name, tool_call_id, tool.result
 ```
 
 `stt.confidence` is **synthetic** (0.95). Vapi does not expose per-utterance ASR confidence in the end-of-call-report webhook.

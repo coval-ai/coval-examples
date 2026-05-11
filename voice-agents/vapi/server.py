@@ -22,12 +22,12 @@ possible and cache it in memory: call_id → simulation_id.
 Span schema (SIM-328 + SIM-329 attributes)
 ──────────────────────────────────────────
   conversation (root)
-    ├── stt          stt.transcription, metrics.ttfb, stt.confidence
+    ├── stt          transcript, metrics.ttfb, stt.confidence
     │     ├── stt.provider.vapi       stt.providerName, stt.confidence, metrics.ttfb
     │     └── stt.provider_selection  stt.selectedProvider, stt.providerType
     ├── llm          metrics.ttfb, llm.finish_reason
     ├── tts          metrics.ttfb
-    └── tool_call    tool.name, tool.call_id, tool.arguments, tool.result
+    └── llm_tool_call function.name, tool_call_id, function.arguments
 
   stt.confidence  — synthetic 0.95 (Vapi does not expose per-utterance ASR
                     confidence in the end-of-call-report webhook; real-time
@@ -285,7 +285,7 @@ def _build_spans(message: dict, call: dict) -> list[dict]:
                 trace_id, span_id, conv_span_id,
                 "stt", span_start_ns, span_end_ns,
                 {
-                    "stt.transcription": content,
+                    "transcript": content,
                     "metrics.ttfb": round(ttfb, 4),
                     # Synthetic: Vapi does not expose per-utterance ASR confidence
                     # in the end-of-call-report. Real-time agents emit the true value.
@@ -340,17 +340,17 @@ def _build_spans(message: dict, call: dict) -> list[dict]:
             ))
 
         elif role == "tool_calls":
-            # One tool_call span per function invocation in this message
+            # One llm_tool_call span per function invocation in this message
             for tc in msg.get("toolCalls", []):
                 fn = tc.get("function", {})
                 tc_span_id = format(uuid.uuid4().int & 0xFFFFFFFFFFFFFFFF, "016x")
                 spans.append(_make_span(
                     trace_id, tc_span_id, conv_span_id,
-                    "tool_call", span_start_ns, span_end_ns,
+                    "llm_tool_call", span_start_ns, span_end_ns,
                     {
-                        "tool.name": fn.get("name", "unknown"),
-                        "tool.call_id": tc.get("id", ""),
-                        "tool.arguments": fn.get("arguments", "{}"),
+                        "function.name": fn.get("name", "unknown"),
+                        "tool_call_id": tc.get("id", ""),
+                        "function.arguments": fn.get("arguments", "{}"),
                     },
                 ))
 
@@ -369,8 +369,8 @@ def _build_spans(message: dict, call: dict) -> list[dict]:
                 trace_id, tc_result_span_id, conv_span_id,
                 "tool_call_result", span_start_ns, span_end_ns,
                 {
-                    "tool.name": msg.get("name", "unknown"),
-                    "tool.call_id": msg.get("toolCallId", ""),
+                    "function.name": msg.get("name", "unknown"),
+                    "tool_call_id": msg.get("toolCallId", ""),
                     "tool.result": result_str[:500],
                 },
                 error=tool_error,

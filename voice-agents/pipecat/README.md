@@ -25,7 +25,7 @@ When this field is present, `set_simulation_id()` is called immediately and all 
 ## OTel span schema
 
 ```
-stt                     stt.transcription, metrics.ttfb, stt.confidence
+stt                     transcript, metrics.ttfb, stt.confidence
   stt.provider.deepgram stt.providerName, stt.confidence, metrics.ttfb
 llm                     metrics.ttfb, llm.finish_reason
 tts                     metrics.ttfb

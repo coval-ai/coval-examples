@@ -349,12 +349,12 @@ def _build_spans_from_turns(
 
     Span schema:
       conversation (root)
-        stt   stt.transcription, metrics.ttfb (synthetic), stt.confidence=0.95
+        stt   transcript, metrics.ttfb (synthetic), stt.confidence=0.95
           stt.provider.twilio
           stt.provider_selection
         llm   metrics.ttfb (real!), llm.finish_reason
         tts   metrics.ttfb (synthetic)
-        tool_call         (if tools were called)
+        llm_tool_call     (if tools were called)
         tool_call_result  (if tools were called)
     """
     if not turns:
@@ -385,7 +385,7 @@ def _build_spans_from_turns(
                 trace_id, span_id, conv_span_id,
                 "stt", span_start_ns, span_end_ns,
                 {
-                    "stt.transcription": turn.content,
+                    "transcript": turn.content,
                     "metrics.ttfb": stt_ttfb,
                     "stt.confidence": 0.95,
                 },
@@ -434,11 +434,11 @@ def _build_spans_from_turns(
         elif turn.role == "tool_call":
             spans.append(_make_span(
                 trace_id, span_id, conv_span_id,
-                "tool_call", span_start_ns, span_end_ns,
+                "llm_tool_call", span_start_ns, span_end_ns,
                 {
-                    "tool.name": turn.tool_name or "unknown",
-                    "tool.call_id": turn.tool_call_id or "",
-                    "tool.arguments": turn.content,
+                    "function.name": turn.tool_name or "unknown",
+                    "tool_call_id": turn.tool_call_id or "",
+                    "function.arguments": turn.content,
                 },
             ))
 
@@ -454,8 +454,8 @@ def _build_spans_from_turns(
                 trace_id, span_id, conv_span_id,
                 "tool_call_result", span_start_ns, span_end_ns,
                 {
-                    "tool.name": turn.tool_name or "unknown",
-                    "tool.call_id": turn.tool_call_id or "",
+                    "function.name": turn.tool_name or "unknown",
+                    "tool_call_id": turn.tool_call_id or "",
                     "tool.result": turn.content[:500],
                 },
                 error=tool_error,

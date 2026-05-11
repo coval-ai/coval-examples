@@ -11,7 +11,7 @@ when the caller joins the room. `DynamicCovalExporter` buffers spans until
 `OTLPSpanExporter`. Fallback: `COVAL_SIMULATION_ID` env var (for local testing).
 
 Span schema (Coval conventions):
-  stt          stt.transcription, metrics.ttfb, stt.confidence
+  stt          transcript, metrics.ttfb, stt.confidence
     └── stt.provider.deepgram    stt.providerName, stt.confidence, metrics.ttfb
   llm          metrics.ttfb, llm.finish_reason, gen_ai.usage.input_tokens,
                gen_ai.usage.output_tokens
@@ -216,7 +216,7 @@ async def my_agent(ctx: agents.JobContext):
     def _emit_stt_span(ttfb: float, transcript: str) -> None:
         confidence = 0.95  # synthetic — LiveKit metrics don't expose per-utterance confidence
         with _stt_tracer.start_as_current_span("stt") as span:
-            span.set_attribute("stt.transcription", transcript)
+            span.set_attribute("transcript", transcript)
             span.set_attribute("metrics.ttfb", round(ttfb, 4))
             span.set_attribute("stt.confidence", confidence)
             with _stt_tracer.start_as_current_span("stt.provider.deepgram") as p:

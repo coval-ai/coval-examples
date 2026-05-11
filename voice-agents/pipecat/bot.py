@@ -10,7 +10,7 @@ Tracing: DynamicCovalExporter buffers spans until simulation_id is known.
          Fallback: COVAL_SIMULATION_ID env var (set at startup for local testing).
 
 Span schema (SIM-328 + SIM-329 attributes):
-  stt          stt.transcription, metrics.ttfb, stt.confidence
+  stt          transcript, metrics.ttfb, stt.confidence
     └── stt.provider.deepgram    stt.providerName, stt.confidence, metrics.ttfb
   llm          metrics.ttfb, llm.finish_reason
   tts          metrics.ttfb
@@ -240,7 +240,7 @@ class STTSpanProcessor(FrameProcessor):
     """Emits Coval-standard 'stt' spans for each final STT transcription.
 
     Span attributes (SIM-328):
-      stt.transcription  — the transcribed text (required for STT WER metric)
+      transcript        — the transcribed text (required for STT WER metric)
       metrics.ttfb       — seconds from user started speaking to first result
       stt.confidence     — ASR confidence score (0.0–1.0) from Deepgram result
 
@@ -283,7 +283,7 @@ class STTSpanProcessor(FrameProcessor):
             ttfb_rounded = round(ttfb, 4)
 
             with self._tracer.start_as_current_span("stt") as span:
-                span.set_attribute("stt.transcription", frame.text)
+                span.set_attribute("transcript", frame.text)
                 span.set_attribute("metrics.ttfb", ttfb_rounded)
                 span.set_attribute("stt.confidence", confidence)
 
@@ -646,7 +646,7 @@ async def bot(args: Any) -> None:
     pipeline = Pipeline([
         transport.input(),
         stt,
-        STTSpanProcessor(),                       # Emits 'stt' spans: stt.transcription + metrics.ttfb + stt.confidence + stt.provider.deepgram
+        STTSpanProcessor(),                       # Emits 'stt' spans: transcript + metrics.ttfb + stt.confidence + stt.provider.deepgram
         context_aggregator.user(),
         LLMPreSpanProcessor(timing=llm_timing),   # Records LLM request start time
         llm,
