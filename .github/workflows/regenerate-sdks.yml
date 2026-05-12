@@ -1,5 +1,24 @@
 name: Regenerate SDKs
 
+# Weekly cron + manual dispatch. Pulls the latest OpenAPI specs from
+# coval-ai/docs, regenerates @coval/sdk (TypeScript) + coval-sdk (Python),
+# runs build + tests, and opens (or updates) a single rolling regen PR.
+#
+# Prerequisites — set these as repository secrets before the first run:
+#
+#   DOCS_REPO_TOKEN (required for cross-org checkout of coval-ai/docs)
+#     Personal Access Token with `repo` read access to coval-ai/docs.
+#     The default GITHUB_TOKEN only scopes to this repo and cannot read
+#     coval-ai/docs.
+#
+# Hardening notes (TRACE-83):
+#   - Deps installed via `npm ci` against committed lockfiles only — no
+#     fallback to floating versions
+#   - openapi-generator-cli pinned to 2.13.4 in scripts/generate-sdks.sh
+#   - Determinism check re-runs codegen and fails on drift
+#   - PR branch is stable so peter-evans/create-pull-request updates the
+#     same PR in place instead of accumulating per-run branches
+
 on:
   workflow_dispatch:
     inputs:
@@ -8,8 +27,7 @@ on:
         required: false
         default: main
   schedule:
-    # Weekly Monday 09:00 UTC. Refreshes the SDK against the latest OpenAPI
-    # specs and opens a PR if anything changed.
+    # Weekly Monday 09:00 UTC.
     - cron: "0 9 * * 1"
 
 permissions:
@@ -29,12 +47,18 @@ jobs:
           repository: coval-ai/docs
           ref: ${{ github.event.inputs.docs_ref || 'main' }}
           path: coval-docs
-          token: ${{ secrets.DOCS_REPO_TOKEN || secrets.GITHUB_TOKEN }}
+          # DOCS_REPO_TOKEN must be configured as a repo secret. GITHUB_TOKEN
+          # cannot read another repository in the org by default.
+          token: ${{ secrets.DOCS_REPO_TOKEN }}
 
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: "22"
+          cache: npm
+          cache-dependency-path: |
+            scripts/package-lock.json
+            typescript-sdk/package-lock.json
 
       - name: Set up Java (openapi-generator-cli)
         uses: actions/setup-java@v4
@@ -43,31 +67,52 @@ jobs:
           java-version: "21"
 
       - name: Install scripts deps
-        run: npm ci --prefix scripts || npm install --prefix scripts
+        run: npm ci --prefix scripts
 
       - name: Bundle spec
         env:
           COVAL_SPECS_DIR: ${{ github.workspace }}/coval-docs/api-reference/v1
         run: node scripts/bundle-spec.mjs
 
-      - name: Generate SDKs
+      - name: Generate SDKs (pass 1)
         run: bash scripts/generate-sdks.sh
+
+      - name: Determinism check (regenerate into tmp + diff)
+        env:
+          COVAL_SPECS_DIR: ${{ github.workspace }}/coval-docs/api-reference/v1
+        run: |
+          set -euo pipefail
+          # Snapshot pass-1 output.
+          cp -r typescript-sdk/src/generated /tmp/ts-pass-1
+          cp -r python-sdk/src/coval_sdk /tmp/py-pass-1
+          cp dist/coval-openapi.yaml /tmp/spec-pass-1.yaml
+          # Re-run bundle + codegen.
+          node scripts/bundle-spec.mjs
+          bash scripts/generate-sdks.sh
+          # Diff. Any change between passes = upstream non-determinism.
+          echo "=== TypeScript generated diff ==="
+          diff -r /tmp/ts-pass-1 typescript-sdk/src/generated
+          echo "=== Python generated diff ==="
+          diff -r /tmp/py-pass-1 python-sdk/src/coval_sdk
+          echo "=== bundled spec diff ==="
+          diff /tmp/spec-pass-1.yaml dist/coval-openapi.yaml
+          echo "✓ Codegen output is deterministic across two consecutive runs."
 
       - name: Install TS SDK deps + build + test
         working-directory: typescript-sdk
         run: |
-          npm install
+          npm ci
           npm run build
           npm test
 
-      - name: Install Python SDK + run example (--raw, smoke compile only)
+      - name: Install Python SDK + smoke import
         working-directory: python-sdk
         run: |
           python -m pip install --upgrade pip
           pip install -e .
-          python -c "import coval_sdk; print(coval_sdk.__version__)"
+          python -c "import coval_sdk; print('coval-sdk version:', coval_sdk.__version__)"
 
-      - name: Open PR if there are changes
+      - name: Open / update regen PR if there are changes
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -78,13 +123,17 @@ jobs:
 
             - Bundled `dist/coval-openapi.yaml`
             - Regenerated `typescript-sdk/src/generated/` + `python-sdk/src/coval_sdk/`
-            - TS tests passed in CI
+            - Determinism check passed (two consecutive runs produced identical output)
+            - TS tests passed, Python import smoke passed
 
             If only the OpenAPI marker timestamp changed, this PR can be closed
             without merging.
-          branch: chore/regenerate-sdks-${{ github.run_id }}
-          delete-branch: true
+          # Stable branch name — peter-evans/create-pull-request updates the
+          # existing PR in place instead of opening a new one each run.
+          branch: chore/regenerate-sdks
+          delete-branch: false
           add-paths: |
             dist/coval-openapi.yaml
             typescript-sdk/src/generated/
             python-sdk/src/coval_sdk/
+            python-sdk/GENERATED_README.md
