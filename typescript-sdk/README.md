@@ -1,4 +1,4 @@
-# @covalai/sdk
+# @coval/sdk
 
 Typed TypeScript client for the [Coval](https://coval.dev) evaluation platform API.
 
@@ -11,7 +11,7 @@ production use.
 ## Install
 
 ```bash
-npm install @covalai/sdk
+npm install @coval/sdk
 ```
 
 Requires Node 18+.
@@ -19,7 +19,7 @@ Requires Node 18+.
 ## Quick start
 
 ```ts
-import { CovalClient } from '@covalai/sdk';
+import { CovalClient } from '@coval/sdk';
 
 const coval = new CovalClient({ apiKey: process.env.COVAL_API_KEY! });
 
@@ -71,7 +71,7 @@ exhausted. Network failures become `CovalNetworkError`. Both extend `Error`,
 so plain `try/catch` works.
 
 ```ts
-import { CovalApiError } from '@covalai/sdk';
+import { CovalApiError } from '@coval/sdk';
 
 try {
   await coval.agents.getAgent({ agentId: 'unknown' });
@@ -88,7 +88,7 @@ List endpoints return a single page plus a `next_page_token`. The `paginate`
 helper turns that into an async iterator so you don't have to manage tokens.
 
 ```ts
-import { paginate, collectAll } from '@covalai/sdk';
+import { paginate, collectAll } from '@coval/sdk';
 
 for await (const agent of paginate({
   fetchPage: (pageToken) => coval.agents.listAgents({ pageToken, pageSize: 50 }),

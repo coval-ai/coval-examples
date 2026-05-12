@@ -1,4 +1,4 @@
-// Public entry point for @covalai/sdk.
+// Public entry point for @coval/sdk.
 
 export { CovalClient } from './CovalClient.js';
 export type { CovalClientOptions } from './CovalClient.js';

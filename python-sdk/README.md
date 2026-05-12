@@ -5,7 +5,7 @@ platform API. Built from the public OpenAPI specs via
 [openapi-generator](https://openapi-generator.tech/docs/generators/python).
 
 This package is currently **demo-grade**: it's the generated client without a
-hand-written ergonomic wrapper layer. The TypeScript SDK (`@covalai/sdk`)
+hand-written ergonomic wrapper layer. The TypeScript SDK (`@coval/sdk`)
 ships with auth/retry/pagination helpers — those are still in flight on the
 Python side and will follow in a subsequent release.
 
