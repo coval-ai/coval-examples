@@ -28,7 +28,7 @@ import {
  */
 export interface CovalConversationsAPIGetConversationMetricResponse {
     /**
-     * Single simplified metric output
+     * Single metric output (returned when {metric_output_id} is a 26-char ULID)
      * @type {CovalConversationsAPISimpleMetricOutput}
      * @memberof CovalConversationsAPIGetConversationMetricResponse
      */

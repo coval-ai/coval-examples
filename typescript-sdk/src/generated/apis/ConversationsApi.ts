@@ -24,11 +24,6 @@ import {
     CovalConversationsAPIErrorResponseToJSON,
 } from '../models/CovalConversationsAPIErrorResponse.js';
 import {
-    type CovalConversationsAPIGetConversationMetricResponse,
-    CovalConversationsAPIGetConversationMetricResponseFromJSON,
-    CovalConversationsAPIGetConversationMetricResponseToJSON,
-} from '../models/CovalConversationsAPIGetConversationMetricResponse.js';
-import {
     type CovalConversationsAPIGetConversationResponse,
     CovalConversationsAPIGetConversationResponseFromJSON,
     CovalConversationsAPIGetConversationResponseToJSON,
@@ -58,6 +53,11 @@ import {
     CovalConversationsAPISubmitConversationResponseFromJSON,
     CovalConversationsAPISubmitConversationResponseToJSON,
 } from '../models/CovalConversationsAPISubmitConversationResponse.js';
+import {
+    type GetConversationMetric200Response,
+    GetConversationMetric200ResponseFromJSON,
+    GetConversationMetric200ResponseToJSON,
+} from '../models/GetConversationMetric200Response.js';
 
 export interface DeleteConversationRequest {
     conversationId: string;
@@ -157,28 +157,28 @@ export interface ConversationsApiInterface {
     /**
      * Creates request options for getConversationMetric without sending the request
      * @param {string} conversationId Unique conversation identifier
-     * @param {string} metricOutputId Unique metric output identifier (26-char ULID)
+     * @param {string} metricOutputId Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type. 
      * @throws {RequiredError}
      * @memberof ConversationsApiInterface
      */
     getConversationMetricRequestOpts(requestParameters: GetConversationMetricRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Retrieve a single metric output by ID for a specific conversation. 
-     * @summary Get single conversation metric
+     * Retrieve metric output(s) for a conversation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID** (e.g. `01JCQR8Z9PQSTNVWXY12345678`):   returns a single metric output as `{ \"metric\": {...} }`. - **22-char Metric definition ID** (e.g. `29BlkepvvX19ebbLDB0y6Q`):   returns every output for that metric on the conversation as   `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
+     * @summary Get conversation metric output(s)
      * @param {string} conversationId Unique conversation identifier
-     * @param {string} metricOutputId Unique metric output identifier (26-char ULID)
+     * @param {string} metricOutputId Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type. 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ConversationsApiInterface
      */
-    getConversationMetricRaw(requestParameters: GetConversationMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalConversationsAPIGetConversationMetricResponse>>;
+    getConversationMetricRaw(requestParameters: GetConversationMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetConversationMetric200Response>>;
 
     /**
-     * Retrieve a single metric output by ID for a specific conversation. 
-     * Get single conversation metric
+     * Retrieve metric output(s) for a conversation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID** (e.g. `01JCQR8Z9PQSTNVWXY12345678`):   returns a single metric output as `{ \"metric\": {...} }`. - **22-char Metric definition ID** (e.g. `29BlkepvvX19ebbLDB0y6Q`):   returns every output for that metric on the conversation as   `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
+     * Get conversation metric output(s)
      */
-    getConversationMetric(requestParameters: GetConversationMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalConversationsAPIGetConversationMetricResponse>;
+    getConversationMetric(requestParameters: GetConversationMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetConversationMetric200Response>;
 
     /**
      * Creates request options for listConversationMetrics without sending the request
@@ -445,21 +445,21 @@ export class ConversationsApi extends runtime.BaseAPI implements ConversationsAp
     }
 
     /**
-     * Retrieve a single metric output by ID for a specific conversation. 
-     * Get single conversation metric
+     * Retrieve metric output(s) for a conversation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID** (e.g. `01JCQR8Z9PQSTNVWXY12345678`):   returns a single metric output as `{ \"metric\": {...} }`. - **22-char Metric definition ID** (e.g. `29BlkepvvX19ebbLDB0y6Q`):   returns every output for that metric on the conversation as   `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
+     * Get conversation metric output(s)
      */
-    async getConversationMetricRaw(requestParameters: GetConversationMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalConversationsAPIGetConversationMetricResponse>> {
+    async getConversationMetricRaw(requestParameters: GetConversationMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetConversationMetric200Response>> {
         const requestOptions = await this.getConversationMetricRequestOpts(requestParameters);
         const response = await this.request(requestOptions, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CovalConversationsAPIGetConversationMetricResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetConversationMetric200ResponseFromJSON(jsonValue));
     }
 
     /**
-     * Retrieve a single metric output by ID for a specific conversation. 
-     * Get single conversation metric
+     * Retrieve metric output(s) for a conversation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID** (e.g. `01JCQR8Z9PQSTNVWXY12345678`):   returns a single metric output as `{ \"metric\": {...} }`. - **22-char Metric definition ID** (e.g. `29BlkepvvX19ebbLDB0y6Q`):   returns every output for that metric on the conversation as   `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
+     * Get conversation metric output(s)
      */
-    async getConversationMetric(requestParameters: GetConversationMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalConversationsAPIGetConversationMetricResponse> {
+    async getConversationMetric(requestParameters: GetConversationMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetConversationMetric200Response> {
         const response = await this.getConversationMetricRaw(requestParameters, initOverrides);
         return await response.value();
     }

@@ -20,6 +20,13 @@ import {
     CovalReviewsAPIProjectTypeToJSON,
     CovalReviewsAPIProjectTypeToJSONTyped,
 } from './CovalReviewsAPIProjectType.js';
+import type { CovalReviewsAPIProjectRule } from './CovalReviewsAPIProjectRule.js';
+import {
+    CovalReviewsAPIProjectRuleFromJSON,
+    CovalReviewsAPIProjectRuleFromJSONTyped,
+    CovalReviewsAPIProjectRuleToJSON,
+    CovalReviewsAPIProjectRuleToJSONTyped,
+} from './CovalReviewsAPIProjectRule.js';
 
 /**
  * A single review project resource.
@@ -82,6 +89,12 @@ export interface CovalReviewsAPIReviewProjectResource {
      */
     notifications: boolean;
     /**
+     * Rules applied to this project (e.g. require notes on disagreement)
+     * @type {Array<CovalReviewsAPIProjectRule>}
+     * @memberof CovalReviewsAPIReviewProjectResource
+     */
+    project_rules?: Array<CovalReviewsAPIProjectRule> | null;
+    /**
      * Creation timestamp (ISO 8601)
      * @type {Date}
      * @memberof CovalReviewsAPIReviewProjectResource
@@ -133,6 +146,7 @@ export function CovalReviewsAPIReviewProjectResourceFromJSONTyped(json: any, ign
         'linked_metric_ids': json['linked_metric_ids'],
         'project_type': CovalReviewsAPIProjectTypeFromJSON(json['project_type']),
         'notifications': json['notifications'],
+        'project_rules': json['project_rules'] == null ? undefined : ((json['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleFromJSON)),
         'create_time': (new Date(json['create_time'])),
         'update_time': (new Date(json['update_time'])),
     };
@@ -158,6 +172,7 @@ export function CovalReviewsAPIReviewProjectResourceToJSONTyped(value?: CovalRev
         'linked_metric_ids': value['linked_metric_ids'],
         'project_type': CovalReviewsAPIProjectTypeToJSON(value['project_type']),
         'notifications': value['notifications'],
+        'project_rules': value['project_rules'] == null ? undefined : ((value['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleToJSON)),
         'create_time': value['create_time'].toISOString(),
         'update_time': value['update_time'].toISOString(),
     };

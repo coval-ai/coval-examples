@@ -25,10 +25,13 @@ import {
  * Request to submit a conversation for monitoring evaluation.
  * 
  * **Requirements:**
- * - At least one of: `transcript` or `audio_url` must be provided
+ * - At least one of: `transcript`, `audio_url`, or `upload_id` must be provided
+ * - `audio_url` and `upload_id` are mutually exclusive
+ * 
+ * **Payload Size Limit:** The combined queued payload is subject to a 256 KB limit (including large `metadata` values); oversized payloads return 413 `PAYLOAD_TOO_LARGE`.
  * 
  * **Best Practices:**
- * - Provide both transcript and audio_url when available (enables audio metrics)
+ * - Provide both transcript and audio_url (or upload_id) when available (enables audio metrics)
  * - **Include `start_time` and `end_time` in transcript messages when submitting audio_url** to avoid automatic retranscription
  * - Include `external_conversation_id` for correlation with external systems
  * - Add metadata for conditional metrics and analytics
@@ -53,6 +56,7 @@ export interface CovalConversationsAPISubmitConversationRequest {
      * 
      * **Audio Validation Requirements:**
      * - **Formats**: WAV or MP3 ONLY (detected via magic bytes, not file extension)
+     * - **Channels**: Stereo (recommended) or mono. Stereo assigns speaker roles deterministically from channel position (channel 0 = agent, channel 1 = user); mono infers roles by classifying transcript content, which is typically accurate but less reliable than channel-based mapping.
      * - **Duration**: 5 seconds minimum, 1 hour (3600 seconds) maximum
      * - **File Size**: 200 MB maximum
      * - **Validation**: Audio is validated BEFORE processing begins
@@ -78,6 +82,26 @@ export interface CovalConversationsAPISubmitConversationRequest {
      * @memberof CovalConversationsAPISubmitConversationRequest
      */
     audio_url?: string;
+    /**
+     * Reference to a previously issued direct upload from `POST /v1/audio:upload`.
+     * 
+     * Use this when you've uploaded audio bytes directly via a Coval-issued
+     * presigned PUT URL. The Coval backend resolves the staged upload, validates
+     * it, and promotes it into managed recordings storage.
+     * 
+     * **Mutually exclusive** with `audio` and `audio_url` — provide exactly one
+     * audio source.
+     * 
+     * **Validation Errors:**
+     * - 404 NOT_FOUND: `upload_id` does not exist, has expired, has already been consumed,
+     *   or belongs to a different organization (404 is returned in all four cases to
+     *   avoid leaking ID existence across organizations).
+     * - 400 INVALID_ARGUMENT: Mutually exclusive audio sources provided.
+     * 
+     * @type {string}
+     * @memberof CovalConversationsAPISubmitConversationRequest
+     */
+    upload_id?: string;
     /**
      * List of metric IDs to evaluate (22–26 character IDs).
      * 
@@ -115,6 +139,18 @@ export interface CovalConversationsAPISubmitConversationRequest {
      * @memberof CovalConversationsAPISubmitConversationRequest
      */
     occurred_at?: Date;
+    /**
+     * Agent resource ID (22-character ShortUUID) to associate with this conversation.
+     * 
+     * Must reference an existing agent within your organization. The agent is
+     * validated at submission time:
+     * - **400 INVALID_ARGUMENT**: Malformed ID (wrong length or characters).
+     * - **404 NOT_FOUND**: Agent does not exist or belongs to a different organization.
+     * 
+     * @type {string}
+     * @memberof CovalConversationsAPISubmitConversationRequest
+     */
+    agent_id?: string | null;
 }
 
 /**
@@ -136,10 +172,12 @@ export function CovalConversationsAPISubmitConversationRequestFromJSONTyped(json
         
         'transcript': json['transcript'] == null ? undefined : ((json['transcript'] as Array<any>).map(CovalConversationsAPITranscriptMessageFromJSON)),
         'audio_url': json['audio_url'] == null ? undefined : json['audio_url'],
+        'upload_id': json['upload_id'] == null ? undefined : json['upload_id'],
         'metrics': json['metrics'] == null ? undefined : json['metrics'],
         'metadata': json['metadata'] == null ? undefined : json['metadata'],
         'external_conversation_id': json['external_conversation_id'] == null ? undefined : json['external_conversation_id'],
         'occurred_at': json['occurred_at'] == null ? undefined : (new Date(json['occurred_at'])),
+        'agent_id': json['agent_id'] == null ? undefined : json['agent_id'],
     };
 }
 
@@ -156,10 +194,12 @@ export function CovalConversationsAPISubmitConversationRequestToJSONTyped(value?
         
         'transcript': value['transcript'] == null ? undefined : ((value['transcript'] as Array<any>).map(CovalConversationsAPITranscriptMessageToJSON)),
         'audio_url': value['audio_url'],
+        'upload_id': value['upload_id'],
         'metrics': value['metrics'],
         'metadata': value['metadata'],
         'external_conversation_id': value['external_conversation_id'],
         'occurred_at': value['occurred_at'] == null ? value['occurred_at'] : value['occurred_at'].toISOString(),
+        'agent_id': value['agent_id'],
     };
 }
 

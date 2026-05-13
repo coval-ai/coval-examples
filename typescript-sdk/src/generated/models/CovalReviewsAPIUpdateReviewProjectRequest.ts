@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime.js';
+import type { CovalReviewsAPIProjectRule } from './CovalReviewsAPIProjectRule.js';
+import {
+    CovalReviewsAPIProjectRuleFromJSON,
+    CovalReviewsAPIProjectRuleFromJSONTyped,
+    CovalReviewsAPIProjectRuleToJSON,
+    CovalReviewsAPIProjectRuleToJSONTyped,
+} from './CovalReviewsAPIProjectRule.js';
+
 /**
  * 
  * @export
@@ -56,6 +64,12 @@ export interface CovalReviewsAPIUpdateReviewProjectRequest {
      */
     notifications?: boolean | null;
     /**
+     * Updated project rules
+     * @type {Array<CovalReviewsAPIProjectRule>}
+     * @memberof CovalReviewsAPIUpdateReviewProjectRequest
+     */
+    project_rules?: Array<CovalReviewsAPIProjectRule> | null;
+    /**
      * Assignees who opted out of notifications
      * @type {Array<string>}
      * @memberof CovalReviewsAPIUpdateReviewProjectRequest
@@ -86,6 +100,7 @@ export function CovalReviewsAPIUpdateReviewProjectRequestFromJSONTyped(json: any
         'linked_simulation_ids': json['linked_simulation_ids'] == null ? undefined : json['linked_simulation_ids'],
         'linked_metric_ids': json['linked_metric_ids'] == null ? undefined : json['linked_metric_ids'],
         'notifications': json['notifications'] == null ? undefined : json['notifications'],
+        'project_rules': json['project_rules'] == null ? undefined : ((json['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleFromJSON)),
         'opted_out_assignees': json['opted_out_assignees'] == null ? undefined : json['opted_out_assignees'],
     };
 }
@@ -107,6 +122,7 @@ export function CovalReviewsAPIUpdateReviewProjectRequestToJSONTyped(value?: Cov
         'linked_simulation_ids': value['linked_simulation_ids'],
         'linked_metric_ids': value['linked_metric_ids'],
         'notifications': value['notifications'],
+        'project_rules': value['project_rules'] == null ? undefined : ((value['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleToJSON)),
         'opted_out_assignees': value['opted_out_assignees'],
     };
 }

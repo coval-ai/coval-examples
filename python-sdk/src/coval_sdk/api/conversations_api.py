@@ -20,13 +20,13 @@ from pydantic import Field, StrictBool, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_conversations_api_delete_conversation_response import CovalConversationsAPIDeleteConversationResponse
-from coval_sdk.models.coval_conversations_api_get_conversation_metric_response import CovalConversationsAPIGetConversationMetricResponse
 from coval_sdk.models.coval_conversations_api_get_conversation_response import CovalConversationsAPIGetConversationResponse
 from coval_sdk.models.coval_conversations_api_list_conversation_metrics_response import CovalConversationsAPIListConversationMetricsResponse
 from coval_sdk.models.coval_conversations_api_list_conversations_response import CovalConversationsAPIListConversationsResponse
 from coval_sdk.models.coval_conversations_api_patch_conversation_request import CovalConversationsAPIPatchConversationRequest
 from coval_sdk.models.coval_conversations_api_submit_conversation_request import CovalConversationsAPISubmitConversationRequest
 from coval_sdk.models.coval_conversations_api_submit_conversation_response import CovalConversationsAPISubmitConversationResponse
+from coval_sdk.models.get_conversation_metric200_response import GetConversationMetric200Response
 
 from coval_sdk.api_client import ApiClient, RequestSerialized
 from coval_sdk.api_response import ApiResponse
@@ -607,7 +607,7 @@ class ConversationsApi:
     def get_conversation_metric(
         self,
         conversation_id: Annotated[str, Field(min_length=22, strict=True, max_length=26, description="Unique conversation identifier")],
-        metric_output_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="Unique metric output identifier (26-char ULID)")],
+        metric_output_id: Annotated[str, Field(min_length=22, strict=True, max_length=26, description="Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type. ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -620,14 +620,14 @@ class ConversationsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CovalConversationsAPIGetConversationMetricResponse:
-        """Get single conversation metric
+    ) -> GetConversationMetric200Response:
+        """Get conversation metric output(s)
 
-        Retrieve a single metric output by ID for a specific conversation. 
+        Retrieve metric output(s) for a conversation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID** (e.g. `01JCQR8Z9PQSTNVWXY12345678`):   returns a single metric output as `{ \"metric\": {...} }`. - **22-char Metric definition ID** (e.g. `29BlkepvvX19ebbLDB0y6Q`):   returns every output for that metric on the conversation as   `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
 
         :param conversation_id: Unique conversation identifier (required)
         :type conversation_id: str
-        :param metric_output_id: Unique metric output identifier (26-char ULID) (required)
+        :param metric_output_id: Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type.  (required)
         :type metric_output_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -661,7 +661,7 @@ class ConversationsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CovalConversationsAPIGetConversationMetricResponse",
+            '200': "GetConversationMetric200Response",
             '401': "CovalConversationsAPIErrorResponse",
             '404': "CovalConversationsAPIErrorResponse",
             '500': "CovalConversationsAPIErrorResponse",
@@ -681,7 +681,7 @@ class ConversationsApi:
     def get_conversation_metric_with_http_info(
         self,
         conversation_id: Annotated[str, Field(min_length=22, strict=True, max_length=26, description="Unique conversation identifier")],
-        metric_output_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="Unique metric output identifier (26-char ULID)")],
+        metric_output_id: Annotated[str, Field(min_length=22, strict=True, max_length=26, description="Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type. ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -694,14 +694,14 @@ class ConversationsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CovalConversationsAPIGetConversationMetricResponse]:
-        """Get single conversation metric
+    ) -> ApiResponse[GetConversationMetric200Response]:
+        """Get conversation metric output(s)
 
-        Retrieve a single metric output by ID for a specific conversation. 
+        Retrieve metric output(s) for a conversation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID** (e.g. `01JCQR8Z9PQSTNVWXY12345678`):   returns a single metric output as `{ \"metric\": {...} }`. - **22-char Metric definition ID** (e.g. `29BlkepvvX19ebbLDB0y6Q`):   returns every output for that metric on the conversation as   `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
 
         :param conversation_id: Unique conversation identifier (required)
         :type conversation_id: str
-        :param metric_output_id: Unique metric output identifier (26-char ULID) (required)
+        :param metric_output_id: Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type.  (required)
         :type metric_output_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -735,7 +735,7 @@ class ConversationsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CovalConversationsAPIGetConversationMetricResponse",
+            '200': "GetConversationMetric200Response",
             '401': "CovalConversationsAPIErrorResponse",
             '404': "CovalConversationsAPIErrorResponse",
             '500': "CovalConversationsAPIErrorResponse",
@@ -755,7 +755,7 @@ class ConversationsApi:
     def get_conversation_metric_without_preload_content(
         self,
         conversation_id: Annotated[str, Field(min_length=22, strict=True, max_length=26, description="Unique conversation identifier")],
-        metric_output_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="Unique metric output identifier (26-char ULID)")],
+        metric_output_id: Annotated[str, Field(min_length=22, strict=True, max_length=26, description="Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type. ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -769,13 +769,13 @@ class ConversationsApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Get single conversation metric
+        """Get conversation metric output(s)
 
-        Retrieve a single metric output by ID for a specific conversation. 
+        Retrieve metric output(s) for a conversation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID** (e.g. `01JCQR8Z9PQSTNVWXY12345678`):   returns a single metric output as `{ \"metric\": {...} }`. - **22-char Metric definition ID** (e.g. `29BlkepvvX19ebbLDB0y6Q`):   returns every output for that metric on the conversation as   `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
 
         :param conversation_id: Unique conversation identifier (required)
         :type conversation_id: str
-        :param metric_output_id: Unique metric output identifier (26-char ULID) (required)
+        :param metric_output_id: Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type.  (required)
         :type metric_output_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -809,7 +809,7 @@ class ConversationsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CovalConversationsAPIGetConversationMetricResponse",
+            '200': "GetConversationMetric200Response",
             '401': "CovalConversationsAPIErrorResponse",
             '404': "CovalConversationsAPIErrorResponse",
             '500': "CovalConversationsAPIErrorResponse",
@@ -1913,6 +1913,7 @@ class ConversationsApi:
             '200': "CovalConversationsAPISubmitConversationResponse",
             '400': "CovalConversationsAPIErrorResponse",
             '401': "CovalConversationsAPIErrorResponse",
+            '404': "CovalConversationsAPIErrorResponse",
             '413': "CovalConversationsAPIErrorResponse",
             '500': "CovalConversationsAPIErrorResponse",
         }
@@ -1984,6 +1985,7 @@ class ConversationsApi:
             '200': "CovalConversationsAPISubmitConversationResponse",
             '400': "CovalConversationsAPIErrorResponse",
             '401': "CovalConversationsAPIErrorResponse",
+            '404': "CovalConversationsAPIErrorResponse",
             '413': "CovalConversationsAPIErrorResponse",
             '500': "CovalConversationsAPIErrorResponse",
         }
@@ -2055,6 +2057,7 @@ class ConversationsApi:
             '200': "CovalConversationsAPISubmitConversationResponse",
             '400': "CovalConversationsAPIErrorResponse",
             '401': "CovalConversationsAPIErrorResponse",
+            '404': "CovalConversationsAPIErrorResponse",
             '413': "CovalConversationsAPIErrorResponse",
             '500': "CovalConversationsAPIErrorResponse",
         }

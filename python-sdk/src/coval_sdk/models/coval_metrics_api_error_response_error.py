@@ -38,8 +38,8 @@ class CovalMetricsAPIErrorResponseError(BaseModel):
     @field_validator('code')
     def code_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['INVALID_ARGUMENT', 'UNAUTHENTICATED', 'NOT_FOUND', 'ALREADY_EXISTS', 'INTERNAL']):
-            raise ValueError("must be one of enum values ('INVALID_ARGUMENT', 'UNAUTHENTICATED', 'NOT_FOUND', 'ALREADY_EXISTS', 'INTERNAL')")
+        if value not in set(['INVALID_ARGUMENT', 'UNAUTHENTICATED', 'PERMISSION_DENIED', 'NOT_FOUND', 'ALREADY_EXISTS', 'INTERNAL']):
+            raise ValueError("must be one of enum values ('INVALID_ARGUMENT', 'UNAUTHENTICATED', 'PERMISSION_DENIED', 'NOT_FOUND', 'ALREADY_EXISTS', 'INTERNAL')")
         return value
 
     model_config = ConfigDict(

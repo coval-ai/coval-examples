@@ -21,7 +21,7 @@ from typing_extensions import Self
 
 class CovalAgentsAPISimulatorType(str, Enum):
     """
-    Agent type. 8 types are supported:  - **MODEL_TYPE_VOICE**: Inbound voice calls (requires phone_number in E.164 format or SIP address) - **MODEL_TYPE_OUTBOUND_VOICE**: Outbound voice calls (requires endpoint webhook URL) - **MODEL_TYPE_CHAT**: Text-based chat agents (requires metadata.chat_endpoint) - **MODEL_TYPE_CHAT_A2A**: A2A v2 JSON-RPC chat agents (requires metadata.chat_endpoint) - **MODEL_TYPE_SMS**: SMS messaging agents (requires phone_number in E.164 format) - **MODEL_TYPE_WEBSOCKET**: WebSocket voice agents (requires metadata.endpoint wss:// URL and metadata.initialization_json) - **MODEL_TYPE_OPENAI_REALTIME**: Voice-to-voice agents on the OpenAI Realtime API (requires metadata.openai_realtime_api_key) - **MODEL_TYPE_GEMINI_REALTIME**: Voice-to-voice agents on Google Gemini Live (requires metadata.gemini_realtime_api_key) 
+    Agent type. Active types that can be created via the v1 API:  - **MODEL_TYPE_VOICE**: Inbound voice calls (requires phone_number in E.164 format or SIP address) - **MODEL_TYPE_OUTBOUND_VOICE**: Outbound voice calls (requires endpoint webhook URL) - **MODEL_TYPE_CHAT**: Text-based chat agents (requires metadata.chat_endpoint) - **MODEL_TYPE_CHAT_A2A**: A2A JSON-RPC chat agents (requires metadata.chat_endpoint) - **MODEL_TYPE_CHAT_WEBSOCKET**: Text chat over WebSocket (requires metadata.endpoint in direct mode) - **MODEL_TYPE_SMS**: SMS messaging agents (requires phone_number in E.164 format) - **MODEL_TYPE_WEBSOCKET**: WebSocket voice agents (requires metadata.endpoint wss:// URL in direct mode; metadata.initialization_json is optional) - **MODEL_TYPE_OPENAI_REALTIME**: OpenAI Realtime voice-to-voice agents - **MODEL_TYPE_GEMINI_REALTIME**: Gemini Live voice-to-voice agents 
     """
 
     """
@@ -31,6 +31,7 @@ class CovalAgentsAPISimulatorType(str, Enum):
     MODEL_TYPE_OUTBOUND_VOICE = 'MODEL_TYPE_OUTBOUND_VOICE'
     MODEL_TYPE_CHAT = 'MODEL_TYPE_CHAT'
     MODEL_TYPE_CHAT_A2_A = 'MODEL_TYPE_CHAT_A2A'
+    MODEL_TYPE_CHAT_WEBSOCKET = 'MODEL_TYPE_CHAT_WEBSOCKET'
     MODEL_TYPE_SMS = 'MODEL_TYPE_SMS'
     MODEL_TYPE_WEBSOCKET = 'MODEL_TYPE_WEBSOCKET'
     MODEL_TYPE_OPENAI_REALTIME = 'MODEL_TYPE_OPENAI_REALTIME'

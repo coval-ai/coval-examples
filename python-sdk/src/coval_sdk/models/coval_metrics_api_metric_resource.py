@@ -23,6 +23,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, Stri
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
 from coval_sdk.models.coval_metrics_api_metadata_field_type import CovalMetricsAPIMetadataFieldType
+from coval_sdk.models.coval_metrics_api_metric_runtime_config import CovalMetricsAPIMetricRuntimeConfig
 from coval_sdk.models.coval_metrics_api_metric_type import CovalMetricsAPIMetricType
 from coval_sdk.models.coval_metrics_api_target_condition import CovalMetricsAPITargetCondition
 from typing import Optional, Set
@@ -48,12 +49,13 @@ class CovalMetricsAPIMetricResource(BaseModel):
     role: Optional[StrictStr] = Field(default=None, description="Speaker role filter (for METRIC_TRANSCRIPT_REGEX)")
     min_pause_duration_seconds: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum pause duration (for METRIC_PAUSE_ANALYSIS)")
     include_traces: Optional[StrictBool] = Field(default=None, description="Whether OTel trace context is injected into the LLM judge prompt during evaluation. Supported for LLM judge metric types only (`METRIC_LLM_BINARY`, `METRIC_CATEGORICAL`, `METRIC_NUMERICAL_LLM_JUDGE`, `METRIC_AUDIO_LLM_BINARY`, `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`). ")
+    runtime_config: Optional[CovalMetricsAPIMetricRuntimeConfig] = Field(default=None, description="LLM model and thinking configuration for this metric. Not supported for audio metric types (`METRIC_AUDIO_LLM_BINARY`, `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`), which always use the platform-default audio model. ")
     target_condition: Optional[CovalMetricsAPITargetCondition] = Field(default=None, description="Target condition for metric evaluation")
     created_by: Optional[StrictStr] = Field(default=None, description="Creator email")
     create_time: Optional[datetime] = Field(default=None, description="Creation timestamp")
     update_time: Optional[datetime] = Field(default=None, description="Last update timestamp")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "id", "metric_name", "description", "metric_type", "prompt", "categories", "min_value", "max_value", "metadata_field_type", "metadata_field_key", "regex_pattern", "role", "min_pause_duration_seconds", "include_traces", "target_condition", "created_by", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["name", "id", "metric_name", "description", "metric_type", "prompt", "categories", "min_value", "max_value", "metadata_field_type", "metadata_field_key", "regex_pattern", "role", "min_pause_duration_seconds", "include_traces", "runtime_config", "target_condition", "created_by", "create_time", "update_time"]
 
     @field_validator('role')
     def role_validate_enum(cls, value):
@@ -106,6 +108,9 @@ class CovalMetricsAPIMetricResource(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of runtime_config
+        if self.runtime_config:
+            _dict['runtime_config'] = self.runtime_config.to_dict()
         # override the default output from pydantic by calling `to_dict()` of target_condition
         if self.target_condition:
             _dict['target_condition'] = self.target_condition.to_dict()
@@ -206,6 +211,7 @@ class CovalMetricsAPIMetricResource(BaseModel):
             "role": obj.get("role"),
             "min_pause_duration_seconds": obj.get("min_pause_duration_seconds"),
             "include_traces": obj.get("include_traces"),
+            "runtime_config": CovalMetricsAPIMetricRuntimeConfig.from_dict(obj["runtime_config"]) if obj.get("runtime_config") is not None else None,
             "target_condition": CovalMetricsAPITargetCondition.from_dict(obj["target_condition"]) if obj.get("target_condition") is not None else None,
             "created_by": obj.get("created_by"),
             "create_time": obj.get("create_time"),

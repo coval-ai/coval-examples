@@ -55,6 +55,7 @@ export const CovalConversationsAPIErrorResponseErrorCodeEnum = {
     InvalidArgument: 'INVALID_ARGUMENT',
     Unauthenticated: 'UNAUTHENTICATED',
     NotFound: 'NOT_FOUND',
+    AlreadyExists: 'ALREADY_EXISTS',
     PayloadTooLarge: 'PAYLOAD_TOO_LARGE',
     InternalError: 'INTERNAL_ERROR'
 } as const;

@@ -54,6 +54,7 @@ export interface CovalMetricsAPIErrorResponseError {
 export const CovalMetricsAPIErrorResponseErrorCodeEnum = {
     InvalidArgument: 'INVALID_ARGUMENT',
     Unauthenticated: 'UNAUTHENTICATED',
+    PermissionDenied: 'PERMISSION_DENIED',
     NotFound: 'NOT_FOUND',
     AlreadyExists: 'ALREADY_EXISTS',
     Internal: 'INTERNAL'

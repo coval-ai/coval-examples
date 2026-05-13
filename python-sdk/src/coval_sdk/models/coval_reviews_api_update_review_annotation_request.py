@@ -21,7 +21,6 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from coval_sdk.models.coval_reviews_api_annotation_priority import CovalReviewsAPIAnnotationPriority
-from coval_sdk.models.coval_reviews_api_completion_status import CovalReviewsAPICompletionStatus
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -36,9 +35,8 @@ class CovalReviewsAPIUpdateReviewAnnotationRequest(BaseModel):
     reviewer_notes: Optional[StrictStr] = Field(default=None, description="Reviewer notes")
     priority: Optional[CovalReviewsAPIAnnotationPriority] = CovalReviewsAPIAnnotationPriority.PRIORITY_STANDARD
     assignee: Optional[StrictStr] = Field(default=None, description="Reassign to a different reviewer")
-    completion_status: Optional[CovalReviewsAPICompletionStatus] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["ground_truth_float_value", "ground_truth_string_value", "ground_truth_subvalues_by_timestamp", "reviewer_notes", "priority", "assignee", "completion_status"]
+    __properties: ClassVar[List[str]] = ["ground_truth_float_value", "ground_truth_string_value", "ground_truth_subvalues_by_timestamp", "reviewer_notes", "priority", "assignee"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -128,8 +126,7 @@ class CovalReviewsAPIUpdateReviewAnnotationRequest(BaseModel):
             "ground_truth_subvalues_by_timestamp": obj.get("ground_truth_subvalues_by_timestamp"),
             "reviewer_notes": obj.get("reviewer_notes"),
             "priority": obj.get("priority") if obj.get("priority") is not None else CovalReviewsAPIAnnotationPriority.PRIORITY_STANDARD,
-            "assignee": obj.get("assignee"),
-            "completion_status": obj.get("completion_status")
+            "assignee": obj.get("assignee")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

@@ -19,15 +19,15 @@ import {
     CovalSimulationsAPIErrorResponseToJSON,
 } from '../models/CovalSimulationsAPIErrorResponse.js';
 import {
-    type CovalSimulationsAPIGetMetricOutputResponse,
-    CovalSimulationsAPIGetMetricOutputResponseFromJSON,
-    CovalSimulationsAPIGetMetricOutputResponseToJSON,
-} from '../models/CovalSimulationsAPIGetMetricOutputResponse.js';
-import {
     type CovalSimulationsAPIListMetricsResponse,
     CovalSimulationsAPIListMetricsResponseFromJSON,
     CovalSimulationsAPIListMetricsResponseToJSON,
 } from '../models/CovalSimulationsAPIListMetricsResponse.js';
+import {
+    type SimulationsGetMetric200Response,
+    SimulationsGetMetric200ResponseFromJSON,
+    SimulationsGetMetric200ResponseToJSON,
+} from '../models/SimulationsGetMetric200Response.js';
 
 export interface SimulationsGetMetricRequest {
     simulationId: string;
@@ -52,28 +52,28 @@ export interface MetricOutputsApiInterface {
     /**
      * Creates request options for simulationsGetMetric without sending the request
      * @param {string} simulationId The simulation ID
-     * @param {string} metricOutputId The metric output ID (ULID format)
+     * @param {string} metricOutputId Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type. 
      * @throws {RequiredError}
      * @memberof MetricOutputsApiInterface
      */
     simulationsGetMetricRequestOpts(requestParameters: SimulationsGetMetricRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Get a specific metric result.
-     * @summary Get metric
+     * Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
+     * @summary Get simulation metric output(s)
      * @param {string} simulationId The simulation ID
-     * @param {string} metricOutputId The metric output ID (ULID format)
+     * @param {string} metricOutputId Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type. 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MetricOutputsApiInterface
      */
-    simulationsGetMetricRaw(requestParameters: SimulationsGetMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalSimulationsAPIGetMetricOutputResponse>>;
+    simulationsGetMetricRaw(requestParameters: SimulationsGetMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SimulationsGetMetric200Response>>;
 
     /**
-     * Get a specific metric result.
-     * Get metric
+     * Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
+     * Get simulation metric output(s)
      */
-    simulationsGetMetric(requestParameters: SimulationsGetMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalSimulationsAPIGetMetricOutputResponse>;
+    simulationsGetMetric(requestParameters: SimulationsGetMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SimulationsGetMetric200Response>;
 
     /**
      * Creates request options for simulationsListMetrics without sending the request
@@ -154,21 +154,21 @@ export class MetricOutputsApi extends runtime.BaseAPI implements MetricOutputsAp
     }
 
     /**
-     * Get a specific metric result.
-     * Get metric
+     * Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
+     * Get simulation metric output(s)
      */
-    async simulationsGetMetricRaw(requestParameters: SimulationsGetMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalSimulationsAPIGetMetricOutputResponse>> {
+    async simulationsGetMetricRaw(requestParameters: SimulationsGetMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SimulationsGetMetric200Response>> {
         const requestOptions = await this.simulationsGetMetricRequestOpts(requestParameters);
         const response = await this.request(requestOptions, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CovalSimulationsAPIGetMetricOutputResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => SimulationsGetMetric200ResponseFromJSON(jsonValue));
     }
 
     /**
-     * Get a specific metric result.
-     * Get metric
+     * Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
+     * Get simulation metric output(s)
      */
-    async simulationsGetMetric(requestParameters: SimulationsGetMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalSimulationsAPIGetMetricOutputResponse> {
+    async simulationsGetMetric(requestParameters: SimulationsGetMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SimulationsGetMetric200Response> {
         const response = await this.simulationsGetMetricRaw(requestParameters, initOverrides);
         return await response.value();
     }

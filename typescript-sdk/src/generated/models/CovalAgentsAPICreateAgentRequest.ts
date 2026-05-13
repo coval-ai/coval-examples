@@ -88,7 +88,7 @@ export interface CovalAgentsAPICreateAgentRequest {
      * - `custom_persona_data` - Persona-specific data (max 16KB JSON string)
      * 
      * *Headers & Format:*
-     * - `custom_headers` - Additional headers with template variables (max 16KB JSON string)
+     * - `custom_headers` - Additional headers with template variables, as a JSON object or JSON-encoded object string (max 16KB when encoded)
      * - `response_format` - "chat_completions" (default) or "responses"
      * 
      * *Request/Response Processing:*
@@ -105,31 +105,6 @@ export interface CovalAgentsAPICreateAgentRequest {
      * 
      * *Template Variables:* `{{sessionId}}`, `{{simulation_output_id}}`, `{{init_response.path}}`, `{{persona.field}}`, `{{messages}}`, `{{latest_message}}`, `{{custom_data.field}}`
      * 
-     * **For CHAT_A2A agents:**
-     * 
-     * *Required:*
-     * - `chat_endpoint` - A2A JSON-RPC endpoint URL (validated, no private IPs/localhost)
-     * 
-     * *Initialization (optional):*
-     * - `initialization_endpoint` - Auth endpoint called once per simulation; if response contains `access_token`, it is used as `Authorization: Bearer <token>` for chat requests
-     * - `initialization_payload` - Body sent to initialization endpoint (JSON string)
-     * - `initialization_content_type` - `application/x-www-form-urlencoded` (default) or `application/json`
-     * - `authorization_header` - Static auth value, used when no initialization endpoint is configured
-     * 
-     * *Headers:*
-     * - `custom_headers` - Additional headers sent on every chat request (JSON string)
-     * 
-     * *Response Parsing:*
-     * - `response_message_path` - Dot-notation path to the agent's reply text (default: `result.artifacts.0.parts.0.text`)
-     * - `response_state_extraction` - JSON paths to the `contextId` and `taskId` echoed back on each turn (default: `{"contextId": "result.contextId", "taskId": "result.id"}`). Keys must be `contextId` and `taskId`; only the paths are configurable.
-     * 
-     * *End-of-Conversation:*
-     * - `end_state_path` - Dot-notation path to the conversation status field (default: `result.status.state`)
-     * - `end_state_values` - List of status values that terminate the conversation (default: `["completed", "failed"]`)
-     * 
-     * *Custom Data:*
-     * - `custom_data` - Arbitrary JSON object merged into `params.metadata` on every chat request
-     * 
      * **For OUTBOUND_VOICE agents:**
      * - `trigger_call_headers` - JSON string with HTTP headers
      * - `trigger_call_payload` - JSON string with base payload
@@ -138,14 +113,43 @@ export interface CovalAgentsAPICreateAgentRequest {
      * **For WEBSOCKET agents:**
      * 
      * *Required:*
-     * - `endpoint` - WebSocket endpoint URL (must be wss://, validated)
-     * - `initialization_json` - JSON string payload sent on connection
+     * - `endpoint` - WebSocket endpoint URL (must be wss://, validated). Required in `direct` connection mode.
+     * 
+     * *Connection mode:*
+     * - `connection_mode` - `direct` (default) or `http_first`. In `http_first` mode Coval issues an HTTP request first and dials the WebSocket URL returned in the response.
+     * - `http_url`, `http_method`, `http_request_body`, `http_headers`, `websocket_url_response_path` - HTTP-first setup fields when `connection_mode=http_first`.
      * 
      * *Authentication (optional):*
-     * - `authorization_header` - Auth header sent during WebSocket handshake. Supports:
+     * - `authorization_header` - Auth header sent during the WebSocket handshake. Supports:
      *   - `"Bearer <token>"` → sent as `Authorization: Bearer <token>`
+     *   - `"Basic <base64-credentials>"` → sent as `Authorization: Basic <base64-credentials>`
      *   - `"X-API-Key <key>"` → sent as `X-API-Key: <key>`
-     * - `custom_headers` - JSON string of additional HTTP headers for WebSocket handshake
+     * - `custom_headers` - JSON object or JSON-encoded object string of additional HTTP headers for the WebSocket handshake.
+     * 
+     * *Initialization & handshake (optional):*
+     * - `initialization_json` - JSON object or JSON string payload sent after the WebSocket upgrade and before any ready-message wait.
+     * - `handshake_ready_message_type` - Message type to wait for before streaming audio (default `session_ready` in direct mode and empty in `http_first`; empty string skips the ready-message wait).
+     * - `handshake_requires_session_id` - Whether the ready message must include `session_id` (default `true` in direct mode and `false` in `http_first`).
+     * - `handshake_timeout_seconds` - Seconds Coval waits for the ready message (default `30`).
+     * 
+     * *Audio format (optional):*
+     * - `send_audio_template` - JSON template for outbound audio. Must contain `{{audio_data}}`. Setting it exactly to `{{audio_data}}` sends raw PCM bytes (default `{"type":"audio_chunk","data":"{{audio_data}}"}`).
+     * - `message_type_path` - Dot-notation path to the field naming the inbound message kind (default `type`).
+     * - `audio_message_type_value` - Value identifying an audio frame; use `*` to treat every JSON message as audio (default `audio_chunk`).
+     * - `audio_data_path` - Dot-notation path to the inbound base64 audio payload (default `data`).
+     * - `audio_encoding` - Inbound JSON audio payload encoding: `pcm` (default) or `mp3`.
+     * - `receive_audio_channels` - `1` for mono inbound JSON PCM or `2` for legacy stereo-to-mono averaging (default `2`).
+     * - `send_sample_rate_hertz` - Outbound sample rate. One of 8000, 16000, 24000, 48000 (default 16000).
+     * - `receive_sample_rate_hertz` - Inbound sample rate. One of 8000, 16000, 24000, 48000 (default 48000).
+     * - `pipeline_sample_rate_hertz` - Pipeline-internal rate; must remain 16000.
+     * - `pace_inbound_binary_audio` - Boolean, paces inbound binary PCM at real-time. Defaults on when outbound audio is configured for raw PCM bytes, off for JSON templates.
+     * - `send_media_template` - Outbound template for image attachments. Must contain `{{media_data}}`; may also include `{{media_name}}` and `{{mime_type}}`. Set exactly to `{{media_data}}` to send raw bytes, otherwise Coval base64-encodes the image into the JSON template.
+     * 
+     * *Non-audio event capture (optional):*
+     * - `non_audio_event_message_types` - List of message-type values to emit as `WebsocketEventFrame`s instead of dropping. Each match carries the message type, optional `event` name, and original payload. Useful for cart updates, transcript fragments, or session telemetry.
+     * 
+     * *Compatibility profile (optional):*
+     * - `websocket_compat_profile` - One of `generic` or `json_audio`. Forces the simulator routing decision. Use `json_audio` for the JSON audio preset shape.
      * 
      * @type {{ [key: string]: any; }}
      * @memberof CovalAgentsAPICreateAgentRequest

@@ -38,8 +38,8 @@ class CovalConversationsAPIErrorResponseError(BaseModel):
     @field_validator('code')
     def code_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['INVALID_ARGUMENT', 'UNAUTHENTICATED', 'NOT_FOUND', 'PAYLOAD_TOO_LARGE', 'INTERNAL_ERROR']):
-            raise ValueError("must be one of enum values ('INVALID_ARGUMENT', 'UNAUTHENTICATED', 'NOT_FOUND', 'PAYLOAD_TOO_LARGE', 'INTERNAL_ERROR')")
+        if value not in set(['INVALID_ARGUMENT', 'UNAUTHENTICATED', 'NOT_FOUND', 'ALREADY_EXISTS', 'PAYLOAD_TOO_LARGE', 'INTERNAL_ERROR']):
+            raise ValueError("must be one of enum values ('INVALID_ARGUMENT', 'UNAUTHENTICATED', 'NOT_FOUND', 'ALREADY_EXISTS', 'PAYLOAD_TOO_LARGE', 'INTERNAL_ERROR')")
         return value
 
     model_config = ConfigDict(

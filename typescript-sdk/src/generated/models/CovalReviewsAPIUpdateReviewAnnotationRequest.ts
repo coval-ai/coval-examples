@@ -13,13 +13,6 @@
  */
 
 import { mapValues } from '../runtime.js';
-import type { CovalReviewsAPICompletionStatus } from './CovalReviewsAPICompletionStatus.js';
-import {
-    CovalReviewsAPICompletionStatusFromJSON,
-    CovalReviewsAPICompletionStatusFromJSONTyped,
-    CovalReviewsAPICompletionStatusToJSON,
-    CovalReviewsAPICompletionStatusToJSONTyped,
-} from './CovalReviewsAPICompletionStatus.js';
 import type { CovalReviewsAPIAnnotationPriority } from './CovalReviewsAPIAnnotationPriority.js';
 import {
     CovalReviewsAPIAnnotationPriorityFromJSON,
@@ -70,12 +63,6 @@ export interface CovalReviewsAPIUpdateReviewAnnotationRequest {
      * @memberof CovalReviewsAPIUpdateReviewAnnotationRequest
      */
     assignee?: string | null;
-    /**
-     * 
-     * @type {CovalReviewsAPICompletionStatus}
-     * @memberof CovalReviewsAPIUpdateReviewAnnotationRequest
-     */
-    completion_status?: CovalReviewsAPICompletionStatus;
 }
 
 
@@ -103,7 +90,6 @@ export function CovalReviewsAPIUpdateReviewAnnotationRequestFromJSONTyped(json: 
         'reviewer_notes': json['reviewer_notes'] == null ? undefined : json['reviewer_notes'],
         'priority': json['priority'] == null ? undefined : CovalReviewsAPIAnnotationPriorityFromJSON(json['priority']),
         'assignee': json['assignee'] == null ? undefined : json['assignee'],
-        'completion_status': json['completion_status'] == null ? undefined : CovalReviewsAPICompletionStatusFromJSON(json['completion_status']),
     };
 }
 
@@ -124,7 +110,6 @@ export function CovalReviewsAPIUpdateReviewAnnotationRequestToJSONTyped(value?: 
         'reviewer_notes': value['reviewer_notes'],
         'priority': CovalReviewsAPIAnnotationPriorityToJSON(value['priority']),
         'assignee': value['assignee'],
-        'completion_status': CovalReviewsAPICompletionStatusToJSON(value['completion_status']),
     };
 }
 
