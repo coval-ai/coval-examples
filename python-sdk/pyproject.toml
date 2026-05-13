@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,12 +7,11 @@ name = "coval-sdk"
 version = "0.2.0"
 description = "Typed Python client for the Coval evaluation platform API."
 readme = "README.md"
-license = { text = "MIT" }
+license = "MIT"
 authors = [{ name = "Coval", email = "support@coval.dev" }]
 requires-python = ">=3.9"
 keywords = ["coval", "voice-ai", "evaluation", "openapi", "sdk"]
 classifiers = [
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",

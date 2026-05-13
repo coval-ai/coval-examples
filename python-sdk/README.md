@@ -12,9 +12,13 @@ Python side and will follow in a subsequent release.
 ## Install
 
 ```bash
-pip install -e ./python-sdk          # from the coval-examples repo
-# or, once published to PyPI:
-# pip install coval-sdk
+pip install coval-sdk
+
+# For latest main before the next PyPI release:
+# pip install "git+https://github.com/coval-ai/coval-examples.git#subdirectory=python-sdk"
+
+# For local SDK development from the coval-examples repo:
+# pip install -e ./python-sdk
 ```
 
 Requires Python 3.9+.

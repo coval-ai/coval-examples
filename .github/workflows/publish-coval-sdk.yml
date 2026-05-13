@@ -1,0 +1,93 @@
+name: Publish coval-sdk to PyPI
+
+# PyPI Trusted Publishers setup required before first publish:
+# - PyPI project: coval-sdk
+# - GitHub repository: coval-ai/coval-examples
+# - Workflow: publish-coval-sdk.yml
+# - Environment: pypi
+#
+# This workflow intentionally does not use PYPI_API_TOKEN. The publish job
+# grants GitHub OIDC with `id-token: write`, and pypa/gh-action-pypi-publish
+# exchanges that identity for a short-lived PyPI token.
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "python-sdk-v*"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build coval-sdk distributions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout coval-examples
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install build tooling
+        run: python -m pip install --upgrade pip build twine
+
+      - name: Build sdist + wheel
+        working-directory: python-sdk
+        run: python -m build
+
+      - name: Check package metadata
+        working-directory: python-sdk
+        run: python -m twine check dist/*
+
+      - name: Verify tag matches pyproject version
+        if: startsWith(github.ref, 'refs/tags/')
+        working-directory: python-sdk
+        run: |
+          set -euo pipefail
+          version="$(python - <<'PY'
+          import pathlib
+          import tomllib
+
+          data = tomllib.loads(pathlib.Path("pyproject.toml").read_text())
+          print(data["project"]["version"])
+          PY
+          )"
+          expected="python-sdk-v${version}"
+          if [ "${GITHUB_REF_NAME}" != "${expected}" ]; then
+            echo "Tag ${GITHUB_REF_NAME} does not match pyproject version ${version}; expected ${expected}."
+            exit 1
+          fi
+
+      - name: Upload distributions
+        uses: actions/upload-artifact@v4
+        with:
+          name: coval-sdk-dist
+          path: python-sdk/dist/
+          if-no-files-found: error
+
+  publish:
+    name: Publish coval-sdk to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    environment:
+      name: pypi
+      url: https://pypi.org/project/coval-sdk/
+    steps:
+      - name: Download distributions
+        uses: actions/download-artifact@v4
+        with:
+          name: coval-sdk-dist
+          path: dist/
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
+          attestations: true
