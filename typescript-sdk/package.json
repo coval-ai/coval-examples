@@ -1,6 +1,6 @@
 {
   "name": "@coval/sdk",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Typed TypeScript client for the Coval evaluation platform API.",
   "license": "MIT",
   "author": "Coval <support@coval.dev>",
@@ -49,6 +49,9 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "devDependencies": {
     "@types/node": "22.10.2",
