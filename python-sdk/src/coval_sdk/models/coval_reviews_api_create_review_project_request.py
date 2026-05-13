@@ -21,6 +21,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
+from coval_sdk.models.coval_reviews_api_project_rule import CovalReviewsAPIProjectRule
 from coval_sdk.models.coval_reviews_api_project_type import CovalReviewsAPIProjectType
 from typing import Optional, Set
 from typing_extensions import Self
@@ -37,8 +38,9 @@ class CovalReviewsAPICreateReviewProjectRequest(BaseModel):
     linked_metric_ids: Annotated[List[StrictStr], Field(min_length=1)] = Field(description="Metric IDs (at least one required)")
     project_type: Optional[CovalReviewsAPIProjectType] = CovalReviewsAPIProjectType.PROJECT_INDIVIDUAL
     notifications: Optional[StrictBool] = Field(default=True, description="Enable notifications for assignees")
+    project_rules: Optional[List[CovalReviewsAPIProjectRule]] = Field(default=None, description="Rules to apply to this project")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["display_name", "description", "assignees", "linked_simulation_ids", "linked_metric_ids", "project_type", "notifications"]
+    __properties: ClassVar[List[str]] = ["display_name", "description", "assignees", "linked_simulation_ids", "linked_metric_ids", "project_type", "notifications", "project_rules"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -91,6 +93,11 @@ class CovalReviewsAPICreateReviewProjectRequest(BaseModel):
         if self.description is None and "description" in self.model_fields_set:
             _dict['description'] = None
 
+        # set to None if project_rules (nullable) is None
+        # and model_fields_set contains the field
+        if self.project_rules is None and "project_rules" in self.model_fields_set:
+            _dict['project_rules'] = None
+
         return _dict
 
     @classmethod
@@ -109,7 +116,8 @@ class CovalReviewsAPICreateReviewProjectRequest(BaseModel):
             "linked_simulation_ids": obj.get("linked_simulation_ids"),
             "linked_metric_ids": obj.get("linked_metric_ids"),
             "project_type": obj.get("project_type") if obj.get("project_type") is not None else CovalReviewsAPIProjectType.PROJECT_INDIVIDUAL,
-            "notifications": obj.get("notifications") if obj.get("notifications") is not None else True
+            "notifications": obj.get("notifications") if obj.get("notifications") is not None else True,
+            "project_rules": obj.get("project_rules")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

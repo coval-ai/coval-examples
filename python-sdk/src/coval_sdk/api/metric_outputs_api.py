@@ -19,8 +19,8 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
-from coval_sdk.models.coval_simulations_api_get_metric_output_response import CovalSimulationsAPIGetMetricOutputResponse
 from coval_sdk.models.coval_simulations_api_list_metrics_response import CovalSimulationsAPIListMetricsResponse
+from coval_sdk.models.simulations_get_metric200_response import SimulationsGetMetric200Response
 
 from coval_sdk.api_client import ApiClient, RequestSerialized
 from coval_sdk.api_response import ApiResponse
@@ -44,7 +44,7 @@ class MetricOutputsApi:
     def simulations_get_metric(
         self,
         simulation_id: Annotated[str, Field(min_length=22, strict=True, max_length=27, description="The simulation ID")],
-        metric_output_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="The metric output ID (ULID format)")],
+        metric_output_id: Annotated[str, Field(min_length=22, strict=True, max_length=26, description="Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type. ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -57,14 +57,14 @@ class MetricOutputsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CovalSimulationsAPIGetMetricOutputResponse:
-        """Get metric
+    ) -> SimulationsGetMetric200Response:
+        """Get simulation metric output(s)
 
-        Get a specific metric result.
+        Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
 
         :param simulation_id: The simulation ID (required)
         :type simulation_id: str
-        :param metric_output_id: The metric output ID (ULID format) (required)
+        :param metric_output_id: Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type.  (required)
         :type metric_output_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -98,7 +98,7 @@ class MetricOutputsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CovalSimulationsAPIGetMetricOutputResponse",
+            '200': "SimulationsGetMetric200Response",
             '401': "CovalSimulationsAPIErrorResponse",
             '404': "CovalSimulationsAPIErrorResponse",
             '500': "CovalSimulationsAPIErrorResponse",
@@ -118,7 +118,7 @@ class MetricOutputsApi:
     def simulations_get_metric_with_http_info(
         self,
         simulation_id: Annotated[str, Field(min_length=22, strict=True, max_length=27, description="The simulation ID")],
-        metric_output_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="The metric output ID (ULID format)")],
+        metric_output_id: Annotated[str, Field(min_length=22, strict=True, max_length=26, description="Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type. ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -131,14 +131,14 @@ class MetricOutputsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CovalSimulationsAPIGetMetricOutputResponse]:
-        """Get metric
+    ) -> ApiResponse[SimulationsGetMetric200Response]:
+        """Get simulation metric output(s)
 
-        Get a specific metric result.
+        Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
 
         :param simulation_id: The simulation ID (required)
         :type simulation_id: str
-        :param metric_output_id: The metric output ID (ULID format) (required)
+        :param metric_output_id: Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type.  (required)
         :type metric_output_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -172,7 +172,7 @@ class MetricOutputsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CovalSimulationsAPIGetMetricOutputResponse",
+            '200': "SimulationsGetMetric200Response",
             '401': "CovalSimulationsAPIErrorResponse",
             '404': "CovalSimulationsAPIErrorResponse",
             '500': "CovalSimulationsAPIErrorResponse",
@@ -192,7 +192,7 @@ class MetricOutputsApi:
     def simulations_get_metric_without_preload_content(
         self,
         simulation_id: Annotated[str, Field(min_length=22, strict=True, max_length=27, description="The simulation ID")],
-        metric_output_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="The metric output ID (ULID format)")],
+        metric_output_id: Annotated[str, Field(min_length=22, strict=True, max_length=26, description="Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type. ")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -206,13 +206,13 @@ class MetricOutputsApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Get metric
+        """Get simulation metric output(s)
 
-        Get a specific metric result.
+        Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
 
         :param simulation_id: The simulation ID (required)
         :type simulation_id: str
-        :param metric_output_id: The metric output ID (ULID format) (required)
+        :param metric_output_id: Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type.  (required)
         :type metric_output_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -246,7 +246,7 @@ class MetricOutputsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CovalSimulationsAPIGetMetricOutputResponse",
+            '200': "SimulationsGetMetric200Response",
             '401': "CovalSimulationsAPIErrorResponse",
             '404': "CovalSimulationsAPIErrorResponse",
             '500': "CovalSimulationsAPIErrorResponse",

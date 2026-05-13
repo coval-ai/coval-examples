@@ -21,5 +21,6 @@ from coval_sdk.api.simulations_api import SimulationsApi
 from coval_sdk.api.templates_api import TemplatesApi
 from coval_sdk.api.test_cases_api import TestCasesApi
 from coval_sdk.api.test_sets_api import TestSetsApi
+from coval_sdk.api.traces_api import TracesApi
 from coval_sdk.api.widgets_api import WidgetsApi
 

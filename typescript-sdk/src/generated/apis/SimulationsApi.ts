@@ -38,6 +38,16 @@ import {
     CovalSimulationsAPIResimulateSimulationResponseFromJSON,
     CovalSimulationsAPIResimulateSimulationResponseToJSON,
 } from '../models/CovalSimulationsAPIResimulateSimulationResponse.js';
+import {
+    type CovalSimulationsAPIUpdateSimulationRequest,
+    CovalSimulationsAPIUpdateSimulationRequestFromJSON,
+    CovalSimulationsAPIUpdateSimulationRequestToJSON,
+} from '../models/CovalSimulationsAPIUpdateSimulationRequest.js';
+import {
+    type CovalSimulationsAPIUpdateSimulationResponse,
+    CovalSimulationsAPIUpdateSimulationResponseFromJSON,
+    CovalSimulationsAPIUpdateSimulationResponseToJSON,
+} from '../models/CovalSimulationsAPIUpdateSimulationResponse.js';
 
 export interface DeleteSimulationRequest {
     simulationId: string;
@@ -61,6 +71,11 @@ export interface ListSimulationsRequest {
 export interface ResimulateSimulationRequest {
     simulationId: string;
     body?: object;
+}
+
+export interface UpdateSimulationRequest {
+    simulationId: string;
+    covalSimulationsAPIUpdateSimulationRequest?: CovalSimulationsAPIUpdateSimulationRequest;
 }
 
 /**
@@ -197,6 +212,32 @@ export interface SimulationsApiInterface {
      * Rerun a simulation
      */
     resimulateSimulation(requestParameters: ResimulateSimulationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalSimulationsAPIResimulateSimulationResponse>;
+
+    /**
+     * Creates request options for updateSimulation without sending the request
+     * @param {string} simulationId The simulation ID
+     * @param {CovalSimulationsAPIUpdateSimulationRequest} [covalSimulationsAPIUpdateSimulationRequest] 
+     * @throws {RequiredError}
+     * @memberof SimulationsApiInterface
+     */
+    updateSimulationRequestOpts(requestParameters: UpdateSimulationRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Update specific fields of a simulation. All fields are optional (PATCH semantics). Only provided fields will be updated. 
+     * @summary Update simulation
+     * @param {string} simulationId The simulation ID
+     * @param {CovalSimulationsAPIUpdateSimulationRequest} [covalSimulationsAPIUpdateSimulationRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SimulationsApiInterface
+     */
+    updateSimulationRaw(requestParameters: UpdateSimulationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalSimulationsAPIUpdateSimulationResponse>>;
+
+    /**
+     * Update specific fields of a simulation. All fields are optional (PATCH semantics). Only provided fields will be updated. 
+     * Update simulation
+     */
+    updateSimulation(requestParameters: UpdateSimulationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalSimulationsAPIUpdateSimulationResponse>;
 
 }
 
@@ -468,6 +509,60 @@ export class SimulationsApi extends runtime.BaseAPI implements SimulationsApiInt
      */
     async resimulateSimulation(requestParameters: ResimulateSimulationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalSimulationsAPIResimulateSimulationResponse> {
         const response = await this.resimulateSimulationRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for updateSimulation without sending the request
+     */
+    async updateSimulationRequestOpts(requestParameters: UpdateSimulationRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['simulationId'] == null) {
+            throw new runtime.RequiredError(
+                'simulationId',
+                'Required parameter "simulationId" was null or undefined when calling updateSimulation().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Simulations_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/v1/simulations/{simulation_id}`;
+        urlPath = urlPath.replace('{simulation_id}', encodeURIComponent(String(requestParameters['simulationId'])));
+
+        return {
+            path: urlPath,
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CovalSimulationsAPIUpdateSimulationRequestToJSON(requestParameters['covalSimulationsAPIUpdateSimulationRequest']),
+        };
+    }
+
+    /**
+     * Update specific fields of a simulation. All fields are optional (PATCH semantics). Only provided fields will be updated. 
+     * Update simulation
+     */
+    async updateSimulationRaw(requestParameters: UpdateSimulationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalSimulationsAPIUpdateSimulationResponse>> {
+        const requestOptions = await this.updateSimulationRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalSimulationsAPIUpdateSimulationResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Update specific fields of a simulation. All fields are optional (PATCH semantics). Only provided fields will be updated. 
+     * Update simulation
+     */
+    async updateSimulation(requestParameters: UpdateSimulationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalSimulationsAPIUpdateSimulationResponse> {
+        const response = await this.updateSimulationRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

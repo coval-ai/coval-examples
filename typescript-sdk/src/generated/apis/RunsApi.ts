@@ -24,6 +24,11 @@ import {
     CovalRunsAPILaunchRunResponseToJSON,
 } from '../models/CovalRunsAPILaunchRunResponse.js';
 import {
+    type CovalRunsAPIUpdateRunRequest,
+    CovalRunsAPIUpdateRunRequestFromJSON,
+    CovalRunsAPIUpdateRunRequestToJSON,
+} from '../models/CovalRunsAPIUpdateRunRequest.js';
+import {
     type GetRun200Response,
     GetRun200ResponseFromJSON,
     GetRun200ResponseToJSON,
@@ -56,6 +61,11 @@ export interface ListRunsRequest {
     pageSize?: number;
     pageToken?: string;
     orderBy?: string;
+}
+
+export interface UpdateRunRequest {
+    runId: string;
+    covalRunsAPIUpdateRunRequest: CovalRunsAPIUpdateRunRequest;
 }
 
 /**
@@ -166,6 +176,32 @@ export interface RunsApiInterface {
      * List runs
      */
     listRuns(requestParameters: ListRunsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ListRuns200Response>;
+
+    /**
+     * Creates request options for updateRun without sending the request
+     * @param {string} runId Unique identifier for the run
+     * @param {CovalRunsAPIUpdateRunRequest} covalRunsAPIUpdateRunRequest 
+     * @throws {RequiredError}
+     * @memberof RunsApiInterface
+     */
+    updateRunRequestOpts(requestParameters: UpdateRunRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Replace the tag set for an existing simulation run. Provide an empty list to clear all tags. 
+     * @summary Update run
+     * @param {string} runId Unique identifier for the run
+     * @param {CovalRunsAPIUpdateRunRequest} covalRunsAPIUpdateRunRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RunsApiInterface
+     */
+    updateRunRaw(requestParameters: UpdateRunRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetRun200Response>>;
+
+    /**
+     * Replace the tag set for an existing simulation run. Provide an empty list to clear all tags. 
+     * Update run
+     */
+    updateRun(requestParameters: UpdateRunRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetRun200Response>;
 
 }
 
@@ -385,6 +421,67 @@ export class RunsApi extends runtime.BaseAPI implements RunsApiInterface {
      */
     async listRuns(requestParameters: ListRunsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ListRuns200Response> {
         const response = await this.listRunsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for updateRun without sending the request
+     */
+    async updateRunRequestOpts(requestParameters: UpdateRunRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['runId'] == null) {
+            throw new runtime.RequiredError(
+                'runId',
+                'Required parameter "runId" was null or undefined when calling updateRun().'
+            );
+        }
+
+        if (requestParameters['covalRunsAPIUpdateRunRequest'] == null) {
+            throw new runtime.RequiredError(
+                'covalRunsAPIUpdateRunRequest',
+                'Required parameter "covalRunsAPIUpdateRunRequest" was null or undefined when calling updateRun().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Runs_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/runs/{run_id}`;
+        urlPath = urlPath.replace('{run_id}', encodeURIComponent(String(requestParameters['runId'])));
+
+        return {
+            path: urlPath,
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CovalRunsAPIUpdateRunRequestToJSON(requestParameters['covalRunsAPIUpdateRunRequest']),
+        };
+    }
+
+    /**
+     * Replace the tag set for an existing simulation run. Provide an empty list to clear all tags. 
+     * Update run
+     */
+    async updateRunRaw(requestParameters: UpdateRunRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetRun200Response>> {
+        const requestOptions = await this.updateRunRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetRun200ResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Replace the tag set for an existing simulation run. Provide an empty list to clear all tags. 
+     * Update run
+     */
+    async updateRun(requestParameters: UpdateRunRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetRun200Response> {
+        const response = await this.updateRunRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

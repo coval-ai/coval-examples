@@ -32,9 +32,8 @@ class CovalConversationsAPIConversationProgress(BaseModel):
     completed_metrics: Optional[StrictInt] = Field(default=None, description="Number of metrics completed successfully")
     failed_metrics: Optional[StrictInt] = Field(default=None, description="Number of metrics that failed evaluation")
     in_progress_metrics: Optional[StrictInt] = Field(default=None, description="Number of metrics currently running")
-    skipped_metrics: Optional[StrictInt] = Field(default=0, description="Number of metrics that were skipped (e.g., audio-dependent metric on a transcript-only conversation). Distinct from failed_metrics: skipped is expected / non-actionable. For a fully-processed conversation, `total_metrics == completed_metrics + failed_metrics + in_progress_metrics + skipped_metrics`. ")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["total_metrics", "completed_metrics", "failed_metrics", "in_progress_metrics", "skipped_metrics"]
+    __properties: ClassVar[List[str]] = ["total_metrics", "completed_metrics", "failed_metrics", "in_progress_metrics"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -97,8 +96,7 @@ class CovalConversationsAPIConversationProgress(BaseModel):
             "total_metrics": obj.get("total_metrics"),
             "completed_metrics": obj.get("completed_metrics"),
             "failed_metrics": obj.get("failed_metrics"),
-            "in_progress_metrics": obj.get("in_progress_metrics"),
-            "skipped_metrics": obj.get("skipped_metrics") if obj.get("skipped_metrics") is not None else 0
+            "in_progress_metrics": obj.get("in_progress_metrics")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

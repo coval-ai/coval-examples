@@ -67,6 +67,24 @@ export interface CovalPersonasAPIPersonaResource {
      */
     background_sound?: CovalPersonasAPIPersonaResourceBackgroundSoundEnum | null;
     /**
+     * Volume level for background sound (>= 0.0, no upper limit). Default is provider-controlled when omitted.
+     * @type {number}
+     * @memberof CovalPersonasAPIPersonaResource
+     */
+    background_sound_volume?: number | null;
+    /**
+     * Voice gain multiplier. 0.0 is silent, 1.0 is unchanged, and 2.0 is double volume.
+     * @type {number}
+     * @memberof CovalPersonasAPIPersonaResource
+     */
+    voice_volume?: number | null;
+    /**
+     * Voice speed multiplier accepted and stored from 0.25 to 2.0. 1.0 is unchanged. The selected voice may enforce a narrower effective range or ignore speed changes.
+     * @type {number}
+     * @memberof CovalPersonasAPIPersonaResource
+     */
+    voice_speed?: number | null;
+    /**
      * Response delay in seconds
      * @type {number}
      * @memberof CovalPersonasAPIPersonaResource
@@ -79,7 +97,17 @@ export interface CovalPersonasAPIPersonaResource {
      */
     conversation_initiation?: CovalPersonasAPIPersonaResourceConversationInitiationEnum | null;
     /**
-     * Disconnect after this many seconds of no speech activity (5-300). When set, the simulation ends on the first period of silence exceeding this duration. Useful for ending calls quickly after transfers to hold queues or live agents.
+     * Enable multilingual speech-to-text so callers speaking languages
+     * other than the primary language_code are still transcribed accurately.
+     * Useful for personas simulating callers in bilingual regions or
+     * contact centers that serve diverse populations.
+     * 
+     * @type {boolean}
+     * @memberof CovalPersonasAPIPersonaResource
+     */
+    multi_language_stt?: boolean | null;
+    /**
+     * Disconnect after this many seconds of no speech (5-300). Used for hold music scenarios.
      * @type {number}
      * @memberof CovalPersonasAPIPersonaResource
      */
@@ -164,8 +192,12 @@ export function CovalPersonasAPIPersonaResourceFromJSONTyped(json: any, ignoreDi
         'voice_name': json['voice_name'] == null ? undefined : json['voice_name'],
         'language_code': json['language_code'] == null ? undefined : json['language_code'],
         'background_sound': json['background_sound'] == null ? undefined : json['background_sound'],
+        'background_sound_volume': json['background_sound_volume'] == null ? undefined : json['background_sound_volume'],
+        'voice_volume': json['voice_volume'] == null ? undefined : json['voice_volume'],
+        'voice_speed': json['voice_speed'] == null ? undefined : json['voice_speed'],
         'wait_seconds': json['wait_seconds'] == null ? undefined : json['wait_seconds'],
         'conversation_initiation': json['conversation_initiation'] == null ? undefined : json['conversation_initiation'],
+        'multi_language_stt': json['multi_language_stt'] == null ? undefined : json['multi_language_stt'],
         'hold_music_timeout_seconds': json['hold_music_timeout_seconds'] == null ? undefined : json['hold_music_timeout_seconds'],
         'create_time': (new Date(json['create_time'])),
         'update_time': json['update_time'] == null ? undefined : (new Date(json['update_time'])),
@@ -190,8 +222,12 @@ export function CovalPersonasAPIPersonaResourceToJSONTyped(value?: CovalPersonas
         'voice_name': value['voice_name'],
         'language_code': value['language_code'],
         'background_sound': value['background_sound'],
+        'background_sound_volume': value['background_sound_volume'],
+        'voice_volume': value['voice_volume'],
+        'voice_speed': value['voice_speed'],
         'wait_seconds': value['wait_seconds'],
         'conversation_initiation': value['conversation_initiation'],
+        'multi_language_stt': value['multi_language_stt'],
         'hold_music_timeout_seconds': value['hold_music_timeout_seconds'],
         'create_time': value['create_time'].toISOString(),
         'update_time': value['update_time'] == null ? value['update_time'] : value['update_time'].toISOString(),

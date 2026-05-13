@@ -21,6 +21,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from coval_sdk.models.coval_reviews_api_project_rule import CovalReviewsAPIProjectRule
 from coval_sdk.models.coval_reviews_api_project_type import CovalReviewsAPIProjectType
 from typing import Optional, Set
 from typing_extensions import Self
@@ -39,10 +40,11 @@ class CovalReviewsAPIReviewProjectResource(BaseModel):
     linked_metric_ids: List[StrictStr] = Field(description="Metric IDs included in this project")
     project_type: CovalReviewsAPIProjectType
     notifications: StrictBool = Field(description="Whether notifications are enabled")
+    project_rules: Optional[List[CovalReviewsAPIProjectRule]] = Field(default=None, description="Rules applied to this project (e.g. require notes on disagreement)")
     create_time: datetime = Field(description="Creation timestamp (ISO 8601)")
     update_time: datetime = Field(description="Last update timestamp (ISO 8601)")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "id", "display_name", "description", "assignees", "linked_simulation_ids", "linked_metric_ids", "project_type", "notifications", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["name", "id", "display_name", "description", "assignees", "linked_simulation_ids", "linked_metric_ids", "project_type", "notifications", "project_rules", "create_time", "update_time"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -95,6 +97,11 @@ class CovalReviewsAPIReviewProjectResource(BaseModel):
         if self.description is None and "description" in self.model_fields_set:
             _dict['description'] = None
 
+        # set to None if project_rules (nullable) is None
+        # and model_fields_set contains the field
+        if self.project_rules is None and "project_rules" in self.model_fields_set:
+            _dict['project_rules'] = None
+
         return _dict
 
     @classmethod
@@ -116,6 +123,7 @@ class CovalReviewsAPIReviewProjectResource(BaseModel):
             "linked_metric_ids": obj.get("linked_metric_ids"),
             "project_type": obj.get("project_type") if obj.get("project_type") is not None else CovalReviewsAPIProjectType.PROJECT_INDIVIDUAL,
             "notifications": obj.get("notifications"),
+            "project_rules": obj.get("project_rules"),
             "create_time": obj.get("create_time"),
             "update_time": obj.get("update_time")
         })

@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime.js';
+import type { CovalMetricsAPIMetricRuntimeConfig } from './CovalMetricsAPIMetricRuntimeConfig.js';
+import {
+    CovalMetricsAPIMetricRuntimeConfigFromJSON,
+    CovalMetricsAPIMetricRuntimeConfigFromJSONTyped,
+    CovalMetricsAPIMetricRuntimeConfigToJSON,
+    CovalMetricsAPIMetricRuntimeConfigToJSONTyped,
+} from './CovalMetricsAPIMetricRuntimeConfig.js';
 import type { CovalMetricsAPITargetCondition } from './CovalMetricsAPITargetCondition.js';
 import {
     CovalMetricsAPITargetConditionFromJSON,
@@ -122,6 +129,17 @@ export interface CovalMetricsAPIUpdateMetricRequest {
      */
     include_traces?: boolean | null;
     /**
+     * Override the LLM model used for metric evaluation. Set to `null` to revert to
+     * the platform default. Use `GET /v1/models/metric` to list available models.
+     * Not supported for audio metric types (`METRIC_AUDIO_LLM_BINARY`,
+     * `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`),
+     * which always use the platform-default audio model.
+     * 
+     * @type {CovalMetricsAPIMetricRuntimeConfig}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    runtime_config?: CovalMetricsAPIMetricRuntimeConfig | null;
+    /**
      * Target condition for metric evaluation
      * @type {CovalMetricsAPITargetCondition}
      * @memberof CovalMetricsAPIUpdateMetricRequest
@@ -170,6 +188,7 @@ export function CovalMetricsAPIUpdateMetricRequestFromJSONTyped(json: any, ignor
         'role': json['role'] == null ? undefined : json['role'],
         'min_pause_duration_seconds': json['min_pause_duration_seconds'] == null ? undefined : json['min_pause_duration_seconds'],
         'include_traces': json['include_traces'] == null ? undefined : json['include_traces'],
+        'runtime_config': json['runtime_config'] == null ? undefined : CovalMetricsAPIMetricRuntimeConfigFromJSON(json['runtime_config']),
         'target_condition': json['target_condition'] == null ? undefined : CovalMetricsAPITargetConditionFromJSON(json['target_condition']),
     };
 }
@@ -198,6 +217,7 @@ export function CovalMetricsAPIUpdateMetricRequestToJSONTyped(value?: CovalMetri
         'role': value['role'],
         'min_pause_duration_seconds': value['min_pause_duration_seconds'],
         'include_traces': value['include_traces'],
+        'runtime_config': CovalMetricsAPIMetricRuntimeConfigToJSON(value['runtime_config']),
         'target_condition': CovalMetricsAPITargetConditionToJSON(value['target_condition']),
     };
 }

@@ -233,7 +233,7 @@ export class AgentsApi extends runtime.BaseAPI implements AgentsApiInterface {
         headerParameters['Content-Type'] = 'application/json';
 
         if (this.configuration && this.configuration.apiKey) {
-            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Agents_API_ApiKeyAuth authentication
+            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Agents_API_ApiKeyAuth authentication
         }
 
 
@@ -284,7 +284,7 @@ export class AgentsApi extends runtime.BaseAPI implements AgentsApiInterface {
         const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.apiKey) {
-            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Agents_API_ApiKeyAuth authentication
+            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Agents_API_ApiKeyAuth authentication
         }
 
 
@@ -335,7 +335,7 @@ export class AgentsApi extends runtime.BaseAPI implements AgentsApiInterface {
         const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.apiKey) {
-            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Agents_API_ApiKeyAuth authentication
+            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Agents_API_ApiKeyAuth authentication
         }
 
 
@@ -395,7 +395,7 @@ export class AgentsApi extends runtime.BaseAPI implements AgentsApiInterface {
         const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.apiKey) {
-            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Agents_API_ApiKeyAuth authentication
+            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Agents_API_ApiKeyAuth authentication
         }
 
 
@@ -454,7 +454,7 @@ export class AgentsApi extends runtime.BaseAPI implements AgentsApiInterface {
         headerParameters['Content-Type'] = 'application/json';
 
         if (this.configuration && this.configuration.apiKey) {
-            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Agents_API_ApiKeyAuth authentication
+            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Agents_API_ApiKeyAuth authentication
         }
 
 

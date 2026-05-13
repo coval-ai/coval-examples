@@ -43,17 +43,6 @@ export interface CovalConversationsAPIConversationProgress {
      * @memberof CovalConversationsAPIConversationProgress
      */
     in_progress_metrics?: number;
-    /**
-     * Number of metrics that were skipped (e.g., audio-dependent metric
-     * on a transcript-only conversation). Distinct from failed_metrics:
-     * skipped is expected / non-actionable. For a fully-processed
-     * conversation,
-     * `total_metrics == completed_metrics + failed_metrics + in_progress_metrics + skipped_metrics`.
-     * 
-     * @type {number}
-     * @memberof CovalConversationsAPIConversationProgress
-     */
-    skipped_metrics?: number;
 }
 
 /**
@@ -77,7 +66,6 @@ export function CovalConversationsAPIConversationProgressFromJSONTyped(json: any
         'completed_metrics': json['completed_metrics'] == null ? undefined : json['completed_metrics'],
         'failed_metrics': json['failed_metrics'] == null ? undefined : json['failed_metrics'],
         'in_progress_metrics': json['in_progress_metrics'] == null ? undefined : json['in_progress_metrics'],
-        'skipped_metrics': json['skipped_metrics'] == null ? undefined : json['skipped_metrics'],
     };
 }
 
@@ -96,7 +84,6 @@ export function CovalConversationsAPIConversationProgressToJSONTyped(value?: Cov
         'completed_metrics': value['completed_metrics'],
         'failed_metrics': value['failed_metrics'],
         'in_progress_metrics': value['in_progress_metrics'],
-        'skipped_metrics': value['skipped_metrics'],
     };
 }
 

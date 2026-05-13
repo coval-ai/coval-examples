@@ -19,7 +19,7 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
 from typing import Optional, Set
@@ -37,13 +37,17 @@ class CovalPersonasAPIPersonaResource(BaseModel):
     voice_name: Optional[StrictStr] = Field(default=None, description="Coval voice name. Use GET /personas/voices to discover available voices and their supported language codes. ")
     language_code: Optional[StrictStr] = Field(default=None, description="BCP-47 language code for voice synthesis. Must be supported by the selected voice. Use GET /personas/voices to discover valid voice and language combinations. ")
     background_sound: Optional[StrictStr] = Field(default=None, description="Background noise type")
+    background_sound_volume: Optional[Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]]] = Field(default=None, description="Volume level for background sound (>= 0.0, no upper limit). Default is provider-controlled when omitted.")
+    voice_volume: Optional[Union[Annotated[float, Field(le=2, strict=True, ge=0)], Annotated[int, Field(le=2, strict=True, ge=0)]]] = Field(default=None, description="Voice gain multiplier. 0.0 is silent, 1.0 is unchanged, and 2.0 is double volume.")
+    voice_speed: Optional[Union[Annotated[float, Field(le=2, strict=True, ge=0.25)], Annotated[int, Field(le=2, strict=True, ge=1)]]] = Field(default=None, description="Voice speed multiplier accepted and stored from 0.25 to 2.0. 1.0 is unchanged. The selected voice may enforce a narrower effective range or ignore speed changes.")
     wait_seconds: Optional[Union[Annotated[float, Field(le=2, strict=True, ge=0.1)], Annotated[int, Field(le=2, strict=True, ge=1)]]] = Field(default=None, description="Response delay in seconds")
     conversation_initiation: Optional[StrictStr] = Field(default=None, description="Who initiates the conversation")
-    hold_music_timeout_seconds: Optional[Union[Annotated[float, Field(le=300, strict=True, ge=5)], Annotated[int, Field(le=300, strict=True, ge=5)]]] = Field(default=None, description="Disconnect after this many seconds of no speech activity (5-300). When set, the simulation ends on the first period of silence exceeding this duration. Useful for ending calls quickly after transfers to hold queues or live agents.")
+    multi_language_stt: Optional[StrictBool] = Field(default=None, description="Enable multilingual speech-to-text so callers speaking languages other than the primary language_code are still transcribed accurately. Useful for personas simulating callers in bilingual regions or contact centers that serve diverse populations. ")
+    hold_music_timeout_seconds: Optional[Union[Annotated[float, Field(le=300, strict=True, ge=5)], Annotated[int, Field(le=300, strict=True, ge=5)]]] = Field(default=None, description="Disconnect after this many seconds of no speech (5-300). Used for hold music scenarios.")
     create_time: datetime = Field(description="Persona creation timestamp (ISO 8601)")
     update_time: Optional[datetime] = Field(default=None, description="Last update timestamp (ISO 8601)")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["resource_name", "id", "name", "persona_prompt", "voice_name", "language_code", "background_sound", "wait_seconds", "conversation_initiation", "hold_music_timeout_seconds", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["resource_name", "id", "name", "persona_prompt", "voice_name", "language_code", "background_sound", "background_sound_volume", "voice_volume", "voice_speed", "wait_seconds", "conversation_initiation", "multi_language_stt", "hold_music_timeout_seconds", "create_time", "update_time"]
 
     @field_validator('background_sound')
     def background_sound_validate_enum(cls, value):
@@ -131,6 +135,21 @@ class CovalPersonasAPIPersonaResource(BaseModel):
         if self.background_sound is None and "background_sound" in self.model_fields_set:
             _dict['background_sound'] = None
 
+        # set to None if background_sound_volume (nullable) is None
+        # and model_fields_set contains the field
+        if self.background_sound_volume is None and "background_sound_volume" in self.model_fields_set:
+            _dict['background_sound_volume'] = None
+
+        # set to None if voice_volume (nullable) is None
+        # and model_fields_set contains the field
+        if self.voice_volume is None and "voice_volume" in self.model_fields_set:
+            _dict['voice_volume'] = None
+
+        # set to None if voice_speed (nullable) is None
+        # and model_fields_set contains the field
+        if self.voice_speed is None and "voice_speed" in self.model_fields_set:
+            _dict['voice_speed'] = None
+
         # set to None if wait_seconds (nullable) is None
         # and model_fields_set contains the field
         if self.wait_seconds is None and "wait_seconds" in self.model_fields_set:
@@ -140,6 +159,11 @@ class CovalPersonasAPIPersonaResource(BaseModel):
         # and model_fields_set contains the field
         if self.conversation_initiation is None and "conversation_initiation" in self.model_fields_set:
             _dict['conversation_initiation'] = None
+
+        # set to None if multi_language_stt (nullable) is None
+        # and model_fields_set contains the field
+        if self.multi_language_stt is None and "multi_language_stt" in self.model_fields_set:
+            _dict['multi_language_stt'] = None
 
         # set to None if hold_music_timeout_seconds (nullable) is None
         # and model_fields_set contains the field
@@ -170,8 +194,12 @@ class CovalPersonasAPIPersonaResource(BaseModel):
             "voice_name": obj.get("voice_name"),
             "language_code": obj.get("language_code"),
             "background_sound": obj.get("background_sound"),
+            "background_sound_volume": obj.get("background_sound_volume"),
+            "voice_volume": obj.get("voice_volume"),
+            "voice_speed": obj.get("voice_speed"),
             "wait_seconds": obj.get("wait_seconds"),
             "conversation_initiation": obj.get("conversation_initiation"),
+            "multi_language_stt": obj.get("multi_language_stt"),
             "hold_music_timeout_seconds": obj.get("hold_music_timeout_seconds"),
             "create_time": obj.get("create_time"),
             "update_time": obj.get("update_time")

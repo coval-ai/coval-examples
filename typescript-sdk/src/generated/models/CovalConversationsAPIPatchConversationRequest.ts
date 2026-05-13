@@ -33,7 +33,8 @@ export interface CovalConversationsAPIPatchConversationRequest {
      * Presigned URL to the audio recording. Same validation rules as
      * `audio_url` on `POST /v1/conversations:submit` (WAV or MP3, 5 s to
      * 60 min, 200 MB max). Supports AWS S3, GCP Cloud Storage, Azure Blob
-     * Storage, or any public/presigned HTTPS URL.
+     * Storage, or any public/presigned HTTPS URL. The `s3://bucket/key`
+     * protocol form is also accepted.
      * 
      * @type {string}
      * @memberof CovalConversationsAPIPatchConversationRequest

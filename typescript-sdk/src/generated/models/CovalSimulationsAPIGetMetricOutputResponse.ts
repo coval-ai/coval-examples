@@ -22,7 +22,7 @@ import {
 } from './CovalSimulationsAPISimpleMetricOutput.js';
 
 /**
- * Single simplified metric output
+ * Single metric output (returned when {metric_output_id} is a 26-char ULID)
  * @export
  * @interface CovalSimulationsAPIGetMetricOutputResponse
  */

@@ -81,7 +81,7 @@ export interface CovalConversationsAPIConversationResource {
      */
     has_audio?: boolean;
     /**
-     * Reference to agent resource (typically null for monitoring)
+     * Agent resource ID (22-character ShortUUID), if one was provided at submission
      * @type {string}
      * @memberof CovalConversationsAPIConversationResource
      */

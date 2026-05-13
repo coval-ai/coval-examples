@@ -51,6 +51,7 @@ import {
 
 export interface CreateReviewAnnotationRequest {
     covalReviewsAPICreateReviewAnnotationRequest: CovalReviewsAPICreateReviewAnnotationRequest;
+    projectId?: string;
 }
 
 export interface DeleteReviewAnnotationRequest {
@@ -59,6 +60,7 @@ export interface DeleteReviewAnnotationRequest {
 
 export interface GetReviewAnnotationRequest {
     annotationId: string;
+    projectId?: string;
 }
 
 export interface ListReviewAnnotationsRequest {
@@ -71,6 +73,7 @@ export interface ListReviewAnnotationsRequest {
 export interface UpdateReviewAnnotationRequest {
     annotationId: string;
     covalReviewsAPIUpdateReviewAnnotationRequest: CovalReviewsAPIUpdateReviewAnnotationRequest;
+    projectId?: string;
 }
 
 /**
@@ -83,6 +86,7 @@ export interface ReviewAnnotationsApiInterface {
     /**
      * Creates request options for createReviewAnnotation without sending the request
      * @param {CovalReviewsAPICreateReviewAnnotationRequest} covalReviewsAPICreateReviewAnnotationRequest 
+     * @param {string} [projectId] Optional project ID to apply project-rule-aware completion status
      * @throws {RequiredError}
      * @memberof ReviewAnnotationsApiInterface
      */
@@ -92,6 +96,7 @@ export interface ReviewAnnotationsApiInterface {
      * Create a new review annotation for your organization.
      * @summary Create review annotation
      * @param {CovalReviewsAPICreateReviewAnnotationRequest} covalReviewsAPICreateReviewAnnotationRequest 
+     * @param {string} [projectId] Optional project ID to apply project-rule-aware completion status
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ReviewAnnotationsApiInterface
@@ -131,6 +136,7 @@ export interface ReviewAnnotationsApiInterface {
     /**
      * Creates request options for getReviewAnnotation without sending the request
      * @param {string} annotationId The annotation ID
+     * @param {string} [projectId] Optional project ID to apply project-rule-aware completion status
      * @throws {RequiredError}
      * @memberof ReviewAnnotationsApiInterface
      */
@@ -140,6 +146,7 @@ export interface ReviewAnnotationsApiInterface {
      * Get a single review annotation by ID.
      * @summary Get review annotation
      * @param {string} annotationId The annotation ID
+     * @param {string} [projectId] Optional project ID to apply project-rule-aware completion status
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ReviewAnnotationsApiInterface
@@ -186,6 +193,7 @@ export interface ReviewAnnotationsApiInterface {
      * Creates request options for updateReviewAnnotation without sending the request
      * @param {string} annotationId The annotation ID
      * @param {CovalReviewsAPIUpdateReviewAnnotationRequest} covalReviewsAPIUpdateReviewAnnotationRequest 
+     * @param {string} [projectId] Optional project ID to apply project-rule-aware completion status
      * @throws {RequiredError}
      * @memberof ReviewAnnotationsApiInterface
      */
@@ -196,6 +204,7 @@ export interface ReviewAnnotationsApiInterface {
      * @summary Update review annotation
      * @param {string} annotationId The annotation ID
      * @param {CovalReviewsAPIUpdateReviewAnnotationRequest} covalReviewsAPIUpdateReviewAnnotationRequest 
+     * @param {string} [projectId] Optional project ID to apply project-rule-aware completion status
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ReviewAnnotationsApiInterface
@@ -227,6 +236,10 @@ export class ReviewAnnotationsApi extends runtime.BaseAPI implements ReviewAnnot
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['projectId'] != null) {
+            queryParameters['project_id'] = requestParameters['projectId'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -331,6 +344,10 @@ export class ReviewAnnotationsApi extends runtime.BaseAPI implements ReviewAnnot
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['projectId'] != null) {
+            queryParameters['project_id'] = requestParameters['projectId'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -448,6 +465,10 @@ export class ReviewAnnotationsApi extends runtime.BaseAPI implements ReviewAnnot
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['projectId'] != null) {
+            queryParameters['project_id'] = requestParameters['projectId'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 

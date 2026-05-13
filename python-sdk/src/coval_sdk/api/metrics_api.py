@@ -16,12 +16,24 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictBool, StrictStr, field_validator
-from typing import Any, Dict, Optional
+from pydantic import Field, StrictBool, StrictInt, StrictStr, field_validator
+from typing import Any, Dict, List, Optional
 from typing_extensions import Annotated
+from coval_sdk.models.coval_metrics_api_baseline import CovalMetricsAPIBaseline
+from coval_sdk.models.coval_metrics_api_baseline_status import CovalMetricsAPIBaselineStatus
+from coval_sdk.models.coval_metrics_api_create_metric_baseline_request import CovalMetricsAPICreateMetricBaselineRequest
 from coval_sdk.models.coval_metrics_api_create_metric_request import CovalMetricsAPICreateMetricRequest
+from coval_sdk.models.coval_metrics_api_create_threshold_request import CovalMetricsAPICreateThresholdRequest
+from coval_sdk.models.coval_metrics_api_create_threshold_response import CovalMetricsAPICreateThresholdResponse
 from coval_sdk.models.coval_metrics_api_get_metric_response import CovalMetricsAPIGetMetricResponse
+from coval_sdk.models.coval_metrics_api_get_threshold_response import CovalMetricsAPIGetThresholdResponse
+from coval_sdk.models.coval_metrics_api_list_metric_baselines_response import CovalMetricsAPIListMetricBaselinesResponse
+from coval_sdk.models.coval_metrics_api_list_metric_models_response import CovalMetricsAPIListMetricModelsResponse
 from coval_sdk.models.coval_metrics_api_list_metrics_response import CovalMetricsAPIListMetricsResponse
+from coval_sdk.models.coval_metrics_api_list_thresholds_response import CovalMetricsAPIListThresholdsResponse
+from coval_sdk.models.coval_metrics_api_patch_threshold_request import CovalMetricsAPIPatchThresholdRequest
+from coval_sdk.models.coval_metrics_api_patch_threshold_response import CovalMetricsAPIPatchThresholdResponse
+from coval_sdk.models.coval_metrics_api_update_metric_baseline_request import CovalMetricsAPIUpdateMetricBaselineRequest
 from coval_sdk.models.coval_metrics_api_update_metric_request import CovalMetricsAPIUpdateMetricRequest
 
 from coval_sdk.api_client import ApiClient, RequestSerialized
@@ -99,6 +111,7 @@ class MetricsApi:
             '201': "CovalMetricsAPIGetMetricResponse",
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
+            '403': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -169,6 +182,7 @@ class MetricsApi:
             '201': "CovalMetricsAPIGetMetricResponse",
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
+            '403': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -239,6 +253,7 @@ class MetricsApi:
             '201': "CovalMetricsAPIGetMetricResponse",
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
+            '403': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -310,6 +325,608 @@ class MetricsApi:
         return self.api_client.param_serialize(
             method='POST',
             resource_path='/v1/metrics',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def create_metric_baseline(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        coval_metrics_api_create_metric_baseline_request: CovalMetricsAPICreateMetricBaselineRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> CovalMetricsAPIBaseline:
+        """Create metric baseline
+
+        Create a new anomaly-detection baseline for a specific metric.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param coval_metrics_api_create_metric_baseline_request: (required)
+        :type coval_metrics_api_create_metric_baseline_request: CovalMetricsAPICreateMetricBaselineRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._create_metric_baseline_serialize(
+            metric_id=metric_id,
+            coval_metrics_api_create_metric_baseline_request=coval_metrics_api_create_metric_baseline_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '201': "CovalMetricsAPIBaseline",
+            '400': "CovalMetricsAPIErrorResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def create_metric_baseline_with_http_info(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        coval_metrics_api_create_metric_baseline_request: CovalMetricsAPICreateMetricBaselineRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[CovalMetricsAPIBaseline]:
+        """Create metric baseline
+
+        Create a new anomaly-detection baseline for a specific metric.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param coval_metrics_api_create_metric_baseline_request: (required)
+        :type coval_metrics_api_create_metric_baseline_request: CovalMetricsAPICreateMetricBaselineRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._create_metric_baseline_serialize(
+            metric_id=metric_id,
+            coval_metrics_api_create_metric_baseline_request=coval_metrics_api_create_metric_baseline_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '201': "CovalMetricsAPIBaseline",
+            '400': "CovalMetricsAPIErrorResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def create_metric_baseline_without_preload_content(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        coval_metrics_api_create_metric_baseline_request: CovalMetricsAPICreateMetricBaselineRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Create metric baseline
+
+        Create a new anomaly-detection baseline for a specific metric.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param coval_metrics_api_create_metric_baseline_request: (required)
+        :type coval_metrics_api_create_metric_baseline_request: CovalMetricsAPICreateMetricBaselineRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._create_metric_baseline_serialize(
+            metric_id=metric_id,
+            coval_metrics_api_create_metric_baseline_request=coval_metrics_api_create_metric_baseline_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '201': "CovalMetricsAPIBaseline",
+            '400': "CovalMetricsAPIErrorResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _create_metric_baseline_serialize(
+        self,
+        metric_id,
+        coval_metrics_api_create_metric_baseline_request,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if metric_id is not None:
+            _path_params['metric_id'] = metric_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if coval_metrics_api_create_metric_baseline_request is not None:
+            _body_params = coval_metrics_api_create_metric_baseline_request
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'Coval_Metrics_API_ApiKeyAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/v1/metrics/{metric_id}/baselines',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def create_metric_threshold(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        coval_metrics_api_create_threshold_request: CovalMetricsAPICreateThresholdRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> CovalMetricsAPICreateThresholdResponse:
+        """Create metric threshold
+
+        Create a new threshold for a specific metric.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param coval_metrics_api_create_threshold_request: (required)
+        :type coval_metrics_api_create_threshold_request: CovalMetricsAPICreateThresholdRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._create_metric_threshold_serialize(
+            metric_id=metric_id,
+            coval_metrics_api_create_threshold_request=coval_metrics_api_create_threshold_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '201': "CovalMetricsAPICreateThresholdResponse",
+            '400': "CovalMetricsAPIErrorResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def create_metric_threshold_with_http_info(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        coval_metrics_api_create_threshold_request: CovalMetricsAPICreateThresholdRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[CovalMetricsAPICreateThresholdResponse]:
+        """Create metric threshold
+
+        Create a new threshold for a specific metric.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param coval_metrics_api_create_threshold_request: (required)
+        :type coval_metrics_api_create_threshold_request: CovalMetricsAPICreateThresholdRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._create_metric_threshold_serialize(
+            metric_id=metric_id,
+            coval_metrics_api_create_threshold_request=coval_metrics_api_create_threshold_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '201': "CovalMetricsAPICreateThresholdResponse",
+            '400': "CovalMetricsAPIErrorResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def create_metric_threshold_without_preload_content(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        coval_metrics_api_create_threshold_request: CovalMetricsAPICreateThresholdRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Create metric threshold
+
+        Create a new threshold for a specific metric.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param coval_metrics_api_create_threshold_request: (required)
+        :type coval_metrics_api_create_threshold_request: CovalMetricsAPICreateThresholdRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._create_metric_threshold_serialize(
+            metric_id=metric_id,
+            coval_metrics_api_create_threshold_request=coval_metrics_api_create_threshold_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '201': "CovalMetricsAPICreateThresholdResponse",
+            '400': "CovalMetricsAPIErrorResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _create_metric_threshold_serialize(
+        self,
+        metric_id,
+        coval_metrics_api_create_threshold_request,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if metric_id is not None:
+            _path_params['metric_id'] = metric_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if coval_metrics_api_create_threshold_request is not None:
+            _body_params = coval_metrics_api_create_threshold_request
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'Coval_Metrics_API_ApiKeyAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/v1/metrics/{metric_id}/thresholds',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -593,6 +1210,576 @@ class MetricsApi:
 
 
     @validate_call
+    def delete_metric_baseline(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        baseline_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="26-character baseline ULID.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """Delete metric baseline
+
+        Delete a specific baseline by ID.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param baseline_id: 26-character baseline ULID. (required)
+        :type baseline_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._delete_metric_baseline_serialize(
+            metric_id=metric_id,
+            baseline_id=baseline_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def delete_metric_baseline_with_http_info(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        baseline_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="26-character baseline ULID.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Delete metric baseline
+
+        Delete a specific baseline by ID.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param baseline_id: 26-character baseline ULID. (required)
+        :type baseline_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._delete_metric_baseline_serialize(
+            metric_id=metric_id,
+            baseline_id=baseline_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def delete_metric_baseline_without_preload_content(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        baseline_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="26-character baseline ULID.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Delete metric baseline
+
+        Delete a specific baseline by ID.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param baseline_id: 26-character baseline ULID. (required)
+        :type baseline_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._delete_metric_baseline_serialize(
+            metric_id=metric_id,
+            baseline_id=baseline_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _delete_metric_baseline_serialize(
+        self,
+        metric_id,
+        baseline_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if metric_id is not None:
+            _path_params['metric_id'] = metric_id
+        if baseline_id is not None:
+            _path_params['baseline_id'] = baseline_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'Coval_Metrics_API_ApiKeyAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='DELETE',
+            resource_path='/v1/metrics/{metric_id}/baselines/{baseline_id}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def delete_metric_threshold(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        threshold_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="26-character threshold ID (ULID)")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> object:
+        """Delete metric threshold
+
+        Delete a specific threshold by ID.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param threshold_id: 26-character threshold ID (ULID) (required)
+        :type threshold_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._delete_metric_threshold_serialize(
+            metric_id=metric_id,
+            threshold_id=threshold_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "object",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def delete_metric_threshold_with_http_info(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        threshold_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="26-character threshold ID (ULID)")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[object]:
+        """Delete metric threshold
+
+        Delete a specific threshold by ID.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param threshold_id: 26-character threshold ID (ULID) (required)
+        :type threshold_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._delete_metric_threshold_serialize(
+            metric_id=metric_id,
+            threshold_id=threshold_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "object",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def delete_metric_threshold_without_preload_content(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        threshold_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="26-character threshold ID (ULID)")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Delete metric threshold
+
+        Delete a specific threshold by ID.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param threshold_id: 26-character threshold ID (ULID) (required)
+        :type threshold_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._delete_metric_threshold_serialize(
+            metric_id=metric_id,
+            threshold_id=threshold_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "object",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _delete_metric_threshold_serialize(
+        self,
+        metric_id,
+        threshold_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if metric_id is not None:
+            _path_params['metric_id'] = metric_id
+        if threshold_id is not None:
+            _path_params['threshold_id'] = threshold_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'Coval_Metrics_API_ApiKeyAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='DELETE',
+            resource_path='/v1/metrics/{metric_id}/thresholds/{threshold_id}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
     def get_metric(
         self,
         metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
@@ -847,6 +2034,1525 @@ class MetricsApi:
         return self.api_client.param_serialize(
             method='GET',
             resource_path='/v1/metrics/{metric_id}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def get_metric_baseline(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        baseline_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="26-character baseline ULID.")],
+        sigma_levels: Annotated[Optional[List[StrictInt]], Field(description="Comma-separated sigma multipliers used to populate `sigma_bands` in each baseline (e.g. `1,2,3`).")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> CovalMetricsAPIBaseline:
+        """Get metric baseline
+
+        Retrieve a single anomaly-detection baseline by ID.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param baseline_id: 26-character baseline ULID. (required)
+        :type baseline_id: str
+        :param sigma_levels: Comma-separated sigma multipliers used to populate `sigma_bands` in each baseline (e.g. `1,2,3`).
+        :type sigma_levels: List[int]
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_metric_baseline_serialize(
+            metric_id=metric_id,
+            baseline_id=baseline_id,
+            sigma_levels=sigma_levels,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalMetricsAPIBaseline",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def get_metric_baseline_with_http_info(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        baseline_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="26-character baseline ULID.")],
+        sigma_levels: Annotated[Optional[List[StrictInt]], Field(description="Comma-separated sigma multipliers used to populate `sigma_bands` in each baseline (e.g. `1,2,3`).")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[CovalMetricsAPIBaseline]:
+        """Get metric baseline
+
+        Retrieve a single anomaly-detection baseline by ID.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param baseline_id: 26-character baseline ULID. (required)
+        :type baseline_id: str
+        :param sigma_levels: Comma-separated sigma multipliers used to populate `sigma_bands` in each baseline (e.g. `1,2,3`).
+        :type sigma_levels: List[int]
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_metric_baseline_serialize(
+            metric_id=metric_id,
+            baseline_id=baseline_id,
+            sigma_levels=sigma_levels,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalMetricsAPIBaseline",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def get_metric_baseline_without_preload_content(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        baseline_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="26-character baseline ULID.")],
+        sigma_levels: Annotated[Optional[List[StrictInt]], Field(description="Comma-separated sigma multipliers used to populate `sigma_bands` in each baseline (e.g. `1,2,3`).")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Get metric baseline
+
+        Retrieve a single anomaly-detection baseline by ID.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param baseline_id: 26-character baseline ULID. (required)
+        :type baseline_id: str
+        :param sigma_levels: Comma-separated sigma multipliers used to populate `sigma_bands` in each baseline (e.g. `1,2,3`).
+        :type sigma_levels: List[int]
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_metric_baseline_serialize(
+            metric_id=metric_id,
+            baseline_id=baseline_id,
+            sigma_levels=sigma_levels,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalMetricsAPIBaseline",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _get_metric_baseline_serialize(
+        self,
+        metric_id,
+        baseline_id,
+        sigma_levels,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+            'sigma_levels': 'csv',
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if metric_id is not None:
+            _path_params['metric_id'] = metric_id
+        if baseline_id is not None:
+            _path_params['baseline_id'] = baseline_id
+        # process the query parameters
+        if sigma_levels is not None:
+            
+            _query_params.append(('sigma_levels', sigma_levels))
+            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'Coval_Metrics_API_ApiKeyAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/v1/metrics/{metric_id}/baselines/{baseline_id}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def get_metric_threshold(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> CovalMetricsAPIGetThresholdResponse:
+        """Get metric threshold
+
+        Retrieve the singleton threshold for a specific metric (AIP-156 singleton sub-resource). Returns `200` with an empty threshold resource when the metric exists but no threshold is configured. Returns `404` only when the parent metric is not found or inaccessible. 
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_metric_threshold_serialize(
+            metric_id=metric_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalMetricsAPIGetThresholdResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def get_metric_threshold_with_http_info(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[CovalMetricsAPIGetThresholdResponse]:
+        """Get metric threshold
+
+        Retrieve the singleton threshold for a specific metric (AIP-156 singleton sub-resource). Returns `200` with an empty threshold resource when the metric exists but no threshold is configured. Returns `404` only when the parent metric is not found or inaccessible. 
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_metric_threshold_serialize(
+            metric_id=metric_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalMetricsAPIGetThresholdResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def get_metric_threshold_without_preload_content(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Get metric threshold
+
+        Retrieve the singleton threshold for a specific metric (AIP-156 singleton sub-resource). Returns `200` with an empty threshold resource when the metric exists but no threshold is configured. Returns `404` only when the parent metric is not found or inaccessible. 
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_metric_threshold_serialize(
+            metric_id=metric_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalMetricsAPIGetThresholdResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _get_metric_threshold_serialize(
+        self,
+        metric_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if metric_id is not None:
+            _path_params['metric_id'] = metric_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'Coval_Metrics_API_ApiKeyAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/v1/metrics/{metric_id}/threshold',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def list_metric_baselines(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        agent_id: Annotated[Optional[StrictStr], Field(description="Filter by agent ID. Null/omitted returns org-wide baselines.")] = None,
+        test_set_id: Annotated[Optional[StrictStr], Field(description="Filter by test set ULID. Null/omitted returns monitoring baselines.")] = None,
+        persona_id: Annotated[Optional[StrictStr], Field(description="Filter by persona ULID. Null/omitted returns baselines covering all personas.")] = None,
+        status: Annotated[Optional[CovalMetricsAPIBaselineStatus], Field(description="Filter by baseline lifecycle status.")] = None,
+        page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum results per page")] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination cursor.")] = None,
+        sigma_levels: Annotated[Optional[List[StrictInt]], Field(description="Comma-separated sigma multipliers used to populate `sigma_bands` in each baseline (e.g. `1,2,3`).")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> CovalMetricsAPIListMetricBaselinesResponse:
+        """List metric baselines
+
+        Retrieve all anomaly-detection baselines for a specific metric.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param agent_id: Filter by agent ID. Null/omitted returns org-wide baselines.
+        :type agent_id: str
+        :param test_set_id: Filter by test set ULID. Null/omitted returns monitoring baselines.
+        :type test_set_id: str
+        :param persona_id: Filter by persona ULID. Null/omitted returns baselines covering all personas.
+        :type persona_id: str
+        :param status: Filter by baseline lifecycle status.
+        :type status: CovalMetricsAPIBaselineStatus
+        :param page_size: Maximum results per page
+        :type page_size: int
+        :param page_token: Opaque pagination cursor.
+        :type page_token: str
+        :param sigma_levels: Comma-separated sigma multipliers used to populate `sigma_bands` in each baseline (e.g. `1,2,3`).
+        :type sigma_levels: List[int]
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._list_metric_baselines_serialize(
+            metric_id=metric_id,
+            agent_id=agent_id,
+            test_set_id=test_set_id,
+            persona_id=persona_id,
+            status=status,
+            page_size=page_size,
+            page_token=page_token,
+            sigma_levels=sigma_levels,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalMetricsAPIListMetricBaselinesResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def list_metric_baselines_with_http_info(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        agent_id: Annotated[Optional[StrictStr], Field(description="Filter by agent ID. Null/omitted returns org-wide baselines.")] = None,
+        test_set_id: Annotated[Optional[StrictStr], Field(description="Filter by test set ULID. Null/omitted returns monitoring baselines.")] = None,
+        persona_id: Annotated[Optional[StrictStr], Field(description="Filter by persona ULID. Null/omitted returns baselines covering all personas.")] = None,
+        status: Annotated[Optional[CovalMetricsAPIBaselineStatus], Field(description="Filter by baseline lifecycle status.")] = None,
+        page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum results per page")] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination cursor.")] = None,
+        sigma_levels: Annotated[Optional[List[StrictInt]], Field(description="Comma-separated sigma multipliers used to populate `sigma_bands` in each baseline (e.g. `1,2,3`).")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[CovalMetricsAPIListMetricBaselinesResponse]:
+        """List metric baselines
+
+        Retrieve all anomaly-detection baselines for a specific metric.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param agent_id: Filter by agent ID. Null/omitted returns org-wide baselines.
+        :type agent_id: str
+        :param test_set_id: Filter by test set ULID. Null/omitted returns monitoring baselines.
+        :type test_set_id: str
+        :param persona_id: Filter by persona ULID. Null/omitted returns baselines covering all personas.
+        :type persona_id: str
+        :param status: Filter by baseline lifecycle status.
+        :type status: CovalMetricsAPIBaselineStatus
+        :param page_size: Maximum results per page
+        :type page_size: int
+        :param page_token: Opaque pagination cursor.
+        :type page_token: str
+        :param sigma_levels: Comma-separated sigma multipliers used to populate `sigma_bands` in each baseline (e.g. `1,2,3`).
+        :type sigma_levels: List[int]
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._list_metric_baselines_serialize(
+            metric_id=metric_id,
+            agent_id=agent_id,
+            test_set_id=test_set_id,
+            persona_id=persona_id,
+            status=status,
+            page_size=page_size,
+            page_token=page_token,
+            sigma_levels=sigma_levels,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalMetricsAPIListMetricBaselinesResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def list_metric_baselines_without_preload_content(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        agent_id: Annotated[Optional[StrictStr], Field(description="Filter by agent ID. Null/omitted returns org-wide baselines.")] = None,
+        test_set_id: Annotated[Optional[StrictStr], Field(description="Filter by test set ULID. Null/omitted returns monitoring baselines.")] = None,
+        persona_id: Annotated[Optional[StrictStr], Field(description="Filter by persona ULID. Null/omitted returns baselines covering all personas.")] = None,
+        status: Annotated[Optional[CovalMetricsAPIBaselineStatus], Field(description="Filter by baseline lifecycle status.")] = None,
+        page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum results per page")] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination cursor.")] = None,
+        sigma_levels: Annotated[Optional[List[StrictInt]], Field(description="Comma-separated sigma multipliers used to populate `sigma_bands` in each baseline (e.g. `1,2,3`).")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """List metric baselines
+
+        Retrieve all anomaly-detection baselines for a specific metric.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param agent_id: Filter by agent ID. Null/omitted returns org-wide baselines.
+        :type agent_id: str
+        :param test_set_id: Filter by test set ULID. Null/omitted returns monitoring baselines.
+        :type test_set_id: str
+        :param persona_id: Filter by persona ULID. Null/omitted returns baselines covering all personas.
+        :type persona_id: str
+        :param status: Filter by baseline lifecycle status.
+        :type status: CovalMetricsAPIBaselineStatus
+        :param page_size: Maximum results per page
+        :type page_size: int
+        :param page_token: Opaque pagination cursor.
+        :type page_token: str
+        :param sigma_levels: Comma-separated sigma multipliers used to populate `sigma_bands` in each baseline (e.g. `1,2,3`).
+        :type sigma_levels: List[int]
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._list_metric_baselines_serialize(
+            metric_id=metric_id,
+            agent_id=agent_id,
+            test_set_id=test_set_id,
+            persona_id=persona_id,
+            status=status,
+            page_size=page_size,
+            page_token=page_token,
+            sigma_levels=sigma_levels,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalMetricsAPIListMetricBaselinesResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _list_metric_baselines_serialize(
+        self,
+        metric_id,
+        agent_id,
+        test_set_id,
+        persona_id,
+        status,
+        page_size,
+        page_token,
+        sigma_levels,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+            'sigma_levels': 'csv',
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if metric_id is not None:
+            _path_params['metric_id'] = metric_id
+        # process the query parameters
+        if agent_id is not None:
+            
+            _query_params.append(('agent_id', agent_id))
+            
+        if test_set_id is not None:
+            
+            _query_params.append(('test_set_id', test_set_id))
+            
+        if persona_id is not None:
+            
+            _query_params.append(('persona_id', persona_id))
+            
+        if status is not None:
+            
+            _query_params.append(('status', status.value))
+            
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if page_token is not None:
+            
+            _query_params.append(('page_token', page_token))
+            
+        if sigma_levels is not None:
+            
+            _query_params.append(('sigma_levels', sigma_levels))
+            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'Coval_Metrics_API_ApiKeyAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/v1/metrics/{metric_id}/baselines',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def list_metric_models(
+        self,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> CovalMetricsAPIListMetricModelsResponse:
+        """List available metric models
+
+        Returns all LLM models available for metric evaluation, grouped by access tier.  - **standard** models are available to all organizations. - **enterprise** models require an Enterprise plan and will return a `403   MODEL_TIER_ACCESS_DENIED` error if used in `runtime_config` by a non-Enterprise org.  Use the `model_id` values from this response when setting `runtime_config.model_version` on a metric. 
+
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._list_metric_models_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalMetricsAPIListMetricModelsResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def list_metric_models_with_http_info(
+        self,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[CovalMetricsAPIListMetricModelsResponse]:
+        """List available metric models
+
+        Returns all LLM models available for metric evaluation, grouped by access tier.  - **standard** models are available to all organizations. - **enterprise** models require an Enterprise plan and will return a `403   MODEL_TIER_ACCESS_DENIED` error if used in `runtime_config` by a non-Enterprise org.  Use the `model_id` values from this response when setting `runtime_config.model_version` on a metric. 
+
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._list_metric_models_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalMetricsAPIListMetricModelsResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def list_metric_models_without_preload_content(
+        self,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """List available metric models
+
+        Returns all LLM models available for metric evaluation, grouped by access tier.  - **standard** models are available to all organizations. - **enterprise** models require an Enterprise plan and will return a `403   MODEL_TIER_ACCESS_DENIED` error if used in `runtime_config` by a non-Enterprise org.  Use the `model_id` values from this response when setting `runtime_config.model_version` on a metric. 
+
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._list_metric_models_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalMetricsAPIListMetricModelsResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _list_metric_models_serialize(
+        self,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'Coval_Metrics_API_ApiKeyAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/v1/models/metric',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def list_metric_thresholds(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum results per page")] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from previous response")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> CovalMetricsAPIListThresholdsResponse:
+        """List metric thresholds
+
+        Retrieve all thresholds for a specific metric.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param page_size: Maximum results per page
+        :type page_size: int
+        :param page_token: Pagination token from previous response
+        :type page_token: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._list_metric_thresholds_serialize(
+            metric_id=metric_id,
+            page_size=page_size,
+            page_token=page_token,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalMetricsAPIListThresholdsResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def list_metric_thresholds_with_http_info(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum results per page")] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from previous response")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[CovalMetricsAPIListThresholdsResponse]:
+        """List metric thresholds
+
+        Retrieve all thresholds for a specific metric.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param page_size: Maximum results per page
+        :type page_size: int
+        :param page_token: Pagination token from previous response
+        :type page_token: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._list_metric_thresholds_serialize(
+            metric_id=metric_id,
+            page_size=page_size,
+            page_token=page_token,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalMetricsAPIListThresholdsResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def list_metric_thresholds_without_preload_content(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum results per page")] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from previous response")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """List metric thresholds
+
+        Retrieve all thresholds for a specific metric.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param page_size: Maximum results per page
+        :type page_size: int
+        :param page_token: Pagination token from previous response
+        :type page_token: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._list_metric_thresholds_serialize(
+            metric_id=metric_id,
+            page_size=page_size,
+            page_token=page_token,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalMetricsAPIListThresholdsResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _list_metric_thresholds_serialize(
+        self,
+        metric_id,
+        page_size,
+        page_token,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if metric_id is not None:
+            _path_params['metric_id'] = metric_id
+        # process the query parameters
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if page_token is not None:
+            
+            _query_params.append(('page_token', page_token))
+            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'Coval_Metrics_API_ApiKeyAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/v1/metrics/{metric_id}/thresholds',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1260,6 +3966,7 @@ class MetricsApi:
             '200': "CovalMetricsAPIGetMetricResponse",
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
+            '403': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
@@ -1335,6 +4042,7 @@ class MetricsApi:
             '200': "CovalMetricsAPIGetMetricResponse",
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
+            '403': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
@@ -1410,6 +4118,7 @@ class MetricsApi:
             '200': "CovalMetricsAPIGetMetricResponse",
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
+            '403': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
@@ -1485,6 +4194,623 @@ class MetricsApi:
         return self.api_client.param_serialize(
             method='PATCH',
             resource_path='/v1/metrics/{metric_id}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def update_metric_baseline(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        baseline_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="26-character baseline ULID.")],
+        coval_metrics_api_update_metric_baseline_request: CovalMetricsAPIUpdateMetricBaselineRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> CovalMetricsAPIBaseline:
+        """Update metric baseline
+
+        Update mutable fields on an anomaly-detection baseline. All fields optional.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param baseline_id: 26-character baseline ULID. (required)
+        :type baseline_id: str
+        :param coval_metrics_api_update_metric_baseline_request: (required)
+        :type coval_metrics_api_update_metric_baseline_request: CovalMetricsAPIUpdateMetricBaselineRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._update_metric_baseline_serialize(
+            metric_id=metric_id,
+            baseline_id=baseline_id,
+            coval_metrics_api_update_metric_baseline_request=coval_metrics_api_update_metric_baseline_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalMetricsAPIBaseline",
+            '400': "CovalMetricsAPIErrorResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def update_metric_baseline_with_http_info(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        baseline_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="26-character baseline ULID.")],
+        coval_metrics_api_update_metric_baseline_request: CovalMetricsAPIUpdateMetricBaselineRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[CovalMetricsAPIBaseline]:
+        """Update metric baseline
+
+        Update mutable fields on an anomaly-detection baseline. All fields optional.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param baseline_id: 26-character baseline ULID. (required)
+        :type baseline_id: str
+        :param coval_metrics_api_update_metric_baseline_request: (required)
+        :type coval_metrics_api_update_metric_baseline_request: CovalMetricsAPIUpdateMetricBaselineRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._update_metric_baseline_serialize(
+            metric_id=metric_id,
+            baseline_id=baseline_id,
+            coval_metrics_api_update_metric_baseline_request=coval_metrics_api_update_metric_baseline_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalMetricsAPIBaseline",
+            '400': "CovalMetricsAPIErrorResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def update_metric_baseline_without_preload_content(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        baseline_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="26-character baseline ULID.")],
+        coval_metrics_api_update_metric_baseline_request: CovalMetricsAPIUpdateMetricBaselineRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Update metric baseline
+
+        Update mutable fields on an anomaly-detection baseline. All fields optional.
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param baseline_id: 26-character baseline ULID. (required)
+        :type baseline_id: str
+        :param coval_metrics_api_update_metric_baseline_request: (required)
+        :type coval_metrics_api_update_metric_baseline_request: CovalMetricsAPIUpdateMetricBaselineRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._update_metric_baseline_serialize(
+            metric_id=metric_id,
+            baseline_id=baseline_id,
+            coval_metrics_api_update_metric_baseline_request=coval_metrics_api_update_metric_baseline_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalMetricsAPIBaseline",
+            '400': "CovalMetricsAPIErrorResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _update_metric_baseline_serialize(
+        self,
+        metric_id,
+        baseline_id,
+        coval_metrics_api_update_metric_baseline_request,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if metric_id is not None:
+            _path_params['metric_id'] = metric_id
+        if baseline_id is not None:
+            _path_params['baseline_id'] = baseline_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if coval_metrics_api_update_metric_baseline_request is not None:
+            _body_params = coval_metrics_api_update_metric_baseline_request
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'Coval_Metrics_API_ApiKeyAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='PATCH',
+            resource_path='/v1/metrics/{metric_id}/baselines/{baseline_id}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def update_metric_threshold(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        coval_metrics_api_patch_threshold_request: CovalMetricsAPIPatchThresholdRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> CovalMetricsAPIPatchThresholdResponse:
+        """Update metric threshold
+
+        Update the threshold for a specific metric. Send `comparison_operator: null` to clear the threshold. 
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param coval_metrics_api_patch_threshold_request: (required)
+        :type coval_metrics_api_patch_threshold_request: CovalMetricsAPIPatchThresholdRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._update_metric_threshold_serialize(
+            metric_id=metric_id,
+            coval_metrics_api_patch_threshold_request=coval_metrics_api_patch_threshold_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalMetricsAPIPatchThresholdResponse",
+            '400': "CovalMetricsAPIErrorResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def update_metric_threshold_with_http_info(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        coval_metrics_api_patch_threshold_request: CovalMetricsAPIPatchThresholdRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[CovalMetricsAPIPatchThresholdResponse]:
+        """Update metric threshold
+
+        Update the threshold for a specific metric. Send `comparison_operator: null` to clear the threshold. 
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param coval_metrics_api_patch_threshold_request: (required)
+        :type coval_metrics_api_patch_threshold_request: CovalMetricsAPIPatchThresholdRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._update_metric_threshold_serialize(
+            metric_id=metric_id,
+            coval_metrics_api_patch_threshold_request=coval_metrics_api_patch_threshold_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalMetricsAPIPatchThresholdResponse",
+            '400': "CovalMetricsAPIErrorResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def update_metric_threshold_without_preload_content(
+        self,
+        metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        coval_metrics_api_patch_threshold_request: CovalMetricsAPIPatchThresholdRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Update metric threshold
+
+        Update the threshold for a specific metric. Send `comparison_operator: null` to clear the threshold. 
+
+        :param metric_id: 22-character metric ID (required)
+        :type metric_id: str
+        :param coval_metrics_api_patch_threshold_request: (required)
+        :type coval_metrics_api_patch_threshold_request: CovalMetricsAPIPatchThresholdRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._update_metric_threshold_serialize(
+            metric_id=metric_id,
+            coval_metrics_api_patch_threshold_request=coval_metrics_api_patch_threshold_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalMetricsAPIPatchThresholdResponse",
+            '400': "CovalMetricsAPIErrorResponse",
+            '401': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
+            '500': "CovalMetricsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _update_metric_threshold_serialize(
+        self,
+        metric_id,
+        coval_metrics_api_patch_threshold_request,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if metric_id is not None:
+            _path_params['metric_id'] = metric_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if coval_metrics_api_patch_threshold_request is not None:
+            _body_params = coval_metrics_api_patch_threshold_request
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'Coval_Metrics_API_ApiKeyAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='PATCH',
+            resource_path='/v1/metrics/{metric_id}/threshold',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

@@ -29,7 +29,7 @@ class CovalConversationsAPIGetConversationMetricResponse(BaseModel):
     """
     CovalConversationsAPIGetConversationMetricResponse
     """ # noqa: E501
-    metric: CovalConversationsAPISimpleMetricOutput = Field(description="Single simplified metric output")
+    metric: CovalConversationsAPISimpleMetricOutput = Field(description="Single metric output (returned when {metric_output_id} is a 26-char ULID)")
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["metric"]
 

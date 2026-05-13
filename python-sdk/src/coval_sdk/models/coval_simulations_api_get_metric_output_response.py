@@ -27,7 +27,7 @@ from pydantic_core import to_jsonable_python
 
 class CovalSimulationsAPIGetMetricOutputResponse(BaseModel):
     """
-    Single simplified metric output
+    Single metric output (returned when {metric_output_id} is a 26-char ULID)
     """ # noqa: E501
     metric: CovalSimulationsAPISimpleMetricOutput
     additional_properties: Dict[str, Any] = {}

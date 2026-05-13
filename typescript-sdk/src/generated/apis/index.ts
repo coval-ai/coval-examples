@@ -20,4 +20,5 @@ export * from './SimulationsApi.js';
 export * from './TemplatesApi.js';
 export * from './TestCasesApi.js';
 export * from './TestSetsApi.js';
+export * from './TracesApi.js';
 export * from './WidgetsApi.js';

@@ -14,6 +14,16 @@
 
 import * as runtime from '../runtime.js';
 import {
+    type CovalConversationsAPICreateAudioUploadRequest,
+    CovalConversationsAPICreateAudioUploadRequestFromJSON,
+    CovalConversationsAPICreateAudioUploadRequestToJSON,
+} from '../models/CovalConversationsAPICreateAudioUploadRequest.js';
+import {
+    type CovalConversationsAPICreateAudioUploadResponse,
+    CovalConversationsAPICreateAudioUploadResponseFromJSON,
+    CovalConversationsAPICreateAudioUploadResponseToJSON,
+} from '../models/CovalConversationsAPICreateAudioUploadResponse.js';
+import {
     type CovalConversationsAPIErrorResponse,
     CovalConversationsAPIErrorResponseFromJSON,
     CovalConversationsAPIErrorResponseToJSON,
@@ -23,6 +33,10 @@ import {
     CovalConversationsAPIGetConversationAudioResponseFromJSON,
     CovalConversationsAPIGetConversationAudioResponseToJSON,
 } from '../models/CovalConversationsAPIGetConversationAudioResponse.js';
+
+export interface CreateAudioUploadRequest {
+    covalConversationsAPICreateAudioUploadRequest?: CovalConversationsAPICreateAudioUploadRequest;
+}
 
 export interface GetConversationAudioRequest {
     conversationId: string;
@@ -35,6 +49,30 @@ export interface GetConversationAudioRequest {
  * @interface AudioApiInterface
  */
 export interface AudioApiInterface {
+    /**
+     * Creates request options for createAudioUpload without sending the request
+     * @param {CovalConversationsAPICreateAudioUploadRequest} [covalConversationsAPICreateAudioUploadRequest] 
+     * @throws {RequiredError}
+     * @memberof AudioApiInterface
+     */
+    createAudioUploadRequestOpts(requestParameters: CreateAudioUploadRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Issue an opaque `upload_id` and a short-lived presigned PUT URL for direct audio upload. 
+     * @summary Upload audio
+     * @param {CovalConversationsAPICreateAudioUploadRequest} [covalConversationsAPICreateAudioUploadRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AudioApiInterface
+     */
+    createAudioUploadRaw(requestParameters: CreateAudioUploadRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalConversationsAPICreateAudioUploadResponse>>;
+
+    /**
+     * Issue an opaque `upload_id` and a short-lived presigned PUT URL for direct audio upload. 
+     * Upload audio
+     */
+    createAudioUpload(requestParameters: CreateAudioUploadRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalConversationsAPICreateAudioUploadResponse>;
+
     /**
      * Creates request options for getConversationAudio without sending the request
      * @param {string} conversationId Unique conversation identifier
@@ -65,6 +103,52 @@ export interface AudioApiInterface {
  * 
  */
 export class AudioApi extends runtime.BaseAPI implements AudioApiInterface {
+
+    /**
+     * Creates request options for createAudioUpload without sending the request
+     */
+    async createAudioUploadRequestOpts(requestParameters: CreateAudioUploadRequest): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Conversations_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/v1/audio:upload`;
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CovalConversationsAPICreateAudioUploadRequestToJSON(requestParameters['covalConversationsAPICreateAudioUploadRequest']),
+        };
+    }
+
+    /**
+     * Issue an opaque `upload_id` and a short-lived presigned PUT URL for direct audio upload. 
+     * Upload audio
+     */
+    async createAudioUploadRaw(requestParameters: CreateAudioUploadRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalConversationsAPICreateAudioUploadResponse>> {
+        const requestOptions = await this.createAudioUploadRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalConversationsAPICreateAudioUploadResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Issue an opaque `upload_id` and a short-lived presigned PUT URL for direct audio upload. 
+     * Upload audio
+     */
+    async createAudioUpload(requestParameters: CreateAudioUploadRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalConversationsAPICreateAudioUploadResponse> {
+        const response = await this.createAudioUploadRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
 
     /**
      * Creates request options for getConversationAudio without sending the request

@@ -14,10 +14,35 @@
 
 import * as runtime from '../runtime.js';
 import {
+    type CovalMetricsAPIBaseline,
+    CovalMetricsAPIBaselineFromJSON,
+    CovalMetricsAPIBaselineToJSON,
+} from '../models/CovalMetricsAPIBaseline.js';
+import {
+    type CovalMetricsAPIBaselineStatus,
+    CovalMetricsAPIBaselineStatusFromJSON,
+    CovalMetricsAPIBaselineStatusToJSON,
+} from '../models/CovalMetricsAPIBaselineStatus.js';
+import {
+    type CovalMetricsAPICreateMetricBaselineRequest,
+    CovalMetricsAPICreateMetricBaselineRequestFromJSON,
+    CovalMetricsAPICreateMetricBaselineRequestToJSON,
+} from '../models/CovalMetricsAPICreateMetricBaselineRequest.js';
+import {
     type CovalMetricsAPICreateMetricRequest,
     CovalMetricsAPICreateMetricRequestFromJSON,
     CovalMetricsAPICreateMetricRequestToJSON,
 } from '../models/CovalMetricsAPICreateMetricRequest.js';
+import {
+    type CovalMetricsAPICreateThresholdRequest,
+    CovalMetricsAPICreateThresholdRequestFromJSON,
+    CovalMetricsAPICreateThresholdRequestToJSON,
+} from '../models/CovalMetricsAPICreateThresholdRequest.js';
+import {
+    type CovalMetricsAPICreateThresholdResponse,
+    CovalMetricsAPICreateThresholdResponseFromJSON,
+    CovalMetricsAPICreateThresholdResponseToJSON,
+} from '../models/CovalMetricsAPICreateThresholdResponse.js';
 import {
     type CovalMetricsAPIErrorResponse,
     CovalMetricsAPIErrorResponseFromJSON,
@@ -29,10 +54,45 @@ import {
     CovalMetricsAPIGetMetricResponseToJSON,
 } from '../models/CovalMetricsAPIGetMetricResponse.js';
 import {
+    type CovalMetricsAPIGetThresholdResponse,
+    CovalMetricsAPIGetThresholdResponseFromJSON,
+    CovalMetricsAPIGetThresholdResponseToJSON,
+} from '../models/CovalMetricsAPIGetThresholdResponse.js';
+import {
+    type CovalMetricsAPIListMetricBaselinesResponse,
+    CovalMetricsAPIListMetricBaselinesResponseFromJSON,
+    CovalMetricsAPIListMetricBaselinesResponseToJSON,
+} from '../models/CovalMetricsAPIListMetricBaselinesResponse.js';
+import {
+    type CovalMetricsAPIListMetricModelsResponse,
+    CovalMetricsAPIListMetricModelsResponseFromJSON,
+    CovalMetricsAPIListMetricModelsResponseToJSON,
+} from '../models/CovalMetricsAPIListMetricModelsResponse.js';
+import {
     type CovalMetricsAPIListMetricsResponse,
     CovalMetricsAPIListMetricsResponseFromJSON,
     CovalMetricsAPIListMetricsResponseToJSON,
 } from '../models/CovalMetricsAPIListMetricsResponse.js';
+import {
+    type CovalMetricsAPIListThresholdsResponse,
+    CovalMetricsAPIListThresholdsResponseFromJSON,
+    CovalMetricsAPIListThresholdsResponseToJSON,
+} from '../models/CovalMetricsAPIListThresholdsResponse.js';
+import {
+    type CovalMetricsAPIPatchThresholdRequest,
+    CovalMetricsAPIPatchThresholdRequestFromJSON,
+    CovalMetricsAPIPatchThresholdRequestToJSON,
+} from '../models/CovalMetricsAPIPatchThresholdRequest.js';
+import {
+    type CovalMetricsAPIPatchThresholdResponse,
+    CovalMetricsAPIPatchThresholdResponseFromJSON,
+    CovalMetricsAPIPatchThresholdResponseToJSON,
+} from '../models/CovalMetricsAPIPatchThresholdResponse.js';
+import {
+    type CovalMetricsAPIUpdateMetricBaselineRequest,
+    CovalMetricsAPIUpdateMetricBaselineRequestFromJSON,
+    CovalMetricsAPIUpdateMetricBaselineRequestToJSON,
+} from '../models/CovalMetricsAPIUpdateMetricBaselineRequest.js';
 import {
     type CovalMetricsAPIUpdateMetricRequest,
     CovalMetricsAPIUpdateMetricRequestFromJSON,
@@ -43,12 +103,59 @@ export interface CreateMetricRequest {
     covalMetricsAPICreateMetricRequest: CovalMetricsAPICreateMetricRequest;
 }
 
+export interface CreateMetricBaselineRequest {
+    metricId: string;
+    covalMetricsAPICreateMetricBaselineRequest: CovalMetricsAPICreateMetricBaselineRequest;
+}
+
+export interface CreateMetricThresholdRequest {
+    metricId: string;
+    covalMetricsAPICreateThresholdRequest: CovalMetricsAPICreateThresholdRequest;
+}
+
 export interface DeleteMetricRequest {
     metricId: string;
 }
 
+export interface DeleteMetricBaselineRequest {
+    metricId: string;
+    baselineId: string;
+}
+
+export interface DeleteMetricThresholdRequest {
+    metricId: string;
+    thresholdId: string;
+}
+
 export interface GetMetricRequest {
     metricId: string;
+}
+
+export interface GetMetricBaselineRequest {
+    metricId: string;
+    baselineId: string;
+    sigmaLevels?: Array<number>;
+}
+
+export interface GetMetricThresholdRequest {
+    metricId: string;
+}
+
+export interface ListMetricBaselinesRequest {
+    metricId: string;
+    agentId?: string;
+    testSetId?: string;
+    personaId?: string;
+    status?: CovalMetricsAPIBaselineStatus;
+    pageSize?: number;
+    pageToken?: string;
+    sigmaLevels?: Array<number>;
+}
+
+export interface ListMetricThresholdsRequest {
+    metricId: string;
+    pageSize?: number;
+    pageToken?: string;
 }
 
 export interface ListMetricsRequest {
@@ -62,6 +169,17 @@ export interface ListMetricsRequest {
 export interface UpdateMetricRequest {
     metricId: string;
     covalMetricsAPIUpdateMetricRequest: CovalMetricsAPIUpdateMetricRequest;
+}
+
+export interface UpdateMetricBaselineRequest {
+    metricId: string;
+    baselineId: string;
+    covalMetricsAPIUpdateMetricBaselineRequest: CovalMetricsAPIUpdateMetricBaselineRequest;
+}
+
+export interface UpdateMetricThresholdRequest {
+    metricId: string;
+    covalMetricsAPIPatchThresholdRequest: CovalMetricsAPIPatchThresholdRequest;
 }
 
 /**
@@ -96,6 +214,58 @@ export interface MetricsApiInterface {
     createMetric(requestParameters: CreateMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetMetricResponse>;
 
     /**
+     * Creates request options for createMetricBaseline without sending the request
+     * @param {string} metricId 22-character metric ID
+     * @param {CovalMetricsAPICreateMetricBaselineRequest} covalMetricsAPICreateMetricBaselineRequest 
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    createMetricBaselineRequestOpts(requestParameters: CreateMetricBaselineRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Create a new anomaly-detection baseline for a specific metric.
+     * @summary Create metric baseline
+     * @param {string} metricId 22-character metric ID
+     * @param {CovalMetricsAPICreateMetricBaselineRequest} covalMetricsAPICreateMetricBaselineRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    createMetricBaselineRaw(requestParameters: CreateMetricBaselineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIBaseline>>;
+
+    /**
+     * Create a new anomaly-detection baseline for a specific metric.
+     * Create metric baseline
+     */
+    createMetricBaseline(requestParameters: CreateMetricBaselineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIBaseline>;
+
+    /**
+     * Creates request options for createMetricThreshold without sending the request
+     * @param {string} metricId 22-character metric ID
+     * @param {CovalMetricsAPICreateThresholdRequest} covalMetricsAPICreateThresholdRequest 
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    createMetricThresholdRequestOpts(requestParameters: CreateMetricThresholdRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Create a new threshold for a specific metric.
+     * @summary Create metric threshold
+     * @param {string} metricId 22-character metric ID
+     * @param {CovalMetricsAPICreateThresholdRequest} covalMetricsAPICreateThresholdRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    createMetricThresholdRaw(requestParameters: CreateMetricThresholdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPICreateThresholdResponse>>;
+
+    /**
+     * Create a new threshold for a specific metric.
+     * Create metric threshold
+     */
+    createMetricThreshold(requestParameters: CreateMetricThresholdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPICreateThresholdResponse>;
+
+    /**
      * Creates request options for deleteMetric without sending the request
      * @param {string} metricId 22-character metric ID
      * @throws {RequiredError}
@@ -120,6 +290,58 @@ export interface MetricsApiInterface {
     deleteMetric(requestParameters: DeleteMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object>;
 
     /**
+     * Creates request options for deleteMetricBaseline without sending the request
+     * @param {string} metricId 22-character metric ID
+     * @param {string} baselineId 26-character baseline ULID.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    deleteMetricBaselineRequestOpts(requestParameters: DeleteMetricBaselineRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Delete a specific baseline by ID.
+     * @summary Delete metric baseline
+     * @param {string} metricId 22-character metric ID
+     * @param {string} baselineId 26-character baseline ULID.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    deleteMetricBaselineRaw(requestParameters: DeleteMetricBaselineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     * Delete a specific baseline by ID.
+     * Delete metric baseline
+     */
+    deleteMetricBaseline(requestParameters: DeleteMetricBaselineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void>;
+
+    /**
+     * Creates request options for deleteMetricThreshold without sending the request
+     * @param {string} metricId 22-character metric ID
+     * @param {string} thresholdId 26-character threshold ID (ULID)
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    deleteMetricThresholdRequestOpts(requestParameters: DeleteMetricThresholdRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Delete a specific threshold by ID.
+     * @summary Delete metric threshold
+     * @param {string} metricId 22-character metric ID
+     * @param {string} thresholdId 26-character threshold ID (ULID)
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    deleteMetricThresholdRaw(requestParameters: DeleteMetricThresholdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>>;
+
+    /**
+     * Delete a specific threshold by ID.
+     * Delete metric threshold
+     */
+    deleteMetricThreshold(requestParameters: DeleteMetricThresholdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object>;
+
+    /**
      * Creates request options for getMetric without sending the request
      * @param {string} metricId 22-character metric ID
      * @throws {RequiredError}
@@ -142,6 +364,146 @@ export interface MetricsApiInterface {
      * Get metric
      */
     getMetric(requestParameters: GetMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetMetricResponse>;
+
+    /**
+     * Creates request options for getMetricBaseline without sending the request
+     * @param {string} metricId 22-character metric ID
+     * @param {string} baselineId 26-character baseline ULID.
+     * @param {Array<number>} [sigmaLevels] Comma-separated sigma multipliers used to populate &#x60;sigma_bands&#x60; in each baseline (e.g. &#x60;1,2,3&#x60;).
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    getMetricBaselineRequestOpts(requestParameters: GetMetricBaselineRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Retrieve a single anomaly-detection baseline by ID.
+     * @summary Get metric baseline
+     * @param {string} metricId 22-character metric ID
+     * @param {string} baselineId 26-character baseline ULID.
+     * @param {Array<number>} [sigmaLevels] Comma-separated sigma multipliers used to populate &#x60;sigma_bands&#x60; in each baseline (e.g. &#x60;1,2,3&#x60;).
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    getMetricBaselineRaw(requestParameters: GetMetricBaselineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIBaseline>>;
+
+    /**
+     * Retrieve a single anomaly-detection baseline by ID.
+     * Get metric baseline
+     */
+    getMetricBaseline(requestParameters: GetMetricBaselineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIBaseline>;
+
+    /**
+     * Creates request options for getMetricThreshold without sending the request
+     * @param {string} metricId 22-character metric ID
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    getMetricThresholdRequestOpts(requestParameters: GetMetricThresholdRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Retrieve the singleton threshold for a specific metric (AIP-156 singleton sub-resource). Returns `200` with an empty threshold resource when the metric exists but no threshold is configured. Returns `404` only when the parent metric is not found or inaccessible. 
+     * @summary Get metric threshold
+     * @param {string} metricId 22-character metric ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    getMetricThresholdRaw(requestParameters: GetMetricThresholdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIGetThresholdResponse>>;
+
+    /**
+     * Retrieve the singleton threshold for a specific metric (AIP-156 singleton sub-resource). Returns `200` with an empty threshold resource when the metric exists but no threshold is configured. Returns `404` only when the parent metric is not found or inaccessible. 
+     * Get metric threshold
+     */
+    getMetricThreshold(requestParameters: GetMetricThresholdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetThresholdResponse>;
+
+    /**
+     * Creates request options for listMetricBaselines without sending the request
+     * @param {string} metricId 22-character metric ID
+     * @param {string} [agentId] Filter by agent ID. Null/omitted returns org-wide baselines.
+     * @param {string} [testSetId] Filter by test set ULID. Null/omitted returns monitoring baselines.
+     * @param {string} [personaId] Filter by persona ULID. Null/omitted returns baselines covering all personas.
+     * @param {CovalMetricsAPIBaselineStatus} [status] Filter by baseline lifecycle status.
+     * @param {number} [pageSize] Maximum results per page
+     * @param {string} [pageToken] Opaque pagination cursor.
+     * @param {Array<number>} [sigmaLevels] Comma-separated sigma multipliers used to populate &#x60;sigma_bands&#x60; in each baseline (e.g. &#x60;1,2,3&#x60;).
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    listMetricBaselinesRequestOpts(requestParameters: ListMetricBaselinesRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Retrieve all anomaly-detection baselines for a specific metric.
+     * @summary List metric baselines
+     * @param {string} metricId 22-character metric ID
+     * @param {string} [agentId] Filter by agent ID. Null/omitted returns org-wide baselines.
+     * @param {string} [testSetId] Filter by test set ULID. Null/omitted returns monitoring baselines.
+     * @param {string} [personaId] Filter by persona ULID. Null/omitted returns baselines covering all personas.
+     * @param {CovalMetricsAPIBaselineStatus} [status] Filter by baseline lifecycle status.
+     * @param {number} [pageSize] Maximum results per page
+     * @param {string} [pageToken] Opaque pagination cursor.
+     * @param {Array<number>} [sigmaLevels] Comma-separated sigma multipliers used to populate &#x60;sigma_bands&#x60; in each baseline (e.g. &#x60;1,2,3&#x60;).
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    listMetricBaselinesRaw(requestParameters: ListMetricBaselinesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIListMetricBaselinesResponse>>;
+
+    /**
+     * Retrieve all anomaly-detection baselines for a specific metric.
+     * List metric baselines
+     */
+    listMetricBaselines(requestParameters: ListMetricBaselinesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListMetricBaselinesResponse>;
+
+    /**
+     * Creates request options for listMetricModels without sending the request
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    listMetricModelsRequestOpts(): Promise<runtime.RequestOpts>;
+
+    /**
+     * Returns all LLM models available for metric evaluation, grouped by access tier.  - **standard** models are available to all organizations. - **enterprise** models require an Enterprise plan and will return a `403   MODEL_TIER_ACCESS_DENIED` error if used in `runtime_config` by a non-Enterprise org.  Use the `model_id` values from this response when setting `runtime_config.model_version` on a metric. 
+     * @summary List available metric models
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    listMetricModelsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIListMetricModelsResponse>>;
+
+    /**
+     * Returns all LLM models available for metric evaluation, grouped by access tier.  - **standard** models are available to all organizations. - **enterprise** models require an Enterprise plan and will return a `403   MODEL_TIER_ACCESS_DENIED` error if used in `runtime_config` by a non-Enterprise org.  Use the `model_id` values from this response when setting `runtime_config.model_version` on a metric. 
+     * List available metric models
+     */
+    listMetricModels(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListMetricModelsResponse>;
+
+    /**
+     * Creates request options for listMetricThresholds without sending the request
+     * @param {string} metricId 22-character metric ID
+     * @param {number} [pageSize] Maximum results per page
+     * @param {string} [pageToken] Pagination token from previous response
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    listMetricThresholdsRequestOpts(requestParameters: ListMetricThresholdsRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Retrieve all thresholds for a specific metric.
+     * @summary List metric thresholds
+     * @param {string} metricId 22-character metric ID
+     * @param {number} [pageSize] Maximum results per page
+     * @param {string} [pageToken] Pagination token from previous response
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    listMetricThresholdsRaw(requestParameters: ListMetricThresholdsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIListThresholdsResponse>>;
+
+    /**
+     * Retrieve all thresholds for a specific metric.
+     * List metric thresholds
+     */
+    listMetricThresholds(requestParameters: ListMetricThresholdsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListThresholdsResponse>;
 
     /**
      * Creates request options for listMetrics without sending the request
@@ -200,6 +562,60 @@ export interface MetricsApiInterface {
      * Update metric
      */
     updateMetric(requestParameters: UpdateMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetMetricResponse>;
+
+    /**
+     * Creates request options for updateMetricBaseline without sending the request
+     * @param {string} metricId 22-character metric ID
+     * @param {string} baselineId 26-character baseline ULID.
+     * @param {CovalMetricsAPIUpdateMetricBaselineRequest} covalMetricsAPIUpdateMetricBaselineRequest 
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    updateMetricBaselineRequestOpts(requestParameters: UpdateMetricBaselineRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Update mutable fields on an anomaly-detection baseline. All fields optional.
+     * @summary Update metric baseline
+     * @param {string} metricId 22-character metric ID
+     * @param {string} baselineId 26-character baseline ULID.
+     * @param {CovalMetricsAPIUpdateMetricBaselineRequest} covalMetricsAPIUpdateMetricBaselineRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    updateMetricBaselineRaw(requestParameters: UpdateMetricBaselineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIBaseline>>;
+
+    /**
+     * Update mutable fields on an anomaly-detection baseline. All fields optional.
+     * Update metric baseline
+     */
+    updateMetricBaseline(requestParameters: UpdateMetricBaselineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIBaseline>;
+
+    /**
+     * Creates request options for updateMetricThreshold without sending the request
+     * @param {string} metricId 22-character metric ID
+     * @param {CovalMetricsAPIPatchThresholdRequest} covalMetricsAPIPatchThresholdRequest 
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    updateMetricThresholdRequestOpts(requestParameters: UpdateMetricThresholdRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Update the threshold for a specific metric. Send `comparison_operator: null` to clear the threshold. 
+     * @summary Update metric threshold
+     * @param {string} metricId 22-character metric ID
+     * @param {CovalMetricsAPIPatchThresholdRequest} covalMetricsAPIPatchThresholdRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    updateMetricThresholdRaw(requestParameters: UpdateMetricThresholdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIPatchThresholdResponse>>;
+
+    /**
+     * Update the threshold for a specific metric. Send `comparison_operator: null` to clear the threshold. 
+     * Update metric threshold
+     */
+    updateMetricThreshold(requestParameters: UpdateMetricThresholdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIPatchThresholdResponse>;
 
 }
 
@@ -262,6 +678,128 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
+     * Creates request options for createMetricBaseline without sending the request
+     */
+    async createMetricBaselineRequestOpts(requestParameters: CreateMetricBaselineRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['metricId'] == null) {
+            throw new runtime.RequiredError(
+                'metricId',
+                'Required parameter "metricId" was null or undefined when calling createMetricBaseline().'
+            );
+        }
+
+        if (requestParameters['covalMetricsAPICreateMetricBaselineRequest'] == null) {
+            throw new runtime.RequiredError(
+                'covalMetricsAPICreateMetricBaselineRequest',
+                'Required parameter "covalMetricsAPICreateMetricBaselineRequest" was null or undefined when calling createMetricBaseline().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/v1/metrics/{metric_id}/baselines`;
+        urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CovalMetricsAPICreateMetricBaselineRequestToJSON(requestParameters['covalMetricsAPICreateMetricBaselineRequest']),
+        };
+    }
+
+    /**
+     * Create a new anomaly-detection baseline for a specific metric.
+     * Create metric baseline
+     */
+    async createMetricBaselineRaw(requestParameters: CreateMetricBaselineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIBaseline>> {
+        const requestOptions = await this.createMetricBaselineRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPIBaselineFromJSON(jsonValue));
+    }
+
+    /**
+     * Create a new anomaly-detection baseline for a specific metric.
+     * Create metric baseline
+     */
+    async createMetricBaseline(requestParameters: CreateMetricBaselineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIBaseline> {
+        const response = await this.createMetricBaselineRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for createMetricThreshold without sending the request
+     */
+    async createMetricThresholdRequestOpts(requestParameters: CreateMetricThresholdRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['metricId'] == null) {
+            throw new runtime.RequiredError(
+                'metricId',
+                'Required parameter "metricId" was null or undefined when calling createMetricThreshold().'
+            );
+        }
+
+        if (requestParameters['covalMetricsAPICreateThresholdRequest'] == null) {
+            throw new runtime.RequiredError(
+                'covalMetricsAPICreateThresholdRequest',
+                'Required parameter "covalMetricsAPICreateThresholdRequest" was null or undefined when calling createMetricThreshold().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/v1/metrics/{metric_id}/thresholds`;
+        urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CovalMetricsAPICreateThresholdRequestToJSON(requestParameters['covalMetricsAPICreateThresholdRequest']),
+        };
+    }
+
+    /**
+     * Create a new threshold for a specific metric.
+     * Create metric threshold
+     */
+    async createMetricThresholdRaw(requestParameters: CreateMetricThresholdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPICreateThresholdResponse>> {
+        const requestOptions = await this.createMetricThresholdRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPICreateThresholdResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Create a new threshold for a specific metric.
+     * Create metric threshold
+     */
+    async createMetricThreshold(requestParameters: CreateMetricThresholdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPICreateThresholdResponse> {
+        const response = await this.createMetricThresholdRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for deleteMetric without sending the request
      */
     async deleteMetricRequestOpts(requestParameters: DeleteMetricRequest): Promise<runtime.RequestOpts> {
@@ -313,6 +851,123 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
+     * Creates request options for deleteMetricBaseline without sending the request
+     */
+    async deleteMetricBaselineRequestOpts(requestParameters: DeleteMetricBaselineRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['metricId'] == null) {
+            throw new runtime.RequiredError(
+                'metricId',
+                'Required parameter "metricId" was null or undefined when calling deleteMetricBaseline().'
+            );
+        }
+
+        if (requestParameters['baselineId'] == null) {
+            throw new runtime.RequiredError(
+                'baselineId',
+                'Required parameter "baselineId" was null or undefined when calling deleteMetricBaseline().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/v1/metrics/{metric_id}/baselines/{baseline_id}`;
+        urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
+        urlPath = urlPath.replace('{baseline_id}', encodeURIComponent(String(requestParameters['baselineId'])));
+
+        return {
+            path: urlPath,
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Delete a specific baseline by ID.
+     * Delete metric baseline
+     */
+    async deleteMetricBaselineRaw(requestParameters: DeleteMetricBaselineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.deleteMetricBaselineRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Delete a specific baseline by ID.
+     * Delete metric baseline
+     */
+    async deleteMetricBaseline(requestParameters: DeleteMetricBaselineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.deleteMetricBaselineRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Creates request options for deleteMetricThreshold without sending the request
+     */
+    async deleteMetricThresholdRequestOpts(requestParameters: DeleteMetricThresholdRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['metricId'] == null) {
+            throw new runtime.RequiredError(
+                'metricId',
+                'Required parameter "metricId" was null or undefined when calling deleteMetricThreshold().'
+            );
+        }
+
+        if (requestParameters['thresholdId'] == null) {
+            throw new runtime.RequiredError(
+                'thresholdId',
+                'Required parameter "thresholdId" was null or undefined when calling deleteMetricThreshold().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/v1/metrics/{metric_id}/thresholds/{threshold_id}`;
+        urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
+        urlPath = urlPath.replace('{threshold_id}', encodeURIComponent(String(requestParameters['thresholdId'])));
+
+        return {
+            path: urlPath,
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Delete a specific threshold by ID.
+     * Delete metric threshold
+     */
+    async deleteMetricThresholdRaw(requestParameters: DeleteMetricThresholdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+        const requestOptions = await this.deleteMetricThresholdRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * Delete a specific threshold by ID.
+     * Delete metric threshold
+     */
+    async deleteMetricThreshold(requestParameters: DeleteMetricThresholdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+        const response = await this.deleteMetricThresholdRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for getMetric without sending the request
      */
     async getMetricRequestOpts(requestParameters: GetMetricRequest): Promise<runtime.RequestOpts> {
@@ -360,6 +1015,301 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
      */
     async getMetric(requestParameters: GetMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetMetricResponse> {
         const response = await this.getMetricRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for getMetricBaseline without sending the request
+     */
+    async getMetricBaselineRequestOpts(requestParameters: GetMetricBaselineRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['metricId'] == null) {
+            throw new runtime.RequiredError(
+                'metricId',
+                'Required parameter "metricId" was null or undefined when calling getMetricBaseline().'
+            );
+        }
+
+        if (requestParameters['baselineId'] == null) {
+            throw new runtime.RequiredError(
+                'baselineId',
+                'Required parameter "baselineId" was null or undefined when calling getMetricBaseline().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['sigmaLevels'] != null) {
+            queryParameters['sigma_levels'] = requestParameters['sigmaLevels']!.join(runtime.COLLECTION_FORMATS["csv"]);
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/v1/metrics/{metric_id}/baselines/{baseline_id}`;
+        urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
+        urlPath = urlPath.replace('{baseline_id}', encodeURIComponent(String(requestParameters['baselineId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Retrieve a single anomaly-detection baseline by ID.
+     * Get metric baseline
+     */
+    async getMetricBaselineRaw(requestParameters: GetMetricBaselineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIBaseline>> {
+        const requestOptions = await this.getMetricBaselineRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPIBaselineFromJSON(jsonValue));
+    }
+
+    /**
+     * Retrieve a single anomaly-detection baseline by ID.
+     * Get metric baseline
+     */
+    async getMetricBaseline(requestParameters: GetMetricBaselineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIBaseline> {
+        const response = await this.getMetricBaselineRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for getMetricThreshold without sending the request
+     */
+    async getMetricThresholdRequestOpts(requestParameters: GetMetricThresholdRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['metricId'] == null) {
+            throw new runtime.RequiredError(
+                'metricId',
+                'Required parameter "metricId" was null or undefined when calling getMetricThreshold().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/v1/metrics/{metric_id}/threshold`;
+        urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Retrieve the singleton threshold for a specific metric (AIP-156 singleton sub-resource). Returns `200` with an empty threshold resource when the metric exists but no threshold is configured. Returns `404` only when the parent metric is not found or inaccessible. 
+     * Get metric threshold
+     */
+    async getMetricThresholdRaw(requestParameters: GetMetricThresholdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIGetThresholdResponse>> {
+        const requestOptions = await this.getMetricThresholdRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPIGetThresholdResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Retrieve the singleton threshold for a specific metric (AIP-156 singleton sub-resource). Returns `200` with an empty threshold resource when the metric exists but no threshold is configured. Returns `404` only when the parent metric is not found or inaccessible. 
+     * Get metric threshold
+     */
+    async getMetricThreshold(requestParameters: GetMetricThresholdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetThresholdResponse> {
+        const response = await this.getMetricThresholdRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for listMetricBaselines without sending the request
+     */
+    async listMetricBaselinesRequestOpts(requestParameters: ListMetricBaselinesRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['metricId'] == null) {
+            throw new runtime.RequiredError(
+                'metricId',
+                'Required parameter "metricId" was null or undefined when calling listMetricBaselines().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['agentId'] != null) {
+            queryParameters['agent_id'] = requestParameters['agentId'];
+        }
+
+        if (requestParameters['testSetId'] != null) {
+            queryParameters['test_set_id'] = requestParameters['testSetId'];
+        }
+
+        if (requestParameters['personaId'] != null) {
+            queryParameters['persona_id'] = requestParameters['personaId'];
+        }
+
+        if (requestParameters['status'] != null) {
+            queryParameters['status'] = requestParameters['status'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['pageToken'] != null) {
+            queryParameters['page_token'] = requestParameters['pageToken'];
+        }
+
+        if (requestParameters['sigmaLevels'] != null) {
+            queryParameters['sigma_levels'] = requestParameters['sigmaLevels']!.join(runtime.COLLECTION_FORMATS["csv"]);
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/v1/metrics/{metric_id}/baselines`;
+        urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Retrieve all anomaly-detection baselines for a specific metric.
+     * List metric baselines
+     */
+    async listMetricBaselinesRaw(requestParameters: ListMetricBaselinesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIListMetricBaselinesResponse>> {
+        const requestOptions = await this.listMetricBaselinesRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPIListMetricBaselinesResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Retrieve all anomaly-detection baselines for a specific metric.
+     * List metric baselines
+     */
+    async listMetricBaselines(requestParameters: ListMetricBaselinesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListMetricBaselinesResponse> {
+        const response = await this.listMetricBaselinesRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for listMetricModels without sending the request
+     */
+    async listMetricModelsRequestOpts(): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/v1/models/metric`;
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Returns all LLM models available for metric evaluation, grouped by access tier.  - **standard** models are available to all organizations. - **enterprise** models require an Enterprise plan and will return a `403   MODEL_TIER_ACCESS_DENIED` error if used in `runtime_config` by a non-Enterprise org.  Use the `model_id` values from this response when setting `runtime_config.model_version` on a metric. 
+     * List available metric models
+     */
+    async listMetricModelsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIListMetricModelsResponse>> {
+        const requestOptions = await this.listMetricModelsRequestOpts();
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPIListMetricModelsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Returns all LLM models available for metric evaluation, grouped by access tier.  - **standard** models are available to all organizations. - **enterprise** models require an Enterprise plan and will return a `403   MODEL_TIER_ACCESS_DENIED` error if used in `runtime_config` by a non-Enterprise org.  Use the `model_id` values from this response when setting `runtime_config.model_version` on a metric. 
+     * List available metric models
+     */
+    async listMetricModels(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListMetricModelsResponse> {
+        const response = await this.listMetricModelsRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for listMetricThresholds without sending the request
+     */
+    async listMetricThresholdsRequestOpts(requestParameters: ListMetricThresholdsRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['metricId'] == null) {
+            throw new runtime.RequiredError(
+                'metricId',
+                'Required parameter "metricId" was null or undefined when calling listMetricThresholds().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['pageToken'] != null) {
+            queryParameters['page_token'] = requestParameters['pageToken'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/v1/metrics/{metric_id}/thresholds`;
+        urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Retrieve all thresholds for a specific metric.
+     * List metric thresholds
+     */
+    async listMetricThresholdsRaw(requestParameters: ListMetricThresholdsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIListThresholdsResponse>> {
+        const requestOptions = await this.listMetricThresholdsRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPIListThresholdsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Retrieve all thresholds for a specific metric.
+     * List metric thresholds
+     */
+    async listMetricThresholds(requestParameters: ListMetricThresholdsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListThresholdsResponse> {
+        const response = await this.listMetricThresholdsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -484,6 +1434,136 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
      */
     async updateMetric(requestParameters: UpdateMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetMetricResponse> {
         const response = await this.updateMetricRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for updateMetricBaseline without sending the request
+     */
+    async updateMetricBaselineRequestOpts(requestParameters: UpdateMetricBaselineRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['metricId'] == null) {
+            throw new runtime.RequiredError(
+                'metricId',
+                'Required parameter "metricId" was null or undefined when calling updateMetricBaseline().'
+            );
+        }
+
+        if (requestParameters['baselineId'] == null) {
+            throw new runtime.RequiredError(
+                'baselineId',
+                'Required parameter "baselineId" was null or undefined when calling updateMetricBaseline().'
+            );
+        }
+
+        if (requestParameters['covalMetricsAPIUpdateMetricBaselineRequest'] == null) {
+            throw new runtime.RequiredError(
+                'covalMetricsAPIUpdateMetricBaselineRequest',
+                'Required parameter "covalMetricsAPIUpdateMetricBaselineRequest" was null or undefined when calling updateMetricBaseline().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/v1/metrics/{metric_id}/baselines/{baseline_id}`;
+        urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
+        urlPath = urlPath.replace('{baseline_id}', encodeURIComponent(String(requestParameters['baselineId'])));
+
+        return {
+            path: urlPath,
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CovalMetricsAPIUpdateMetricBaselineRequestToJSON(requestParameters['covalMetricsAPIUpdateMetricBaselineRequest']),
+        };
+    }
+
+    /**
+     * Update mutable fields on an anomaly-detection baseline. All fields optional.
+     * Update metric baseline
+     */
+    async updateMetricBaselineRaw(requestParameters: UpdateMetricBaselineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIBaseline>> {
+        const requestOptions = await this.updateMetricBaselineRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPIBaselineFromJSON(jsonValue));
+    }
+
+    /**
+     * Update mutable fields on an anomaly-detection baseline. All fields optional.
+     * Update metric baseline
+     */
+    async updateMetricBaseline(requestParameters: UpdateMetricBaselineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIBaseline> {
+        const response = await this.updateMetricBaselineRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for updateMetricThreshold without sending the request
+     */
+    async updateMetricThresholdRequestOpts(requestParameters: UpdateMetricThresholdRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['metricId'] == null) {
+            throw new runtime.RequiredError(
+                'metricId',
+                'Required parameter "metricId" was null or undefined when calling updateMetricThreshold().'
+            );
+        }
+
+        if (requestParameters['covalMetricsAPIPatchThresholdRequest'] == null) {
+            throw new runtime.RequiredError(
+                'covalMetricsAPIPatchThresholdRequest',
+                'Required parameter "covalMetricsAPIPatchThresholdRequest" was null or undefined when calling updateMetricThreshold().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/v1/metrics/{metric_id}/threshold`;
+        urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
+
+        return {
+            path: urlPath,
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CovalMetricsAPIPatchThresholdRequestToJSON(requestParameters['covalMetricsAPIPatchThresholdRequest']),
+        };
+    }
+
+    /**
+     * Update the threshold for a specific metric. Send `comparison_operator: null` to clear the threshold. 
+     * Update metric threshold
+     */
+    async updateMetricThresholdRaw(requestParameters: UpdateMetricThresholdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIPatchThresholdResponse>> {
+        const requestOptions = await this.updateMetricThresholdRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPIPatchThresholdResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Update the threshold for a specific metric. Send `comparison_operator: null` to clear the threshold. 
+     * Update metric threshold
+     */
+    async updateMetricThreshold(requestParameters: UpdateMetricThresholdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIPatchThresholdResponse> {
+        const response = await this.updateMetricThresholdRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

@@ -107,10 +107,11 @@ Class | Method | HTTP request | Description
 *AgentsApi* | [**get_agent**](docs/AgentsApi.md#get_agent) | **GET** /v1/agents/{agent_id} | Get agent
 *AgentsApi* | [**list_agents**](docs/AgentsApi.md#list_agents) | **GET** /v1/agents | List agents
 *AgentsApi* | [**update_agent**](docs/AgentsApi.md#update_agent) | **PATCH** /v1/agents/{agent_id} | Update agent
+*AudioApi* | [**create_audio_upload**](docs/AudioApi.md#create_audio_upload) | **POST** /v1/audio:upload | Upload audio
 *AudioApi* | [**get_conversation_audio**](docs/AudioApi.md#get_conversation_audio) | **GET** /v1/conversations/{conversation_id}/audio | Get conversation audio
 *ConversationsApi* | [**delete_conversation**](docs/ConversationsApi.md#delete_conversation) | **DELETE** /v1/conversations/{conversation_id} | Delete or cancel conversation
 *ConversationsApi* | [**get_conversation**](docs/ConversationsApi.md#get_conversation) | **GET** /v1/conversations/{conversation_id} | Get conversation details
-*ConversationsApi* | [**get_conversation_metric**](docs/ConversationsApi.md#get_conversation_metric) | **GET** /v1/conversations/{conversation_id}/metrics/{metric_output_id} | Get single conversation metric
+*ConversationsApi* | [**get_conversation_metric**](docs/ConversationsApi.md#get_conversation_metric) | **GET** /v1/conversations/{conversation_id}/metrics/{metric_output_id} | Get conversation metric output(s)
 *ConversationsApi* | [**list_conversation_metrics**](docs/ConversationsApi.md#list_conversation_metrics) | **GET** /v1/conversations/{conversation_id}/metrics | List conversation metrics
 *ConversationsApi* | [**list_conversations**](docs/ConversationsApi.md#list_conversations) | **GET** /v1/conversations | List conversations
 *ConversationsApi* | [**patch_conversation**](docs/ConversationsApi.md#patch_conversation) | **PATCH** /v1/conversations/{conversation_id} | Attach audio to a conversation
@@ -120,13 +121,24 @@ Class | Method | HTTP request | Description
 *DashboardsApi* | [**get_dashboard**](docs/DashboardsApi.md#get_dashboard) | **GET** /v1/dashboards/{dashboard_id} | Get dashboard
 *DashboardsApi* | [**list_dashboards**](docs/DashboardsApi.md#list_dashboards) | **GET** /v1/dashboards | List dashboards
 *DashboardsApi* | [**update_dashboard**](docs/DashboardsApi.md#update_dashboard) | **PATCH** /v1/dashboards/{dashboard_id} | Update dashboard
-*MetricOutputsApi* | [**simulations_get_metric**](docs/MetricOutputsApi.md#simulations_get_metric) | **GET** /v1/simulations/{simulation_id}/metrics/{metric_output_id} | Get metric
+*MetricOutputsApi* | [**simulations_get_metric**](docs/MetricOutputsApi.md#simulations_get_metric) | **GET** /v1/simulations/{simulation_id}/metrics/{metric_output_id} | Get simulation metric output(s)
 *MetricOutputsApi* | [**simulations_list_metrics**](docs/MetricOutputsApi.md#simulations_list_metrics) | **GET** /v1/simulations/{simulation_id}/metrics | List metrics
 *MetricsApi* | [**create_metric**](docs/MetricsApi.md#create_metric) | **POST** /v1/metrics | Create metric
+*MetricsApi* | [**create_metric_baseline**](docs/MetricsApi.md#create_metric_baseline) | **POST** /v1/metrics/{metric_id}/baselines | Create metric baseline
+*MetricsApi* | [**create_metric_threshold**](docs/MetricsApi.md#create_metric_threshold) | **POST** /v1/metrics/{metric_id}/thresholds | Create metric threshold
 *MetricsApi* | [**delete_metric**](docs/MetricsApi.md#delete_metric) | **DELETE** /v1/metrics/{metric_id} | Delete metric
+*MetricsApi* | [**delete_metric_baseline**](docs/MetricsApi.md#delete_metric_baseline) | **DELETE** /v1/metrics/{metric_id}/baselines/{baseline_id} | Delete metric baseline
+*MetricsApi* | [**delete_metric_threshold**](docs/MetricsApi.md#delete_metric_threshold) | **DELETE** /v1/metrics/{metric_id}/thresholds/{threshold_id} | Delete metric threshold
 *MetricsApi* | [**get_metric**](docs/MetricsApi.md#get_metric) | **GET** /v1/metrics/{metric_id} | Get metric
+*MetricsApi* | [**get_metric_baseline**](docs/MetricsApi.md#get_metric_baseline) | **GET** /v1/metrics/{metric_id}/baselines/{baseline_id} | Get metric baseline
+*MetricsApi* | [**get_metric_threshold**](docs/MetricsApi.md#get_metric_threshold) | **GET** /v1/metrics/{metric_id}/threshold | Get metric threshold
+*MetricsApi* | [**list_metric_baselines**](docs/MetricsApi.md#list_metric_baselines) | **GET** /v1/metrics/{metric_id}/baselines | List metric baselines
+*MetricsApi* | [**list_metric_models**](docs/MetricsApi.md#list_metric_models) | **GET** /v1/models/metric | List available metric models
+*MetricsApi* | [**list_metric_thresholds**](docs/MetricsApi.md#list_metric_thresholds) | **GET** /v1/metrics/{metric_id}/thresholds | List metric thresholds
 *MetricsApi* | [**list_metrics**](docs/MetricsApi.md#list_metrics) | **GET** /v1/metrics | List metrics
 *MetricsApi* | [**update_metric**](docs/MetricsApi.md#update_metric) | **PATCH** /v1/metrics/{metric_id} | Update metric
+*MetricsApi* | [**update_metric_baseline**](docs/MetricsApi.md#update_metric_baseline) | **PATCH** /v1/metrics/{metric_id}/baselines/{baseline_id} | Update metric baseline
+*MetricsApi* | [**update_metric_threshold**](docs/MetricsApi.md#update_metric_threshold) | **PATCH** /v1/metrics/{metric_id}/threshold | Update metric threshold
 *MonitorEventsApi* | [**list_monitor_events**](docs/MonitorEventsApi.md#list_monitor_events) | **GET** /monitors/{monitor_id}/events | List monitor events
 *MonitorsApi* | [**create_monitor**](docs/MonitorsApi.md#create_monitor) | **POST** /monitors | Create a monitor
 *MonitorsApi* | [**delete_monitor**](docs/MonitorsApi.md#delete_monitor) | **DELETE** /monitors/{monitor_id} | Delete a monitor
@@ -165,6 +177,7 @@ Class | Method | HTTP request | Description
 *RunsApi* | [**get_run**](docs/RunsApi.md#get_run) | **GET** /runs/{run_id} | Get run
 *RunsApi* | [**launch_run**](docs/RunsApi.md#launch_run) | **POST** /runs | Launch run
 *RunsApi* | [**list_runs**](docs/RunsApi.md#list_runs) | **GET** /runs | List runs
+*RunsApi* | [**update_run**](docs/RunsApi.md#update_run) | **PATCH** /runs/{run_id} | Update run
 *ScheduledRunsApi* | [**create_scheduled_run**](docs/ScheduledRunsApi.md#create_scheduled_run) | **POST** /v1/scheduled-runs | Create scheduled run
 *ScheduledRunsApi* | [**delete_scheduled_run**](docs/ScheduledRunsApi.md#delete_scheduled_run) | **DELETE** /v1/scheduled-runs/{scheduled_run_id} | Delete scheduled run
 *ScheduledRunsApi* | [**get_scheduled_run**](docs/ScheduledRunsApi.md#get_scheduled_run) | **GET** /v1/scheduled-runs/{scheduled_run_id} | Get scheduled run
@@ -175,6 +188,7 @@ Class | Method | HTTP request | Description
 *SimulationsApi* | [**get_simulation**](docs/SimulationsApi.md#get_simulation) | **GET** /v1/simulations/{simulation_id} | Get simulation
 *SimulationsApi* | [**list_simulations**](docs/SimulationsApi.md#list_simulations) | **GET** /v1/simulations | List simulations
 *SimulationsApi* | [**resimulate_simulation**](docs/SimulationsApi.md#resimulate_simulation) | **POST** /v1/simulations/{simulation_id}/resimulate | Rerun a simulation
+*SimulationsApi* | [**update_simulation**](docs/SimulationsApi.md#update_simulation) | **PATCH** /v1/simulations/{simulation_id} | Update simulation
 *TemplatesApi* | [**create_template**](docs/TemplatesApi.md#create_template) | **POST** /v1/templates | Create a template
 *TemplatesApi* | [**delete_template**](docs/TemplatesApi.md#delete_template) | **DELETE** /v1/templates/{template_id} | Delete template
 *TemplatesApi* | [**duplicate_template**](docs/TemplatesApi.md#duplicate_template) | **POST** /v1/templates/{template_id}/duplicate | Duplicate template
@@ -191,6 +205,7 @@ Class | Method | HTTP request | Description
 *TestSetsApi* | [**get_test_set**](docs/TestSetsApi.md#get_test_set) | **GET** /test-sets/{test_set_id} | Get test set
 *TestSetsApi* | [**list_test_sets**](docs/TestSetsApi.md#list_test_sets) | **GET** /test-sets | List test sets
 *TestSetsApi* | [**update_test_set**](docs/TestSetsApi.md#update_test_set) | **PATCH** /test-sets/{test_set_id} | Update test set
+*TracesApi* | [**ingest_traces**](docs/TracesApi.md#ingest_traces) | **POST** /traces | Ingest OTLP traces
 *WidgetsApi* | [**create_widget**](docs/WidgetsApi.md#create_widget) | **POST** /v1/dashboards/{dashboard_id}/widgets | Create widget
 *WidgetsApi* | [**delete_widget**](docs/WidgetsApi.md#delete_widget) | **DELETE** /v1/dashboards/{dashboard_id}/widgets/{widget_id} | Delete widget
 *WidgetsApi* | [**get_widget**](docs/WidgetsApi.md#get_widget) | **GET** /v1/dashboards/{dashboard_id}/widgets/{widget_id} | Get widget
@@ -237,6 +252,8 @@ Class | Method | HTTP request | Description
  - [CovalConversationsAPIConversationProgress](docs/CovalConversationsAPIConversationProgress.md)
  - [CovalConversationsAPIConversationResource](docs/CovalConversationsAPIConversationResource.md)
  - [CovalConversationsAPIConversationStatus](docs/CovalConversationsAPIConversationStatus.md)
+ - [CovalConversationsAPICreateAudioUploadRequest](docs/CovalConversationsAPICreateAudioUploadRequest.md)
+ - [CovalConversationsAPICreateAudioUploadResponse](docs/CovalConversationsAPICreateAudioUploadResponse.md)
  - [CovalConversationsAPIDeleteConversationResponse](docs/CovalConversationsAPIDeleteConversationResponse.md)
  - [CovalConversationsAPIErrorDetail](docs/CovalConversationsAPIErrorDetail.md)
  - [CovalConversationsAPIErrorResponse](docs/CovalConversationsAPIErrorResponse.md)
@@ -246,6 +263,7 @@ Class | Method | HTTP request | Description
  - [CovalConversationsAPIGetConversationResponse](docs/CovalConversationsAPIGetConversationResponse.md)
  - [CovalConversationsAPIListConversationMetricsResponse](docs/CovalConversationsAPIListConversationMetricsResponse.md)
  - [CovalConversationsAPIListConversationsResponse](docs/CovalConversationsAPIListConversationsResponse.md)
+ - [CovalConversationsAPIMetricOutputCollection](docs/CovalConversationsAPIMetricOutputCollection.md)
  - [CovalConversationsAPIPatchConversationRequest](docs/CovalConversationsAPIPatchConversationRequest.md)
  - [CovalConversationsAPISimpleMetricOutput](docs/CovalConversationsAPISimpleMetricOutput.md)
  - [CovalConversationsAPISimpleMetricOutputValue](docs/CovalConversationsAPISimpleMetricOutputValue.md)
@@ -285,16 +303,36 @@ Class | Method | HTTP request | Description
  - [CovalDashboardsAPIWidgetConfig](docs/CovalDashboardsAPIWidgetConfig.md)
  - [CovalDashboardsAPIWidgetResource](docs/CovalDashboardsAPIWidgetResource.md)
  - [CovalDashboardsAPIWidgetType](docs/CovalDashboardsAPIWidgetType.md)
+ - [CovalMetricsAPIBaseline](docs/CovalMetricsAPIBaseline.md)
+ - [CovalMetricsAPIBaselineConfig](docs/CovalMetricsAPIBaselineConfig.md)
+ - [CovalMetricsAPIBaselineDetectionMethod](docs/CovalMetricsAPIBaselineDetectionMethod.md)
+ - [CovalMetricsAPIBaselineDirection](docs/CovalMetricsAPIBaselineDirection.md)
+ - [CovalMetricsAPIBaselineStatus](docs/CovalMetricsAPIBaselineStatus.md)
+ - [CovalMetricsAPIComparisonOperator](docs/CovalMetricsAPIComparisonOperator.md)
+ - [CovalMetricsAPICreateMetricBaselineRequest](docs/CovalMetricsAPICreateMetricBaselineRequest.md)
  - [CovalMetricsAPICreateMetricRequest](docs/CovalMetricsAPICreateMetricRequest.md)
+ - [CovalMetricsAPICreateThresholdRequest](docs/CovalMetricsAPICreateThresholdRequest.md)
+ - [CovalMetricsAPICreateThresholdResponse](docs/CovalMetricsAPICreateThresholdResponse.md)
  - [CovalMetricsAPIErrorResponse](docs/CovalMetricsAPIErrorResponse.md)
  - [CovalMetricsAPIErrorResponseError](docs/CovalMetricsAPIErrorResponseError.md)
  - [CovalMetricsAPIErrorResponseErrorDetailsInner](docs/CovalMetricsAPIErrorResponseErrorDetailsInner.md)
  - [CovalMetricsAPIGetMetricResponse](docs/CovalMetricsAPIGetMetricResponse.md)
+ - [CovalMetricsAPIGetThresholdResponse](docs/CovalMetricsAPIGetThresholdResponse.md)
+ - [CovalMetricsAPIListMetricBaselinesResponse](docs/CovalMetricsAPIListMetricBaselinesResponse.md)
+ - [CovalMetricsAPIListMetricModelsResponse](docs/CovalMetricsAPIListMetricModelsResponse.md)
  - [CovalMetricsAPIListMetricsResponse](docs/CovalMetricsAPIListMetricsResponse.md)
+ - [CovalMetricsAPIListThresholdsResponse](docs/CovalMetricsAPIListThresholdsResponse.md)
  - [CovalMetricsAPIMetadataFieldType](docs/CovalMetricsAPIMetadataFieldType.md)
+ - [CovalMetricsAPIMetricModelResource](docs/CovalMetricsAPIMetricModelResource.md)
  - [CovalMetricsAPIMetricResource](docs/CovalMetricsAPIMetricResource.md)
+ - [CovalMetricsAPIMetricRuntimeConfig](docs/CovalMetricsAPIMetricRuntimeConfig.md)
+ - [CovalMetricsAPIMetricThresholdResource](docs/CovalMetricsAPIMetricThresholdResource.md)
  - [CovalMetricsAPIMetricType](docs/CovalMetricsAPIMetricType.md)
+ - [CovalMetricsAPIPatchThresholdRequest](docs/CovalMetricsAPIPatchThresholdRequest.md)
+ - [CovalMetricsAPIPatchThresholdResponse](docs/CovalMetricsAPIPatchThresholdResponse.md)
  - [CovalMetricsAPITargetCondition](docs/CovalMetricsAPITargetCondition.md)
+ - [CovalMetricsAPIThresholdSource](docs/CovalMetricsAPIThresholdSource.md)
+ - [CovalMetricsAPIUpdateMetricBaselineRequest](docs/CovalMetricsAPIUpdateMetricBaselineRequest.md)
  - [CovalMetricsAPIUpdateMetricRequest](docs/CovalMetricsAPIUpdateMetricRequest.md)
  - [CovalMonitorsAPIChannelInput](docs/CovalMonitorsAPIChannelInput.md)
  - [CovalMonitorsAPIChannelType](docs/CovalMonitorsAPIChannelType.md)
@@ -347,6 +385,7 @@ Class | Method | HTTP request | Description
  - [CovalReviewsAPIGetReviewProjectResponse](docs/CovalReviewsAPIGetReviewProjectResponse.md)
  - [CovalReviewsAPIListReviewAnnotationsResponse](docs/CovalReviewsAPIListReviewAnnotationsResponse.md)
  - [CovalReviewsAPIListReviewProjectsResponse](docs/CovalReviewsAPIListReviewProjectsResponse.md)
+ - [CovalReviewsAPIProjectRule](docs/CovalReviewsAPIProjectRule.md)
  - [CovalReviewsAPIProjectType](docs/CovalReviewsAPIProjectType.md)
  - [CovalReviewsAPIReviewAnnotationResource](docs/CovalReviewsAPIReviewAnnotationResource.md)
  - [CovalReviewsAPIReviewProjectResource](docs/CovalReviewsAPIReviewProjectResource.md)
@@ -374,6 +413,7 @@ Class | Method | HTTP request | Description
  - [CovalRunsAPIProgress](docs/CovalRunsAPIProgress.md)
  - [CovalRunsAPIResults](docs/CovalRunsAPIResults.md)
  - [CovalRunsAPIRun](docs/CovalRunsAPIRun.md)
+ - [CovalRunsAPIUpdateRunRequest](docs/CovalRunsAPIUpdateRunRequest.md)
  - [CovalScheduledRunsAPICreateScheduledRunRequest](docs/CovalScheduledRunsAPICreateScheduledRunRequest.md)
  - [CovalScheduledRunsAPICreateScheduledRunResponse](docs/CovalScheduledRunsAPICreateScheduledRunResponse.md)
  - [CovalScheduledRunsAPIErrorResponse](docs/CovalScheduledRunsAPIErrorResponse.md)
@@ -392,6 +432,7 @@ Class | Method | HTTP request | Description
  - [CovalSimulationsAPIGetSimulationResponse](docs/CovalSimulationsAPIGetSimulationResponse.md)
  - [CovalSimulationsAPIListMetricsResponse](docs/CovalSimulationsAPIListMetricsResponse.md)
  - [CovalSimulationsAPIListSimulationsResponse](docs/CovalSimulationsAPIListSimulationsResponse.md)
+ - [CovalSimulationsAPIMetricOutputCollection](docs/CovalSimulationsAPIMetricOutputCollection.md)
  - [CovalSimulationsAPIResimulateSimulationResponse](docs/CovalSimulationsAPIResimulateSimulationResponse.md)
  - [CovalSimulationsAPISimpleMetricOutput](docs/CovalSimulationsAPISimpleMetricOutput.md)
  - [CovalSimulationsAPISimpleMetricOutputValue](docs/CovalSimulationsAPISimpleMetricOutputValue.md)
@@ -400,6 +441,8 @@ Class | Method | HTTP request | Description
  - [CovalSimulationsAPISubvalueByTimestamp](docs/CovalSimulationsAPISubvalueByTimestamp.md)
  - [CovalSimulationsAPITranscriptMessage](docs/CovalSimulationsAPITranscriptMessage.md)
  - [CovalSimulationsAPITranscriptMessageContent](docs/CovalSimulationsAPITranscriptMessageContent.md)
+ - [CovalSimulationsAPIUpdateSimulationRequest](docs/CovalSimulationsAPIUpdateSimulationRequest.md)
+ - [CovalSimulationsAPIUpdateSimulationResponse](docs/CovalSimulationsAPIUpdateSimulationResponse.md)
  - [CovalTemplatesAPICreateTemplateRequest](docs/CovalTemplatesAPICreateTemplateRequest.md)
  - [CovalTemplatesAPICreateTemplateResponse](docs/CovalTemplatesAPICreateTemplateResponse.md)
  - [CovalTemplatesAPIDuplicateTemplateResponse](docs/CovalTemplatesAPIDuplicateTemplateResponse.md)
@@ -414,11 +457,14 @@ Class | Method | HTTP request | Description
  - [CovalTemplatesAPIUpdateTemplateResponse](docs/CovalTemplatesAPIUpdateTemplateResponse.md)
  - [CreateTestCase201Response](docs/CreateTestCase201Response.md)
  - [CreateTestSet201Response](docs/CreateTestSet201Response.md)
+ - [GetConversationMetric200Response](docs/GetConversationMetric200Response.md)
  - [GetRun200Response](docs/GetRun200Response.md)
+ - [IngestTraces200Response](docs/IngestTraces200Response.md)
  - [ListRuns200Response](docs/ListRuns200Response.md)
  - [ListRuns400Response](docs/ListRuns400Response.md)
  - [ListTestCases200Response](docs/ListTestCases200Response.md)
  - [ListTestSets200Response](docs/ListTestSets200Response.md)
+ - [SimulationsGetMetric200Response](docs/SimulationsGetMetric200Response.md)
  - [TestCasesAPICreateTestCaseRequest](docs/TestCasesAPICreateTestCaseRequest.md)
  - [TestCasesAPIErrorResponse](docs/TestCasesAPIErrorResponse.md)
  - [TestCasesAPIErrorResponseError](docs/TestCasesAPIErrorResponseError.md)
@@ -431,6 +477,9 @@ Class | Method | HTTP request | Description
  - [TestSetsAPIErrorResponseErrorDetailsInner](docs/TestSetsAPIErrorResponseErrorDetailsInner.md)
  - [TestSetsAPITestSetResource](docs/TestSetsAPITestSetResource.md)
  - [TestSetsAPIUpdateTestSetRequest](docs/TestSetsAPIUpdateTestSetRequest.md)
+ - [TracesAPIErrorResponse](docs/TracesAPIErrorResponse.md)
+ - [TracesAPIErrorResponseError](docs/TracesAPIErrorResponseError.md)
+ - [TracesAPIErrorResponseErrorDetailsInner](docs/TracesAPIErrorResponseErrorDetailsInner.md)
 
 
 <a id="documentation-for-authorization"></a>
@@ -442,7 +491,7 @@ Authentication schemes defined for the API:
 ### Coval_Agents_API_ApiKeyAuth
 
 - **Type**: API key
-- **API key parameter name**: X-API-Key
+- **API key parameter name**: x-api-key
 - **Location**: HTTP header
 
 <a id="Coval_API_Keys_API_ApiKeyAuth"></a>
@@ -545,6 +594,13 @@ Authentication schemes defined for the API:
 
 <a id="Test_Sets_API_apiKey"></a>
 ### Test_Sets_API_apiKey
+
+- **Type**: API key
+- **API key parameter name**: X-API-Key
+- **Location**: HTTP header
+
+<a id="Traces_API_apiKey"></a>
+### Traces_API_apiKey
 
 - **Type**: API key
 - **API key parameter name**: X-API-Key

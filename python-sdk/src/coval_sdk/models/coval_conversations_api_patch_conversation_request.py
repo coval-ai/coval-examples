@@ -28,7 +28,7 @@ class CovalConversationsAPIPatchConversationRequest(BaseModel):
     """
     Request to attach audio to an already-submitted conversation.  **Exactly one** of `audio_url` or `audio` must be provided. Submitting both, or neither, returns `400 INVALID_ARGUMENT`.  **Idempotency:** Audio can be attached only once per conversation. A second PATCH on a conversation that already has audio returns `409 ALREADY_EXISTS`. Conversations that were submitted with audio via `POST /v1/conversations:submit` already have audio attached and cannot be PATCHed. 
     """ # noqa: E501
-    audio_url: Optional[StrictStr] = Field(default=None, description="Presigned URL to the audio recording. Same validation rules as `audio_url` on `POST /v1/conversations:submit` (WAV or MP3, 5 s to 60 min, 200 MB max). Supports AWS S3, GCP Cloud Storage, Azure Blob Storage, or any public/presigned HTTPS URL. ")
+    audio_url: Optional[StrictStr] = Field(default=None, description="Presigned URL to the audio recording. Same validation rules as `audio_url` on `POST /v1/conversations:submit` (WAV or MP3, 5 s to 60 min, 200 MB max). Supports AWS S3, GCP Cloud Storage, Azure Blob Storage, or any public/presigned HTTPS URL. The `s3://bucket/key` protocol form is also accepted. ")
     audio: Optional[StrictStr] = Field(default=None, description="Base64-encoded audio bytes. Same format and size limits as `audio_url`. Prefer `audio_url` for anything other than very small clips. ")
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["audio_url", "audio"]

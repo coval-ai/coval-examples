@@ -20,6 +20,13 @@ import {
     CovalReviewsAPIProjectTypeToJSON,
     CovalReviewsAPIProjectTypeToJSONTyped,
 } from './CovalReviewsAPIProjectType.js';
+import type { CovalReviewsAPIProjectRule } from './CovalReviewsAPIProjectRule.js';
+import {
+    CovalReviewsAPIProjectRuleFromJSON,
+    CovalReviewsAPIProjectRuleFromJSONTyped,
+    CovalReviewsAPIProjectRuleToJSON,
+    CovalReviewsAPIProjectRuleToJSONTyped,
+} from './CovalReviewsAPIProjectRule.js';
 
 /**
  * 
@@ -69,6 +76,12 @@ export interface CovalReviewsAPICreateReviewProjectRequest {
      * @memberof CovalReviewsAPICreateReviewProjectRequest
      */
     notifications?: boolean;
+    /**
+     * Rules to apply to this project
+     * @type {Array<CovalReviewsAPIProjectRule>}
+     * @memberof CovalReviewsAPICreateReviewProjectRequest
+     */
+    project_rules?: Array<CovalReviewsAPIProjectRule> | null;
 }
 
 
@@ -101,6 +114,7 @@ export function CovalReviewsAPICreateReviewProjectRequestFromJSONTyped(json: any
         'linked_metric_ids': json['linked_metric_ids'],
         'project_type': json['project_type'] == null ? undefined : CovalReviewsAPIProjectTypeFromJSON(json['project_type']),
         'notifications': json['notifications'] == null ? undefined : json['notifications'],
+        'project_rules': json['project_rules'] == null ? undefined : ((json['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleFromJSON)),
     };
 }
 
@@ -122,6 +136,7 @@ export function CovalReviewsAPICreateReviewProjectRequestToJSONTyped(value?: Cov
         'linked_metric_ids': value['linked_metric_ids'],
         'project_type': CovalReviewsAPIProjectTypeToJSON(value['project_type']),
         'notifications': value['notifications'],
+        'project_rules': value['project_rules'] == null ? undefined : ((value['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleToJSON)),
     };
 }
 

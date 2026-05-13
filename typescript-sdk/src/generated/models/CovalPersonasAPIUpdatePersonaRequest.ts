@@ -55,6 +55,24 @@ export interface CovalPersonasAPIUpdatePersonaRequest {
      */
     background_sound?: CovalPersonasAPIUpdatePersonaRequestBackgroundSoundEnum | null;
     /**
+     * Volume level for background sound (>= 0.0, no upper limit).
+     * @type {number}
+     * @memberof CovalPersonasAPIUpdatePersonaRequest
+     */
+    background_sound_volume?: number | null;
+    /**
+     * Voice gain multiplier. Send null to clear an existing configured volume.
+     * @type {number}
+     * @memberof CovalPersonasAPIUpdatePersonaRequest
+     */
+    voice_volume?: number | null;
+    /**
+     * Voice speed multiplier accepted and stored from 0.25 to 2.0. Send null to clear an existing configured speed. The selected voice may enforce a narrower effective range or ignore speed changes.
+     * @type {number}
+     * @memberof CovalPersonasAPIUpdatePersonaRequest
+     */
+    voice_speed?: number | null;
+    /**
      * Response delay in seconds
      * @type {number}
      * @memberof CovalPersonasAPIUpdatePersonaRequest
@@ -67,7 +85,13 @@ export interface CovalPersonasAPIUpdatePersonaRequest {
      */
     conversation_initiation?: CovalPersonasAPIUpdatePersonaRequestConversationInitiationEnum | null;
     /**
-     * Disconnect after this many seconds of no speech activity (5-300)
+     * Enable multilingual speech-to-text so callers speaking languages other than the primary language_code are still transcribed accurately.
+     * @type {boolean}
+     * @memberof CovalPersonasAPIUpdatePersonaRequest
+     */
+    multi_language_stt?: boolean | null;
+    /**
+     * Disconnect after this many seconds of no speech (5-300)
      * @type {number}
      * @memberof CovalPersonasAPIUpdatePersonaRequest
      */
@@ -134,8 +158,12 @@ export function CovalPersonasAPIUpdatePersonaRequestFromJSONTyped(json: any, ign
         'voice_name': json['voice_name'] == null ? undefined : json['voice_name'],
         'language_code': json['language_code'] == null ? undefined : json['language_code'],
         'background_sound': json['background_sound'] == null ? undefined : json['background_sound'],
+        'background_sound_volume': json['background_sound_volume'] == null ? undefined : json['background_sound_volume'],
+        'voice_volume': json['voice_volume'] == null ? undefined : json['voice_volume'],
+        'voice_speed': json['voice_speed'] == null ? undefined : json['voice_speed'],
         'wait_seconds': json['wait_seconds'] == null ? undefined : json['wait_seconds'],
         'conversation_initiation': json['conversation_initiation'] == null ? undefined : json['conversation_initiation'],
+        'multi_language_stt': json['multi_language_stt'] == null ? undefined : json['multi_language_stt'],
         'hold_music_timeout_seconds': json['hold_music_timeout_seconds'] == null ? undefined : json['hold_music_timeout_seconds'],
     };
 }
@@ -156,8 +184,12 @@ export function CovalPersonasAPIUpdatePersonaRequestToJSONTyped(value?: CovalPer
         'voice_name': value['voice_name'],
         'language_code': value['language_code'],
         'background_sound': value['background_sound'],
+        'background_sound_volume': value['background_sound_volume'],
+        'voice_volume': value['voice_volume'],
+        'voice_speed': value['voice_speed'],
         'wait_seconds': value['wait_seconds'],
         'conversation_initiation': value['conversation_initiation'],
+        'multi_language_stt': value['multi_language_stt'],
         'hold_music_timeout_seconds': value['hold_music_timeout_seconds'],
     };
 }

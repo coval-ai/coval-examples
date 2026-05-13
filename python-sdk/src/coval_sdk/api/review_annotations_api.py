@@ -48,6 +48,7 @@ class ReviewAnnotationsApi:
     def create_review_annotation(
         self,
         coval_reviews_api_create_review_annotation_request: CovalReviewsAPICreateReviewAnnotationRequest,
+        project_id: Annotated[Optional[StrictStr], Field(description="Optional project ID to apply project-rule-aware completion status")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -67,6 +68,8 @@ class ReviewAnnotationsApi:
 
         :param coval_reviews_api_create_review_annotation_request: (required)
         :type coval_reviews_api_create_review_annotation_request: CovalReviewsAPICreateReviewAnnotationRequest
+        :param project_id: Optional project ID to apply project-rule-aware completion status
+        :type project_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -91,6 +94,7 @@ class ReviewAnnotationsApi:
 
         _param = self._create_review_annotation_serialize(
             coval_reviews_api_create_review_annotation_request=coval_reviews_api_create_review_annotation_request,
+            project_id=project_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -101,6 +105,7 @@ class ReviewAnnotationsApi:
             '201': "CovalReviewsAPICreateReviewAnnotationResponse",
             '400': "CovalReviewsAPIErrorResponse",
             '401': "CovalReviewsAPIErrorResponse",
+            '404': "CovalReviewsAPIErrorResponse",
             '500': "CovalReviewsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -118,6 +123,7 @@ class ReviewAnnotationsApi:
     def create_review_annotation_with_http_info(
         self,
         coval_reviews_api_create_review_annotation_request: CovalReviewsAPICreateReviewAnnotationRequest,
+        project_id: Annotated[Optional[StrictStr], Field(description="Optional project ID to apply project-rule-aware completion status")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -137,6 +143,8 @@ class ReviewAnnotationsApi:
 
         :param coval_reviews_api_create_review_annotation_request: (required)
         :type coval_reviews_api_create_review_annotation_request: CovalReviewsAPICreateReviewAnnotationRequest
+        :param project_id: Optional project ID to apply project-rule-aware completion status
+        :type project_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -161,6 +169,7 @@ class ReviewAnnotationsApi:
 
         _param = self._create_review_annotation_serialize(
             coval_reviews_api_create_review_annotation_request=coval_reviews_api_create_review_annotation_request,
+            project_id=project_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -171,6 +180,7 @@ class ReviewAnnotationsApi:
             '201': "CovalReviewsAPICreateReviewAnnotationResponse",
             '400': "CovalReviewsAPIErrorResponse",
             '401': "CovalReviewsAPIErrorResponse",
+            '404': "CovalReviewsAPIErrorResponse",
             '500': "CovalReviewsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -188,6 +198,7 @@ class ReviewAnnotationsApi:
     def create_review_annotation_without_preload_content(
         self,
         coval_reviews_api_create_review_annotation_request: CovalReviewsAPICreateReviewAnnotationRequest,
+        project_id: Annotated[Optional[StrictStr], Field(description="Optional project ID to apply project-rule-aware completion status")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -207,6 +218,8 @@ class ReviewAnnotationsApi:
 
         :param coval_reviews_api_create_review_annotation_request: (required)
         :type coval_reviews_api_create_review_annotation_request: CovalReviewsAPICreateReviewAnnotationRequest
+        :param project_id: Optional project ID to apply project-rule-aware completion status
+        :type project_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -231,6 +244,7 @@ class ReviewAnnotationsApi:
 
         _param = self._create_review_annotation_serialize(
             coval_reviews_api_create_review_annotation_request=coval_reviews_api_create_review_annotation_request,
+            project_id=project_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -241,6 +255,7 @@ class ReviewAnnotationsApi:
             '201': "CovalReviewsAPICreateReviewAnnotationResponse",
             '400': "CovalReviewsAPIErrorResponse",
             '401': "CovalReviewsAPIErrorResponse",
+            '404': "CovalReviewsAPIErrorResponse",
             '500': "CovalReviewsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -253,6 +268,7 @@ class ReviewAnnotationsApi:
     def _create_review_annotation_serialize(
         self,
         coval_reviews_api_create_review_annotation_request,
+        project_id,
         _request_auth,
         _content_type,
         _headers,
@@ -275,6 +291,10 @@ class ReviewAnnotationsApi:
 
         # process the path parameters
         # process the query parameters
+        if project_id is not None:
+            
+            _query_params.append(('project_id', project_id))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -601,6 +621,7 @@ class ReviewAnnotationsApi:
     def get_review_annotation(
         self,
         annotation_id: Annotated[StrictStr, Field(description="The annotation ID")],
+        project_id: Annotated[Optional[StrictStr], Field(description="Optional project ID to apply project-rule-aware completion status")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -620,6 +641,8 @@ class ReviewAnnotationsApi:
 
         :param annotation_id: The annotation ID (required)
         :type annotation_id: str
+        :param project_id: Optional project ID to apply project-rule-aware completion status
+        :type project_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -644,6 +667,7 @@ class ReviewAnnotationsApi:
 
         _param = self._get_review_annotation_serialize(
             annotation_id=annotation_id,
+            project_id=project_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -671,6 +695,7 @@ class ReviewAnnotationsApi:
     def get_review_annotation_with_http_info(
         self,
         annotation_id: Annotated[StrictStr, Field(description="The annotation ID")],
+        project_id: Annotated[Optional[StrictStr], Field(description="Optional project ID to apply project-rule-aware completion status")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -690,6 +715,8 @@ class ReviewAnnotationsApi:
 
         :param annotation_id: The annotation ID (required)
         :type annotation_id: str
+        :param project_id: Optional project ID to apply project-rule-aware completion status
+        :type project_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -714,6 +741,7 @@ class ReviewAnnotationsApi:
 
         _param = self._get_review_annotation_serialize(
             annotation_id=annotation_id,
+            project_id=project_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -741,6 +769,7 @@ class ReviewAnnotationsApi:
     def get_review_annotation_without_preload_content(
         self,
         annotation_id: Annotated[StrictStr, Field(description="The annotation ID")],
+        project_id: Annotated[Optional[StrictStr], Field(description="Optional project ID to apply project-rule-aware completion status")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -760,6 +789,8 @@ class ReviewAnnotationsApi:
 
         :param annotation_id: The annotation ID (required)
         :type annotation_id: str
+        :param project_id: Optional project ID to apply project-rule-aware completion status
+        :type project_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -784,6 +815,7 @@ class ReviewAnnotationsApi:
 
         _param = self._get_review_annotation_serialize(
             annotation_id=annotation_id,
+            project_id=project_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -806,6 +838,7 @@ class ReviewAnnotationsApi:
     def _get_review_annotation_serialize(
         self,
         annotation_id,
+        project_id,
         _request_auth,
         _content_type,
         _headers,
@@ -830,6 +863,10 @@ class ReviewAnnotationsApi:
         if annotation_id is not None:
             _path_params['annotation_id'] = annotation_id
         # process the query parameters
+        if project_id is not None:
+            
+            _query_params.append(('project_id', project_id))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -1195,6 +1232,7 @@ class ReviewAnnotationsApi:
         self,
         annotation_id: Annotated[StrictStr, Field(description="The annotation ID")],
         coval_reviews_api_update_review_annotation_request: CovalReviewsAPIUpdateReviewAnnotationRequest,
+        project_id: Annotated[Optional[StrictStr], Field(description="Optional project ID to apply project-rule-aware completion status")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1216,6 +1254,8 @@ class ReviewAnnotationsApi:
         :type annotation_id: str
         :param coval_reviews_api_update_review_annotation_request: (required)
         :type coval_reviews_api_update_review_annotation_request: CovalReviewsAPIUpdateReviewAnnotationRequest
+        :param project_id: Optional project ID to apply project-rule-aware completion status
+        :type project_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1241,6 +1281,7 @@ class ReviewAnnotationsApi:
         _param = self._update_review_annotation_serialize(
             annotation_id=annotation_id,
             coval_reviews_api_update_review_annotation_request=coval_reviews_api_update_review_annotation_request,
+            project_id=project_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1270,6 +1311,7 @@ class ReviewAnnotationsApi:
         self,
         annotation_id: Annotated[StrictStr, Field(description="The annotation ID")],
         coval_reviews_api_update_review_annotation_request: CovalReviewsAPIUpdateReviewAnnotationRequest,
+        project_id: Annotated[Optional[StrictStr], Field(description="Optional project ID to apply project-rule-aware completion status")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1291,6 +1333,8 @@ class ReviewAnnotationsApi:
         :type annotation_id: str
         :param coval_reviews_api_update_review_annotation_request: (required)
         :type coval_reviews_api_update_review_annotation_request: CovalReviewsAPIUpdateReviewAnnotationRequest
+        :param project_id: Optional project ID to apply project-rule-aware completion status
+        :type project_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1316,6 +1360,7 @@ class ReviewAnnotationsApi:
         _param = self._update_review_annotation_serialize(
             annotation_id=annotation_id,
             coval_reviews_api_update_review_annotation_request=coval_reviews_api_update_review_annotation_request,
+            project_id=project_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1345,6 +1390,7 @@ class ReviewAnnotationsApi:
         self,
         annotation_id: Annotated[StrictStr, Field(description="The annotation ID")],
         coval_reviews_api_update_review_annotation_request: CovalReviewsAPIUpdateReviewAnnotationRequest,
+        project_id: Annotated[Optional[StrictStr], Field(description="Optional project ID to apply project-rule-aware completion status")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1366,6 +1412,8 @@ class ReviewAnnotationsApi:
         :type annotation_id: str
         :param coval_reviews_api_update_review_annotation_request: (required)
         :type coval_reviews_api_update_review_annotation_request: CovalReviewsAPIUpdateReviewAnnotationRequest
+        :param project_id: Optional project ID to apply project-rule-aware completion status
+        :type project_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1391,6 +1439,7 @@ class ReviewAnnotationsApi:
         _param = self._update_review_annotation_serialize(
             annotation_id=annotation_id,
             coval_reviews_api_update_review_annotation_request=coval_reviews_api_update_review_annotation_request,
+            project_id=project_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1415,6 +1464,7 @@ class ReviewAnnotationsApi:
         self,
         annotation_id,
         coval_reviews_api_update_review_annotation_request,
+        project_id,
         _request_auth,
         _content_type,
         _headers,
@@ -1439,6 +1489,10 @@ class ReviewAnnotationsApi:
         if annotation_id is not None:
             _path_params['annotation_id'] = annotation_id
         # process the query parameters
+        if project_id is not None:
+            
+            _query_params.append(('project_id', project_id))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
