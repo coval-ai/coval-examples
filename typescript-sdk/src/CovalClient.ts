@@ -37,6 +37,7 @@ import {
   TemplatesApi,
   TestCasesApi,
   TestSetsApi,
+  TracesApi,
   WidgetsApi,
 } from './generated/index.js';
 
@@ -76,6 +77,7 @@ export class CovalClient {
   readonly templates: TemplatesApi;
   readonly testCases: TestCasesApi;
   readonly testSets: TestSetsApi;
+  readonly traces: TracesApi;
   readonly widgets: WidgetsApi;
 
   readonly configuration: Configuration;
@@ -123,6 +125,7 @@ export class CovalClient {
     this.templates = new TemplatesApi(this.configuration);
     this.testCases = new TestCasesApi(this.configuration);
     this.testSets = new TestSetsApi(this.configuration);
+    this.traces = new TracesApi(this.configuration);
     this.widgets = new WidgetsApi(this.configuration);
   }
 }
