@@ -11,6 +11,12 @@ name: Regenerate SDKs
 #     The default GITHUB_TOKEN only scopes to this repo and cannot read
 #     coval-ai/docs.
 #
+#   REGEN_PR_TOKEN (required to open the auto-PR)
+#     Personal Access Token with `repo` scope on coval-ai/coval-examples.
+#     Used in place of GITHUB_TOKEN for the create-pull-request step
+#     because the coval-ai org ruleset disallows GitHub Actions from
+#     creating PRs via GITHUB_TOKEN. User PATs bypass that restriction.
+#
 # Hardening notes (TRACE-83):
 #   - Deps installed via `npm ci` against committed lockfiles only — no
 #     fallback to floating versions
@@ -115,7 +121,11 @@ jobs:
       - name: Open / update regen PR if there are changes
         uses: peter-evans/create-pull-request@v7
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # Uses a user PAT instead of GITHUB_TOKEN because the coval-ai
+          # org ruleset disallows GitHub Actions from creating PRs via
+          # the default ephemeral token. The PAT authenticates as its
+          # owner (callumreidcoval), which is not subject to that gate.
+          token: ${{ secrets.REGEN_PR_TOKEN }}
           commit-message: "chore(sdks): regenerate from latest OpenAPI specs"
           title: "chore(sdks): regenerate from latest OpenAPI specs"
           body: |
