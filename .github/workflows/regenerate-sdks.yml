@@ -75,6 +75,9 @@ jobs:
       - name: Install scripts deps
         run: npm ci --prefix scripts
 
+      - name: Verify Python SDK versions are in sync
+        run: node scripts/check-python-sdk-version.mjs
+
       - name: Bundle spec
         env:
           COVAL_SPECS_DIR: ${{ github.workspace }}/coval-docs/api-reference/v1
