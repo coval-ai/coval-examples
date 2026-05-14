@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "coval-sdk"
-version = "0.2.0"
+version = "0.2.1"
 description = "Typed Python client for the Coval evaluation platform API."
 readme = "README.md"
 license = "MIT"
