@@ -132,7 +132,7 @@ The recommended pattern is a two-call submission:
 ```bash
 # 1. Submit transcript at call end
 curl -X POST https://api.coval.dev/v1/conversations:submit \
-  -H 'x-api-key: $COVAL_API_KEY' \
+  -H "x-api-key: $COVAL_API_KEY" \
   -H 'Content-Type: application/json' \
   -d '{
     "transcript": [...],
@@ -141,12 +141,12 @@ curl -X POST https://api.coval.dev/v1/conversations:submit \
   }'
 
 # 2. Once the recording URL is ready (poll Twilio, or use a recording-status callback)
-curl -X PATCH https://api.coval.dev/v1/conversations/${CONVERSATION_ID} \
-  -H 'x-api-key: $COVAL_API_KEY' \
+curl -X PATCH "https://api.coval.dev/v1/conversations/$CONVERSATION_ID" \
+  -H "x-api-key: $COVAL_API_KEY" \
   -H 'Content-Type: application/json' \
   -d '{"audio_url": "'"$TWILIO_RECORDING_URL"'"}'
 ```
 
 Each wave fires its own webhook. Audio can only be attached once per conversation — a repeat PATCH returns `409 ALREADY_EXISTS`.
 
-See the [`PATCH /v1/conversations/{conversation_id}`](https://docs.coval.dev/api-reference/v1/conversations/conversations/attach-audio-to-conversation) reference for the full API contract.
+See the [`PATCH /v1/conversations/{conversation_id}`](https://docs.coval.dev/api-reference/v1/conversations/conversations/attach-audio-to-a-conversation) reference for the full API contract.
