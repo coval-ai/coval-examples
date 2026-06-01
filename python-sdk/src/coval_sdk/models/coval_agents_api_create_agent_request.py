@@ -18,7 +18,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_agents_api_simulator_type import CovalAgentsAPISimulatorType
@@ -39,8 +39,9 @@ class CovalAgentsAPICreateAgentRequest(BaseModel):
     workflows: Optional[Dict[str, Any]] = Field(default=None, description="Workflow configuration (JSONB, max 10MB)")
     metric_ids: Optional[List[Annotated[str, Field(strict=True)]]] = Field(default=None, description="Associated metric IDs (22-char IDs)")
     test_set_ids: Optional[List[Annotated[str, Field(strict=True)]]] = Field(default=None, description="Associated test set IDs (22-char IDs)")
+    tags: Optional[List[StrictStr]] = Field(default=None, description="Tags to associate with this agent. Null or omitted creates the agent with no tags. Pass [] for an empty tag list.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["display_name", "model_type", "phone_number", "endpoint", "prompt", "metadata", "workflows", "metric_ids", "test_set_ids"]
+    __properties: ClassVar[List[str]] = ["display_name", "model_type", "phone_number", "endpoint", "prompt", "metadata", "workflows", "metric_ids", "test_set_ids", "tags"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -103,6 +104,11 @@ class CovalAgentsAPICreateAgentRequest(BaseModel):
         if self.prompt is None and "prompt" in self.model_fields_set:
             _dict['prompt'] = None
 
+        # set to None if tags (nullable) is None
+        # and model_fields_set contains the field
+        if self.tags is None and "tags" in self.model_fields_set:
+            _dict['tags'] = None
+
         return _dict
 
     @classmethod
@@ -123,7 +129,8 @@ class CovalAgentsAPICreateAgentRequest(BaseModel):
             "metadata": obj.get("metadata"),
             "workflows": obj.get("workflows"),
             "metric_ids": obj.get("metric_ids"),
-            "test_set_ids": obj.get("test_set_ids")
+            "test_set_ids": obj.get("test_set_ids"),
+            "tags": obj.get("tags")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

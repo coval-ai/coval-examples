@@ -47,7 +47,7 @@ export interface CovalDashboardsAPIWidgetResource {
      */
     display_name?: string | null;
     /**
-     * 
+     * Widget type.
      * @type {CovalDashboardsAPIWidgetType}
      * @memberof CovalDashboardsAPIWidgetResource
      */

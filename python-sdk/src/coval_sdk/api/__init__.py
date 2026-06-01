@@ -18,6 +18,7 @@ from coval_sdk.api.run_templates_api import RunTemplatesApi
 from coval_sdk.api.runs_api import RunsApi
 from coval_sdk.api.scheduled_runs_api import ScheduledRunsApi
 from coval_sdk.api.simulations_api import SimulationsApi
+from coval_sdk.api.tags_api import TagsApi
 from coval_sdk.api.templates_api import TemplatesApi
 from coval_sdk.api.test_cases_api import TestCasesApi
 from coval_sdk.api.test_sets_api import TestSetsApi

@@ -66,6 +66,7 @@ export interface ListAgentsRequest {
     pageSize?: number;
     pageToken?: string;
     orderBy?: string;
+    tagFilters?: Array<string>;
 }
 
 export interface UpdateAgentRequest {
@@ -158,6 +159,7 @@ export interface AgentsApiInterface {
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response.  Do not decode or modify this token. 
      * @param {string} [orderBy] Sort order specification.  **Formats:** 1. Dash-prefix: &#x60;-create_time&#x60; (descending), &#x60;display_name&#x60; (ascending) 2. Space-separated: &#x60;create_time desc&#x60;, &#x60;display_name asc&#x60;  **Sortable fields:** &#x60;create_time&#x60;, &#x60;update_time&#x60;, &#x60;display_name&#x60;, &#x60;model_type&#x60; 
+     * @param {Array<string>} [tagFilters] Filter agents by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., &#x60;?tag_filters&#x3D;production&amp;tag_filters&#x3D;voice&#x60;). 
      * @throws {RequiredError}
      * @memberof AgentsApiInterface
      */
@@ -170,6 +172,7 @@ export interface AgentsApiInterface {
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response.  Do not decode or modify this token. 
      * @param {string} [orderBy] Sort order specification.  **Formats:** 1. Dash-prefix: &#x60;-create_time&#x60; (descending), &#x60;display_name&#x60; (ascending) 2. Space-separated: &#x60;create_time desc&#x60;, &#x60;display_name asc&#x60;  **Sortable fields:** &#x60;create_time&#x60;, &#x60;update_time&#x60;, &#x60;display_name&#x60;, &#x60;model_type&#x60; 
+     * @param {Array<string>} [tagFilters] Filter agents by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., &#x60;?tag_filters&#x3D;production&amp;tag_filters&#x3D;voice&#x60;). 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AgentsApiInterface
@@ -390,6 +393,10 @@ export class AgentsApi extends runtime.BaseAPI implements AgentsApiInterface {
 
         if (requestParameters['orderBy'] != null) {
             queryParameters['order_by'] = requestParameters['orderBy'];
+        }
+
+        if (requestParameters['tagFilters'] != null) {
+            queryParameters['tag_filters'] = requestParameters['tagFilters'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

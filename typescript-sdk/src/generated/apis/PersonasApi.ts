@@ -76,6 +76,7 @@ export interface ListPersonasRequest {
     pageToken?: string;
     filter?: string;
     orderBy?: string;
+    tagFilters?: Array<string>;
 }
 
 export interface UpdatePersonaRequest {
@@ -168,6 +169,7 @@ export interface PersonasApiInterface {
      * @param {string} [pageToken] Token for retrieving the next page of results
      * @param {string} [filter] Filter expression syntax.  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  Supported fields: - &#x60;name&#x60;: Filter by persona name (e.g., &#x60;name&#x3D;Customer&#x60; or &#x60;name&#x3D;\&quot;Customer Support\&quot;&#x60;) - &#x60;create_time&#x60;: Filter by creation time (e.g., &#x60;create_time&gt;\&quot;2025-01-01T00:00:00Z\&quot;&#x60;) - &#x60;update_time&#x60;: Filter by update time  Examples: - &#x60;name&#x3D;\&quot;Customer Support\&quot;&#x60; (quoted - contains space) - &#x60;create_time&gt;\&quot;2025-01-01T00:00:00Z\&quot;&#x60; 
      * @param {string} [orderBy] Field to order results by.  Supported fields: &#x60;create_time&#x60;, &#x60;update_time&#x60;, &#x60;name&#x60;  Formats: - Dash prefix: &#x60;-create_time&#x60; (descending) - Space separated: &#x60;create_time desc&#x60; (descending) - No prefix: &#x60;create_time&#x60; (ascending) 
+     * @param {Array<string>} [tagFilters] Filter personas by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., &#x60;?tag_filters&#x3D;production&amp;tag_filters&#x3D;voice&#x60;). 
      * @throws {RequiredError}
      * @memberof PersonasApiInterface
      */
@@ -180,6 +182,7 @@ export interface PersonasApiInterface {
      * @param {string} [pageToken] Token for retrieving the next page of results
      * @param {string} [filter] Filter expression syntax.  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  Supported fields: - &#x60;name&#x60;: Filter by persona name (e.g., &#x60;name&#x3D;Customer&#x60; or &#x60;name&#x3D;\&quot;Customer Support\&quot;&#x60;) - &#x60;create_time&#x60;: Filter by creation time (e.g., &#x60;create_time&gt;\&quot;2025-01-01T00:00:00Z\&quot;&#x60;) - &#x60;update_time&#x60;: Filter by update time  Examples: - &#x60;name&#x3D;\&quot;Customer Support\&quot;&#x60; (quoted - contains space) - &#x60;create_time&gt;\&quot;2025-01-01T00:00:00Z\&quot;&#x60; 
      * @param {string} [orderBy] Field to order results by.  Supported fields: &#x60;create_time&#x60;, &#x60;update_time&#x60;, &#x60;name&#x60;  Formats: - Dash prefix: &#x60;-create_time&#x60; (descending) - Space separated: &#x60;create_time desc&#x60; (descending) - No prefix: &#x60;create_time&#x60; (ascending) 
+     * @param {Array<string>} [tagFilters] Filter personas by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., &#x60;?tag_filters&#x3D;production&amp;tag_filters&#x3D;voice&#x60;). 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PersonasApiInterface
@@ -444,6 +447,10 @@ export class PersonasApi extends runtime.BaseAPI implements PersonasApiInterface
 
         if (requestParameters['orderBy'] != null) {
             queryParameters['order_by'] = requestParameters['orderBy'];
+        }
+
+        if (requestParameters['tagFilters'] != null) {
+            queryParameters['tag_filters'] = requestParameters['tagFilters'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

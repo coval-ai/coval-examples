@@ -17,6 +17,7 @@ export * from './RunTemplatesApi.js';
 export * from './RunsApi.js';
 export * from './ScheduledRunsApi.js';
 export * from './SimulationsApi.js';
+export * from './TagsApi.js';
 export * from './TemplatesApi.js';
 export * from './TestCasesApi.js';
 export * from './TestSetsApi.js';

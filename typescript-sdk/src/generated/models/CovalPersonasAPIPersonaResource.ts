@@ -113,6 +113,12 @@ export interface CovalPersonasAPIPersonaResource {
      */
     hold_music_timeout_seconds?: number | null;
     /**
+     * Tags associated with this persona
+     * @type {Array<string>}
+     * @memberof CovalPersonasAPIPersonaResource
+     */
+    tags?: Array<string>;
+    /**
      * Persona creation timestamp (ISO 8601)
      * @type {Date}
      * @memberof CovalPersonasAPIPersonaResource
@@ -199,6 +205,7 @@ export function CovalPersonasAPIPersonaResourceFromJSONTyped(json: any, ignoreDi
         'conversation_initiation': json['conversation_initiation'] == null ? undefined : json['conversation_initiation'],
         'multi_language_stt': json['multi_language_stt'] == null ? undefined : json['multi_language_stt'],
         'hold_music_timeout_seconds': json['hold_music_timeout_seconds'] == null ? undefined : json['hold_music_timeout_seconds'],
+        'tags': json['tags'] == null ? undefined : json['tags'],
         'create_time': (new Date(json['create_time'])),
         'update_time': json['update_time'] == null ? undefined : (new Date(json['update_time'])),
     };
@@ -229,6 +236,7 @@ export function CovalPersonasAPIPersonaResourceToJSONTyped(value?: CovalPersonas
         'conversation_initiation': value['conversation_initiation'],
         'multi_language_stt': value['multi_language_stt'],
         'hold_music_timeout_seconds': value['hold_music_timeout_seconds'],
+        'tags': value['tags'],
         'create_time': value['create_time'].toISOString(),
         'update_time': value['update_time'] == null ? value['update_time'] : value['update_time'].toISOString(),
     };

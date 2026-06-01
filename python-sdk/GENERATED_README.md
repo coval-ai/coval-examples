@@ -189,6 +189,11 @@ Class | Method | HTTP request | Description
 *SimulationsApi* | [**list_simulations**](docs/SimulationsApi.md#list_simulations) | **GET** /v1/simulations | List simulations
 *SimulationsApi* | [**resimulate_simulation**](docs/SimulationsApi.md#resimulate_simulation) | **POST** /v1/simulations/{simulation_id}/resimulate | Rerun a simulation
 *SimulationsApi* | [**update_simulation**](docs/SimulationsApi.md#update_simulation) | **PATCH** /v1/simulations/{simulation_id} | Update simulation
+*TagsApi* | [**create_tag**](docs/TagsApi.md#create_tag) | **POST** /v1/tags | Create tag
+*TagsApi* | [**delete_tag**](docs/TagsApi.md#delete_tag) | **DELETE** /v1/tags/{tag_id} | Delete tag
+*TagsApi* | [**get_tag**](docs/TagsApi.md#get_tag) | **GET** /v1/tags/{tag_id} | Get tag
+*TagsApi* | [**list_tags**](docs/TagsApi.md#list_tags) | **GET** /v1/tags | List tags
+*TagsApi* | [**update_tag**](docs/TagsApi.md#update_tag) | **PATCH** /v1/tags/{tag_id} | Update tag
 *TemplatesApi* | [**create_template**](docs/TemplatesApi.md#create_template) | **POST** /v1/templates | Create a template
 *TemplatesApi* | [**delete_template**](docs/TemplatesApi.md#delete_template) | **DELETE** /v1/templates/{template_id} | Delete template
 *TemplatesApi* | [**duplicate_template**](docs/TemplatesApi.md#duplicate_template) | **POST** /v1/templates/{template_id}/duplicate | Duplicate template
@@ -443,6 +448,17 @@ Class | Method | HTTP request | Description
  - [CovalSimulationsAPITranscriptMessageContent](docs/CovalSimulationsAPITranscriptMessageContent.md)
  - [CovalSimulationsAPIUpdateSimulationRequest](docs/CovalSimulationsAPIUpdateSimulationRequest.md)
  - [CovalSimulationsAPIUpdateSimulationResponse](docs/CovalSimulationsAPIUpdateSimulationResponse.md)
+ - [CovalTagsAPICreateTagRequest](docs/CovalTagsAPICreateTagRequest.md)
+ - [CovalTagsAPICreateTagResponse](docs/CovalTagsAPICreateTagResponse.md)
+ - [CovalTagsAPIDeleteTagResponse](docs/CovalTagsAPIDeleteTagResponse.md)
+ - [CovalTagsAPIErrorResponse](docs/CovalTagsAPIErrorResponse.md)
+ - [CovalTagsAPIErrorResponseError](docs/CovalTagsAPIErrorResponseError.md)
+ - [CovalTagsAPIErrorResponseErrorDetailsInner](docs/CovalTagsAPIErrorResponseErrorDetailsInner.md)
+ - [CovalTagsAPIGetTagResponse](docs/CovalTagsAPIGetTagResponse.md)
+ - [CovalTagsAPIListTagsResponse](docs/CovalTagsAPIListTagsResponse.md)
+ - [CovalTagsAPITagResource](docs/CovalTagsAPITagResource.md)
+ - [CovalTagsAPIUpdateTagRequest](docs/CovalTagsAPIUpdateTagRequest.md)
+ - [CovalTagsAPIUpdateTagResponse](docs/CovalTagsAPIUpdateTagResponse.md)
  - [CovalTemplatesAPICreateTemplateRequest](docs/CovalTemplatesAPICreateTemplateRequest.md)
  - [CovalTemplatesAPICreateTemplateResponse](docs/CovalTemplatesAPICreateTemplateResponse.md)
  - [CovalTemplatesAPIDuplicateTemplateResponse](docs/CovalTemplatesAPIDuplicateTemplateResponse.md)
@@ -573,6 +589,13 @@ Authentication schemes defined for the API:
 
 <a id="Coval_Simulations_API_ApiKeyAuth"></a>
 ### Coval_Simulations_API_ApiKeyAuth
+
+- **Type**: API key
+- **API key parameter name**: X-API-Key
+- **Location**: HTTP header
+
+<a id="Coval_Tags_API_ApiKeyAuth"></a>
+### Coval_Tags_API_ApiKeyAuth
 
 - **Type**: API key
 - **API key parameter name**: X-API-Key

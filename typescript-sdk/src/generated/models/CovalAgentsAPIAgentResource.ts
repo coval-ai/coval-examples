@@ -97,6 +97,12 @@ export interface CovalAgentsAPIAgentResource {
      */
     readonly knowledge_base_ids?: Array<string>;
     /**
+     * Tags associated with this agent
+     * @type {Array<string>}
+     * @memberof CovalAgentsAPIAgentResource
+     */
+    tags?: Array<string>;
+    /**
      * Creation timestamp (ISO 8601)
      * @type {Date}
      * @memberof CovalAgentsAPIAgentResource
@@ -140,6 +146,7 @@ export function CovalAgentsAPIAgentResourceFromJSONTyped(json: any, ignoreDiscri
         'metric_ids': json['metric_ids'] == null ? undefined : json['metric_ids'],
         'test_set_ids': json['test_set_ids'] == null ? undefined : json['test_set_ids'],
         'knowledge_base_ids': json['knowledge_base_ids'] == null ? undefined : json['knowledge_base_ids'],
+        'tags': json['tags'] == null ? undefined : json['tags'],
         'create_time': json['create_time'] == null ? undefined : (new Date(json['create_time'])),
         'update_time': json['update_time'] == null ? undefined : (new Date(json['update_time'])),
     };
@@ -166,6 +173,7 @@ export function CovalAgentsAPIAgentResourceToJSONTyped(value?: Omit<CovalAgentsA
         'workflows': value['workflows'],
         'metric_ids': value['metric_ids'],
         'test_set_ids': value['test_set_ids'],
+        'tags': value['tags'],
         'create_time': value['create_time'] == null ? value['create_time'] : value['create_time'].toISOString(),
         'update_time': value['update_time'] == null ? value['update_time'] : value['update_time'].toISOString(),
     };

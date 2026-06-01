@@ -164,6 +164,7 @@ export interface ListMetricsRequest {
     orderBy?: string;
     filter?: string;
     includeBuiltin?: boolean;
+    tagFilters?: Array<string>;
 }
 
 export interface UpdateMetricRequest {
@@ -512,6 +513,7 @@ export interface MetricsApiInterface {
      * @param {string} [orderBy] Sort order (e.g., &#x60;create_time desc&#x60;, &#x60;metric_name asc&#x60;)
      * @param {string} [filter] Filter expression syntax. Values may be unquoted or double-quoted. Values containing spaces must be quoted. Example: &#x60;metric_type&#x3D;METRIC_LLM_BINARY&#x60; 
      * @param {boolean} [includeBuiltin] Include built-in metrics in the response. By default, only organization-specific metrics are returned. Set to &#x60;true&#x60; to also include Coval\&#39;s built-in evaluation metrics. 
+     * @param {Array<string>} [tagFilters] Filter metrics by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., &#x60;?tag_filters&#x3D;production&amp;tag_filters&#x3D;llm&#x60;). 
      * @throws {RequiredError}
      * @memberof MetricsApiInterface
      */
@@ -525,6 +527,7 @@ export interface MetricsApiInterface {
      * @param {string} [orderBy] Sort order (e.g., &#x60;create_time desc&#x60;, &#x60;metric_name asc&#x60;)
      * @param {string} [filter] Filter expression syntax. Values may be unquoted or double-quoted. Values containing spaces must be quoted. Example: &#x60;metric_type&#x3D;METRIC_LLM_BINARY&#x60; 
      * @param {boolean} [includeBuiltin] Include built-in metrics in the response. By default, only organization-specific metrics are returned. Set to &#x60;true&#x60; to also include Coval\&#39;s built-in evaluation metrics. 
+     * @param {Array<string>} [tagFilters] Filter metrics by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., &#x60;?tag_filters&#x3D;production&amp;tag_filters&#x3D;llm&#x60;). 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MetricsApiInterface
@@ -1337,6 +1340,10 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
 
         if (requestParameters['includeBuiltin'] != null) {
             queryParameters['include_builtin'] = requestParameters['includeBuiltin'];
+        }
+
+        if (requestParameters['tagFilters'] != null) {
+            queryParameters['tag_filters'] = requestParameters['tagFilters'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

@@ -34,7 +34,7 @@ class CovalDashboardsAPIWidgetResource(BaseModel):
     """ # noqa: E501
     name: StrictStr = Field(description="Resource name in format `dashboards/{dashboard_id}/widgets/{id}`")
     display_name: Optional[Annotated[str, Field(strict=True, max_length=255)]] = Field(default=None, description="Human-readable widget name")
-    type: CovalDashboardsAPIWidgetType
+    type: CovalDashboardsAPIWidgetType = Field(description="Widget type.")
     grid_x: Optional[StrictInt] = Field(default=None, description="Grid column position")
     grid_y: Optional[StrictInt] = Field(default=None, description="Grid row position")
     grid_w: Optional[StrictInt] = Field(default=None, description="Grid column span")

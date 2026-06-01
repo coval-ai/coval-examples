@@ -64,6 +64,7 @@ export interface GetRunTemplateRequest {
 export interface ListRunTemplatesRequest {
     pageSize?: number;
     pageToken?: string;
+    tagFilters?: Array<string>;
 }
 
 export interface UpdateRunTemplateRequest {
@@ -154,6 +155,7 @@ export interface RunTemplatesApiInterface {
      * Creates request options for listRunTemplates without sending the request
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response
+     * @param {Array<string>} [tagFilters] Filter run templates by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., &#x60;?tag_filters&#x3D;nightly&amp;tag_filters&#x3D;voice&#x60;). 
      * @throws {RequiredError}
      * @memberof RunTemplatesApiInterface
      */
@@ -164,6 +166,7 @@ export interface RunTemplatesApiInterface {
      * @summary List run templates
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response
+     * @param {Array<string>} [tagFilters] Filter run templates by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., &#x60;?tag_filters&#x3D;nightly&amp;tag_filters&#x3D;voice&#x60;). 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RunTemplatesApiInterface
@@ -375,6 +378,10 @@ export class RunTemplatesApi extends runtime.BaseAPI implements RunTemplatesApiI
 
         if (requestParameters['pageToken'] != null) {
             queryParameters['page_token'] = requestParameters['pageToken'];
+        }
+
+        if (requestParameters['tagFilters'] != null) {
+            queryParameters['tag_filters'] = requestParameters['tagFilters'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

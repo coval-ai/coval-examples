@@ -104,6 +104,12 @@ export interface CovalRunTemplatesAPIRunTemplateResource {
      */
     metadata?: { [key: string]: any; };
     /**
+     * Tags associated with this run template
+     * @type {Array<string>}
+     * @memberof CovalRunTemplatesAPIRunTemplateResource
+     */
+    tags?: Array<string>;
+    /**
      * Creation timestamp (ISO 8601)
      * @type {Date}
      * @memberof CovalRunTemplatesAPIRunTemplateResource
@@ -155,6 +161,7 @@ export function CovalRunTemplatesAPIRunTemplateResourceFromJSONTyped(json: any, 
         'sub_sample_size': json['sub_sample_size'] == null ? undefined : json['sub_sample_size'],
         'sub_sample_seed': json['sub_sample_seed'] == null ? undefined : json['sub_sample_seed'],
         'metadata': json['metadata'] == null ? undefined : json['metadata'],
+        'tags': json['tags'] == null ? undefined : json['tags'],
         'create_time': (new Date(json['create_time'])),
         'update_time': json['update_time'] == null ? undefined : (new Date(json['update_time'])),
     };
@@ -185,6 +192,7 @@ export function CovalRunTemplatesAPIRunTemplateResourceToJSONTyped(value?: Coval
         'sub_sample_size': value['sub_sample_size'],
         'sub_sample_seed': value['sub_sample_seed'],
         'metadata': value['metadata'],
+        'tags': value['tags'],
         'create_time': value['create_time'].toISOString(),
         'update_time': value['update_time'] == null ? value['update_time'] : value['update_time'].toISOString(),
     };

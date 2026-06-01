@@ -36,6 +36,7 @@ __all__ = [
     "RunsApi",
     "ScheduledRunsApi",
     "SimulationsApi",
+    "TagsApi",
     "TemplatesApi",
     "TestCasesApi",
     "TestSetsApi",
@@ -278,6 +279,17 @@ __all__ = [
     "CovalSimulationsAPITranscriptMessageContent",
     "CovalSimulationsAPIUpdateSimulationRequest",
     "CovalSimulationsAPIUpdateSimulationResponse",
+    "CovalTagsAPICreateTagRequest",
+    "CovalTagsAPICreateTagResponse",
+    "CovalTagsAPIDeleteTagResponse",
+    "CovalTagsAPIErrorResponse",
+    "CovalTagsAPIErrorResponseError",
+    "CovalTagsAPIErrorResponseErrorDetailsInner",
+    "CovalTagsAPIGetTagResponse",
+    "CovalTagsAPIListTagsResponse",
+    "CovalTagsAPITagResource",
+    "CovalTagsAPIUpdateTagRequest",
+    "CovalTagsAPIUpdateTagResponse",
     "CovalTemplatesAPICreateTemplateRequest",
     "CovalTemplatesAPICreateTemplateResponse",
     "CovalTemplatesAPIDuplicateTemplateResponse",
@@ -335,6 +347,7 @@ from coval_sdk.api.run_templates_api import RunTemplatesApi as RunTemplatesApi
 from coval_sdk.api.runs_api import RunsApi as RunsApi
 from coval_sdk.api.scheduled_runs_api import ScheduledRunsApi as ScheduledRunsApi
 from coval_sdk.api.simulations_api import SimulationsApi as SimulationsApi
+from coval_sdk.api.tags_api import TagsApi as TagsApi
 from coval_sdk.api.templates_api import TemplatesApi as TemplatesApi
 from coval_sdk.api.test_cases_api import TestCasesApi as TestCasesApi
 from coval_sdk.api.test_sets_api import TestSetsApi as TestSetsApi
@@ -581,6 +594,17 @@ from coval_sdk.models.coval_simulations_api_transcript_message import CovalSimul
 from coval_sdk.models.coval_simulations_api_transcript_message_content import CovalSimulationsAPITranscriptMessageContent as CovalSimulationsAPITranscriptMessageContent
 from coval_sdk.models.coval_simulations_api_update_simulation_request import CovalSimulationsAPIUpdateSimulationRequest as CovalSimulationsAPIUpdateSimulationRequest
 from coval_sdk.models.coval_simulations_api_update_simulation_response import CovalSimulationsAPIUpdateSimulationResponse as CovalSimulationsAPIUpdateSimulationResponse
+from coval_sdk.models.coval_tags_api_create_tag_request import CovalTagsAPICreateTagRequest as CovalTagsAPICreateTagRequest
+from coval_sdk.models.coval_tags_api_create_tag_response import CovalTagsAPICreateTagResponse as CovalTagsAPICreateTagResponse
+from coval_sdk.models.coval_tags_api_delete_tag_response import CovalTagsAPIDeleteTagResponse as CovalTagsAPIDeleteTagResponse
+from coval_sdk.models.coval_tags_api_error_response import CovalTagsAPIErrorResponse as CovalTagsAPIErrorResponse
+from coval_sdk.models.coval_tags_api_error_response_error import CovalTagsAPIErrorResponseError as CovalTagsAPIErrorResponseError
+from coval_sdk.models.coval_tags_api_error_response_error_details_inner import CovalTagsAPIErrorResponseErrorDetailsInner as CovalTagsAPIErrorResponseErrorDetailsInner
+from coval_sdk.models.coval_tags_api_get_tag_response import CovalTagsAPIGetTagResponse as CovalTagsAPIGetTagResponse
+from coval_sdk.models.coval_tags_api_list_tags_response import CovalTagsAPIListTagsResponse as CovalTagsAPIListTagsResponse
+from coval_sdk.models.coval_tags_api_tag_resource import CovalTagsAPITagResource as CovalTagsAPITagResource
+from coval_sdk.models.coval_tags_api_update_tag_request import CovalTagsAPIUpdateTagRequest as CovalTagsAPIUpdateTagRequest
+from coval_sdk.models.coval_tags_api_update_tag_response import CovalTagsAPIUpdateTagResponse as CovalTagsAPIUpdateTagResponse
 from coval_sdk.models.coval_templates_api_create_template_request import CovalTemplatesAPICreateTemplateRequest as CovalTemplatesAPICreateTemplateRequest
 from coval_sdk.models.coval_templates_api_create_template_response import CovalTemplatesAPICreateTemplateResponse as CovalTemplatesAPICreateTemplateResponse
 from coval_sdk.models.coval_templates_api_duplicate_template_response import CovalTemplatesAPIDuplicateTemplateResponse as CovalTemplatesAPIDuplicateTemplateResponse

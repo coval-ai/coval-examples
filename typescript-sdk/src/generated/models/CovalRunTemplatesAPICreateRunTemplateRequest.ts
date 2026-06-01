@@ -91,6 +91,12 @@ export interface CovalRunTemplatesAPICreateRunTemplateRequest {
      * @memberof CovalRunTemplatesAPICreateRunTemplateRequest
      */
     metadata?: { [key: string]: any; };
+    /**
+     * Tags to associate with this run template. Null or omitted creates the run template with no tags. Pass [] for an empty tag list.
+     * @type {Array<string>}
+     * @memberof CovalRunTemplatesAPICreateRunTemplateRequest
+     */
+    tags?: Array<string> | null;
 }
 
 /**
@@ -126,6 +132,7 @@ export function CovalRunTemplatesAPICreateRunTemplateRequestFromJSONTyped(json: 
         'sub_sample_size': json['sub_sample_size'] == null ? undefined : json['sub_sample_size'],
         'sub_sample_seed': json['sub_sample_seed'] == null ? undefined : json['sub_sample_seed'],
         'metadata': json['metadata'] == null ? undefined : json['metadata'],
+        'tags': json['tags'] == null ? undefined : json['tags'],
     };
 }
 
@@ -152,6 +159,7 @@ export function CovalRunTemplatesAPICreateRunTemplateRequestToJSONTyped(value?: 
         'sub_sample_size': value['sub_sample_size'],
         'sub_sample_seed': value['sub_sample_seed'],
         'metadata': value['metadata'],
+        'tags': value['tags'],
     };
 }
 

@@ -42,10 +42,11 @@ class CovalAgentsAPIAgentResource(BaseModel):
     metric_ids: Optional[List[StrictStr]] = Field(default=None, description="Associated metric IDs")
     test_set_ids: Optional[List[StrictStr]] = Field(default=None, description="Associated test set IDs")
     knowledge_base_ids: Optional[List[StrictStr]] = Field(default=None, description="Associated knowledge base entry IDs (read-only, derived from reverse FK)")
+    tags: Optional[List[StrictStr]] = Field(default=None, description="Tags associated with this agent")
     create_time: Optional[datetime] = Field(default=None, description="Creation timestamp (ISO 8601)")
     update_time: Optional[datetime] = Field(default=None, description="Last update timestamp (ISO 8601)")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["id", "display_name", "model_type", "phone_number", "endpoint", "prompt", "metadata", "workflows", "metric_ids", "test_set_ids", "knowledge_base_ids", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["id", "display_name", "model_type", "phone_number", "endpoint", "prompt", "metadata", "workflows", "metric_ids", "test_set_ids", "knowledge_base_ids", "tags", "create_time", "update_time"]
 
     @field_validator('id')
     def id_validate_regular_expression(cls, value):
@@ -151,6 +152,7 @@ class CovalAgentsAPIAgentResource(BaseModel):
             "metric_ids": obj.get("metric_ids"),
             "test_set_ids": obj.get("test_set_ids"),
             "knowledge_base_ids": obj.get("knowledge_base_ids"),
+            "tags": obj.get("tags"),
             "create_time": obj.get("create_time"),
             "update_time": obj.get("update_time")
         })

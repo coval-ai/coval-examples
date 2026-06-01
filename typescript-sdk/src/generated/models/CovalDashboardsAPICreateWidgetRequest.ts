@@ -41,11 +41,12 @@ export interface CovalDashboardsAPICreateWidgetRequest {
      */
     display_name: string;
     /**
+     * Widget type. Optional; defaults to `chart` when omitted.
      * 
      * @type {CovalDashboardsAPIWidgetType}
      * @memberof CovalDashboardsAPICreateWidgetRequest
      */
-    type: CovalDashboardsAPIWidgetType;
+    type?: CovalDashboardsAPIWidgetType;
     /**
      * Grid column position
      * @type {number}
@@ -85,7 +86,6 @@ export interface CovalDashboardsAPICreateWidgetRequest {
  */
 export function instanceOfCovalDashboardsAPICreateWidgetRequest(value: object): value is CovalDashboardsAPICreateWidgetRequest {
     if (!('display_name' in value) || value['display_name'] === undefined) return false;
-    if (!('type' in value) || value['type'] === undefined) return false;
     return true;
 }
 
@@ -100,7 +100,7 @@ export function CovalDashboardsAPICreateWidgetRequestFromJSONTyped(json: any, ig
     return {
         
         'display_name': json['display_name'],
-        'type': CovalDashboardsAPIWidgetTypeFromJSON(json['type']),
+        'type': json['type'] == null ? undefined : CovalDashboardsAPIWidgetTypeFromJSON(json['type']),
         'grid_x': json['grid_x'] == null ? undefined : json['grid_x'],
         'grid_y': json['grid_y'] == null ? undefined : json['grid_y'],
         'grid_w': json['grid_w'] == null ? undefined : json['grid_w'],

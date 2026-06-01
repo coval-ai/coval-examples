@@ -125,6 +125,7 @@ AuthSettings = TypedDict(
         "Coval_Runs_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_Scheduled_Runs_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_Simulations_API_ApiKeyAuth": APIKeyAuthSetting,
+        "Coval_Tags_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_Templates_API_ApiKeyAuth": APIKeyAuthSetting,
         "Test_Cases_API_apiKey": APIKeyAuthSetting,
         "Test_Sets_API_apiKey": APIKeyAuthSetting,
@@ -666,6 +667,15 @@ conf = coval_sdk.Configuration(
                 'key': 'X-API-Key',
                 'value': self.get_api_key_with_prefix(
                     'Coval_Simulations_API_ApiKeyAuth',
+                ),
+            }
+        if 'Coval_Tags_API_ApiKeyAuth' in self.api_key:
+            auth['Coval_Tags_API_ApiKeyAuth'] = {
+                'type': 'api_key',
+                'in': 'header',
+                'key': 'X-API-Key',
+                'value': self.get_api_key_with_prefix(
+                    'Coval_Tags_API_ApiKeyAuth',
                 ),
             }
         if 'Coval_Templates_API_ApiKeyAuth' in self.api_key:

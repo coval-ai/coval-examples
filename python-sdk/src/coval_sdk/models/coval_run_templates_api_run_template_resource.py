@@ -44,10 +44,11 @@ class CovalRunTemplatesAPIRunTemplateResource(BaseModel):
     sub_sample_size: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=0, description="Number of test cases to randomly sample (0 = use all)")
     sub_sample_seed: Optional[StrictInt] = Field(default=None, description="Random seed for reproducible sub-sampling")
     metadata: Optional[Dict[str, Any]] = Field(default=None, description="Custom metadata for tracking")
+    tags: Optional[List[StrictStr]] = Field(default=None, description="Tags associated with this run template")
     create_time: datetime = Field(description="Creation timestamp (ISO 8601)")
     update_time: Optional[datetime] = Field(default=None, description="Last update timestamp (ISO 8601)")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "id", "display_name", "description", "agent_id", "persona_id", "test_set_id", "metric_ids", "mutation_ids", "iteration_count", "concurrency", "sub_sample_size", "sub_sample_seed", "metadata", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["name", "id", "display_name", "description", "agent_id", "persona_id", "test_set_id", "metric_ids", "mutation_ids", "iteration_count", "concurrency", "sub_sample_size", "sub_sample_seed", "metadata", "tags", "create_time", "update_time"]
 
     @field_validator('id')
     def id_validate_regular_expression(cls, value):
@@ -171,6 +172,7 @@ class CovalRunTemplatesAPIRunTemplateResource(BaseModel):
             "sub_sample_size": obj.get("sub_sample_size") if obj.get("sub_sample_size") is not None else 0,
             "sub_sample_seed": obj.get("sub_sample_seed"),
             "metadata": obj.get("metadata"),
+            "tags": obj.get("tags"),
             "create_time": obj.get("create_time"),
             "update_time": obj.get("update_time")
         })
