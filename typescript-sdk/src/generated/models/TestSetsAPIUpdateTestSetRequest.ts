@@ -55,6 +55,12 @@ export interface TestSetsAPIUpdateTestSetRequest {
      * @memberof TestSetsAPIUpdateTestSetRequest
      */
     parameters?: { [key: string]: any; };
+    /**
+     * Tags to associate with this test set. Null or omitted leaves tags unchanged. Pass [] to clear all tags.
+     * @type {Array<string>}
+     * @memberof TestSetsAPIUpdateTestSetRequest
+     */
+    tags?: Array<string> | null;
 }
 
 /**
@@ -80,6 +86,7 @@ export function TestSetsAPIUpdateTestSetRequestFromJSONTyped(json: any, ignoreDi
         'test_set_type': json['test_set_type'] == null ? undefined : json['test_set_type'],
         'test_set_metadata': json['test_set_metadata'] == null ? undefined : json['test_set_metadata'],
         'parameters': json['parameters'] == null ? undefined : json['parameters'],
+        'tags': json['tags'] == null ? undefined : json['tags'],
     };
 }
 
@@ -100,6 +107,7 @@ export function TestSetsAPIUpdateTestSetRequestToJSONTyped(value?: TestSetsAPIUp
         'test_set_type': value['test_set_type'],
         'test_set_metadata': value['test_set_metadata'],
         'parameters': value['parameters'],
+        'tags': value['tags'],
     };
 }
 

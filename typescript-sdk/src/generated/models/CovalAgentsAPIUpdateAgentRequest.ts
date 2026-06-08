@@ -81,6 +81,12 @@ export interface CovalAgentsAPIUpdateAgentRequest {
      * @memberof CovalAgentsAPIUpdateAgentRequest
      */
     test_set_ids?: Array<string> | null;
+    /**
+     * Tags to associate with this agent. Null or omitted leaves tags unchanged. Pass [] to clear all tags.
+     * @type {Array<string>}
+     * @memberof CovalAgentsAPIUpdateAgentRequest
+     */
+    tags?: Array<string> | null;
 }
 
 
@@ -111,6 +117,7 @@ export function CovalAgentsAPIUpdateAgentRequestFromJSONTyped(json: any, ignoreD
         'workflows': json['workflows'] == null ? undefined : json['workflows'],
         'metric_ids': json['metric_ids'] == null ? undefined : json['metric_ids'],
         'test_set_ids': json['test_set_ids'] == null ? undefined : json['test_set_ids'],
+        'tags': json['tags'] == null ? undefined : json['tags'],
     };
 }
 
@@ -134,6 +141,7 @@ export function CovalAgentsAPIUpdateAgentRequestToJSONTyped(value?: CovalAgentsA
         'workflows': value['workflows'],
         'metric_ids': value['metric_ids'],
         'test_set_ids': value['test_set_ids'],
+        'tags': value['tags'],
     };
 }
 

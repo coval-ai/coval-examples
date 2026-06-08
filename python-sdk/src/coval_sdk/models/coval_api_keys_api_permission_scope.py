@@ -70,6 +70,10 @@ class CovalAPIKeysAPIPermissionScope(str, Enum):
     RUN_MINUS_TEMPLATES_COLON_WRITE = 'run-templates:write'
     RUN_MINUS_TEMPLATES_COLON_DELETE = 'run-templates:delete'
     RUN_MINUS_TEMPLATES_COLON_STAR = 'run-templates:*'
+    REPORTS_COLON_READ = 'reports:read'
+    REPORTS_COLON_WRITE = 'reports:write'
+    REPORTS_COLON_DELETE = 'reports:delete'
+    REPORTS_COLON_STAR = 'reports:*'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

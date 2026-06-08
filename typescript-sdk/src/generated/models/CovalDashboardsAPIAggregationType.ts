@@ -23,7 +23,10 @@ export const CovalDashboardsAPIAggregationType = {
     Avg: 'avg',
     Max: 'max',
     Min: 'min',
-    Success: 'success'
+    Success: 'success',
+    P90: 'p90',
+    P95: 'p95',
+    P99: 'p99'
 } as const;
 export type CovalDashboardsAPIAggregationType = typeof CovalDashboardsAPIAggregationType[keyof typeof CovalDashboardsAPIAggregationType];
 

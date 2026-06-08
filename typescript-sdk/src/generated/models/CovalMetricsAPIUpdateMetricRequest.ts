@@ -145,6 +145,12 @@ export interface CovalMetricsAPIUpdateMetricRequest {
      * @memberof CovalMetricsAPIUpdateMetricRequest
      */
     target_condition?: CovalMetricsAPITargetCondition | null;
+    /**
+     * Tags to associate with this metric. Null or omitted leaves tags unchanged. Pass [] to clear all tags.
+     * @type {Array<string>}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    tags?: Array<string> | null;
 }
 
 
@@ -190,6 +196,7 @@ export function CovalMetricsAPIUpdateMetricRequestFromJSONTyped(json: any, ignor
         'include_traces': json['include_traces'] == null ? undefined : json['include_traces'],
         'runtime_config': json['runtime_config'] == null ? undefined : CovalMetricsAPIMetricRuntimeConfigFromJSON(json['runtime_config']),
         'target_condition': json['target_condition'] == null ? undefined : CovalMetricsAPITargetConditionFromJSON(json['target_condition']),
+        'tags': json['tags'] == null ? undefined : json['tags'],
     };
 }
 
@@ -219,6 +226,7 @@ export function CovalMetricsAPIUpdateMetricRequestToJSONTyped(value?: CovalMetri
         'include_traces': value['include_traces'],
         'runtime_config': CovalMetricsAPIMetricRuntimeConfigToJSON(value['runtime_config']),
         'target_condition': CovalMetricsAPITargetConditionToJSON(value['target_condition']),
+        'tags': value['tags'],
     };
 }
 

@@ -17,7 +17,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
 from pydantic import Field, StrictStr, field_validator
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_agents_api_create_agent_request import CovalAgentsAPICreateAgentRequest
 from coval_sdk.models.coval_agents_api_create_agent_response import CovalAgentsAPICreateAgentResponse
@@ -880,6 +880,7 @@ class AgentsApi:
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response.  Do not decode or modify this token. ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort order specification.  **Formats:** 1. Dash-prefix: `-create_time` (descending), `display_name` (ascending) 2. Space-separated: `create_time desc`, `display_name asc`  **Sortable fields:** `create_time`, `update_time`, `display_name`, `model_type` ")] = None,
+        tag_filters: Annotated[Optional[Annotated[List[StrictStr], Field(max_length=20)]], Field(description="Filter agents by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=voice`). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -905,6 +906,8 @@ class AgentsApi:
         :type page_token: str
         :param order_by: Sort order specification.  **Formats:** 1. Dash-prefix: `-create_time` (descending), `display_name` (ascending) 2. Space-separated: `create_time desc`, `display_name asc`  **Sortable fields:** `create_time`, `update_time`, `display_name`, `model_type` 
         :type order_by: str
+        :param tag_filters: Filter agents by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=voice`). 
+        :type tag_filters: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -932,6 +935,7 @@ class AgentsApi:
             page_size=page_size,
             page_token=page_token,
             order_by=order_by,
+            tag_filters=tag_filters,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -962,6 +966,7 @@ class AgentsApi:
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response.  Do not decode or modify this token. ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort order specification.  **Formats:** 1. Dash-prefix: `-create_time` (descending), `display_name` (ascending) 2. Space-separated: `create_time desc`, `display_name asc`  **Sortable fields:** `create_time`, `update_time`, `display_name`, `model_type` ")] = None,
+        tag_filters: Annotated[Optional[Annotated[List[StrictStr], Field(max_length=20)]], Field(description="Filter agents by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=voice`). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -987,6 +992,8 @@ class AgentsApi:
         :type page_token: str
         :param order_by: Sort order specification.  **Formats:** 1. Dash-prefix: `-create_time` (descending), `display_name` (ascending) 2. Space-separated: `create_time desc`, `display_name asc`  **Sortable fields:** `create_time`, `update_time`, `display_name`, `model_type` 
         :type order_by: str
+        :param tag_filters: Filter agents by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=voice`). 
+        :type tag_filters: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1014,6 +1021,7 @@ class AgentsApi:
             page_size=page_size,
             page_token=page_token,
             order_by=order_by,
+            tag_filters=tag_filters,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1044,6 +1052,7 @@ class AgentsApi:
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response.  Do not decode or modify this token. ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort order specification.  **Formats:** 1. Dash-prefix: `-create_time` (descending), `display_name` (ascending) 2. Space-separated: `create_time desc`, `display_name asc`  **Sortable fields:** `create_time`, `update_time`, `display_name`, `model_type` ")] = None,
+        tag_filters: Annotated[Optional[Annotated[List[StrictStr], Field(max_length=20)]], Field(description="Filter agents by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=voice`). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1069,6 +1078,8 @@ class AgentsApi:
         :type page_token: str
         :param order_by: Sort order specification.  **Formats:** 1. Dash-prefix: `-create_time` (descending), `display_name` (ascending) 2. Space-separated: `create_time desc`, `display_name asc`  **Sortable fields:** `create_time`, `update_time`, `display_name`, `model_type` 
         :type order_by: str
+        :param tag_filters: Filter agents by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=voice`). 
+        :type tag_filters: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1096,6 +1107,7 @@ class AgentsApi:
             page_size=page_size,
             page_token=page_token,
             order_by=order_by,
+            tag_filters=tag_filters,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1121,6 +1133,7 @@ class AgentsApi:
         page_size,
         page_token,
         order_by,
+        tag_filters,
         _request_auth,
         _content_type,
         _headers,
@@ -1130,6 +1143,7 @@ class AgentsApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'tag_filters': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -1158,6 +1172,10 @@ class AgentsApi:
         if order_by is not None:
             
             _query_params.append(('order_by', order_by))
+            
+        if tag_filters is not None:
+            
+            _query_params.append(('tag_filters', tag_filters))
             
         # process the header parameters
         # process the form parameters

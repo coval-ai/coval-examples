@@ -3576,6 +3576,7 @@ class MetricsApi:
         order_by: Annotated[Optional[StrictStr], Field(description="Sort order (e.g., `create_time desc`, `metric_name asc`)")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax. Values may be unquoted or double-quoted. Values containing spaces must be quoted. Example: `metric_type=METRIC_LLM_BINARY` ")] = None,
         include_builtin: Annotated[Optional[StrictBool], Field(description="Include built-in metrics in the response. By default, only organization-specific metrics are returned. Set to `true` to also include Coval's built-in evaluation metrics. ")] = None,
+        tag_filters: Annotated[Optional[Annotated[List[StrictStr], Field(max_length=20)]], Field(description="Filter metrics by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=llm`). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3603,6 +3604,8 @@ class MetricsApi:
         :type filter: str
         :param include_builtin: Include built-in metrics in the response. By default, only organization-specific metrics are returned. Set to `true` to also include Coval's built-in evaluation metrics. 
         :type include_builtin: bool
+        :param tag_filters: Filter metrics by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=llm`). 
+        :type tag_filters: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3631,6 +3634,7 @@ class MetricsApi:
             order_by=order_by,
             filter=filter,
             include_builtin=include_builtin,
+            tag_filters=tag_filters,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3661,6 +3665,7 @@ class MetricsApi:
         order_by: Annotated[Optional[StrictStr], Field(description="Sort order (e.g., `create_time desc`, `metric_name asc`)")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax. Values may be unquoted or double-quoted. Values containing spaces must be quoted. Example: `metric_type=METRIC_LLM_BINARY` ")] = None,
         include_builtin: Annotated[Optional[StrictBool], Field(description="Include built-in metrics in the response. By default, only organization-specific metrics are returned. Set to `true` to also include Coval's built-in evaluation metrics. ")] = None,
+        tag_filters: Annotated[Optional[Annotated[List[StrictStr], Field(max_length=20)]], Field(description="Filter metrics by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=llm`). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3688,6 +3693,8 @@ class MetricsApi:
         :type filter: str
         :param include_builtin: Include built-in metrics in the response. By default, only organization-specific metrics are returned. Set to `true` to also include Coval's built-in evaluation metrics. 
         :type include_builtin: bool
+        :param tag_filters: Filter metrics by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=llm`). 
+        :type tag_filters: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3716,6 +3723,7 @@ class MetricsApi:
             order_by=order_by,
             filter=filter,
             include_builtin=include_builtin,
+            tag_filters=tag_filters,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3746,6 +3754,7 @@ class MetricsApi:
         order_by: Annotated[Optional[StrictStr], Field(description="Sort order (e.g., `create_time desc`, `metric_name asc`)")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax. Values may be unquoted or double-quoted. Values containing spaces must be quoted. Example: `metric_type=METRIC_LLM_BINARY` ")] = None,
         include_builtin: Annotated[Optional[StrictBool], Field(description="Include built-in metrics in the response. By default, only organization-specific metrics are returned. Set to `true` to also include Coval's built-in evaluation metrics. ")] = None,
+        tag_filters: Annotated[Optional[Annotated[List[StrictStr], Field(max_length=20)]], Field(description="Filter metrics by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=llm`). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3773,6 +3782,8 @@ class MetricsApi:
         :type filter: str
         :param include_builtin: Include built-in metrics in the response. By default, only organization-specific metrics are returned. Set to `true` to also include Coval's built-in evaluation metrics. 
         :type include_builtin: bool
+        :param tag_filters: Filter metrics by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=llm`). 
+        :type tag_filters: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3801,6 +3812,7 @@ class MetricsApi:
             order_by=order_by,
             filter=filter,
             include_builtin=include_builtin,
+            tag_filters=tag_filters,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3826,6 +3838,7 @@ class MetricsApi:
         order_by,
         filter,
         include_builtin,
+        tag_filters,
         _request_auth,
         _content_type,
         _headers,
@@ -3835,6 +3848,7 @@ class MetricsApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'tag_filters': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -3867,6 +3881,10 @@ class MetricsApi:
         if include_builtin is not None:
             
             _query_params.append(('include_builtin', include_builtin))
+            
+        if tag_filters is not None:
+            
+            _query_params.append(('tag_filters', tag_filters))
             
         # process the header parameters
         # process the form parameters

@@ -62,7 +62,11 @@ export const CovalAPIKeysAPIPermissionScope = {
     RunTemplatesRead: 'run-templates:read',
     RunTemplatesWrite: 'run-templates:write',
     RunTemplatesDelete: 'run-templates:delete',
-    RunTemplates: 'run-templates:*'
+    RunTemplates: 'run-templates:*',
+    ReportsRead: 'reports:read',
+    ReportsWrite: 'reports:write',
+    ReportsDelete: 'reports:delete',
+    Reports: 'reports:*'
 } as const;
 export type CovalAPIKeysAPIPermissionScope = typeof CovalAPIKeysAPIPermissionScope[keyof typeof CovalAPIKeysAPIPermissionScope];
 

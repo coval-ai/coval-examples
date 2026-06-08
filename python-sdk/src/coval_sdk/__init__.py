@@ -30,12 +30,14 @@ __all__ = [
     "MonitorsApi",
     "MutationsApi",
     "PersonasApi",
+    "ReportsApi",
     "ReviewAnnotationsApi",
     "ReviewProjectsApi",
     "RunTemplatesApi",
     "RunsApi",
     "ScheduledRunsApi",
     "SimulationsApi",
+    "TagsApi",
     "TemplatesApi",
     "TestCasesApi",
     "TestSetsApi",
@@ -207,6 +209,19 @@ __all__ = [
     "CovalPersonasAPIUpdatePersonaRequest",
     "CovalPersonasAPIUpdatePersonaResponse",
     "CovalPersonasAPIVoiceResource",
+    "CovalReportsAPICompareBy",
+    "CovalReportsAPICreateReportRequest",
+    "CovalReportsAPICreateReportResponse",
+    "CovalReportsAPIDeleteReportResponse",
+    "CovalReportsAPIError",
+    "CovalReportsAPIErrorDetail",
+    "CovalReportsAPIErrorResponse",
+    "CovalReportsAPIGetReportResponse",
+    "CovalReportsAPIListReportsResponse",
+    "CovalReportsAPIReport",
+    "CovalReportsAPIReportPermission",
+    "CovalReportsAPIUpdateReportRequest",
+    "CovalReportsAPIUpdateReportResponse",
     "CovalReviewsAPIAnnotationPriority",
     "CovalReviewsAPIAnnotationStatus",
     "CovalReviewsAPICompletionStatus",
@@ -278,6 +293,17 @@ __all__ = [
     "CovalSimulationsAPITranscriptMessageContent",
     "CovalSimulationsAPIUpdateSimulationRequest",
     "CovalSimulationsAPIUpdateSimulationResponse",
+    "CovalTagsAPICreateTagRequest",
+    "CovalTagsAPICreateTagResponse",
+    "CovalTagsAPIDeleteTagResponse",
+    "CovalTagsAPIErrorResponse",
+    "CovalTagsAPIErrorResponseError",
+    "CovalTagsAPIErrorResponseErrorDetailsInner",
+    "CovalTagsAPIGetTagResponse",
+    "CovalTagsAPIListTagsResponse",
+    "CovalTagsAPITagResource",
+    "CovalTagsAPIUpdateTagRequest",
+    "CovalTagsAPIUpdateTagResponse",
     "CovalTemplatesAPICreateTemplateRequest",
     "CovalTemplatesAPICreateTemplateResponse",
     "CovalTemplatesAPIDuplicateTemplateResponse",
@@ -329,12 +355,14 @@ from coval_sdk.api.monitor_events_api import MonitorEventsApi as MonitorEventsAp
 from coval_sdk.api.monitors_api import MonitorsApi as MonitorsApi
 from coval_sdk.api.mutations_api import MutationsApi as MutationsApi
 from coval_sdk.api.personas_api import PersonasApi as PersonasApi
+from coval_sdk.api.reports_api import ReportsApi as ReportsApi
 from coval_sdk.api.review_annotations_api import ReviewAnnotationsApi as ReviewAnnotationsApi
 from coval_sdk.api.review_projects_api import ReviewProjectsApi as ReviewProjectsApi
 from coval_sdk.api.run_templates_api import RunTemplatesApi as RunTemplatesApi
 from coval_sdk.api.runs_api import RunsApi as RunsApi
 from coval_sdk.api.scheduled_runs_api import ScheduledRunsApi as ScheduledRunsApi
 from coval_sdk.api.simulations_api import SimulationsApi as SimulationsApi
+from coval_sdk.api.tags_api import TagsApi as TagsApi
 from coval_sdk.api.templates_api import TemplatesApi as TemplatesApi
 from coval_sdk.api.test_cases_api import TestCasesApi as TestCasesApi
 from coval_sdk.api.test_sets_api import TestSetsApi as TestSetsApi
@@ -510,6 +538,19 @@ from coval_sdk.models.coval_personas_api_phone_numbers_data import CovalPersonas
 from coval_sdk.models.coval_personas_api_update_persona_request import CovalPersonasAPIUpdatePersonaRequest as CovalPersonasAPIUpdatePersonaRequest
 from coval_sdk.models.coval_personas_api_update_persona_response import CovalPersonasAPIUpdatePersonaResponse as CovalPersonasAPIUpdatePersonaResponse
 from coval_sdk.models.coval_personas_api_voice_resource import CovalPersonasAPIVoiceResource as CovalPersonasAPIVoiceResource
+from coval_sdk.models.coval_reports_api_compare_by import CovalReportsAPICompareBy as CovalReportsAPICompareBy
+from coval_sdk.models.coval_reports_api_create_report_request import CovalReportsAPICreateReportRequest as CovalReportsAPICreateReportRequest
+from coval_sdk.models.coval_reports_api_create_report_response import CovalReportsAPICreateReportResponse as CovalReportsAPICreateReportResponse
+from coval_sdk.models.coval_reports_api_delete_report_response import CovalReportsAPIDeleteReportResponse as CovalReportsAPIDeleteReportResponse
+from coval_sdk.models.coval_reports_api_error import CovalReportsAPIError as CovalReportsAPIError
+from coval_sdk.models.coval_reports_api_error_detail import CovalReportsAPIErrorDetail as CovalReportsAPIErrorDetail
+from coval_sdk.models.coval_reports_api_error_response import CovalReportsAPIErrorResponse as CovalReportsAPIErrorResponse
+from coval_sdk.models.coval_reports_api_get_report_response import CovalReportsAPIGetReportResponse as CovalReportsAPIGetReportResponse
+from coval_sdk.models.coval_reports_api_list_reports_response import CovalReportsAPIListReportsResponse as CovalReportsAPIListReportsResponse
+from coval_sdk.models.coval_reports_api_report import CovalReportsAPIReport as CovalReportsAPIReport
+from coval_sdk.models.coval_reports_api_report_permission import CovalReportsAPIReportPermission as CovalReportsAPIReportPermission
+from coval_sdk.models.coval_reports_api_update_report_request import CovalReportsAPIUpdateReportRequest as CovalReportsAPIUpdateReportRequest
+from coval_sdk.models.coval_reports_api_update_report_response import CovalReportsAPIUpdateReportResponse as CovalReportsAPIUpdateReportResponse
 from coval_sdk.models.coval_reviews_api_annotation_priority import CovalReviewsAPIAnnotationPriority as CovalReviewsAPIAnnotationPriority
 from coval_sdk.models.coval_reviews_api_annotation_status import CovalReviewsAPIAnnotationStatus as CovalReviewsAPIAnnotationStatus
 from coval_sdk.models.coval_reviews_api_completion_status import CovalReviewsAPICompletionStatus as CovalReviewsAPICompletionStatus
@@ -581,6 +622,17 @@ from coval_sdk.models.coval_simulations_api_transcript_message import CovalSimul
 from coval_sdk.models.coval_simulations_api_transcript_message_content import CovalSimulationsAPITranscriptMessageContent as CovalSimulationsAPITranscriptMessageContent
 from coval_sdk.models.coval_simulations_api_update_simulation_request import CovalSimulationsAPIUpdateSimulationRequest as CovalSimulationsAPIUpdateSimulationRequest
 from coval_sdk.models.coval_simulations_api_update_simulation_response import CovalSimulationsAPIUpdateSimulationResponse as CovalSimulationsAPIUpdateSimulationResponse
+from coval_sdk.models.coval_tags_api_create_tag_request import CovalTagsAPICreateTagRequest as CovalTagsAPICreateTagRequest
+from coval_sdk.models.coval_tags_api_create_tag_response import CovalTagsAPICreateTagResponse as CovalTagsAPICreateTagResponse
+from coval_sdk.models.coval_tags_api_delete_tag_response import CovalTagsAPIDeleteTagResponse as CovalTagsAPIDeleteTagResponse
+from coval_sdk.models.coval_tags_api_error_response import CovalTagsAPIErrorResponse as CovalTagsAPIErrorResponse
+from coval_sdk.models.coval_tags_api_error_response_error import CovalTagsAPIErrorResponseError as CovalTagsAPIErrorResponseError
+from coval_sdk.models.coval_tags_api_error_response_error_details_inner import CovalTagsAPIErrorResponseErrorDetailsInner as CovalTagsAPIErrorResponseErrorDetailsInner
+from coval_sdk.models.coval_tags_api_get_tag_response import CovalTagsAPIGetTagResponse as CovalTagsAPIGetTagResponse
+from coval_sdk.models.coval_tags_api_list_tags_response import CovalTagsAPIListTagsResponse as CovalTagsAPIListTagsResponse
+from coval_sdk.models.coval_tags_api_tag_resource import CovalTagsAPITagResource as CovalTagsAPITagResource
+from coval_sdk.models.coval_tags_api_update_tag_request import CovalTagsAPIUpdateTagRequest as CovalTagsAPIUpdateTagRequest
+from coval_sdk.models.coval_tags_api_update_tag_response import CovalTagsAPIUpdateTagResponse as CovalTagsAPIUpdateTagResponse
 from coval_sdk.models.coval_templates_api_create_template_request import CovalTemplatesAPICreateTemplateRequest as CovalTemplatesAPICreateTemplateRequest
 from coval_sdk.models.coval_templates_api_create_template_response import CovalTemplatesAPICreateTemplateResponse as CovalTemplatesAPICreateTemplateResponse
 from coval_sdk.models.coval_templates_api_duplicate_template_response import CovalTemplatesAPIDuplicateTemplateResponse as CovalTemplatesAPIDuplicateTemplateResponse

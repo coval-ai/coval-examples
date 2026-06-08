@@ -75,6 +75,12 @@ export interface TestSetsAPITestSetResource {
      */
     test_case_count?: number;
     /**
+     * Tags associated with this test set
+     * @type {Array<string>}
+     * @memberof TestSetsAPITestSetResource
+     */
+    tags?: Array<string>;
+    /**
      * Timestamp when test set was created
      * @type {Date}
      * @memberof TestSetsAPITestSetResource
@@ -114,6 +120,7 @@ export function TestSetsAPITestSetResourceFromJSONTyped(json: any, ignoreDiscrim
         'test_set_metadata': json['test_set_metadata'] == null ? undefined : json['test_set_metadata'],
         'parameters': json['parameters'] == null ? undefined : json['parameters'],
         'test_case_count': json['test_case_count'] == null ? undefined : json['test_case_count'],
+        'tags': json['tags'] == null ? undefined : json['tags'],
         'create_time': json['create_time'] == null ? undefined : (new Date(json['create_time'])),
         'update_time': json['update_time'] == null ? undefined : (new Date(json['update_time'])),
     };
@@ -139,6 +146,7 @@ export function TestSetsAPITestSetResourceToJSONTyped(value?: TestSetsAPITestSet
         'test_set_metadata': value['test_set_metadata'],
         'parameters': value['parameters'],
         'test_case_count': value['test_case_count'],
+        'tags': value['tags'],
         'create_time': value['create_time'] == null ? value['create_time'] : value['create_time'].toISOString(),
         'update_time': value['update_time'] == null ? value['update_time'] : value['update_time'].toISOString(),
     };

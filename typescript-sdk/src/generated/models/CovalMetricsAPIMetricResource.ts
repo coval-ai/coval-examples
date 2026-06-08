@@ -159,6 +159,12 @@ export interface CovalMetricsAPIMetricResource {
      */
     target_condition?: CovalMetricsAPITargetCondition | null;
     /**
+     * Tags associated with this metric
+     * @type {Array<string>}
+     * @memberof CovalMetricsAPIMetricResource
+     */
+    tags?: Array<string>;
+    /**
      * Creator email
      * @type {string}
      * @memberof CovalMetricsAPIMetricResource
@@ -223,6 +229,7 @@ export function CovalMetricsAPIMetricResourceFromJSONTyped(json: any, ignoreDisc
         'include_traces': json['include_traces'] == null ? undefined : json['include_traces'],
         'runtime_config': json['runtime_config'] == null ? undefined : CovalMetricsAPIMetricRuntimeConfigFromJSON(json['runtime_config']),
         'target_condition': json['target_condition'] == null ? undefined : CovalMetricsAPITargetConditionFromJSON(json['target_condition']),
+        'tags': json['tags'] == null ? undefined : json['tags'],
         'created_by': json['created_by'] == null ? undefined : json['created_by'],
         'create_time': json['create_time'] == null ? undefined : (new Date(json['create_time'])),
         'update_time': json['update_time'] == null ? undefined : (new Date(json['update_time'])),
@@ -257,6 +264,7 @@ export function CovalMetricsAPIMetricResourceToJSONTyped(value?: CovalMetricsAPI
         'include_traces': value['include_traces'],
         'runtime_config': CovalMetricsAPIMetricRuntimeConfigToJSON(value['runtime_config']),
         'target_condition': CovalMetricsAPITargetConditionToJSON(value['target_condition']),
+        'tags': value['tags'],
         'created_by': value['created_by'],
         'create_time': value['create_time'] == null ? value['create_time'] : value['create_time'].toISOString(),
         'update_time': value['update_time'] == null ? value['update_time'] : value['update_time'].toISOString(),

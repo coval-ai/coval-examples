@@ -17,7 +17,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
 from pydantic import Field, StrictStr
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_personas_api_create_persona_request import CovalPersonasAPICreatePersonaRequest
 from coval_sdk.models.coval_personas_api_create_persona_response import CovalPersonasAPICreatePersonaResponse
@@ -873,6 +873,7 @@ class PersonasApi:
         page_token: Annotated[Optional[StrictStr], Field(description="Token for retrieving the next page of results")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  Supported fields: - `name`: Filter by persona name (e.g., `name=Customer` or `name=\"Customer Support\"`) - `create_time`: Filter by creation time (e.g., `create_time>\"2025-01-01T00:00:00Z\"`) - `update_time`: Filter by update time  Examples: - `name=\"Customer Support\"` (quoted - contains space) - `create_time>\"2025-01-01T00:00:00Z\"` ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Field to order results by.  Supported fields: `create_time`, `update_time`, `name`  Formats: - Dash prefix: `-create_time` (descending) - Space separated: `create_time desc` (descending) - No prefix: `create_time` (ascending) ")] = None,
+        tag_filters: Annotated[Optional[Annotated[List[StrictStr], Field(max_length=20)]], Field(description="Filter personas by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=voice`). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -898,6 +899,8 @@ class PersonasApi:
         :type filter: str
         :param order_by: Field to order results by.  Supported fields: `create_time`, `update_time`, `name`  Formats: - Dash prefix: `-create_time` (descending) - Space separated: `create_time desc` (descending) - No prefix: `create_time` (ascending) 
         :type order_by: str
+        :param tag_filters: Filter personas by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=voice`). 
+        :type tag_filters: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -925,6 +928,7 @@ class PersonasApi:
             page_token=page_token,
             filter=filter,
             order_by=order_by,
+            tag_filters=tag_filters,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -955,6 +959,7 @@ class PersonasApi:
         page_token: Annotated[Optional[StrictStr], Field(description="Token for retrieving the next page of results")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  Supported fields: - `name`: Filter by persona name (e.g., `name=Customer` or `name=\"Customer Support\"`) - `create_time`: Filter by creation time (e.g., `create_time>\"2025-01-01T00:00:00Z\"`) - `update_time`: Filter by update time  Examples: - `name=\"Customer Support\"` (quoted - contains space) - `create_time>\"2025-01-01T00:00:00Z\"` ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Field to order results by.  Supported fields: `create_time`, `update_time`, `name`  Formats: - Dash prefix: `-create_time` (descending) - Space separated: `create_time desc` (descending) - No prefix: `create_time` (ascending) ")] = None,
+        tag_filters: Annotated[Optional[Annotated[List[StrictStr], Field(max_length=20)]], Field(description="Filter personas by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=voice`). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -980,6 +985,8 @@ class PersonasApi:
         :type filter: str
         :param order_by: Field to order results by.  Supported fields: `create_time`, `update_time`, `name`  Formats: - Dash prefix: `-create_time` (descending) - Space separated: `create_time desc` (descending) - No prefix: `create_time` (ascending) 
         :type order_by: str
+        :param tag_filters: Filter personas by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=voice`). 
+        :type tag_filters: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1007,6 +1014,7 @@ class PersonasApi:
             page_token=page_token,
             filter=filter,
             order_by=order_by,
+            tag_filters=tag_filters,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1037,6 +1045,7 @@ class PersonasApi:
         page_token: Annotated[Optional[StrictStr], Field(description="Token for retrieving the next page of results")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  Supported fields: - `name`: Filter by persona name (e.g., `name=Customer` or `name=\"Customer Support\"`) - `create_time`: Filter by creation time (e.g., `create_time>\"2025-01-01T00:00:00Z\"`) - `update_time`: Filter by update time  Examples: - `name=\"Customer Support\"` (quoted - contains space) - `create_time>\"2025-01-01T00:00:00Z\"` ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Field to order results by.  Supported fields: `create_time`, `update_time`, `name`  Formats: - Dash prefix: `-create_time` (descending) - Space separated: `create_time desc` (descending) - No prefix: `create_time` (ascending) ")] = None,
+        tag_filters: Annotated[Optional[Annotated[List[StrictStr], Field(max_length=20)]], Field(description="Filter personas by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=voice`). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1062,6 +1071,8 @@ class PersonasApi:
         :type filter: str
         :param order_by: Field to order results by.  Supported fields: `create_time`, `update_time`, `name`  Formats: - Dash prefix: `-create_time` (descending) - Space separated: `create_time desc` (descending) - No prefix: `create_time` (ascending) 
         :type order_by: str
+        :param tag_filters: Filter personas by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=voice`). 
+        :type tag_filters: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1089,6 +1100,7 @@ class PersonasApi:
             page_token=page_token,
             filter=filter,
             order_by=order_by,
+            tag_filters=tag_filters,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1114,6 +1126,7 @@ class PersonasApi:
         page_token,
         filter,
         order_by,
+        tag_filters,
         _request_auth,
         _content_type,
         _headers,
@@ -1123,6 +1136,7 @@ class PersonasApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'tag_filters': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -1151,6 +1165,10 @@ class PersonasApi:
         if order_by is not None:
             
             _query_params.append(('order_by', order_by))
+            
+        if tag_filters is not None:
+            
+            _query_params.append(('tag_filters', tag_filters))
             
         # process the header parameters
         # process the form parameters

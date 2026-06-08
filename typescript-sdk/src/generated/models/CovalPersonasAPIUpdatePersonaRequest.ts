@@ -96,6 +96,12 @@ export interface CovalPersonasAPIUpdatePersonaRequest {
      * @memberof CovalPersonasAPIUpdatePersonaRequest
      */
     hold_music_timeout_seconds?: number | null;
+    /**
+     * Tags to associate with this persona. Null or omitted leaves tags unchanged. Pass [] to clear all tags.
+     * @type {Array<string>}
+     * @memberof CovalPersonasAPIUpdatePersonaRequest
+     */
+    tags?: Array<string> | null;
 }
 
 
@@ -165,6 +171,7 @@ export function CovalPersonasAPIUpdatePersonaRequestFromJSONTyped(json: any, ign
         'conversation_initiation': json['conversation_initiation'] == null ? undefined : json['conversation_initiation'],
         'multi_language_stt': json['multi_language_stt'] == null ? undefined : json['multi_language_stt'],
         'hold_music_timeout_seconds': json['hold_music_timeout_seconds'] == null ? undefined : json['hold_music_timeout_seconds'],
+        'tags': json['tags'] == null ? undefined : json['tags'],
     };
 }
 
@@ -191,6 +198,7 @@ export function CovalPersonasAPIUpdatePersonaRequestToJSONTyped(value?: CovalPer
         'conversation_initiation': value['conversation_initiation'],
         'multi_language_stt': value['multi_language_stt'],
         'hold_music_timeout_seconds': value['hold_music_timeout_seconds'],
+        'tags': value['tags'],
     };
 }
 

@@ -39,10 +39,11 @@ class TestSetsAPITestSetResource(BaseModel):
     test_set_metadata: Optional[Dict[str, Any]] = Field(default=None, description="Additional test set configuration (JSON)")
     parameters: Optional[Dict[str, Any]] = Field(default=None, description="Test case parameterization (e.g., {\"name\": [\"Alice\", \"Bob\"]})")
     test_case_count: Optional[StrictInt] = Field(default=None, description="Number of active test cases (GET endpoint only)")
+    tags: Optional[List[StrictStr]] = Field(default=None, description="Tags associated with this test set")
     create_time: Optional[datetime] = Field(default=None, description="Timestamp when test set was created")
     update_time: Optional[datetime] = Field(default=None, description="Timestamp when test set was last updated")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "id", "slug", "display_name", "description", "test_set_type", "test_set_metadata", "parameters", "test_case_count", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["name", "id", "slug", "display_name", "description", "test_set_type", "test_set_metadata", "parameters", "test_case_count", "tags", "create_time", "update_time"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -126,6 +127,7 @@ class TestSetsAPITestSetResource(BaseModel):
             "test_set_metadata": obj.get("test_set_metadata"),
             "parameters": obj.get("parameters"),
             "test_case_count": obj.get("test_case_count"),
+            "tags": obj.get("tags"),
             "create_time": obj.get("create_time"),
             "update_time": obj.get("update_time")
         })

@@ -17,7 +17,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
 from pydantic import Field, StrictStr, field_validator
-from typing import Optional
+from typing import List, Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_run_templates_api_create_run_template_request import CovalRunTemplatesAPICreateRunTemplateRequest
 from coval_sdk.models.coval_run_templates_api_create_run_template_response import CovalRunTemplatesAPICreateRunTemplateResponse
@@ -884,6 +884,7 @@ class RunTemplatesApi:
         self,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
+        tag_filters: Annotated[Optional[Annotated[List[StrictStr], Field(max_length=20)]], Field(description="Filter run templates by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=nightly&tag_filters=voice`). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -905,6 +906,8 @@ class RunTemplatesApi:
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
         :type page_token: str
+        :param tag_filters: Filter run templates by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=nightly&tag_filters=voice`). 
+        :type tag_filters: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -930,6 +933,7 @@ class RunTemplatesApi:
         _param = self._list_run_templates_serialize(
             page_size=page_size,
             page_token=page_token,
+            tag_filters=tag_filters,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -958,6 +962,7 @@ class RunTemplatesApi:
         self,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
+        tag_filters: Annotated[Optional[Annotated[List[StrictStr], Field(max_length=20)]], Field(description="Filter run templates by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=nightly&tag_filters=voice`). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -979,6 +984,8 @@ class RunTemplatesApi:
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
         :type page_token: str
+        :param tag_filters: Filter run templates by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=nightly&tag_filters=voice`). 
+        :type tag_filters: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1004,6 +1011,7 @@ class RunTemplatesApi:
         _param = self._list_run_templates_serialize(
             page_size=page_size,
             page_token=page_token,
+            tag_filters=tag_filters,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1032,6 +1040,7 @@ class RunTemplatesApi:
         self,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
+        tag_filters: Annotated[Optional[Annotated[List[StrictStr], Field(max_length=20)]], Field(description="Filter run templates by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=nightly&tag_filters=voice`). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1053,6 +1062,8 @@ class RunTemplatesApi:
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
         :type page_token: str
+        :param tag_filters: Filter run templates by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=nightly&tag_filters=voice`). 
+        :type tag_filters: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1078,6 +1089,7 @@ class RunTemplatesApi:
         _param = self._list_run_templates_serialize(
             page_size=page_size,
             page_token=page_token,
+            tag_filters=tag_filters,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1101,6 +1113,7 @@ class RunTemplatesApi:
         self,
         page_size,
         page_token,
+        tag_filters,
         _request_auth,
         _content_type,
         _headers,
@@ -1110,6 +1123,7 @@ class RunTemplatesApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'tag_filters': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -1130,6 +1144,10 @@ class RunTemplatesApi:
         if page_token is not None:
             
             _query_params.append(('page_token', page_token))
+            
+        if tag_filters is not None:
+            
+            _query_params.append(('tag_filters', tag_filters))
             
         # process the header parameters
         # process the form parameters

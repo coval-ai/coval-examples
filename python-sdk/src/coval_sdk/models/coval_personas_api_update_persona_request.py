@@ -41,8 +41,9 @@ class CovalPersonasAPIUpdatePersonaRequest(BaseModel):
     conversation_initiation: Optional[StrictStr] = Field(default=None, description="Who initiates the conversation")
     multi_language_stt: Optional[StrictBool] = Field(default=None, description="Enable multilingual speech-to-text so callers speaking languages other than the primary language_code are still transcribed accurately.")
     hold_music_timeout_seconds: Optional[Union[Annotated[float, Field(le=300, strict=True, ge=5)], Annotated[int, Field(le=300, strict=True, ge=5)]]] = Field(default=None, description="Disconnect after this many seconds of no speech (5-300)")
+    tags: Optional[List[StrictStr]] = Field(default=None, description="Tags to associate with this persona. Null or omitted leaves tags unchanged. Pass [] to clear all tags.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "persona_prompt", "voice_name", "language_code", "background_sound", "background_sound_volume", "voice_volume", "voice_speed", "wait_seconds", "conversation_initiation", "multi_language_stt", "hold_music_timeout_seconds"]
+    __properties: ClassVar[List[str]] = ["name", "persona_prompt", "voice_name", "language_code", "background_sound", "background_sound_volume", "voice_volume", "voice_speed", "wait_seconds", "conversation_initiation", "multi_language_stt", "hold_music_timeout_seconds", "tags"]
 
     @field_validator('background_sound')
     def background_sound_validate_enum(cls, value):
@@ -170,6 +171,11 @@ class CovalPersonasAPIUpdatePersonaRequest(BaseModel):
         if self.hold_music_timeout_seconds is None and "hold_music_timeout_seconds" in self.model_fields_set:
             _dict['hold_music_timeout_seconds'] = None
 
+        # set to None if tags (nullable) is None
+        # and model_fields_set contains the field
+        if self.tags is None and "tags" in self.model_fields_set:
+            _dict['tags'] = None
+
         return _dict
 
     @classmethod
@@ -193,7 +199,8 @@ class CovalPersonasAPIUpdatePersonaRequest(BaseModel):
             "wait_seconds": obj.get("wait_seconds"),
             "conversation_initiation": obj.get("conversation_initiation"),
             "multi_language_stt": obj.get("multi_language_stt"),
-            "hold_music_timeout_seconds": obj.get("hold_music_timeout_seconds")
+            "hold_music_timeout_seconds": obj.get("hold_music_timeout_seconds"),
+            "tags": obj.get("tags")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

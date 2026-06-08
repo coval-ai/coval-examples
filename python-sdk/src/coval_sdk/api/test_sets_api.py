@@ -17,7 +17,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
 from pydantic import Field, StrictStr
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 from typing_extensions import Annotated
 from coval_sdk.models.create_test_set201_response import CreateTestSet201Response
 from coval_sdk.models.list_test_sets200_response import ListTestSets200Response
@@ -875,6 +875,7 @@ class TestSetsApi:
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True)]], Field(description="Maximum number of test sets to return (default 50, max 100)")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Token for retrieving the next page of results")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Field to order results by. Prefix with `-` for descending order. Example: `-create_time` for newest first ")] = None,
+        tag_filters: Annotated[Optional[Annotated[List[StrictStr], Field(max_length=20)]], Field(description="Filter test sets by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=regression`). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -900,6 +901,8 @@ class TestSetsApi:
         :type page_token: str
         :param order_by: Field to order results by. Prefix with `-` for descending order. Example: `-create_time` for newest first 
         :type order_by: str
+        :param tag_filters: Filter test sets by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=regression`). 
+        :type tag_filters: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -927,6 +930,7 @@ class TestSetsApi:
             page_size=page_size,
             page_token=page_token,
             order_by=order_by,
+            tag_filters=tag_filters,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -956,6 +960,7 @@ class TestSetsApi:
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True)]], Field(description="Maximum number of test sets to return (default 50, max 100)")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Token for retrieving the next page of results")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Field to order results by. Prefix with `-` for descending order. Example: `-create_time` for newest first ")] = None,
+        tag_filters: Annotated[Optional[Annotated[List[StrictStr], Field(max_length=20)]], Field(description="Filter test sets by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=regression`). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -981,6 +986,8 @@ class TestSetsApi:
         :type page_token: str
         :param order_by: Field to order results by. Prefix with `-` for descending order. Example: `-create_time` for newest first 
         :type order_by: str
+        :param tag_filters: Filter test sets by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=regression`). 
+        :type tag_filters: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1008,6 +1015,7 @@ class TestSetsApi:
             page_size=page_size,
             page_token=page_token,
             order_by=order_by,
+            tag_filters=tag_filters,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1037,6 +1045,7 @@ class TestSetsApi:
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True)]], Field(description="Maximum number of test sets to return (default 50, max 100)")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Token for retrieving the next page of results")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Field to order results by. Prefix with `-` for descending order. Example: `-create_time` for newest first ")] = None,
+        tag_filters: Annotated[Optional[Annotated[List[StrictStr], Field(max_length=20)]], Field(description="Filter test sets by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=regression`). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1062,6 +1071,8 @@ class TestSetsApi:
         :type page_token: str
         :param order_by: Field to order results by. Prefix with `-` for descending order. Example: `-create_time` for newest first 
         :type order_by: str
+        :param tag_filters: Filter test sets by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=regression`). 
+        :type tag_filters: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1089,6 +1100,7 @@ class TestSetsApi:
             page_size=page_size,
             page_token=page_token,
             order_by=order_by,
+            tag_filters=tag_filters,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1113,6 +1125,7 @@ class TestSetsApi:
         page_size,
         page_token,
         order_by,
+        tag_filters,
         _request_auth,
         _content_type,
         _headers,
@@ -1122,6 +1135,7 @@ class TestSetsApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'tag_filters': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -1150,6 +1164,10 @@ class TestSetsApi:
         if order_by is not None:
             
             _query_params.append(('order_by', order_by))
+            
+        if tag_filters is not None:
+            
+            _query_params.append(('tag_filters', tag_filters))
             
         # process the header parameters
         # process the form parameters
