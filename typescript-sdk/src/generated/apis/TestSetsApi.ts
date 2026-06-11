@@ -56,6 +56,7 @@ export interface ListTestSetsRequest {
     pageSize?: number;
     pageToken?: string;
     orderBy?: string;
+    tagFilters?: Array<string>;
 }
 
 export interface UpdateTestSetRequest {
@@ -148,6 +149,7 @@ export interface TestSetsApiInterface {
      * @param {number} [pageSize] Maximum number of test sets to return (default 50, max 100)
      * @param {string} [pageToken] Token for retrieving the next page of results
      * @param {string} [orderBy] Field to order results by. Prefix with &#x60;-&#x60; for descending order. Example: &#x60;-create_time&#x60; for newest first 
+     * @param {Array<string>} [tagFilters] Filter test sets by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., &#x60;?tag_filters&#x3D;production&amp;tag_filters&#x3D;regression&#x60;). 
      * @throws {RequiredError}
      * @memberof TestSetsApiInterface
      */
@@ -160,6 +162,7 @@ export interface TestSetsApiInterface {
      * @param {number} [pageSize] Maximum number of test sets to return (default 50, max 100)
      * @param {string} [pageToken] Token for retrieving the next page of results
      * @param {string} [orderBy] Field to order results by. Prefix with &#x60;-&#x60; for descending order. Example: &#x60;-create_time&#x60; for newest first 
+     * @param {Array<string>} [tagFilters] Filter test sets by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., &#x60;?tag_filters&#x3D;production&amp;tag_filters&#x3D;regression&#x60;). 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TestSetsApiInterface
@@ -380,6 +383,10 @@ export class TestSetsApi extends runtime.BaseAPI implements TestSetsApiInterface
 
         if (requestParameters['orderBy'] != null) {
             queryParameters['order_by'] = requestParameters['orderBy'];
+        }
+
+        if (requestParameters['tagFilters'] != null) {
+            queryParameters['tag_filters'] = requestParameters['tagFilters'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

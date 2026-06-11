@@ -48,8 +48,9 @@ class CovalMetricsAPICreateMetricRequest(BaseModel):
     include_traces: Optional[StrictBool] = Field(default=None, description="Inject OTel trace context into the LLM judge prompt during evaluation. Supported for LLM judge metric types only (`METRIC_LLM_BINARY`, `METRIC_CATEGORICAL`, `METRIC_NUMERICAL_LLM_JUDGE`, `METRIC_AUDIO_LLM_BINARY`, `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`). ")
     runtime_config: Optional[CovalMetricsAPIMetricRuntimeConfig] = Field(default=None, description="Override the LLM model used for metric evaluation. If omitted, the platform default model is used. Use `GET /v1/models/metric` to list available models. Not supported for audio metric types (`METRIC_AUDIO_LLM_BINARY`, `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`), which always use the platform-default audio model. ")
     target_condition: Optional[CovalMetricsAPITargetCondition] = Field(default=None, description="Target condition for metric evaluation")
+    tags: Optional[List[StrictStr]] = Field(default=None, description="Tags to associate with this metric. Null or omitted creates the metric with no tags. Pass [] for an empty tag list.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["metric_name", "description", "metric_type", "prompt", "categories", "min_value", "max_value", "metadata_field_type", "metadata_field_key", "regex_pattern", "role", "min_pause_duration_seconds", "include_traces", "runtime_config", "target_condition"]
+    __properties: ClassVar[List[str]] = ["metric_name", "description", "metric_type", "prompt", "categories", "min_value", "max_value", "metadata_field_type", "metadata_field_key", "regex_pattern", "role", "min_pause_duration_seconds", "include_traces", "runtime_config", "target_condition", "tags"]
 
     @field_validator('role')
     def role_validate_enum(cls, value):
@@ -118,6 +119,11 @@ class CovalMetricsAPICreateMetricRequest(BaseModel):
         if self.target_condition is None and "target_condition" in self.model_fields_set:
             _dict['target_condition'] = None
 
+        # set to None if tags (nullable) is None
+        # and model_fields_set contains the field
+        if self.tags is None and "tags" in self.model_fields_set:
+            _dict['tags'] = None
+
         return _dict
 
     @classmethod
@@ -144,7 +150,8 @@ class CovalMetricsAPICreateMetricRequest(BaseModel):
             "min_pause_duration_seconds": obj.get("min_pause_duration_seconds"),
             "include_traces": obj.get("include_traces"),
             "runtime_config": CovalMetricsAPIMetricRuntimeConfig.from_dict(obj["runtime_config"]) if obj.get("runtime_config") is not None else None,
-            "target_condition": CovalMetricsAPITargetCondition.from_dict(obj["target_condition"]) if obj.get("target_condition") is not None else None
+            "target_condition": CovalMetricsAPITargetCondition.from_dict(obj["target_condition"]) if obj.get("target_condition") is not None else None,
+            "tags": obj.get("tags")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

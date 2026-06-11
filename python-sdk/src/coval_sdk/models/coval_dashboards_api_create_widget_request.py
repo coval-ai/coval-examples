@@ -32,7 +32,7 @@ class CovalDashboardsAPICreateWidgetRequest(BaseModel):
     CovalDashboardsAPICreateWidgetRequest
     """ # noqa: E501
     display_name: Annotated[str, Field(min_length=1, strict=True, max_length=255)] = Field(description="Human-readable widget name")
-    type: CovalDashboardsAPIWidgetType
+    type: Optional[CovalDashboardsAPIWidgetType] = Field(default=None, description="Widget type. Optional; defaults to `chart` when omitted. ")
     grid_x: Optional[StrictInt] = Field(default=None, description="Grid column position")
     grid_y: Optional[StrictInt] = Field(default=None, description="Grid row position")
     grid_w: Optional[StrictInt] = Field(default=None, description="Grid column span")

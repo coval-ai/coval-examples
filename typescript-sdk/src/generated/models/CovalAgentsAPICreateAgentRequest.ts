@@ -168,11 +168,17 @@ export interface CovalAgentsAPICreateAgentRequest {
      */
     metric_ids?: Array<string>;
     /**
-     * Associated test set IDs (22-char IDs)
+     * Associated test set IDs (8-char IDs)
      * @type {Array<string>}
      * @memberof CovalAgentsAPICreateAgentRequest
      */
     test_set_ids?: Array<string>;
+    /**
+     * Tags to associate with this agent. Null or omitted creates the agent with no tags. Pass [] for an empty tag list.
+     * @type {Array<string>}
+     * @memberof CovalAgentsAPICreateAgentRequest
+     */
+    tags?: Array<string> | null;
 }
 
 
@@ -205,6 +211,7 @@ export function CovalAgentsAPICreateAgentRequestFromJSONTyped(json: any, ignoreD
         'workflows': json['workflows'] == null ? undefined : json['workflows'],
         'metric_ids': json['metric_ids'] == null ? undefined : json['metric_ids'],
         'test_set_ids': json['test_set_ids'] == null ? undefined : json['test_set_ids'],
+        'tags': json['tags'] == null ? undefined : json['tags'],
     };
 }
 
@@ -228,6 +235,7 @@ export function CovalAgentsAPICreateAgentRequestToJSONTyped(value?: CovalAgentsA
         'workflows': value['workflows'],
         'metric_ids': value['metric_ids'],
         'test_set_ids': value['test_set_ids'],
+        'tags': value['tags'],
     };
 }
 

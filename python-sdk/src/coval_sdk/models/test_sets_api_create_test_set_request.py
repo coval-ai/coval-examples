@@ -35,8 +35,9 @@ class TestSetsAPICreateTestSetRequest(BaseModel):
     test_set_type: Optional[Annotated[str, Field(strict=True, max_length=50)]] = Field(default=None, description="Test set type (e.g., DEFAULT, SCENARIO, TRANSCRIPT, WORKFLOW)")
     test_set_metadata: Optional[Dict[str, Any]] = Field(default=None, description="Additional test set configuration (JSON)")
     parameters: Optional[Dict[str, Any]] = Field(default=None, description="Test case parameterization")
+    tags: Optional[List[StrictStr]] = Field(default=None, description="Tags to associate with this test set. Null or omitted creates the test set with no tags. Pass [] for an empty tag list.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["display_name", "slug", "description", "test_set_type", "test_set_metadata", "parameters"]
+    __properties: ClassVar[List[str]] = ["display_name", "slug", "description", "test_set_type", "test_set_metadata", "parameters", "tags"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -89,6 +90,11 @@ class TestSetsAPICreateTestSetRequest(BaseModel):
         if self.description is None and "description" in self.model_fields_set:
             _dict['description'] = None
 
+        # set to None if tags (nullable) is None
+        # and model_fields_set contains the field
+        if self.tags is None and "tags" in self.model_fields_set:
+            _dict['tags'] = None
+
         return _dict
 
     @classmethod
@@ -106,7 +112,8 @@ class TestSetsAPICreateTestSetRequest(BaseModel):
             "description": obj.get("description"),
             "test_set_type": obj.get("test_set_type"),
             "test_set_metadata": obj.get("test_set_metadata"),
-            "parameters": obj.get("parameters")
+            "parameters": obj.get("parameters"),
+            "tags": obj.get("tags")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

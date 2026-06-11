@@ -39,8 +39,9 @@ class CovalAgentsAPIUpdateAgentRequest(BaseModel):
     workflows: Optional[Dict[str, Any]] = Field(default=None, description="Workflow configuration (null = no change, {} = clear)")
     metric_ids: Optional[List[StrictStr]] = Field(default=None, description="Associated metric IDs (null = no change, [] = clear)")
     test_set_ids: Optional[List[StrictStr]] = Field(default=None, description="Associated test set IDs (null = no change, [] = clear)")
+    tags: Optional[List[StrictStr]] = Field(default=None, description="Tags to associate with this agent. Null or omitted leaves tags unchanged. Pass [] to clear all tags.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["display_name", "model_type", "phone_number", "endpoint", "prompt", "metadata", "workflows", "metric_ids", "test_set_ids"]
+    __properties: ClassVar[List[str]] = ["display_name", "model_type", "phone_number", "endpoint", "prompt", "metadata", "workflows", "metric_ids", "test_set_ids", "tags"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -123,6 +124,11 @@ class CovalAgentsAPIUpdateAgentRequest(BaseModel):
         if self.test_set_ids is None and "test_set_ids" in self.model_fields_set:
             _dict['test_set_ids'] = None
 
+        # set to None if tags (nullable) is None
+        # and model_fields_set contains the field
+        if self.tags is None and "tags" in self.model_fields_set:
+            _dict['tags'] = None
+
         return _dict
 
     @classmethod
@@ -143,7 +149,8 @@ class CovalAgentsAPIUpdateAgentRequest(BaseModel):
             "metadata": obj.get("metadata"),
             "workflows": obj.get("workflows"),
             "metric_ids": obj.get("metric_ids"),
-            "test_set_ids": obj.get("test_set_ids")
+            "test_set_ids": obj.get("test_set_ids"),
+            "tags": obj.get("tags")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

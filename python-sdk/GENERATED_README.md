@@ -158,6 +158,11 @@ Class | Method | HTTP request | Description
 *PersonasApi* | [**list_personas_phone_numbers**](docs/PersonasApi.md#list_personas_phone_numbers) | **GET** /personas/phone-numbers | List phone number mappings
 *PersonasApi* | [**list_personas_voices**](docs/PersonasApi.md#list_personas_voices) | **GET** /personas/voices | List available voices
 *PersonasApi* | [**update_persona**](docs/PersonasApi.md#update_persona) | **PATCH** /personas/{persona_id} | Update persona
+*ReportsApi* | [**create_report**](docs/ReportsApi.md#create_report) | **POST** /reports | Create report
+*ReportsApi* | [**delete_report**](docs/ReportsApi.md#delete_report) | **DELETE** /reports/{report_id} | Delete report
+*ReportsApi* | [**get_report**](docs/ReportsApi.md#get_report) | **GET** /reports/{report_id} | Get report
+*ReportsApi* | [**list_reports**](docs/ReportsApi.md#list_reports) | **GET** /reports | List reports
+*ReportsApi* | [**update_report**](docs/ReportsApi.md#update_report) | **PATCH** /reports/{report_id} | Update report
 *ReviewAnnotationsApi* | [**create_review_annotation**](docs/ReviewAnnotationsApi.md#create_review_annotation) | **POST** /v1/review-annotations | Create review annotation
 *ReviewAnnotationsApi* | [**delete_review_annotation**](docs/ReviewAnnotationsApi.md#delete_review_annotation) | **DELETE** /v1/review-annotations/{annotation_id} | Delete review annotation
 *ReviewAnnotationsApi* | [**get_review_annotation**](docs/ReviewAnnotationsApi.md#get_review_annotation) | **GET** /v1/review-annotations/{annotation_id} | Get review annotation
@@ -189,6 +194,11 @@ Class | Method | HTTP request | Description
 *SimulationsApi* | [**list_simulations**](docs/SimulationsApi.md#list_simulations) | **GET** /v1/simulations | List simulations
 *SimulationsApi* | [**resimulate_simulation**](docs/SimulationsApi.md#resimulate_simulation) | **POST** /v1/simulations/{simulation_id}/resimulate | Rerun a simulation
 *SimulationsApi* | [**update_simulation**](docs/SimulationsApi.md#update_simulation) | **PATCH** /v1/simulations/{simulation_id} | Update simulation
+*TagsApi* | [**create_tag**](docs/TagsApi.md#create_tag) | **POST** /v1/tags | Create tag
+*TagsApi* | [**delete_tag**](docs/TagsApi.md#delete_tag) | **DELETE** /v1/tags/{tag_id} | Delete tag
+*TagsApi* | [**get_tag**](docs/TagsApi.md#get_tag) | **GET** /v1/tags/{tag_id} | Get tag
+*TagsApi* | [**list_tags**](docs/TagsApi.md#list_tags) | **GET** /v1/tags | List tags
+*TagsApi* | [**update_tag**](docs/TagsApi.md#update_tag) | **PATCH** /v1/tags/{tag_id} | Update tag
 *TemplatesApi* | [**create_template**](docs/TemplatesApi.md#create_template) | **POST** /v1/templates | Create a template
 *TemplatesApi* | [**delete_template**](docs/TemplatesApi.md#delete_template) | **DELETE** /v1/templates/{template_id} | Delete template
 *TemplatesApi* | [**duplicate_template**](docs/TemplatesApi.md#duplicate_template) | **POST** /v1/templates/{template_id}/duplicate | Duplicate template
@@ -372,6 +382,19 @@ Class | Method | HTTP request | Description
  - [CovalPersonasAPIUpdatePersonaRequest](docs/CovalPersonasAPIUpdatePersonaRequest.md)
  - [CovalPersonasAPIUpdatePersonaResponse](docs/CovalPersonasAPIUpdatePersonaResponse.md)
  - [CovalPersonasAPIVoiceResource](docs/CovalPersonasAPIVoiceResource.md)
+ - [CovalReportsAPICompareBy](docs/CovalReportsAPICompareBy.md)
+ - [CovalReportsAPICreateReportRequest](docs/CovalReportsAPICreateReportRequest.md)
+ - [CovalReportsAPICreateReportResponse](docs/CovalReportsAPICreateReportResponse.md)
+ - [CovalReportsAPIDeleteReportResponse](docs/CovalReportsAPIDeleteReportResponse.md)
+ - [CovalReportsAPIError](docs/CovalReportsAPIError.md)
+ - [CovalReportsAPIErrorDetail](docs/CovalReportsAPIErrorDetail.md)
+ - [CovalReportsAPIErrorResponse](docs/CovalReportsAPIErrorResponse.md)
+ - [CovalReportsAPIGetReportResponse](docs/CovalReportsAPIGetReportResponse.md)
+ - [CovalReportsAPIListReportsResponse](docs/CovalReportsAPIListReportsResponse.md)
+ - [CovalReportsAPIReport](docs/CovalReportsAPIReport.md)
+ - [CovalReportsAPIReportPermission](docs/CovalReportsAPIReportPermission.md)
+ - [CovalReportsAPIUpdateReportRequest](docs/CovalReportsAPIUpdateReportRequest.md)
+ - [CovalReportsAPIUpdateReportResponse](docs/CovalReportsAPIUpdateReportResponse.md)
  - [CovalReviewsAPIAnnotationPriority](docs/CovalReviewsAPIAnnotationPriority.md)
  - [CovalReviewsAPIAnnotationStatus](docs/CovalReviewsAPIAnnotationStatus.md)
  - [CovalReviewsAPICompletionStatus](docs/CovalReviewsAPICompletionStatus.md)
@@ -443,6 +466,17 @@ Class | Method | HTTP request | Description
  - [CovalSimulationsAPITranscriptMessageContent](docs/CovalSimulationsAPITranscriptMessageContent.md)
  - [CovalSimulationsAPIUpdateSimulationRequest](docs/CovalSimulationsAPIUpdateSimulationRequest.md)
  - [CovalSimulationsAPIUpdateSimulationResponse](docs/CovalSimulationsAPIUpdateSimulationResponse.md)
+ - [CovalTagsAPICreateTagRequest](docs/CovalTagsAPICreateTagRequest.md)
+ - [CovalTagsAPICreateTagResponse](docs/CovalTagsAPICreateTagResponse.md)
+ - [CovalTagsAPIDeleteTagResponse](docs/CovalTagsAPIDeleteTagResponse.md)
+ - [CovalTagsAPIErrorResponse](docs/CovalTagsAPIErrorResponse.md)
+ - [CovalTagsAPIErrorResponseError](docs/CovalTagsAPIErrorResponseError.md)
+ - [CovalTagsAPIErrorResponseErrorDetailsInner](docs/CovalTagsAPIErrorResponseErrorDetailsInner.md)
+ - [CovalTagsAPIGetTagResponse](docs/CovalTagsAPIGetTagResponse.md)
+ - [CovalTagsAPIListTagsResponse](docs/CovalTagsAPIListTagsResponse.md)
+ - [CovalTagsAPITagResource](docs/CovalTagsAPITagResource.md)
+ - [CovalTagsAPIUpdateTagRequest](docs/CovalTagsAPIUpdateTagRequest.md)
+ - [CovalTagsAPIUpdateTagResponse](docs/CovalTagsAPIUpdateTagResponse.md)
  - [CovalTemplatesAPICreateTemplateRequest](docs/CovalTemplatesAPICreateTemplateRequest.md)
  - [CovalTemplatesAPICreateTemplateResponse](docs/CovalTemplatesAPICreateTemplateResponse.md)
  - [CovalTemplatesAPIDuplicateTemplateResponse](docs/CovalTemplatesAPIDuplicateTemplateResponse.md)
@@ -543,6 +577,13 @@ Authentication schemes defined for the API:
 - **API key parameter name**: X-API-Key
 - **Location**: HTTP header
 
+<a id="Coval_Reports_API_ApiKeyAuth"></a>
+### Coval_Reports_API_ApiKeyAuth
+
+- **Type**: API key
+- **API key parameter name**: x-api-key
+- **Location**: HTTP header
+
 <a id="Coval_Reviews_API_ApiKeyAuth"></a>
 ### Coval_Reviews_API_ApiKeyAuth
 
@@ -573,6 +614,13 @@ Authentication schemes defined for the API:
 
 <a id="Coval_Simulations_API_ApiKeyAuth"></a>
 ### Coval_Simulations_API_ApiKeyAuth
+
+- **Type**: API key
+- **API key parameter name**: X-API-Key
+- **Location**: HTTP header
+
+<a id="Coval_Tags_API_ApiKeyAuth"></a>
+### Coval_Tags_API_ApiKeyAuth
 
 - **Type**: API key
 - **API key parameter name**: X-API-Key

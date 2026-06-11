@@ -44,10 +44,11 @@ class CovalPersonasAPIPersonaResource(BaseModel):
     conversation_initiation: Optional[StrictStr] = Field(default=None, description="Who initiates the conversation")
     multi_language_stt: Optional[StrictBool] = Field(default=None, description="Enable multilingual speech-to-text so callers speaking languages other than the primary language_code are still transcribed accurately. Useful for personas simulating callers in bilingual regions or contact centers that serve diverse populations. ")
     hold_music_timeout_seconds: Optional[Union[Annotated[float, Field(le=300, strict=True, ge=5)], Annotated[int, Field(le=300, strict=True, ge=5)]]] = Field(default=None, description="Disconnect after this many seconds of no speech (5-300). Used for hold music scenarios.")
+    tags: Optional[List[StrictStr]] = Field(default=None, description="Tags associated with this persona")
     create_time: datetime = Field(description="Persona creation timestamp (ISO 8601)")
     update_time: Optional[datetime] = Field(default=None, description="Last update timestamp (ISO 8601)")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["resource_name", "id", "name", "persona_prompt", "voice_name", "language_code", "background_sound", "background_sound_volume", "voice_volume", "voice_speed", "wait_seconds", "conversation_initiation", "multi_language_stt", "hold_music_timeout_seconds", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["resource_name", "id", "name", "persona_prompt", "voice_name", "language_code", "background_sound", "background_sound_volume", "voice_volume", "voice_speed", "wait_seconds", "conversation_initiation", "multi_language_stt", "hold_music_timeout_seconds", "tags", "create_time", "update_time"]
 
     @field_validator('background_sound')
     def background_sound_validate_enum(cls, value):
@@ -201,6 +202,7 @@ class CovalPersonasAPIPersonaResource(BaseModel):
             "conversation_initiation": obj.get("conversation_initiation"),
             "multi_language_stt": obj.get("multi_language_stt"),
             "hold_music_timeout_seconds": obj.get("hold_music_timeout_seconds"),
+            "tags": obj.get("tags"),
             "create_time": obj.get("create_time"),
             "update_time": obj.get("update_time")
         })

@@ -41,8 +41,9 @@ class CovalRunTemplatesAPICreateRunTemplateRequest(BaseModel):
     sub_sample_size: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=0, description="Number of test cases to randomly sample (0 = use all)")
     sub_sample_seed: Optional[StrictInt] = Field(default=None, description="Random seed for reproducible sub-sampling")
     metadata: Optional[Dict[str, Any]] = Field(default=None, description="Custom metadata for tracking")
+    tags: Optional[List[StrictStr]] = Field(default=None, description="Tags to associate with this run template. Null or omitted creates the run template with no tags. Pass [] for an empty tag list.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["display_name", "description", "agent_id", "persona_id", "test_set_id", "metric_ids", "mutation_ids", "iteration_count", "concurrency", "sub_sample_size", "sub_sample_seed", "metadata"]
+    __properties: ClassVar[List[str]] = ["display_name", "description", "agent_id", "persona_id", "test_set_id", "metric_ids", "mutation_ids", "iteration_count", "concurrency", "sub_sample_size", "sub_sample_seed", "metadata", "tags"]
 
     @field_validator('agent_id')
     def agent_id_validate_regular_expression(cls, value):
@@ -125,6 +126,11 @@ class CovalRunTemplatesAPICreateRunTemplateRequest(BaseModel):
         if self.sub_sample_seed is None and "sub_sample_seed" in self.model_fields_set:
             _dict['sub_sample_seed'] = None
 
+        # set to None if tags (nullable) is None
+        # and model_fields_set contains the field
+        if self.tags is None and "tags" in self.model_fields_set:
+            _dict['tags'] = None
+
         return _dict
 
     @classmethod
@@ -148,7 +154,8 @@ class CovalRunTemplatesAPICreateRunTemplateRequest(BaseModel):
             "concurrency": obj.get("concurrency") if obj.get("concurrency") is not None else 1,
             "sub_sample_size": obj.get("sub_sample_size") if obj.get("sub_sample_size") is not None else 0,
             "sub_sample_seed": obj.get("sub_sample_seed"),
-            "metadata": obj.get("metadata")
+            "metadata": obj.get("metadata"),
+            "tags": obj.get("tags")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():
