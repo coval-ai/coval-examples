@@ -45,14 +45,25 @@ class CovalRunsAPIRun(BaseModel):
     results: Optional[CovalRunsAPIResults] = None
     metadata: Optional[Dict[str, Any]] = Field(default=None, description="Custom metadata provided during launch")
     error: Optional[StrictStr] = Field(default=None, description="Error message if status is FAILED")
+    error_status: Optional[StrictStr] = Field(default=None, description="Structured final outcome of the run. This field captures the run-level result separately from `status` (which tracks lifecycle state such as COMPLETED or FAILED) and `error` (which holds a human-readable failure message when present). This field is `null` while the run has no final outcome yet, such as when `status` is PENDING, IN_QUEUE, or IN_PROGRESS, and is populated with one of the enum values once the final outcome is available. A run with `status: COMPLETED` may still have `error_status: EXECUTION_FAILURE` when one or more child simulation outputs or metric evaluations failed. ")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "run_id", "status", "create_time", "update_time", "agent_id", "persona_id", "test_set_id", "tags", "progress", "results", "metadata", "error"]
+    __properties: ClassVar[List[str]] = ["name", "run_id", "status", "create_time", "update_time", "agent_id", "persona_id", "test_set_id", "tags", "progress", "results", "metadata", "error", "error_status"]
 
     @field_validator('status')
     def status_validate_enum(cls, value):
         """Validates the enum"""
         if value not in set(['PENDING', 'IN QUEUE', 'IN PROGRESS', 'COMPLETED', 'FAILED', 'CANCELLED', 'DELETED']):
             raise ValueError("must be one of enum values ('PENDING', 'IN QUEUE', 'IN PROGRESS', 'COMPLETED', 'FAILED', 'CANCELLED', 'DELETED')")
+        return value
+
+    @field_validator('error_status')
+    def error_status_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['SUCCESS', 'EXECUTION_FAILURE', 'RUN_CANCELLED']):
+            raise ValueError("must be one of enum values ('SUCCESS', 'EXECUTION_FAILURE', 'RUN_CANCELLED')")
         return value
 
     model_config = ConfigDict(
@@ -132,6 +143,11 @@ class CovalRunsAPIRun(BaseModel):
         if self.error is None and "error" in self.model_fields_set:
             _dict['error'] = None
 
+        # set to None if error_status (nullable) is None
+        # and model_fields_set contains the field
+        if self.error_status is None and "error_status" in self.model_fields_set:
+            _dict['error_status'] = None
+
         return _dict
 
     @classmethod
@@ -156,7 +172,8 @@ class CovalRunsAPIRun(BaseModel):
             "progress": CovalRunsAPIProgress.from_dict(obj["progress"]) if obj.get("progress") is not None else None,
             "results": CovalRunsAPIResults.from_dict(obj["results"]) if obj.get("results") is not None else None,
             "metadata": obj.get("metadata"),
-            "error": obj.get("error")
+            "error": obj.get("error"),
+            "error_status": obj.get("error_status")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

@@ -112,6 +112,21 @@ export interface CovalRunsAPIRun {
      * @memberof CovalRunsAPIRun
      */
     error?: string | null;
+    /**
+     * Structured final outcome of the run. This field captures the run-level
+     * result separately from `status` (which tracks lifecycle state such as
+     * COMPLETED or FAILED) and `error` (which holds a human-readable failure
+     * message when present). This field is `null` while the run has no final
+     * outcome yet, such as when `status` is PENDING, IN_QUEUE, or IN_PROGRESS,
+     * and is populated with one of the enum values once the final outcome is
+     * available. A run with `status: COMPLETED` may still have
+     * `error_status: EXECUTION_FAILURE` when one or more child simulation
+     * outputs or metric evaluations failed.
+     * 
+     * @type {CovalRunsAPIRunErrorStatusEnum}
+     * @memberof CovalRunsAPIRun
+     */
+    error_status?: CovalRunsAPIRunErrorStatusEnum | null;
 }
 
 
@@ -128,6 +143,16 @@ export const CovalRunsAPIRunStatusEnum = {
     Deleted: 'DELETED'
 } as const;
 export type CovalRunsAPIRunStatusEnum = typeof CovalRunsAPIRunStatusEnum[keyof typeof CovalRunsAPIRunStatusEnum];
+
+/**
+ * @export
+ */
+export const CovalRunsAPIRunErrorStatusEnum = {
+    Success: 'SUCCESS',
+    ExecutionFailure: 'EXECUTION_FAILURE',
+    RunCancelled: 'RUN_CANCELLED'
+} as const;
+export type CovalRunsAPIRunErrorStatusEnum = typeof CovalRunsAPIRunErrorStatusEnum[keyof typeof CovalRunsAPIRunErrorStatusEnum];
 
 
 /**
@@ -164,6 +189,7 @@ export function CovalRunsAPIRunFromJSONTyped(json: any, ignoreDiscriminator: boo
         'results': json['results'] == null ? undefined : CovalRunsAPIResultsFromJSON(json['results']),
         'metadata': json['metadata'] == null ? undefined : json['metadata'],
         'error': json['error'] == null ? undefined : json['error'],
+        'error_status': json['error_status'] == null ? undefined : json['error_status'],
     };
 }
 
@@ -191,6 +217,7 @@ export function CovalRunsAPIRunToJSONTyped(value?: CovalRunsAPIRun | null, ignor
         'results': CovalRunsAPIResultsToJSON(value['results']),
         'metadata': value['metadata'],
         'error': value['error'],
+        'error_status': value['error_status'],
     };
 }
 

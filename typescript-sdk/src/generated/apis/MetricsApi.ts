@@ -69,6 +69,11 @@ import {
     CovalMetricsAPIListMetricModelsResponseToJSON,
 } from '../models/CovalMetricsAPIListMetricModelsResponse.js';
 import {
+    type CovalMetricsAPIListMetricVersionsResponse,
+    CovalMetricsAPIListMetricVersionsResponseFromJSON,
+    CovalMetricsAPIListMetricVersionsResponseToJSON,
+} from '../models/CovalMetricsAPIListMetricVersionsResponse.js';
+import {
     type CovalMetricsAPIListMetricsResponse,
     CovalMetricsAPIListMetricsResponseFromJSON,
     CovalMetricsAPIListMetricsResponseToJSON,
@@ -88,6 +93,16 @@ import {
     CovalMetricsAPIPatchThresholdResponseFromJSON,
     CovalMetricsAPIPatchThresholdResponseToJSON,
 } from '../models/CovalMetricsAPIPatchThresholdResponse.js';
+import {
+    type CovalMetricsAPITestMetricRequest,
+    CovalMetricsAPITestMetricRequestFromJSON,
+    CovalMetricsAPITestMetricRequestToJSON,
+} from '../models/CovalMetricsAPITestMetricRequest.js';
+import {
+    type CovalMetricsAPITestMetricResponse,
+    CovalMetricsAPITestMetricResponseFromJSON,
+    CovalMetricsAPITestMetricResponseToJSON,
+} from '../models/CovalMetricsAPITestMetricResponse.js';
 import {
     type CovalMetricsAPIUpdateMetricBaselineRequest,
     CovalMetricsAPIUpdateMetricBaselineRequestFromJSON,
@@ -158,6 +173,10 @@ export interface ListMetricThresholdsRequest {
     pageToken?: string;
 }
 
+export interface ListMetricVersionsRequest {
+    metricId: string;
+}
+
 export interface ListMetricsRequest {
     pageSize?: number;
     pageToken?: string;
@@ -165,6 +184,11 @@ export interface ListMetricsRequest {
     filter?: string;
     includeBuiltin?: boolean;
     tagFilters?: Array<string>;
+}
+
+export interface TestMetricRequest {
+    metricId: string;
+    covalMetricsAPITestMetricRequest: CovalMetricsAPITestMetricRequest;
 }
 
 export interface UpdateMetricRequest {
@@ -507,6 +531,30 @@ export interface MetricsApiInterface {
     listMetricThresholds(requestParameters: ListMetricThresholdsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListThresholdsResponse>;
 
     /**
+     * Creates request options for listMetricVersions without sending the request
+     * @param {string} metricId 22-character metric ID
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    listMetricVersionsRequestOpts(requestParameters: ListMetricVersionsRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * List the prior-state version history for a metric, newest first. The live metric is the current version (see MetricResource.current_version) and is not included here. Built-in metrics carry no per-organization history and return an empty list.
+     * @summary List metric versions
+     * @param {string} metricId 22-character metric ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    listMetricVersionsRaw(requestParameters: ListMetricVersionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIListMetricVersionsResponse>>;
+
+    /**
+     * List the prior-state version history for a metric, newest first. The live metric is the current version (see MetricResource.current_version) and is not included here. Built-in metrics carry no per-organization history and return an empty list.
+     * List metric versions
+     */
+    listMetricVersions(requestParameters: ListMetricVersionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListMetricVersionsResponse>;
+
+    /**
      * Creates request options for listMetrics without sending the request
      * @param {number} [pageSize] Maximum results per page
      * @param {string} [pageToken] Pagination token from previous response
@@ -539,6 +587,32 @@ export interface MetricsApiInterface {
      * List metrics
      */
     listMetrics(requestParameters: ListMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListMetricsResponse>;
+
+    /**
+     * Creates request options for testMetric without sending the request
+     * @param {string} metricId The metric ID (22-character ShortUUID)
+     * @param {CovalMetricsAPITestMetricRequest} covalMetricsAPITestMetricRequest 
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    testMetricRequestOpts(requestParameters: TestMetricRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Trigger execution of a metric against a simulation output for testing purposes. This is an asynchronous operation that returns immediately with a metric output ULID. The metric output result can be retrieved once processing completes. 
+     * @summary Trigger test metric execution
+     * @param {string} metricId The metric ID (22-character ShortUUID)
+     * @param {CovalMetricsAPITestMetricRequest} covalMetricsAPITestMetricRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    testMetricRaw(requestParameters: TestMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPITestMetricResponse>>;
+
+    /**
+     * Trigger execution of a metric against a simulation output for testing purposes. This is an asynchronous operation that returns immediately with a metric output ULID. The metric output result can be retrieved once processing completes. 
+     * Trigger test metric execution
+     */
+    testMetric(requestParameters: TestMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPITestMetricResponse>;
 
     /**
      * Creates request options for updateMetric without sending the request
@@ -1317,6 +1391,57 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
+     * Creates request options for listMetricVersions without sending the request
+     */
+    async listMetricVersionsRequestOpts(requestParameters: ListMetricVersionsRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['metricId'] == null) {
+            throw new runtime.RequiredError(
+                'metricId',
+                'Required parameter "metricId" was null or undefined when calling listMetricVersions().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/v1/metrics/{metric_id}/versions`;
+        urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * List the prior-state version history for a metric, newest first. The live metric is the current version (see MetricResource.current_version) and is not included here. Built-in metrics carry no per-organization history and return an empty list.
+     * List metric versions
+     */
+    async listMetricVersionsRaw(requestParameters: ListMetricVersionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIListMetricVersionsResponse>> {
+        const requestOptions = await this.listMetricVersionsRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPIListMetricVersionsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * List the prior-state version history for a metric, newest first. The live metric is the current version (see MetricResource.current_version) and is not included here. Built-in metrics carry no per-organization history and return an empty list.
+     * List metric versions
+     */
+    async listMetricVersions(requestParameters: ListMetricVersionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListMetricVersionsResponse> {
+        const response = await this.listMetricVersionsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for listMetrics without sending the request
      */
     async listMetricsRequestOpts(requestParameters: ListMetricsRequest): Promise<runtime.RequestOpts> {
@@ -1380,6 +1505,67 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
      */
     async listMetrics(requestParameters: ListMetricsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListMetricsResponse> {
         const response = await this.listMetricsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for testMetric without sending the request
+     */
+    async testMetricRequestOpts(requestParameters: TestMetricRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['metricId'] == null) {
+            throw new runtime.RequiredError(
+                'metricId',
+                'Required parameter "metricId" was null or undefined when calling testMetric().'
+            );
+        }
+
+        if (requestParameters['covalMetricsAPITestMetricRequest'] == null) {
+            throw new runtime.RequiredError(
+                'covalMetricsAPITestMetricRequest',
+                'Required parameter "covalMetricsAPITestMetricRequest" was null or undefined when calling testMetric().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/v1/metrics/{metric_id}/test`;
+        urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CovalMetricsAPITestMetricRequestToJSON(requestParameters['covalMetricsAPITestMetricRequest']),
+        };
+    }
+
+    /**
+     * Trigger execution of a metric against a simulation output for testing purposes. This is an asynchronous operation that returns immediately with a metric output ULID. The metric output result can be retrieved once processing completes. 
+     * Trigger test metric execution
+     */
+    async testMetricRaw(requestParameters: TestMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPITestMetricResponse>> {
+        const requestOptions = await this.testMetricRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPITestMetricResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Trigger execution of a metric against a simulation output for testing purposes. This is an asynchronous operation that returns immediately with a metric output ULID. The metric output result can be retrieved once processing completes. 
+     * Trigger test metric execution
+     */
+    async testMetric(requestParameters: TestMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPITestMetricResponse> {
+        const response = await this.testMetricRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

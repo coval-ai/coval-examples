@@ -28,7 +28,7 @@ import {
  * - At least one of: `transcript`, `audio_url`, or `upload_id` must be provided
  * - `audio_url` and `upload_id` are mutually exclusive
  * 
- * **Payload Size Limit:** The combined queued payload is subject to a 256 KB limit (including large `metadata` values); oversized payloads return 413 `PAYLOAD_TOO_LARGE`.
+ * **Payload Processing:** Large queued payloads are automatically offloaded for asynchronous processing. Metadata is accepted as an arbitrary JSON object without a separate character limit, but keep metadata reasonably small and use external references for very large metadata. The overall request body is still subject to infrastructure limits, including the API Gateway 10 MB request body cap.
  * 
  * **Best Practices:**
  * - Provide both transcript and audio_url (or upload_id) when available (enables audio metrics)
@@ -112,12 +112,18 @@ export interface CovalConversationsAPISubmitConversationRequest {
      */
     metrics?: Array<string>;
     /**
-     * Custom metadata for conditional metrics and tracking.
+     * Custom metadata for conditional metrics and tracking. Accepted as an
+     * arbitrary JSON object without a separate character limit.
      * 
      * Used for:
      * - Triggering conditional metrics
      * - Filtering conversations
      * - Custom analytics and reporting
+     * 
+     * Keep metadata reasonably small and prefer external references for
+     * very large metadata blobs. The overall request body is still subject
+     * to infrastructure limits, including the API Gateway 10 MB request
+     * body cap.
      * 
      * @type {{ [key: string]: any; }}
      * @memberof CovalConversationsAPISubmitConversationRequest

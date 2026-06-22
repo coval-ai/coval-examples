@@ -27,6 +27,13 @@ import {
     CovalMetricsAPITargetConditionToJSON,
     CovalMetricsAPITargetConditionToJSONTyped,
 } from './CovalMetricsAPITargetCondition.js';
+import type { CovalMetricsAPICurrentMetricVersion } from './CovalMetricsAPICurrentMetricVersion.js';
+import {
+    CovalMetricsAPICurrentMetricVersionFromJSON,
+    CovalMetricsAPICurrentMetricVersionFromJSONTyped,
+    CovalMetricsAPICurrentMetricVersionToJSON,
+    CovalMetricsAPICurrentMetricVersionToJSONTyped,
+} from './CovalMetricsAPICurrentMetricVersion.js';
 import type { CovalMetricsAPIMetadataFieldType } from './CovalMetricsAPIMetadataFieldType.js';
 import {
     CovalMetricsAPIMetadataFieldTypeFromJSON,
@@ -182,6 +189,12 @@ export interface CovalMetricsAPIMetricResource {
      * @memberof CovalMetricsAPIMetricResource
      */
     update_time?: Date | null;
+    /**
+     * The metric's live version. Null for pre-versioning metrics that have not yet been saved or run under the versioning system. Full history at GET /v1/metrics/{metric_id}/versions.
+     * @type {CovalMetricsAPICurrentMetricVersion}
+     * @memberof CovalMetricsAPIMetricResource
+     */
+    current_version?: CovalMetricsAPICurrentMetricVersion | null;
 }
 
 
@@ -233,6 +246,7 @@ export function CovalMetricsAPIMetricResourceFromJSONTyped(json: any, ignoreDisc
         'created_by': json['created_by'] == null ? undefined : json['created_by'],
         'create_time': json['create_time'] == null ? undefined : (new Date(json['create_time'])),
         'update_time': json['update_time'] == null ? undefined : (new Date(json['update_time'])),
+        'current_version': json['current_version'] == null ? undefined : CovalMetricsAPICurrentMetricVersionFromJSON(json['current_version']),
     };
 }
 
@@ -268,6 +282,7 @@ export function CovalMetricsAPIMetricResourceToJSONTyped(value?: CovalMetricsAPI
         'created_by': value['created_by'],
         'create_time': value['create_time'] == null ? value['create_time'] : value['create_time'].toISOString(),
         'update_time': value['update_time'] == null ? value['update_time'] : value['update_time'].toISOString(),
+        'current_version': CovalMetricsAPICurrentMetricVersionToJSON(value['current_version']),
     };
 }
 
