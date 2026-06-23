@@ -22,6 +22,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
+from coval_sdk.models.coval_metrics_api_current_metric_version import CovalMetricsAPICurrentMetricVersion
 from coval_sdk.models.coval_metrics_api_metadata_field_type import CovalMetricsAPIMetadataFieldType
 from coval_sdk.models.coval_metrics_api_metric_runtime_config import CovalMetricsAPIMetricRuntimeConfig
 from coval_sdk.models.coval_metrics_api_metric_type import CovalMetricsAPIMetricType
@@ -55,8 +56,9 @@ class CovalMetricsAPIMetricResource(BaseModel):
     created_by: Optional[StrictStr] = Field(default=None, description="Creator email")
     create_time: Optional[datetime] = Field(default=None, description="Creation timestamp")
     update_time: Optional[datetime] = Field(default=None, description="Last update timestamp")
+    current_version: Optional[CovalMetricsAPICurrentMetricVersion] = Field(default=None, description="The metric's live version. Null for pre-versioning metrics that have not yet been saved or run under the versioning system. Full history at GET /v1/metrics/{metric_id}/versions.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "id", "metric_name", "description", "metric_type", "prompt", "categories", "min_value", "max_value", "metadata_field_type", "metadata_field_key", "regex_pattern", "role", "min_pause_duration_seconds", "include_traces", "runtime_config", "target_condition", "tags", "created_by", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["name", "id", "metric_name", "description", "metric_type", "prompt", "categories", "min_value", "max_value", "metadata_field_type", "metadata_field_key", "regex_pattern", "role", "min_pause_duration_seconds", "include_traces", "runtime_config", "target_condition", "tags", "created_by", "create_time", "update_time", "current_version"]
 
     @field_validator('role')
     def role_validate_enum(cls, value):
@@ -115,6 +117,9 @@ class CovalMetricsAPIMetricResource(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of target_condition
         if self.target_condition:
             _dict['target_condition'] = self.target_condition.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of current_version
+        if self.current_version:
+            _dict['current_version'] = self.current_version.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -185,6 +190,11 @@ class CovalMetricsAPIMetricResource(BaseModel):
         if self.update_time is None and "update_time" in self.model_fields_set:
             _dict['update_time'] = None
 
+        # set to None if current_version (nullable) is None
+        # and model_fields_set contains the field
+        if self.current_version is None and "current_version" in self.model_fields_set:
+            _dict['current_version'] = None
+
         return _dict
 
     @classmethod
@@ -217,7 +227,8 @@ class CovalMetricsAPIMetricResource(BaseModel):
             "tags": obj.get("tags"),
             "created_by": obj.get("created_by"),
             "create_time": obj.get("create_time"),
-            "update_time": obj.get("update_time")
+            "update_time": obj.get("update_time"),
+            "current_version": CovalMetricsAPICurrentMetricVersion.from_dict(obj["current_version"]) if obj.get("current_version") is not None else None
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

@@ -150,6 +150,7 @@ __all__ = [
     "CovalMetricsAPICreateMetricRequest",
     "CovalMetricsAPICreateThresholdRequest",
     "CovalMetricsAPICreateThresholdResponse",
+    "CovalMetricsAPICurrentMetricVersion",
     "CovalMetricsAPIErrorResponse",
     "CovalMetricsAPIErrorResponseError",
     "CovalMetricsAPIErrorResponseErrorDetailsInner",
@@ -157,6 +158,7 @@ __all__ = [
     "CovalMetricsAPIGetThresholdResponse",
     "CovalMetricsAPIListMetricBaselinesResponse",
     "CovalMetricsAPIListMetricModelsResponse",
+    "CovalMetricsAPIListMetricVersionsResponse",
     "CovalMetricsAPIListMetricsResponse",
     "CovalMetricsAPIListThresholdsResponse",
     "CovalMetricsAPIMetadataFieldType",
@@ -165,9 +167,13 @@ __all__ = [
     "CovalMetricsAPIMetricRuntimeConfig",
     "CovalMetricsAPIMetricThresholdResource",
     "CovalMetricsAPIMetricType",
+    "CovalMetricsAPIMetricVersionChangeType",
+    "CovalMetricsAPIMetricVersionResource",
     "CovalMetricsAPIPatchThresholdRequest",
     "CovalMetricsAPIPatchThresholdResponse",
     "CovalMetricsAPITargetCondition",
+    "CovalMetricsAPITestMetricRequest",
+    "CovalMetricsAPITestMetricResponse",
     "CovalMetricsAPIThresholdSource",
     "CovalMetricsAPIUpdateMetricBaselineRequest",
     "CovalMetricsAPIUpdateMetricRequest",
@@ -479,6 +485,7 @@ from coval_sdk.models.coval_metrics_api_create_metric_baseline_request import Co
 from coval_sdk.models.coval_metrics_api_create_metric_request import CovalMetricsAPICreateMetricRequest as CovalMetricsAPICreateMetricRequest
 from coval_sdk.models.coval_metrics_api_create_threshold_request import CovalMetricsAPICreateThresholdRequest as CovalMetricsAPICreateThresholdRequest
 from coval_sdk.models.coval_metrics_api_create_threshold_response import CovalMetricsAPICreateThresholdResponse as CovalMetricsAPICreateThresholdResponse
+from coval_sdk.models.coval_metrics_api_current_metric_version import CovalMetricsAPICurrentMetricVersion as CovalMetricsAPICurrentMetricVersion
 from coval_sdk.models.coval_metrics_api_error_response import CovalMetricsAPIErrorResponse as CovalMetricsAPIErrorResponse
 from coval_sdk.models.coval_metrics_api_error_response_error import CovalMetricsAPIErrorResponseError as CovalMetricsAPIErrorResponseError
 from coval_sdk.models.coval_metrics_api_error_response_error_details_inner import CovalMetricsAPIErrorResponseErrorDetailsInner as CovalMetricsAPIErrorResponseErrorDetailsInner
@@ -486,6 +493,7 @@ from coval_sdk.models.coval_metrics_api_get_metric_response import CovalMetricsA
 from coval_sdk.models.coval_metrics_api_get_threshold_response import CovalMetricsAPIGetThresholdResponse as CovalMetricsAPIGetThresholdResponse
 from coval_sdk.models.coval_metrics_api_list_metric_baselines_response import CovalMetricsAPIListMetricBaselinesResponse as CovalMetricsAPIListMetricBaselinesResponse
 from coval_sdk.models.coval_metrics_api_list_metric_models_response import CovalMetricsAPIListMetricModelsResponse as CovalMetricsAPIListMetricModelsResponse
+from coval_sdk.models.coval_metrics_api_list_metric_versions_response import CovalMetricsAPIListMetricVersionsResponse as CovalMetricsAPIListMetricVersionsResponse
 from coval_sdk.models.coval_metrics_api_list_metrics_response import CovalMetricsAPIListMetricsResponse as CovalMetricsAPIListMetricsResponse
 from coval_sdk.models.coval_metrics_api_list_thresholds_response import CovalMetricsAPIListThresholdsResponse as CovalMetricsAPIListThresholdsResponse
 from coval_sdk.models.coval_metrics_api_metadata_field_type import CovalMetricsAPIMetadataFieldType as CovalMetricsAPIMetadataFieldType
@@ -494,9 +502,13 @@ from coval_sdk.models.coval_metrics_api_metric_resource import CovalMetricsAPIMe
 from coval_sdk.models.coval_metrics_api_metric_runtime_config import CovalMetricsAPIMetricRuntimeConfig as CovalMetricsAPIMetricRuntimeConfig
 from coval_sdk.models.coval_metrics_api_metric_threshold_resource import CovalMetricsAPIMetricThresholdResource as CovalMetricsAPIMetricThresholdResource
 from coval_sdk.models.coval_metrics_api_metric_type import CovalMetricsAPIMetricType as CovalMetricsAPIMetricType
+from coval_sdk.models.coval_metrics_api_metric_version_change_type import CovalMetricsAPIMetricVersionChangeType as CovalMetricsAPIMetricVersionChangeType
+from coval_sdk.models.coval_metrics_api_metric_version_resource import CovalMetricsAPIMetricVersionResource as CovalMetricsAPIMetricVersionResource
 from coval_sdk.models.coval_metrics_api_patch_threshold_request import CovalMetricsAPIPatchThresholdRequest as CovalMetricsAPIPatchThresholdRequest
 from coval_sdk.models.coval_metrics_api_patch_threshold_response import CovalMetricsAPIPatchThresholdResponse as CovalMetricsAPIPatchThresholdResponse
 from coval_sdk.models.coval_metrics_api_target_condition import CovalMetricsAPITargetCondition as CovalMetricsAPITargetCondition
+from coval_sdk.models.coval_metrics_api_test_metric_request import CovalMetricsAPITestMetricRequest as CovalMetricsAPITestMetricRequest
+from coval_sdk.models.coval_metrics_api_test_metric_response import CovalMetricsAPITestMetricResponse as CovalMetricsAPITestMetricResponse
 from coval_sdk.models.coval_metrics_api_threshold_source import CovalMetricsAPIThresholdSource as CovalMetricsAPIThresholdSource
 from coval_sdk.models.coval_metrics_api_update_metric_baseline_request import CovalMetricsAPIUpdateMetricBaselineRequest as CovalMetricsAPIUpdateMetricBaselineRequest
 from coval_sdk.models.coval_metrics_api_update_metric_request import CovalMetricsAPIUpdateMetricRequest as CovalMetricsAPIUpdateMetricRequest

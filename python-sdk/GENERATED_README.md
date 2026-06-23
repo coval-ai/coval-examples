@@ -135,7 +135,9 @@ Class | Method | HTTP request | Description
 *MetricsApi* | [**list_metric_baselines**](docs/MetricsApi.md#list_metric_baselines) | **GET** /v1/metrics/{metric_id}/baselines | List metric baselines
 *MetricsApi* | [**list_metric_models**](docs/MetricsApi.md#list_metric_models) | **GET** /v1/models/metric | List available metric models
 *MetricsApi* | [**list_metric_thresholds**](docs/MetricsApi.md#list_metric_thresholds) | **GET** /v1/metrics/{metric_id}/thresholds | List metric thresholds
+*MetricsApi* | [**list_metric_versions**](docs/MetricsApi.md#list_metric_versions) | **GET** /v1/metrics/{metric_id}/versions | List metric versions
 *MetricsApi* | [**list_metrics**](docs/MetricsApi.md#list_metrics) | **GET** /v1/metrics | List metrics
+*MetricsApi* | [**test_metric**](docs/MetricsApi.md#test_metric) | **POST** /v1/metrics/{metric_id}/test | Trigger test metric execution
 *MetricsApi* | [**update_metric**](docs/MetricsApi.md#update_metric) | **PATCH** /v1/metrics/{metric_id} | Update metric
 *MetricsApi* | [**update_metric_baseline**](docs/MetricsApi.md#update_metric_baseline) | **PATCH** /v1/metrics/{metric_id}/baselines/{baseline_id} | Update metric baseline
 *MetricsApi* | [**update_metric_threshold**](docs/MetricsApi.md#update_metric_threshold) | **PATCH** /v1/metrics/{metric_id}/threshold | Update metric threshold
@@ -323,6 +325,7 @@ Class | Method | HTTP request | Description
  - [CovalMetricsAPICreateMetricRequest](docs/CovalMetricsAPICreateMetricRequest.md)
  - [CovalMetricsAPICreateThresholdRequest](docs/CovalMetricsAPICreateThresholdRequest.md)
  - [CovalMetricsAPICreateThresholdResponse](docs/CovalMetricsAPICreateThresholdResponse.md)
+ - [CovalMetricsAPICurrentMetricVersion](docs/CovalMetricsAPICurrentMetricVersion.md)
  - [CovalMetricsAPIErrorResponse](docs/CovalMetricsAPIErrorResponse.md)
  - [CovalMetricsAPIErrorResponseError](docs/CovalMetricsAPIErrorResponseError.md)
  - [CovalMetricsAPIErrorResponseErrorDetailsInner](docs/CovalMetricsAPIErrorResponseErrorDetailsInner.md)
@@ -330,6 +333,7 @@ Class | Method | HTTP request | Description
  - [CovalMetricsAPIGetThresholdResponse](docs/CovalMetricsAPIGetThresholdResponse.md)
  - [CovalMetricsAPIListMetricBaselinesResponse](docs/CovalMetricsAPIListMetricBaselinesResponse.md)
  - [CovalMetricsAPIListMetricModelsResponse](docs/CovalMetricsAPIListMetricModelsResponse.md)
+ - [CovalMetricsAPIListMetricVersionsResponse](docs/CovalMetricsAPIListMetricVersionsResponse.md)
  - [CovalMetricsAPIListMetricsResponse](docs/CovalMetricsAPIListMetricsResponse.md)
  - [CovalMetricsAPIListThresholdsResponse](docs/CovalMetricsAPIListThresholdsResponse.md)
  - [CovalMetricsAPIMetadataFieldType](docs/CovalMetricsAPIMetadataFieldType.md)
@@ -338,9 +342,13 @@ Class | Method | HTTP request | Description
  - [CovalMetricsAPIMetricRuntimeConfig](docs/CovalMetricsAPIMetricRuntimeConfig.md)
  - [CovalMetricsAPIMetricThresholdResource](docs/CovalMetricsAPIMetricThresholdResource.md)
  - [CovalMetricsAPIMetricType](docs/CovalMetricsAPIMetricType.md)
+ - [CovalMetricsAPIMetricVersionChangeType](docs/CovalMetricsAPIMetricVersionChangeType.md)
+ - [CovalMetricsAPIMetricVersionResource](docs/CovalMetricsAPIMetricVersionResource.md)
  - [CovalMetricsAPIPatchThresholdRequest](docs/CovalMetricsAPIPatchThresholdRequest.md)
  - [CovalMetricsAPIPatchThresholdResponse](docs/CovalMetricsAPIPatchThresholdResponse.md)
  - [CovalMetricsAPITargetCondition](docs/CovalMetricsAPITargetCondition.md)
+ - [CovalMetricsAPITestMetricRequest](docs/CovalMetricsAPITestMetricRequest.md)
+ - [CovalMetricsAPITestMetricResponse](docs/CovalMetricsAPITestMetricResponse.md)
  - [CovalMetricsAPIThresholdSource](docs/CovalMetricsAPIThresholdSource.md)
  - [CovalMetricsAPIUpdateMetricBaselineRequest](docs/CovalMetricsAPIUpdateMetricBaselineRequest.md)
  - [CovalMetricsAPIUpdateMetricRequest](docs/CovalMetricsAPIUpdateMetricRequest.md)
