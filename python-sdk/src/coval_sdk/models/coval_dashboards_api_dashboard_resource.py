@@ -19,7 +19,7 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from typing import Optional, Set
@@ -32,10 +32,15 @@ class CovalDashboardsAPIDashboardResource(BaseModel):
     """ # noqa: E501
     name: StrictStr = Field(description="Resource name in format `dashboards/{id}`")
     display_name: Optional[Annotated[str, Field(strict=True, max_length=255)]] = Field(default=None, description="Human-readable dashboard name")
+    description: Optional[StrictStr] = Field(default=None, description="Free-text dashboard description")
+    is_default: Optional[StrictBool] = Field(default=None, description="Whether this is the organization's default dashboard (the one shown when no dashboard is specified)")
+    is_favorite: Optional[StrictBool] = Field(default=None, description="Whether the dashboard is marked as a favorite")
+    position: Optional[StrictInt] = Field(default=None, description="Ordering position within the organization's dashboards")
+    config: Optional[Dict[str, Any]] = Field(default=None, description="Free-form JSON config blob (e.g. saved date preferences)")
     create_time: datetime = Field(description="Creation timestamp (ISO 8601)")
     update_time: datetime = Field(description="Last update timestamp (ISO 8601)")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "display_name", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["name", "display_name", "description", "is_default", "is_favorite", "position", "config", "create_time", "update_time"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -88,6 +93,16 @@ class CovalDashboardsAPIDashboardResource(BaseModel):
         if self.display_name is None and "display_name" in self.model_fields_set:
             _dict['display_name'] = None
 
+        # set to None if description (nullable) is None
+        # and model_fields_set contains the field
+        if self.description is None and "description" in self.model_fields_set:
+            _dict['description'] = None
+
+        # set to None if config (nullable) is None
+        # and model_fields_set contains the field
+        if self.config is None and "config" in self.model_fields_set:
+            _dict['config'] = None
+
         return _dict
 
     @classmethod
@@ -102,6 +117,11 @@ class CovalDashboardsAPIDashboardResource(BaseModel):
         _obj = cls.model_validate({
             "name": obj.get("name"),
             "display_name": obj.get("display_name"),
+            "description": obj.get("description"),
+            "is_default": obj.get("is_default"),
+            "is_favorite": obj.get("is_favorite"),
+            "position": obj.get("position"),
+            "config": obj.get("config"),
             "create_time": obj.get("create_time"),
             "update_time": obj.get("update_time")
         })

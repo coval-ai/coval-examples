@@ -18,8 +18,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictBool
+from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
@@ -30,8 +30,13 @@ class CovalDashboardsAPICreateDashboardRequest(BaseModel):
     CovalDashboardsAPICreateDashboardRequest
     """ # noqa: E501
     display_name: Annotated[str, Field(min_length=1, strict=True, max_length=255)] = Field(description="Human-readable dashboard name")
+    description: Optional[Annotated[str, Field(strict=True, max_length=1000)]] = Field(default=None, description="Optional free-text description")
+    is_favorite: Optional[StrictBool] = Field(default=False, description="Mark the dashboard as a favorite")
+    is_default: Optional[StrictBool] = Field(default=None, description="Mark as the organization's default dashboard. Omit to auto-default the first dashboard in the organization; set true to make this the default (any existing default is unset).")
+    position: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Ordering position. Omit to append to the end.")
+    config: Optional[Dict[str, Any]] = Field(default=None, description="Free-form JSON config blob (max 50000 bytes serialized)")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["display_name"]
+    __properties: ClassVar[List[str]] = ["display_name", "description", "is_favorite", "is_default", "position", "config"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -79,6 +84,11 @@ class CovalDashboardsAPICreateDashboardRequest(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if is_default (nullable) is None
+        # and model_fields_set contains the field
+        if self.is_default is None and "is_default" in self.model_fields_set:
+            _dict['is_default'] = None
+
         return _dict
 
     @classmethod
@@ -91,7 +101,12 @@ class CovalDashboardsAPICreateDashboardRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "display_name": obj.get("display_name")
+            "display_name": obj.get("display_name"),
+            "description": obj.get("description"),
+            "is_favorite": obj.get("is_favorite") if obj.get("is_favorite") is not None else False,
+            "is_default": obj.get("is_default"),
+            "position": obj.get("position"),
+            "config": obj.get("config")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

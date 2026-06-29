@@ -19,7 +19,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict
 from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self

@@ -25,6 +25,36 @@ export interface CovalDashboardsAPICreateDashboardRequest {
      * @memberof CovalDashboardsAPICreateDashboardRequest
      */
     display_name: string;
+    /**
+     * Optional free-text description
+     * @type {string}
+     * @memberof CovalDashboardsAPICreateDashboardRequest
+     */
+    description?: string;
+    /**
+     * Mark the dashboard as a favorite
+     * @type {boolean}
+     * @memberof CovalDashboardsAPICreateDashboardRequest
+     */
+    is_favorite?: boolean;
+    /**
+     * Mark as the organization's default dashboard. Omit to auto-default the first dashboard in the organization; set true to make this the default (any existing default is unset).
+     * @type {boolean}
+     * @memberof CovalDashboardsAPICreateDashboardRequest
+     */
+    is_default?: boolean | null;
+    /**
+     * Ordering position. Omit to append to the end.
+     * @type {number}
+     * @memberof CovalDashboardsAPICreateDashboardRequest
+     */
+    position?: number;
+    /**
+     * Free-form JSON config blob (max 50000 bytes serialized)
+     * @type {{ [key: string]: any; }}
+     * @memberof CovalDashboardsAPICreateDashboardRequest
+     */
+    config?: { [key: string]: any; };
 }
 
 /**
@@ -46,6 +76,11 @@ export function CovalDashboardsAPICreateDashboardRequestFromJSONTyped(json: any,
     return {
         
         'display_name': json['display_name'],
+        'description': json['description'] == null ? undefined : json['description'],
+        'is_favorite': json['is_favorite'] == null ? undefined : json['is_favorite'],
+        'is_default': json['is_default'] == null ? undefined : json['is_default'],
+        'position': json['position'] == null ? undefined : json['position'],
+        'config': json['config'] == null ? undefined : json['config'],
     };
 }
 
@@ -61,6 +96,11 @@ export function CovalDashboardsAPICreateDashboardRequestToJSONTyped(value?: Cova
     return {
         
         'display_name': value['display_name'],
+        'description': value['description'],
+        'is_favorite': value['is_favorite'],
+        'is_default': value['is_default'],
+        'position': value['position'],
+        'config': value['config'],
     };
 }
 

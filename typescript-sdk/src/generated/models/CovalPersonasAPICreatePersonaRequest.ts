@@ -49,7 +49,11 @@ export interface CovalPersonasAPICreatePersonaRequest {
      */
     language_code: string;
     /**
-     * Background noise type
+     * Background noise type. Use `backchanneling` to add short listener
+     * cues like "mm-hmm" and "yeah" that simulate an engaged caller.
+     * Use `off` to disable background sound. All remaining values add
+     * ambient environmental noise.
+     * 
      * @type {CovalPersonasAPICreatePersonaRequestBackgroundSoundEnum}
      * @memberof CovalPersonasAPICreatePersonaRequest
      */
@@ -130,7 +134,8 @@ export const CovalPersonasAPICreatePersonaRequestBackgroundSoundEnum = {
     NewbornBabyCrying: 'newborn-baby-crying',
     OfficeWithAlarm: 'office-with-alarm',
     StreetWithSirens: 'street-with-sirens',
-    ConstructionWork: 'construction-work'
+    ConstructionWork: 'construction-work',
+    Backchanneling: 'backchanneling'
 } as const;
 export type CovalPersonasAPICreatePersonaRequestBackgroundSoundEnum = typeof CovalPersonasAPICreatePersonaRequestBackgroundSoundEnum[keyof typeof CovalPersonasAPICreatePersonaRequestBackgroundSoundEnum];
 
