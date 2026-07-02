@@ -32,6 +32,36 @@ export interface CovalDashboardsAPIDashboardResource {
      */
     display_name?: string | null;
     /**
+     * Free-text dashboard description
+     * @type {string}
+     * @memberof CovalDashboardsAPIDashboardResource
+     */
+    description?: string | null;
+    /**
+     * Whether this is the organization's default dashboard (the one shown when no dashboard is specified)
+     * @type {boolean}
+     * @memberof CovalDashboardsAPIDashboardResource
+     */
+    is_default?: boolean;
+    /**
+     * Whether the dashboard is marked as a favorite
+     * @type {boolean}
+     * @memberof CovalDashboardsAPIDashboardResource
+     */
+    is_favorite?: boolean;
+    /**
+     * Ordering position within the organization's dashboards
+     * @type {number}
+     * @memberof CovalDashboardsAPIDashboardResource
+     */
+    position?: number;
+    /**
+     * Free-form JSON config blob (e.g. saved date preferences)
+     * @type {{ [key: string]: any; }}
+     * @memberof CovalDashboardsAPIDashboardResource
+     */
+    config?: { [key: string]: any; } | null;
+    /**
      * Creation timestamp (ISO 8601)
      * @type {Date}
      * @memberof CovalDashboardsAPIDashboardResource
@@ -67,6 +97,11 @@ export function CovalDashboardsAPIDashboardResourceFromJSONTyped(json: any, igno
         
         'name': json['name'],
         'display_name': json['display_name'] == null ? undefined : json['display_name'],
+        'description': json['description'] == null ? undefined : json['description'],
+        'is_default': json['is_default'] == null ? undefined : json['is_default'],
+        'is_favorite': json['is_favorite'] == null ? undefined : json['is_favorite'],
+        'position': json['position'] == null ? undefined : json['position'],
+        'config': json['config'] == null ? undefined : json['config'],
         'create_time': (new Date(json['create_time'])),
         'update_time': (new Date(json['update_time'])),
     };
@@ -85,6 +120,11 @@ export function CovalDashboardsAPIDashboardResourceToJSONTyped(value?: CovalDash
         
         'name': value['name'],
         'display_name': value['display_name'],
+        'description': value['description'],
+        'is_default': value['is_default'],
+        'is_favorite': value['is_favorite'],
+        'position': value['position'],
+        'config': value['config'],
         'create_time': value['create_time'].toISOString(),
         'update_time': value['update_time'].toISOString(),
     };

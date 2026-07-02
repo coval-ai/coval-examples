@@ -14,7 +14,7 @@
 
 import { mapValues } from '../runtime.js';
 /**
- * 
+ * All fields optional (PATCH semantics). Provided fields are updated; omitted or null fields are left unchanged. Setting is_default=true unsets any other default dashboard in the organization. config fully replaces the stored blob; to clear a value send an empty string (description) or an empty object (config) rather than null.
  * @export
  * @interface CovalDashboardsAPIUpdateDashboardRequest
  */
@@ -24,7 +24,37 @@ export interface CovalDashboardsAPIUpdateDashboardRequest {
      * @type {string}
      * @memberof CovalDashboardsAPIUpdateDashboardRequest
      */
-    display_name?: string;
+    display_name?: string | null;
+    /**
+     * Updated free-text description (empty string clears it)
+     * @type {string}
+     * @memberof CovalDashboardsAPIUpdateDashboardRequest
+     */
+    description?: string | null;
+    /**
+     * Updated favorite flag
+     * @type {boolean}
+     * @memberof CovalDashboardsAPIUpdateDashboardRequest
+     */
+    is_favorite?: boolean | null;
+    /**
+     * Set true to make this the organization's default dashboard (unsets any other default)
+     * @type {boolean}
+     * @memberof CovalDashboardsAPIUpdateDashboardRequest
+     */
+    is_default?: boolean | null;
+    /**
+     * Updated ordering position
+     * @type {number}
+     * @memberof CovalDashboardsAPIUpdateDashboardRequest
+     */
+    position?: number | null;
+    /**
+     * Replacement free-form JSON config blob (max 50000 bytes serialized)
+     * @type {{ [key: string]: any; }}
+     * @memberof CovalDashboardsAPIUpdateDashboardRequest
+     */
+    config?: { [key: string]: any; } | null;
 }
 
 /**
@@ -45,6 +75,11 @@ export function CovalDashboardsAPIUpdateDashboardRequestFromJSONTyped(json: any,
     return {
         
         'display_name': json['display_name'] == null ? undefined : json['display_name'],
+        'description': json['description'] == null ? undefined : json['description'],
+        'is_favorite': json['is_favorite'] == null ? undefined : json['is_favorite'],
+        'is_default': json['is_default'] == null ? undefined : json['is_default'],
+        'position': json['position'] == null ? undefined : json['position'],
+        'config': json['config'] == null ? undefined : json['config'],
     };
 }
 
@@ -60,6 +95,11 @@ export function CovalDashboardsAPIUpdateDashboardRequestToJSONTyped(value?: Cova
     return {
         
         'display_name': value['display_name'],
+        'description': value['description'],
+        'is_favorite': value['is_favorite'],
+        'is_default': value['is_default'],
+        'position': value['position'],
+        'config': value['config'],
     };
 }
 
