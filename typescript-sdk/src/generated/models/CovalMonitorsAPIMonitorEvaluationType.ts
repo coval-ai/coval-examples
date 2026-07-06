@@ -18,8 +18,7 @@
  * @export
  */
 export const CovalMonitorsAPIMonitorEvaluationType = {
-    OnRunComplete: 'ON_RUN_COMPLETE',
-    RollingWindow: 'ROLLING_WINDOW'
+    OnRunComplete: 'ON_RUN_COMPLETE'
 } as const;
 export type CovalMonitorsAPIMonitorEvaluationType = typeof CovalMonitorsAPIMonitorEvaluationType[keyof typeof CovalMonitorsAPIMonitorEvaluationType];
 

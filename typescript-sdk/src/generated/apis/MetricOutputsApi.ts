@@ -59,7 +59,7 @@ export interface MetricOutputsApiInterface {
     simulationsGetMetricRequestOpts(requestParameters: SimulationsGetMetricRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
+     * Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed.  **Retrieving test-metric results:** after calling `POST /v1/metrics/{metric_id}/test`, poll this endpoint using the same simulation output ID you tested against as `simulation_id`, plus the returned 26-char `metric_output_ulid`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test-metric outputs belong to the simulation they ran against, so they are retrieved here, not via the conversations endpoint. 
      * @summary Get simulation metric output(s)
      * @param {string} simulationId The simulation ID
      * @param {string} metricOutputId Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type. 
@@ -70,7 +70,7 @@ export interface MetricOutputsApiInterface {
     simulationsGetMetricRaw(requestParameters: SimulationsGetMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SimulationsGetMetric200Response>>;
 
     /**
-     * Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
+     * Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed.  **Retrieving test-metric results:** after calling `POST /v1/metrics/{metric_id}/test`, poll this endpoint using the same simulation output ID you tested against as `simulation_id`, plus the returned 26-char `metric_output_ulid`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test-metric outputs belong to the simulation they ran against, so they are retrieved here, not via the conversations endpoint. 
      * Get simulation metric output(s)
      */
     simulationsGetMetric(requestParameters: SimulationsGetMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SimulationsGetMetric200Response>;
@@ -141,7 +141,7 @@ export class MetricOutputsApi extends runtime.BaseAPI implements MetricOutputsAp
         }
 
 
-        let urlPath = `/v1/simulations/{simulation_id}/metrics/{metric_output_id}`;
+        let urlPath = `/simulations/{simulation_id}/metrics/{metric_output_id}`;
         urlPath = urlPath.replace('{simulation_id}', encodeURIComponent(String(requestParameters['simulationId'])));
         urlPath = urlPath.replace('{metric_output_id}', encodeURIComponent(String(requestParameters['metricOutputId'])));
 
@@ -154,7 +154,7 @@ export class MetricOutputsApi extends runtime.BaseAPI implements MetricOutputsAp
     }
 
     /**
-     * Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
+     * Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed.  **Retrieving test-metric results:** after calling `POST /v1/metrics/{metric_id}/test`, poll this endpoint using the same simulation output ID you tested against as `simulation_id`, plus the returned 26-char `metric_output_ulid`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test-metric outputs belong to the simulation they ran against, so they are retrieved here, not via the conversations endpoint. 
      * Get simulation metric output(s)
      */
     async simulationsGetMetricRaw(requestParameters: SimulationsGetMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SimulationsGetMetric200Response>> {
@@ -165,7 +165,7 @@ export class MetricOutputsApi extends runtime.BaseAPI implements MetricOutputsAp
     }
 
     /**
-     * Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
+     * Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed.  **Retrieving test-metric results:** after calling `POST /v1/metrics/{metric_id}/test`, poll this endpoint using the same simulation output ID you tested against as `simulation_id`, plus the returned 26-char `metric_output_ulid`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test-metric outputs belong to the simulation they ran against, so they are retrieved here, not via the conversations endpoint. 
      * Get simulation metric output(s)
      */
     async simulationsGetMetric(requestParameters: SimulationsGetMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SimulationsGetMetric200Response> {
@@ -209,7 +209,7 @@ export class MetricOutputsApi extends runtime.BaseAPI implements MetricOutputsAp
         }
 
 
-        let urlPath = `/v1/simulations/{simulation_id}/metrics`;
+        let urlPath = `/simulations/{simulation_id}/metrics`;
         urlPath = urlPath.replace('{simulation_id}', encodeURIComponent(String(requestParameters['simulationId'])));
 
         return {

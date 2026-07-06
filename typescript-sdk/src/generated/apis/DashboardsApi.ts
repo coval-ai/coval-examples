@@ -234,7 +234,7 @@ export class DashboardsApi extends runtime.BaseAPI implements DashboardsApiInter
         }
 
 
-        let urlPath = `/v1/dashboards`;
+        let urlPath = `/dashboards`;
 
         return {
             path: urlPath,
@@ -285,7 +285,7 @@ export class DashboardsApi extends runtime.BaseAPI implements DashboardsApiInter
         }
 
 
-        let urlPath = `/v1/dashboards/{dashboard_id}`;
+        let urlPath = `/dashboards/{dashboard_id}`;
         urlPath = urlPath.replace('{dashboard_id}', encodeURIComponent(String(requestParameters['dashboardId'])));
 
         return {
@@ -336,7 +336,7 @@ export class DashboardsApi extends runtime.BaseAPI implements DashboardsApiInter
         }
 
 
-        let urlPath = `/v1/dashboards/{dashboard_id}`;
+        let urlPath = `/dashboards/{dashboard_id}`;
         urlPath = urlPath.replace('{dashboard_id}', encodeURIComponent(String(requestParameters['dashboardId'])));
 
         return {
@@ -392,7 +392,7 @@ export class DashboardsApi extends runtime.BaseAPI implements DashboardsApiInter
         }
 
 
-        let urlPath = `/v1/dashboards`;
+        let urlPath = `/dashboards`;
 
         return {
             path: urlPath,
@@ -451,7 +451,7 @@ export class DashboardsApi extends runtime.BaseAPI implements DashboardsApiInter
         }
 
 
-        let urlPath = `/v1/dashboards/{dashboard_id}`;
+        let urlPath = `/dashboards/{dashboard_id}`;
         urlPath = urlPath.replace('{dashboard_id}', encodeURIComponent(String(requestParameters['dashboardId'])));
 
         return {

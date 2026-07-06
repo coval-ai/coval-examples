@@ -32,10 +32,11 @@ class CovalConversationsAPISimpleMetricOutput(BaseModel):
     """ # noqa: E501
     metric_output_id: Annotated[str, Field(min_length=26, strict=True, max_length=26)] = Field(description="Unique metric output identifier (26-char ULID)")
     metric_id: Annotated[str, Field(min_length=22, strict=True, max_length=26)] = Field(description="Metric definition identifier (22-char ID)")
+    metric_version_ulid: Optional[Annotated[str, Field(min_length=26, strict=True, max_length=26)]] = Field(default=None, description="ULID of the metric version this output was scored against (null for outputs produced before metric versioning landed)")
     value: Optional[CovalConversationsAPISimpleMetricOutputValue] = None
     status: StrictStr = Field(description="Status of metric computation")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["metric_output_id", "metric_id", "value", "status"]
+    __properties: ClassVar[List[str]] = ["metric_output_id", "metric_id", "metric_version_ulid", "value", "status"]
 
     @field_validator('status')
     def status_validate_enum(cls, value):
@@ -93,6 +94,11 @@ class CovalConversationsAPISimpleMetricOutput(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if metric_version_ulid (nullable) is None
+        # and model_fields_set contains the field
+        if self.metric_version_ulid is None and "metric_version_ulid" in self.model_fields_set:
+            _dict['metric_version_ulid'] = None
+
         return _dict
 
     @classmethod
@@ -107,6 +113,7 @@ class CovalConversationsAPISimpleMetricOutput(BaseModel):
         _obj = cls.model_validate({
             "metric_output_id": obj.get("metric_output_id"),
             "metric_id": obj.get("metric_id"),
+            "metric_version_ulid": obj.get("metric_version_ulid"),
             "value": CovalConversationsAPISimpleMetricOutputValue.from_dict(obj["value"]) if obj.get("value") is not None else None,
             "status": obj.get("status")
         })

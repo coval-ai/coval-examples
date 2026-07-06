@@ -331,7 +331,7 @@ class ReviewAnnotationsApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/v1/review-annotations',
+            resource_path='/review-annotations',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -601,7 +601,7 @@ class ReviewAnnotationsApi:
 
         return self.api_client.param_serialize(
             method='DELETE',
-            resource_path='/v1/review-annotations/{annotation_id}',
+            resource_path='/review-annotations/{annotation_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -888,7 +888,7 @@ class ReviewAnnotationsApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/v1/review-annotations/{annotation_id}',
+            resource_path='/review-annotations/{annotation_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1211,7 +1211,7 @@ class ReviewAnnotationsApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/v1/review-annotations',
+            resource_path='/review-annotations',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1529,7 +1529,7 @@ class ReviewAnnotationsApi:
 
         return self.api_client.param_serialize(
             method='PATCH',
-            resource_path='/v1/review-annotations/{annotation_id}',
+            resource_path='/review-annotations/{annotation_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

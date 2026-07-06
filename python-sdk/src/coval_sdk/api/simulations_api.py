@@ -298,7 +298,7 @@ class SimulationsApi:
 
         return self.api_client.param_serialize(
             method='DELETE',
-            resource_path='/v1/simulations/{simulation_id}',
+            resource_path='/simulations/{simulation_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -568,7 +568,7 @@ class SimulationsApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/v1/simulations/{simulation_id}/audio',
+            resource_path='/simulations/{simulation_id}/audio',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -838,7 +838,7 @@ class SimulationsApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/v1/simulations/{simulation_id}',
+            resource_path='/simulations/{simulation_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1161,7 +1161,7 @@ class SimulationsApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/v1/simulations',
+            resource_path='/simulations',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1465,7 +1465,7 @@ class SimulationsApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/v1/simulations/{simulation_id}/resimulate',
+            resource_path='/simulations/{simulation_id}/resimulate',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1769,7 +1769,7 @@ class SimulationsApi:
 
         return self.api_client.param_serialize(
             method='PATCH',
-            resource_path='/v1/simulations/{simulation_id}',
+            resource_path='/simulations/{simulation_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

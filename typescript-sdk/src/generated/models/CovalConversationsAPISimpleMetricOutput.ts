@@ -41,6 +41,12 @@ export interface CovalConversationsAPISimpleMetricOutput {
      */
     metric_id: string;
     /**
+     * ULID of the metric version this output was scored against (null for outputs produced before metric versioning landed)
+     * @type {string}
+     * @memberof CovalConversationsAPISimpleMetricOutput
+     */
+    metric_version_ulid?: string | null;
+    /**
      * 
      * @type {CovalConversationsAPISimpleMetricOutputValue}
      * @memberof CovalConversationsAPISimpleMetricOutput
@@ -89,6 +95,7 @@ export function CovalConversationsAPISimpleMetricOutputFromJSONTyped(json: any, 
         
         'metric_output_id': json['metric_output_id'],
         'metric_id': json['metric_id'],
+        'metric_version_ulid': json['metric_version_ulid'] == null ? undefined : json['metric_version_ulid'],
         'value': json['value'] == null ? undefined : CovalConversationsAPISimpleMetricOutputValueFromJSON(json['value']),
         'status': json['status'],
     };
@@ -107,6 +114,7 @@ export function CovalConversationsAPISimpleMetricOutputToJSONTyped(value?: Coval
         
         'metric_output_id': value['metric_output_id'],
         'metric_id': value['metric_id'],
+        'metric_version_ulid': value['metric_version_ulid'],
         'value': CovalConversationsAPISimpleMetricOutputValueToJSON(value['value']),
         'status': value['status'],
     };

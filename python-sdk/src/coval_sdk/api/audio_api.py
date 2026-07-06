@@ -308,7 +308,7 @@ class AudioApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/v1/audio:upload',
+            resource_path='/audio:upload',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -578,7 +578,7 @@ class AudioApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/v1/conversations/{conversation_id}/audio',
+            resource_path='/conversations/{conversation_id}/audio',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

@@ -253,7 +253,7 @@ export class MutationsApi extends runtime.BaseAPI implements MutationsApiInterfa
         }
 
 
-        let urlPath = `/v1/agents/{agent_id}/mutations`;
+        let urlPath = `/agents/{agent_id}/mutations`;
         urlPath = urlPath.replace('{agent_id}', encodeURIComponent(String(requestParameters['agentId'])));
 
         return {
@@ -312,7 +312,7 @@ export class MutationsApi extends runtime.BaseAPI implements MutationsApiInterfa
         }
 
 
-        let urlPath = `/v1/agents/{agent_id}/mutations/{mutation_id}`;
+        let urlPath = `/agents/{agent_id}/mutations/{mutation_id}`;
         urlPath = urlPath.replace('{agent_id}', encodeURIComponent(String(requestParameters['agentId'])));
         urlPath = urlPath.replace('{mutation_id}', encodeURIComponent(String(requestParameters['mutationId'])));
 
@@ -370,7 +370,7 @@ export class MutationsApi extends runtime.BaseAPI implements MutationsApiInterfa
         }
 
 
-        let urlPath = `/v1/agents/{agent_id}/mutations/{mutation_id}`;
+        let urlPath = `/agents/{agent_id}/mutations/{mutation_id}`;
         urlPath = urlPath.replace('{agent_id}', encodeURIComponent(String(requestParameters['agentId'])));
         urlPath = urlPath.replace('{mutation_id}', encodeURIComponent(String(requestParameters['mutationId'])));
 
@@ -430,7 +430,7 @@ export class MutationsApi extends runtime.BaseAPI implements MutationsApiInterfa
         }
 
 
-        let urlPath = `/v1/agents/{agent_id}/mutations`;
+        let urlPath = `/agents/{agent_id}/mutations`;
         urlPath = urlPath.replace('{agent_id}', encodeURIComponent(String(requestParameters['agentId'])));
 
         return {
@@ -497,7 +497,7 @@ export class MutationsApi extends runtime.BaseAPI implements MutationsApiInterfa
         }
 
 
-        let urlPath = `/v1/agents/{agent_id}/mutations/{mutation_id}`;
+        let urlPath = `/agents/{agent_id}/mutations/{mutation_id}`;
         urlPath = urlPath.replace('{agent_id}', encodeURIComponent(String(requestParameters['agentId'])));
         urlPath = urlPath.replace('{mutation_id}', encodeURIComponent(String(requestParameters['mutationId'])));
 

@@ -237,7 +237,7 @@ export class ScheduledRunsApi extends runtime.BaseAPI implements ScheduledRunsAp
         }
 
 
-        let urlPath = `/v1/scheduled-runs`;
+        let urlPath = `/scheduled-runs`;
 
         return {
             path: urlPath,
@@ -288,7 +288,7 @@ export class ScheduledRunsApi extends runtime.BaseAPI implements ScheduledRunsAp
         }
 
 
-        let urlPath = `/v1/scheduled-runs/{scheduled_run_id}`;
+        let urlPath = `/scheduled-runs/{scheduled_run_id}`;
         urlPath = urlPath.replace('{scheduled_run_id}', encodeURIComponent(String(requestParameters['scheduledRunId'])));
 
         return {
@@ -338,7 +338,7 @@ export class ScheduledRunsApi extends runtime.BaseAPI implements ScheduledRunsAp
         }
 
 
-        let urlPath = `/v1/scheduled-runs/{scheduled_run_id}`;
+        let urlPath = `/scheduled-runs/{scheduled_run_id}`;
         urlPath = urlPath.replace('{scheduled_run_id}', encodeURIComponent(String(requestParameters['scheduledRunId'])));
 
         return {
@@ -398,7 +398,7 @@ export class ScheduledRunsApi extends runtime.BaseAPI implements ScheduledRunsAp
         }
 
 
-        let urlPath = `/v1/scheduled-runs`;
+        let urlPath = `/scheduled-runs`;
 
         return {
             path: urlPath,
@@ -457,7 +457,7 @@ export class ScheduledRunsApi extends runtime.BaseAPI implements ScheduledRunsAp
         }
 
 
-        let urlPath = `/v1/scheduled-runs/{scheduled_run_id}`;
+        let urlPath = `/scheduled-runs/{scheduled_run_id}`;
         urlPath = urlPath.replace('{scheduled_run_id}', encodeURIComponent(String(requestParameters['scheduledRunId'])));
 
         return {

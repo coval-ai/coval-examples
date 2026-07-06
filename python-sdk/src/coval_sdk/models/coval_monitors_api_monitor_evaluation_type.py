@@ -28,7 +28,6 @@ class CovalMonitorsAPIMonitorEvaluationType(str, Enum):
     allowed enum values
     """
     ON_RUN_COMPLETE = 'ON_RUN_COMPLETE'
-    ROLLING_WINDOW = 'ROLLING_WINDOW'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

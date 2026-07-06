@@ -76,12 +76,14 @@ __all__ = [
     "CovalAgentMutationsAPIUpdateMutationRequest",
     "CovalAgentMutationsAPIUpdateMutationResponse",
     "CovalAgentsAPIAgentResource",
+    "CovalAgentsAPIAgentVersionResource",
     "CovalAgentsAPICreateAgentRequest",
     "CovalAgentsAPICreateAgentResponse",
     "CovalAgentsAPIErrorResponse",
     "CovalAgentsAPIErrorResponseError",
     "CovalAgentsAPIErrorResponseErrorDetailsInner",
     "CovalAgentsAPIGetAgentResponse",
+    "CovalAgentsAPIListAgentVersionsResponse",
     "CovalAgentsAPIListAgentsResponse",
     "CovalAgentsAPISimulatorType",
     "CovalAgentsAPIUpdateAgentRequest",
@@ -100,6 +102,8 @@ __all__ = [
     "CovalConversationsAPIGetConversationResponse",
     "CovalConversationsAPIListConversationMetricsResponse",
     "CovalConversationsAPIListConversationsResponse",
+    "CovalConversationsAPIMetricBreakdownResponse",
+    "CovalConversationsAPIMetricBreakdownRow",
     "CovalConversationsAPIMetricOutputCollection",
     "CovalConversationsAPIPatchConversationRequest",
     "CovalConversationsAPISimpleMetricOutput",
@@ -201,17 +205,26 @@ __all__ = [
     "CovalMonitorsAPITestEvaluateRequest",
     "CovalMonitorsAPITestEvaluateResponse",
     "CovalMonitorsAPIUpdateMonitorRequest",
+    "CovalPersonasAPIBackgroundSoundResource",
+    "CovalPersonasAPICompleteBackgroundSoundResponse",
+    "CovalPersonasAPICreateBackgroundSoundRequest",
+    "CovalPersonasAPICreateBackgroundSoundResponse",
     "CovalPersonasAPICreatePersonaRequest",
     "CovalPersonasAPICreatePersonaResponse",
     "CovalPersonasAPIError",
     "CovalPersonasAPIErrorError",
     "CovalPersonasAPIGetPersonaResponse",
+    "CovalPersonasAPIListBackgroundSoundsResponse",
+    "CovalPersonasAPIListPersonaVersionsResponse",
     "CovalPersonasAPIListPersonasResponse",
     "CovalPersonasAPIListPhoneNumbersResponse",
     "CovalPersonasAPIListVoicesResponse",
     "CovalPersonasAPIPersonaResource",
+    "CovalPersonasAPIPersonaVersionResource",
     "CovalPersonasAPIPhoneNumberMapping",
     "CovalPersonasAPIPhoneNumbersData",
+    "CovalPersonasAPIUpdateBackgroundSoundRequest",
+    "CovalPersonasAPIUpdateBackgroundSoundResponse",
     "CovalPersonasAPIUpdatePersonaRequest",
     "CovalPersonasAPIUpdatePersonaResponse",
     "CovalPersonasAPIVoiceResource",
@@ -327,6 +340,7 @@ __all__ = [
     "GetConversationMetric200Response",
     "GetRun200Response",
     "IngestTraces200Response",
+    "ListConversations200Response",
     "ListRuns200Response",
     "ListRuns400Response",
     "ListTestCases200Response",
@@ -342,7 +356,9 @@ __all__ = [
     "TestSetsAPIErrorResponse",
     "TestSetsAPIErrorResponseError",
     "TestSetsAPIErrorResponseErrorDetailsInner",
+    "TestSetsAPIListTestSetVersionsResponse",
     "TestSetsAPITestSetResource",
+    "TestSetsAPITestSetVersionResource",
     "TestSetsAPIUpdateTestSetRequest",
     "TracesAPIErrorResponse",
     "TracesAPIErrorResponseError",
@@ -411,12 +427,14 @@ from coval_sdk.models.coval_agent_mutations_api_mutation_resource import CovalAg
 from coval_sdk.models.coval_agent_mutations_api_update_mutation_request import CovalAgentMutationsAPIUpdateMutationRequest as CovalAgentMutationsAPIUpdateMutationRequest
 from coval_sdk.models.coval_agent_mutations_api_update_mutation_response import CovalAgentMutationsAPIUpdateMutationResponse as CovalAgentMutationsAPIUpdateMutationResponse
 from coval_sdk.models.coval_agents_api_agent_resource import CovalAgentsAPIAgentResource as CovalAgentsAPIAgentResource
+from coval_sdk.models.coval_agents_api_agent_version_resource import CovalAgentsAPIAgentVersionResource as CovalAgentsAPIAgentVersionResource
 from coval_sdk.models.coval_agents_api_create_agent_request import CovalAgentsAPICreateAgentRequest as CovalAgentsAPICreateAgentRequest
 from coval_sdk.models.coval_agents_api_create_agent_response import CovalAgentsAPICreateAgentResponse as CovalAgentsAPICreateAgentResponse
 from coval_sdk.models.coval_agents_api_error_response import CovalAgentsAPIErrorResponse as CovalAgentsAPIErrorResponse
 from coval_sdk.models.coval_agents_api_error_response_error import CovalAgentsAPIErrorResponseError as CovalAgentsAPIErrorResponseError
 from coval_sdk.models.coval_agents_api_error_response_error_details_inner import CovalAgentsAPIErrorResponseErrorDetailsInner as CovalAgentsAPIErrorResponseErrorDetailsInner
 from coval_sdk.models.coval_agents_api_get_agent_response import CovalAgentsAPIGetAgentResponse as CovalAgentsAPIGetAgentResponse
+from coval_sdk.models.coval_agents_api_list_agent_versions_response import CovalAgentsAPIListAgentVersionsResponse as CovalAgentsAPIListAgentVersionsResponse
 from coval_sdk.models.coval_agents_api_list_agents_response import CovalAgentsAPIListAgentsResponse as CovalAgentsAPIListAgentsResponse
 from coval_sdk.models.coval_agents_api_simulator_type import CovalAgentsAPISimulatorType as CovalAgentsAPISimulatorType
 from coval_sdk.models.coval_agents_api_update_agent_request import CovalAgentsAPIUpdateAgentRequest as CovalAgentsAPIUpdateAgentRequest
@@ -435,6 +453,8 @@ from coval_sdk.models.coval_conversations_api_get_conversation_metric_response i
 from coval_sdk.models.coval_conversations_api_get_conversation_response import CovalConversationsAPIGetConversationResponse as CovalConversationsAPIGetConversationResponse
 from coval_sdk.models.coval_conversations_api_list_conversation_metrics_response import CovalConversationsAPIListConversationMetricsResponse as CovalConversationsAPIListConversationMetricsResponse
 from coval_sdk.models.coval_conversations_api_list_conversations_response import CovalConversationsAPIListConversationsResponse as CovalConversationsAPIListConversationsResponse
+from coval_sdk.models.coval_conversations_api_metric_breakdown_response import CovalConversationsAPIMetricBreakdownResponse as CovalConversationsAPIMetricBreakdownResponse
+from coval_sdk.models.coval_conversations_api_metric_breakdown_row import CovalConversationsAPIMetricBreakdownRow as CovalConversationsAPIMetricBreakdownRow
 from coval_sdk.models.coval_conversations_api_metric_output_collection import CovalConversationsAPIMetricOutputCollection as CovalConversationsAPIMetricOutputCollection
 from coval_sdk.models.coval_conversations_api_patch_conversation_request import CovalConversationsAPIPatchConversationRequest as CovalConversationsAPIPatchConversationRequest
 from coval_sdk.models.coval_conversations_api_simple_metric_output import CovalConversationsAPISimpleMetricOutput as CovalConversationsAPISimpleMetricOutput
@@ -536,17 +556,26 @@ from coval_sdk.models.coval_monitors_api_monitor_scope import CovalMonitorsAPIMo
 from coval_sdk.models.coval_monitors_api_test_evaluate_request import CovalMonitorsAPITestEvaluateRequest as CovalMonitorsAPITestEvaluateRequest
 from coval_sdk.models.coval_monitors_api_test_evaluate_response import CovalMonitorsAPITestEvaluateResponse as CovalMonitorsAPITestEvaluateResponse
 from coval_sdk.models.coval_monitors_api_update_monitor_request import CovalMonitorsAPIUpdateMonitorRequest as CovalMonitorsAPIUpdateMonitorRequest
+from coval_sdk.models.coval_personas_api_background_sound_resource import CovalPersonasAPIBackgroundSoundResource as CovalPersonasAPIBackgroundSoundResource
+from coval_sdk.models.coval_personas_api_complete_background_sound_response import CovalPersonasAPICompleteBackgroundSoundResponse as CovalPersonasAPICompleteBackgroundSoundResponse
+from coval_sdk.models.coval_personas_api_create_background_sound_request import CovalPersonasAPICreateBackgroundSoundRequest as CovalPersonasAPICreateBackgroundSoundRequest
+from coval_sdk.models.coval_personas_api_create_background_sound_response import CovalPersonasAPICreateBackgroundSoundResponse as CovalPersonasAPICreateBackgroundSoundResponse
 from coval_sdk.models.coval_personas_api_create_persona_request import CovalPersonasAPICreatePersonaRequest as CovalPersonasAPICreatePersonaRequest
 from coval_sdk.models.coval_personas_api_create_persona_response import CovalPersonasAPICreatePersonaResponse as CovalPersonasAPICreatePersonaResponse
 from coval_sdk.models.coval_personas_api_error import CovalPersonasAPIError as CovalPersonasAPIError
 from coval_sdk.models.coval_personas_api_error_error import CovalPersonasAPIErrorError as CovalPersonasAPIErrorError
 from coval_sdk.models.coval_personas_api_get_persona_response import CovalPersonasAPIGetPersonaResponse as CovalPersonasAPIGetPersonaResponse
+from coval_sdk.models.coval_personas_api_list_background_sounds_response import CovalPersonasAPIListBackgroundSoundsResponse as CovalPersonasAPIListBackgroundSoundsResponse
+from coval_sdk.models.coval_personas_api_list_persona_versions_response import CovalPersonasAPIListPersonaVersionsResponse as CovalPersonasAPIListPersonaVersionsResponse
 from coval_sdk.models.coval_personas_api_list_personas_response import CovalPersonasAPIListPersonasResponse as CovalPersonasAPIListPersonasResponse
 from coval_sdk.models.coval_personas_api_list_phone_numbers_response import CovalPersonasAPIListPhoneNumbersResponse as CovalPersonasAPIListPhoneNumbersResponse
 from coval_sdk.models.coval_personas_api_list_voices_response import CovalPersonasAPIListVoicesResponse as CovalPersonasAPIListVoicesResponse
 from coval_sdk.models.coval_personas_api_persona_resource import CovalPersonasAPIPersonaResource as CovalPersonasAPIPersonaResource
+from coval_sdk.models.coval_personas_api_persona_version_resource import CovalPersonasAPIPersonaVersionResource as CovalPersonasAPIPersonaVersionResource
 from coval_sdk.models.coval_personas_api_phone_number_mapping import CovalPersonasAPIPhoneNumberMapping as CovalPersonasAPIPhoneNumberMapping
 from coval_sdk.models.coval_personas_api_phone_numbers_data import CovalPersonasAPIPhoneNumbersData as CovalPersonasAPIPhoneNumbersData
+from coval_sdk.models.coval_personas_api_update_background_sound_request import CovalPersonasAPIUpdateBackgroundSoundRequest as CovalPersonasAPIUpdateBackgroundSoundRequest
+from coval_sdk.models.coval_personas_api_update_background_sound_response import CovalPersonasAPIUpdateBackgroundSoundResponse as CovalPersonasAPIUpdateBackgroundSoundResponse
 from coval_sdk.models.coval_personas_api_update_persona_request import CovalPersonasAPIUpdatePersonaRequest as CovalPersonasAPIUpdatePersonaRequest
 from coval_sdk.models.coval_personas_api_update_persona_response import CovalPersonasAPIUpdatePersonaResponse as CovalPersonasAPIUpdatePersonaResponse
 from coval_sdk.models.coval_personas_api_voice_resource import CovalPersonasAPIVoiceResource as CovalPersonasAPIVoiceResource
@@ -662,6 +691,7 @@ from coval_sdk.models.create_test_set201_response import CreateTestSet201Respons
 from coval_sdk.models.get_conversation_metric200_response import GetConversationMetric200Response as GetConversationMetric200Response
 from coval_sdk.models.get_run200_response import GetRun200Response as GetRun200Response
 from coval_sdk.models.ingest_traces200_response import IngestTraces200Response as IngestTraces200Response
+from coval_sdk.models.list_conversations200_response import ListConversations200Response as ListConversations200Response
 from coval_sdk.models.list_runs200_response import ListRuns200Response as ListRuns200Response
 from coval_sdk.models.list_runs400_response import ListRuns400Response as ListRuns400Response
 from coval_sdk.models.list_test_cases200_response import ListTestCases200Response as ListTestCases200Response
@@ -677,7 +707,9 @@ from coval_sdk.models.test_sets_api_create_test_set_request import TestSetsAPICr
 from coval_sdk.models.test_sets_api_error_response import TestSetsAPIErrorResponse as TestSetsAPIErrorResponse
 from coval_sdk.models.test_sets_api_error_response_error import TestSetsAPIErrorResponseError as TestSetsAPIErrorResponseError
 from coval_sdk.models.test_sets_api_error_response_error_details_inner import TestSetsAPIErrorResponseErrorDetailsInner as TestSetsAPIErrorResponseErrorDetailsInner
+from coval_sdk.models.test_sets_api_list_test_set_versions_response import TestSetsAPIListTestSetVersionsResponse as TestSetsAPIListTestSetVersionsResponse
 from coval_sdk.models.test_sets_api_test_set_resource import TestSetsAPITestSetResource as TestSetsAPITestSetResource
+from coval_sdk.models.test_sets_api_test_set_version_resource import TestSetsAPITestSetVersionResource as TestSetsAPITestSetVersionResource
 from coval_sdk.models.test_sets_api_update_test_set_request import TestSetsAPIUpdateTestSetRequest as TestSetsAPIUpdateTestSetRequest
 from coval_sdk.models.traces_api_error_response import TracesAPIErrorResponse as TracesAPIErrorResponse
 from coval_sdk.models.traces_api_error_response_error import TracesAPIErrorResponseError as TracesAPIErrorResponseError

@@ -34,6 +34,11 @@ import {
     TestSetsAPIErrorResponseToJSON,
 } from '../models/TestSetsAPIErrorResponse.js';
 import {
+    type TestSetsAPIListTestSetVersionsResponse,
+    TestSetsAPIListTestSetVersionsResponseFromJSON,
+    TestSetsAPIListTestSetVersionsResponseToJSON,
+} from '../models/TestSetsAPIListTestSetVersionsResponse.js';
+import {
     type TestSetsAPIUpdateTestSetRequest,
     TestSetsAPIUpdateTestSetRequestFromJSON,
     TestSetsAPIUpdateTestSetRequestToJSON,
@@ -51,12 +56,21 @@ export interface GetTestSetRequest {
     testSetId: string;
 }
 
+export interface ListTestSetVersionsRequest {
+    testSetId: string;
+}
+
 export interface ListTestSetsRequest {
     filter?: string;
     pageSize?: number;
     pageToken?: string;
     orderBy?: string;
     tagFilters?: Array<string>;
+}
+
+export interface RevertTestSetVersionRequest {
+    testSetId: string;
+    versionId: string;
 }
 
 export interface UpdateTestSetRequest {
@@ -144,6 +158,30 @@ export interface TestSetsApiInterface {
     getTestSet(requestParameters: GetTestSetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateTestSet201Response>;
 
     /**
+     * Creates request options for listTestSetVersions without sending the request
+     * @param {string} testSetId Test set ID (8-character ID)
+     * @throws {RequiredError}
+     * @memberof TestSetsApiInterface
+     */
+    listTestSetVersionsRequestOpts(requestParameters: ListTestSetVersionsRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * List the prior-state version history for a test set, newest first. The live test set is the current version and is not included here. Each entry captures the test set\'s config and an ordered snapshot of its test-case rows.
+     * @summary List test set versions
+     * @param {string} testSetId Test set ID (8-character ID)
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TestSetsApiInterface
+     */
+    listTestSetVersionsRaw(requestParameters: ListTestSetVersionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TestSetsAPIListTestSetVersionsResponse>>;
+
+    /**
+     * List the prior-state version history for a test set, newest first. The live test set is the current version and is not included here. Each entry captures the test set\'s config and an ordered snapshot of its test-case rows.
+     * List test set versions
+     */
+    listTestSetVersions(requestParameters: ListTestSetVersionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TestSetsAPIListTestSetVersionsResponse>;
+
+    /**
      * Creates request options for listTestSets without sending the request
      * @param {string} [filter] Filter expression syntax. Values may be unquoted or double-quoted. Values containing spaces must be quoted. Example: &#x60;test_set_type&#x3D;SCENARIO&#x60; 
      * @param {number} [pageSize] Maximum number of test sets to return (default 50, max 100)
@@ -174,6 +212,32 @@ export interface TestSetsApiInterface {
      * List test sets
      */
     listTestSets(requestParameters: ListTestSetsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ListTestSets200Response>;
+
+    /**
+     * Creates request options for revertTestSetVersion without sending the request
+     * @param {string} testSetId Test set ID (8-character ID)
+     * @param {string} versionId ULID of the target version to re-apply
+     * @throws {RequiredError}
+     * @memberof TestSetsApiInterface
+     */
+    revertTestSetVersionRequestOpts(requestParameters: RevertTestSetVersionRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Re-apply a prior version\'s content (config + test-case grid) to the live test set. A revert is forward-only: it mints a new version (change_type=revert) and advances the test set, so the response reflects the test set\'s new live config. Reverting to the version the test set already points at is rejected with 400. Test cases are not included in the response; fetch them separately via GET /test-cases.
+     * @summary Revert test set version
+     * @param {string} testSetId Test set ID (8-character ID)
+     * @param {string} versionId ULID of the target version to re-apply
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TestSetsApiInterface
+     */
+    revertTestSetVersionRaw(requestParameters: RevertTestSetVersionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateTestSet201Response>>;
+
+    /**
+     * Re-apply a prior version\'s content (config + test-case grid) to the live test set. A revert is forward-only: it mints a new version (change_type=revert) and advances the test set, so the response reflects the test set\'s new live config. Reverting to the version the test set already points at is rejected with 400. Test cases are not included in the response; fetch them separately via GET /test-cases.
+     * Revert test set version
+     */
+    revertTestSetVersion(requestParameters: RevertTestSetVersionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateTestSet201Response>;
 
     /**
      * Creates request options for updateTestSet without sending the request
@@ -364,6 +428,57 @@ export class TestSetsApi extends runtime.BaseAPI implements TestSetsApiInterface
     }
 
     /**
+     * Creates request options for listTestSetVersions without sending the request
+     */
+    async listTestSetVersionsRequestOpts(requestParameters: ListTestSetVersionsRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['testSetId'] == null) {
+            throw new runtime.RequiredError(
+                'testSetId',
+                'Required parameter "testSetId" was null or undefined when calling listTestSetVersions().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Test_Sets_API_apiKey authentication
+        }
+
+
+        let urlPath = `/test-sets/{test_set_id}/versions`;
+        urlPath = urlPath.replace('{test_set_id}', encodeURIComponent(String(requestParameters['testSetId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * List the prior-state version history for a test set, newest first. The live test set is the current version and is not included here. Each entry captures the test set\'s config and an ordered snapshot of its test-case rows.
+     * List test set versions
+     */
+    async listTestSetVersionsRaw(requestParameters: ListTestSetVersionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TestSetsAPIListTestSetVersionsResponse>> {
+        const requestOptions = await this.listTestSetVersionsRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => TestSetsAPIListTestSetVersionsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * List the prior-state version history for a test set, newest first. The live test set is the current version and is not included here. Each entry captures the test set\'s config and an ordered snapshot of its test-case rows.
+     * List test set versions
+     */
+    async listTestSetVersions(requestParameters: ListTestSetVersionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TestSetsAPIListTestSetVersionsResponse> {
+        const response = await this.listTestSetVersionsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for listTestSets without sending the request
      */
     async listTestSetsRequestOpts(requestParameters: ListTestSetsRequest): Promise<runtime.RequestOpts> {
@@ -423,6 +538,65 @@ export class TestSetsApi extends runtime.BaseAPI implements TestSetsApiInterface
      */
     async listTestSets(requestParameters: ListTestSetsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ListTestSets200Response> {
         const response = await this.listTestSetsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for revertTestSetVersion without sending the request
+     */
+    async revertTestSetVersionRequestOpts(requestParameters: RevertTestSetVersionRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['testSetId'] == null) {
+            throw new runtime.RequiredError(
+                'testSetId',
+                'Required parameter "testSetId" was null or undefined when calling revertTestSetVersion().'
+            );
+        }
+
+        if (requestParameters['versionId'] == null) {
+            throw new runtime.RequiredError(
+                'versionId',
+                'Required parameter "versionId" was null or undefined when calling revertTestSetVersion().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Test_Sets_API_apiKey authentication
+        }
+
+
+        let urlPath = `/test-sets/{test_set_id}/versions/{version_id}/revert`;
+        urlPath = urlPath.replace('{test_set_id}', encodeURIComponent(String(requestParameters['testSetId'])));
+        urlPath = urlPath.replace('{version_id}', encodeURIComponent(String(requestParameters['versionId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Re-apply a prior version\'s content (config + test-case grid) to the live test set. A revert is forward-only: it mints a new version (change_type=revert) and advances the test set, so the response reflects the test set\'s new live config. Reverting to the version the test set already points at is rejected with 400. Test cases are not included in the response; fetch them separately via GET /test-cases.
+     * Revert test set version
+     */
+    async revertTestSetVersionRaw(requestParameters: RevertTestSetVersionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateTestSet201Response>> {
+        const requestOptions = await this.revertTestSetVersionRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CreateTestSet201ResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Re-apply a prior version\'s content (config + test-case grid) to the live test set. A revert is forward-only: it mints a new version (change_type=revert) and advances the test set, so the response reflects the test set\'s new live config. Reverting to the version the test set already points at is rejected with 400. Test cases are not included in the response; fetch them separately via GET /test-cases.
+     * Revert test set version
+     */
+    async revertTestSetVersion(requestParameters: RevertTestSetVersionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateTestSet201Response> {
+        const response = await this.revertTestSetVersionRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

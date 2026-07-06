@@ -110,6 +110,12 @@ export interface CovalMonitorsAPIUpdateMonitorRequest {
      */
     required_tags?: Array<string> | null;
     /**
+     * 
+     * @type {Array<string>}
+     * @memberof CovalMonitorsAPIUpdateMonitorRequest
+     */
+    scheduled_run_ids?: Array<string> | null;
+    /**
      * Replaces all existing conditions
      * @type {Array<CovalMonitorsAPIConditionInput>}
      * @memberof CovalMonitorsAPIUpdateMonitorRequest
@@ -151,6 +157,7 @@ export function CovalMonitorsAPIUpdateMonitorRequestFromJSONTyped(json: any, ign
         'custom_message_template': json['custom_message_template'] == null ? undefined : json['custom_message_template'],
         'agent_ids': json['agent_ids'] == null ? undefined : json['agent_ids'],
         'required_tags': json['required_tags'] == null ? undefined : json['required_tags'],
+        'scheduled_run_ids': json['scheduled_run_ids'] == null ? undefined : json['scheduled_run_ids'],
         'conditions': json['conditions'] == null ? undefined : ((json['conditions'] as Array<any>).map(CovalMonitorsAPIConditionInputFromJSON)),
         'channels': json['channels'] == null ? undefined : ((json['channels'] as Array<any>).map(CovalMonitorsAPIChannelInputFromJSON)),
     };
@@ -176,6 +183,7 @@ export function CovalMonitorsAPIUpdateMonitorRequestToJSONTyped(value?: CovalMon
         'custom_message_template': value['custom_message_template'],
         'agent_ids': value['agent_ids'],
         'required_tags': value['required_tags'],
+        'scheduled_run_ids': value['scheduled_run_ids'],
         'conditions': value['conditions'] == null ? undefined : ((value['conditions'] as Array<any>).map(CovalMonitorsAPIConditionInputToJSON)),
         'channels': value['channels'] == null ? undefined : ((value['channels'] as Array<any>).map(CovalMonitorsAPIChannelInputToJSON)),
     };

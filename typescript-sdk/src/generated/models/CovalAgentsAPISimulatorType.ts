@@ -25,6 +25,7 @@
  * - **MODEL_TYPE_WEBSOCKET**: WebSocket voice agents (requires metadata.endpoint wss:// URL in direct mode; metadata.initialization_json is optional)
  * - **MODEL_TYPE_OPENAI_REALTIME**: OpenAI Realtime voice-to-voice agents
  * - **MODEL_TYPE_GEMINI_REALTIME**: Gemini Live voice-to-voice agents
+ * - **MODEL_TYPE_GROK_REALTIME**: Grok (xAI) Voice Agent voice-to-voice agents
  * 
  * @export
  */
@@ -37,7 +38,8 @@ export const CovalAgentsAPISimulatorType = {
     ModelTypeSms: 'MODEL_TYPE_SMS',
     ModelTypeWebsocket: 'MODEL_TYPE_WEBSOCKET',
     ModelTypeOpenaiRealtime: 'MODEL_TYPE_OPENAI_REALTIME',
-    ModelTypeGeminiRealtime: 'MODEL_TYPE_GEMINI_REALTIME'
+    ModelTypeGeminiRealtime: 'MODEL_TYPE_GEMINI_REALTIME',
+    ModelTypeGrokRealtime: 'MODEL_TYPE_GROK_REALTIME'
 } as const;
 export type CovalAgentsAPISimulatorType = typeof CovalAgentsAPISimulatorType[keyof typeof CovalAgentsAPISimulatorType];
 

@@ -34,6 +34,11 @@ import {
     CovalAgentsAPIGetAgentResponseToJSON,
 } from '../models/CovalAgentsAPIGetAgentResponse.js';
 import {
+    type CovalAgentsAPIListAgentVersionsResponse,
+    CovalAgentsAPIListAgentVersionsResponseFromJSON,
+    CovalAgentsAPIListAgentVersionsResponseToJSON,
+} from '../models/CovalAgentsAPIListAgentVersionsResponse.js';
+import {
     type CovalAgentsAPIListAgentsResponse,
     CovalAgentsAPIListAgentsResponseFromJSON,
     CovalAgentsAPIListAgentsResponseToJSON,
@@ -61,12 +66,21 @@ export interface GetAgentRequest {
     agentId: string;
 }
 
+export interface ListAgentVersionsRequest {
+    agentId: string;
+}
+
 export interface ListAgentsRequest {
     filter?: string;
     pageSize?: number;
     pageToken?: string;
     orderBy?: string;
     tagFilters?: Array<string>;
+}
+
+export interface RevertAgentVersionRequest {
+    agentId: string;
+    versionId: string;
 }
 
 export interface UpdateAgentRequest {
@@ -154,6 +168,30 @@ export interface AgentsApiInterface {
     getAgent(requestParameters: GetAgentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalAgentsAPIGetAgentResponse>;
 
     /**
+     * Creates request options for listAgentVersions without sending the request
+     * @param {string} agentId Agent resource ID
+     * @throws {RequiredError}
+     * @memberof AgentsApiInterface
+     */
+    listAgentVersionsRequestOpts(requestParameters: ListAgentVersionsRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * List the version history for an agent, newest first. The newest entry is the agent\'s current live config; earlier entries are prior states displaced by later saves. Only behavioral config is versioned; identity and cosmetic fields are not.
+     * @summary List agent versions
+     * @param {string} agentId Agent resource ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AgentsApiInterface
+     */
+    listAgentVersionsRaw(requestParameters: ListAgentVersionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalAgentsAPIListAgentVersionsResponse>>;
+
+    /**
+     * List the version history for an agent, newest first. The newest entry is the agent\'s current live config; earlier entries are prior states displaced by later saves. Only behavioral config is versioned; identity and cosmetic fields are not.
+     * List agent versions
+     */
+    listAgentVersions(requestParameters: ListAgentVersionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalAgentsAPIListAgentVersionsResponse>;
+
+    /**
      * Creates request options for listAgents without sending the request
      * @param {string} [filter] Filter expression syntax.  **Supported fields:** &#x60;model_type&#x60;, &#x60;display_name&#x60;, &#x60;create_time&#x60;, &#x60;update_time&#x60;  **Operators:** &#x60;&#x3D;&#x60;, &#x60;!&#x3D;&#x60;, &#x60;&gt;&#x60;, &#x60;&lt;&#x60;, &#x60;&gt;&#x3D;&#x60;, &#x60;&lt;&#x3D;&#x60;, &#x60;AND&#x60;, &#x60;OR&#x60;  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., &#x60;display_name&#x3D;\&quot;Support Agent\&quot;&#x60;).  **Date format:** ISO 8601 (e.g., &#x60;2025-10-01T00:00:00Z&#x60;) 
      * @param {number} [pageSize] Maximum number of results per page
@@ -184,6 +222,32 @@ export interface AgentsApiInterface {
      * List agents
      */
     listAgents(requestParameters: ListAgentsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalAgentsAPIListAgentsResponse>;
+
+    /**
+     * Creates request options for revertAgentVersion without sending the request
+     * @param {string} agentId Agent resource ID
+     * @param {string} versionId ULID of the target version to re-apply
+     * @throws {RequiredError}
+     * @memberof AgentsApiInterface
+     */
+    revertAgentVersionRequestOpts(requestParameters: RevertAgentVersionRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Re-apply a prior version\'s configuration to the live agent. A revert is forward-only: it mints a new version (change_type=revert) and advances the agent, so the response reflects the agent\'s new live config. Reverting to the version the agent already points at is rejected with 400.
+     * @summary Revert agent version
+     * @param {string} agentId Agent resource ID
+     * @param {string} versionId ULID of the target version to re-apply
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AgentsApiInterface
+     */
+    revertAgentVersionRaw(requestParameters: RevertAgentVersionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalAgentsAPIGetAgentResponse>>;
+
+    /**
+     * Re-apply a prior version\'s configuration to the live agent. A revert is forward-only: it mints a new version (change_type=revert) and advances the agent, so the response reflects the agent\'s new live config. Reverting to the version the agent already points at is rejected with 400.
+     * Revert agent version
+     */
+    revertAgentVersion(requestParameters: RevertAgentVersionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalAgentsAPIGetAgentResponse>;
 
     /**
      * Creates request options for updateAgent without sending the request
@@ -240,7 +304,7 @@ export class AgentsApi extends runtime.BaseAPI implements AgentsApiInterface {
         }
 
 
-        let urlPath = `/v1/agents`;
+        let urlPath = `/agents`;
 
         return {
             path: urlPath,
@@ -291,7 +355,7 @@ export class AgentsApi extends runtime.BaseAPI implements AgentsApiInterface {
         }
 
 
-        let urlPath = `/v1/agents/{agent_id}`;
+        let urlPath = `/agents/{agent_id}`;
         urlPath = urlPath.replace('{agent_id}', encodeURIComponent(String(requestParameters['agentId'])));
 
         return {
@@ -342,7 +406,7 @@ export class AgentsApi extends runtime.BaseAPI implements AgentsApiInterface {
         }
 
 
-        let urlPath = `/v1/agents/{agent_id}`;
+        let urlPath = `/agents/{agent_id}`;
         urlPath = urlPath.replace('{agent_id}', encodeURIComponent(String(requestParameters['agentId'])));
 
         return {
@@ -370,6 +434,57 @@ export class AgentsApi extends runtime.BaseAPI implements AgentsApiInterface {
      */
     async getAgent(requestParameters: GetAgentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalAgentsAPIGetAgentResponse> {
         const response = await this.getAgentRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for listAgentVersions without sending the request
+     */
+    async listAgentVersionsRequestOpts(requestParameters: ListAgentVersionsRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['agentId'] == null) {
+            throw new runtime.RequiredError(
+                'agentId',
+                'Required parameter "agentId" was null or undefined when calling listAgentVersions().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Agents_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/agents/{agent_id}/versions`;
+        urlPath = urlPath.replace('{agent_id}', encodeURIComponent(String(requestParameters['agentId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * List the version history for an agent, newest first. The newest entry is the agent\'s current live config; earlier entries are prior states displaced by later saves. Only behavioral config is versioned; identity and cosmetic fields are not.
+     * List agent versions
+     */
+    async listAgentVersionsRaw(requestParameters: ListAgentVersionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalAgentsAPIListAgentVersionsResponse>> {
+        const requestOptions = await this.listAgentVersionsRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalAgentsAPIListAgentVersionsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * List the version history for an agent, newest first. The newest entry is the agent\'s current live config; earlier entries are prior states displaced by later saves. Only behavioral config is versioned; identity and cosmetic fields are not.
+     * List agent versions
+     */
+    async listAgentVersions(requestParameters: ListAgentVersionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalAgentsAPIListAgentVersionsResponse> {
+        const response = await this.listAgentVersionsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -406,7 +521,7 @@ export class AgentsApi extends runtime.BaseAPI implements AgentsApiInterface {
         }
 
 
-        let urlPath = `/v1/agents`;
+        let urlPath = `/agents`;
 
         return {
             path: urlPath,
@@ -433,6 +548,65 @@ export class AgentsApi extends runtime.BaseAPI implements AgentsApiInterface {
      */
     async listAgents(requestParameters: ListAgentsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalAgentsAPIListAgentsResponse> {
         const response = await this.listAgentsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for revertAgentVersion without sending the request
+     */
+    async revertAgentVersionRequestOpts(requestParameters: RevertAgentVersionRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['agentId'] == null) {
+            throw new runtime.RequiredError(
+                'agentId',
+                'Required parameter "agentId" was null or undefined when calling revertAgentVersion().'
+            );
+        }
+
+        if (requestParameters['versionId'] == null) {
+            throw new runtime.RequiredError(
+                'versionId',
+                'Required parameter "versionId" was null or undefined when calling revertAgentVersion().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Agents_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/agents/{agent_id}/versions/{version_id}/revert`;
+        urlPath = urlPath.replace('{agent_id}', encodeURIComponent(String(requestParameters['agentId'])));
+        urlPath = urlPath.replace('{version_id}', encodeURIComponent(String(requestParameters['versionId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Re-apply a prior version\'s configuration to the live agent. A revert is forward-only: it mints a new version (change_type=revert) and advances the agent, so the response reflects the agent\'s new live config. Reverting to the version the agent already points at is rejected with 400.
+     * Revert agent version
+     */
+    async revertAgentVersionRaw(requestParameters: RevertAgentVersionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalAgentsAPIGetAgentResponse>> {
+        const requestOptions = await this.revertAgentVersionRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalAgentsAPIGetAgentResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Re-apply a prior version\'s configuration to the live agent. A revert is forward-only: it mints a new version (change_type=revert) and advances the agent, so the response reflects the agent\'s new live config. Reverting to the version the agent already points at is rejected with 400.
+     * Revert agent version
+     */
+    async revertAgentVersion(requestParameters: RevertAgentVersionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalAgentsAPIGetAgentResponse> {
+        const response = await this.revertAgentVersionRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -465,7 +639,7 @@ export class AgentsApi extends runtime.BaseAPI implements AgentsApiInterface {
         }
 
 
-        let urlPath = `/v1/agents/{agent_id}`;
+        let urlPath = `/agents/{agent_id}`;
         urlPath = urlPath.replace('{agent_id}', encodeURIComponent(String(requestParameters['agentId'])));
 
         return {

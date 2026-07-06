@@ -34,11 +34,6 @@ import {
     CovalConversationsAPIListConversationMetricsResponseToJSON,
 } from '../models/CovalConversationsAPIListConversationMetricsResponse.js';
 import {
-    type CovalConversationsAPIListConversationsResponse,
-    CovalConversationsAPIListConversationsResponseFromJSON,
-    CovalConversationsAPIListConversationsResponseToJSON,
-} from '../models/CovalConversationsAPIListConversationsResponse.js';
-import {
     type CovalConversationsAPIPatchConversationRequest,
     CovalConversationsAPIPatchConversationRequestFromJSON,
     CovalConversationsAPIPatchConversationRequestToJSON,
@@ -58,6 +53,11 @@ import {
     GetConversationMetric200ResponseFromJSON,
     GetConversationMetric200ResponseToJSON,
 } from '../models/GetConversationMetric200Response.js';
+import {
+    type ListConversations200Response,
+    ListConversations200ResponseFromJSON,
+    ListConversations200ResponseToJSON,
+} from '../models/ListConversations200Response.js';
 
 export interface DeleteConversationRequest {
     conversationId: string;
@@ -86,6 +86,12 @@ export interface ListConversationsRequest {
     pageToken?: string;
     filter?: string;
     orderBy?: string;
+    view?: ListConversationsViewEnum;
+    metricId?: string;
+    groupByMetadata?: string;
+    aggregation?: ListConversationsAggregationEnum;
+    startDate?: Date;
+    endDate?: Date;
 }
 
 export interface PatchConversationRequest {
@@ -164,7 +170,7 @@ export interface ConversationsApiInterface {
     getConversationMetricRequestOpts(requestParameters: GetConversationMetricRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Retrieve metric output(s) for a conversation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID** (e.g. `01JCQR8Z9PQSTNVWXY12345678`):   returns a single metric output as `{ \"metric\": {...} }`. - **22-char Metric definition ID** (e.g. `29BlkepvvX19ebbLDB0y6Q`):   returns every output for that metric on the conversation as   `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
+     * Retrieve metric output(s) for a conversation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID** (e.g. `01JCQR8Z9PQSTNVWXY12345678`):   returns a single metric output as `{ \"metric\": {...} }`. - **22-char Metric definition ID** (e.g. `29BlkepvvX19ebbLDB0y6Q`):   returns every output for that metric on the conversation as   `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed.  This endpoint serves **monitoring conversations only**. To retrieve results for a simulation — including test-metric results from `POST /v1/metrics/{metric_id}/test` — use `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` instead. 
      * @summary Get conversation metric output(s)
      * @param {string} conversationId Unique conversation identifier
      * @param {string} metricOutputId Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type. 
@@ -175,7 +181,7 @@ export interface ConversationsApiInterface {
     getConversationMetricRaw(requestParameters: GetConversationMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetConversationMetric200Response>>;
 
     /**
-     * Retrieve metric output(s) for a conversation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID** (e.g. `01JCQR8Z9PQSTNVWXY12345678`):   returns a single metric output as `{ \"metric\": {...} }`. - **22-char Metric definition ID** (e.g. `29BlkepvvX19ebbLDB0y6Q`):   returns every output for that metric on the conversation as   `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
+     * Retrieve metric output(s) for a conversation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID** (e.g. `01JCQR8Z9PQSTNVWXY12345678`):   returns a single metric output as `{ \"metric\": {...} }`. - **22-char Metric definition ID** (e.g. `29BlkepvvX19ebbLDB0y6Q`):   returns every output for that metric on the conversation as   `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed.  This endpoint serves **monitoring conversations only**. To retrieve results for a simulation — including test-metric results from `POST /v1/metrics/{metric_id}/test` — use `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` instead. 
      * Get conversation metric output(s)
      */
     getConversationMetric(requestParameters: GetConversationMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetConversationMetric200Response>;
@@ -218,6 +224,12 @@ export interface ConversationsApiInterface {
      * @param {string} [pageToken] Token for retrieving next page (from previous response)
      * @param {string} [filter] Filter expression syntax.  **Operators:** &#x60;&#x3D;&#x60;, &#x60;!&#x3D;&#x60;, &#x60;&gt;&#x60;, &#x60;&lt;&#x60;, &#x60;&gt;&#x3D;&#x60;, &#x60;&lt;&#x3D;&#x60;, &#x60;AND&#x60;, &#x60;OR&#x60;  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  **Fields:** - &#x60;status&#x60; - PENDING, IN_QUEUE, IN_PROGRESS, COMPLETED, FAILED, CANCELLED, DELETED - &#x60;external_conversation_id&#x60; - Your system\&#39;s conversation ID - &#x60;create_time&#x60; - ISO 8601 timestamp - &#x60;occurred_at&#x60; - ISO 8601 timestamp - &#x60;metadata.{key}&#x60; - Custom metadata fields  **Examples:** - &#x60;status&#x3D;COMPLETED&#x60; - &#x60;create_time&gt;\&quot;2025-11-01T00:00:00Z\&quot;&#x60; - &#x60;status&#x3D;COMPLETED AND occurred_at&gt;&#x3D;\&quot;2025-11-01T00:00:00Z\&quot;&#x60; - &#x60;external_conversation_id&#x3D;external-call-abc&#x60; 
      * @param {string} [orderBy] Sort field with optional &#x60;-&#x60; prefix for descending order.  **Fields:** &#x60;create_time&#x60;, &#x60;occurred_at&#x60;, &#x60;status&#x60;  **Examples:** - &#x60;create_time&#x60; (ascending) - &#x60;-create_time&#x60; (descending, most recent first) - &#x60;-occurred_at&#x60; (most recent conversations first) 
+     * @param {'metric_breakdown'} [view] Set to &#x60;metric_breakdown&#x60; to return an aggregate of one metric\&#39;s scores grouped by a &#x60;customer_metadata&#x60; key (e.g. vendor), computed over the whole scored monitoring corpus, instead of the conversation list. Requires &#x60;metric_id&#x60; and &#x60;group_by_metadata&#x60;; the response is a metric-breakdown object (&#x60;{view, metric_id, group_by_metadata, aggregation, breakdown:[{metadata_value, value, count}], total_count}&#x60;). 
+     * @param {string} [metricId] Required when &#x60;view&#x3D;metric_breakdown&#x60;: the metric to aggregate.
+     * @param {string} [groupByMetadata] Required when &#x60;view&#x3D;metric_breakdown&#x60;: the customer_metadata key to group by (e.g. nlp_provider).
+     * @param {'success' | 'avg'} [aggregation] Aggregation for &#x60;view&#x3D;metric_breakdown&#x60;. Defaults to &#x60;success&#x60; (a YES/NO success rate) for binary/string metrics and &#x60;avg&#x60; (numeric mean) for float metrics. 
+     * @param {Date} [startDate] Optional ISO-8601 lower bound (occurred_at) for &#x60;view&#x3D;metric_breakdown&#x60;.
+     * @param {Date} [endDate] Optional ISO-8601 upper bound (occurred_at) for &#x60;view&#x3D;metric_breakdown&#x60;.
      * @throws {RequiredError}
      * @memberof ConversationsApiInterface
      */
@@ -230,17 +242,23 @@ export interface ConversationsApiInterface {
      * @param {string} [pageToken] Token for retrieving next page (from previous response)
      * @param {string} [filter] Filter expression syntax.  **Operators:** &#x60;&#x3D;&#x60;, &#x60;!&#x3D;&#x60;, &#x60;&gt;&#x60;, &#x60;&lt;&#x60;, &#x60;&gt;&#x3D;&#x60;, &#x60;&lt;&#x3D;&#x60;, &#x60;AND&#x60;, &#x60;OR&#x60;  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  **Fields:** - &#x60;status&#x60; - PENDING, IN_QUEUE, IN_PROGRESS, COMPLETED, FAILED, CANCELLED, DELETED - &#x60;external_conversation_id&#x60; - Your system\&#39;s conversation ID - &#x60;create_time&#x60; - ISO 8601 timestamp - &#x60;occurred_at&#x60; - ISO 8601 timestamp - &#x60;metadata.{key}&#x60; - Custom metadata fields  **Examples:** - &#x60;status&#x3D;COMPLETED&#x60; - &#x60;create_time&gt;\&quot;2025-11-01T00:00:00Z\&quot;&#x60; - &#x60;status&#x3D;COMPLETED AND occurred_at&gt;&#x3D;\&quot;2025-11-01T00:00:00Z\&quot;&#x60; - &#x60;external_conversation_id&#x3D;external-call-abc&#x60; 
      * @param {string} [orderBy] Sort field with optional &#x60;-&#x60; prefix for descending order.  **Fields:** &#x60;create_time&#x60;, &#x60;occurred_at&#x60;, &#x60;status&#x60;  **Examples:** - &#x60;create_time&#x60; (ascending) - &#x60;-create_time&#x60; (descending, most recent first) - &#x60;-occurred_at&#x60; (most recent conversations first) 
+     * @param {'metric_breakdown'} [view] Set to &#x60;metric_breakdown&#x60; to return an aggregate of one metric\&#39;s scores grouped by a &#x60;customer_metadata&#x60; key (e.g. vendor), computed over the whole scored monitoring corpus, instead of the conversation list. Requires &#x60;metric_id&#x60; and &#x60;group_by_metadata&#x60;; the response is a metric-breakdown object (&#x60;{view, metric_id, group_by_metadata, aggregation, breakdown:[{metadata_value, value, count}], total_count}&#x60;). 
+     * @param {string} [metricId] Required when &#x60;view&#x3D;metric_breakdown&#x60;: the metric to aggregate.
+     * @param {string} [groupByMetadata] Required when &#x60;view&#x3D;metric_breakdown&#x60;: the customer_metadata key to group by (e.g. nlp_provider).
+     * @param {'success' | 'avg'} [aggregation] Aggregation for &#x60;view&#x3D;metric_breakdown&#x60;. Defaults to &#x60;success&#x60; (a YES/NO success rate) for binary/string metrics and &#x60;avg&#x60; (numeric mean) for float metrics. 
+     * @param {Date} [startDate] Optional ISO-8601 lower bound (occurred_at) for &#x60;view&#x3D;metric_breakdown&#x60;.
+     * @param {Date} [endDate] Optional ISO-8601 upper bound (occurred_at) for &#x60;view&#x3D;metric_breakdown&#x60;.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ConversationsApiInterface
      */
-    listConversationsRaw(requestParameters: ListConversationsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalConversationsAPIListConversationsResponse>>;
+    listConversationsRaw(requestParameters: ListConversationsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ListConversations200Response>>;
 
     /**
      * List conversations with optional filtering, pagination, and ordering. 
      * List conversations
      */
-    listConversations(requestParameters: ListConversationsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalConversationsAPIListConversationsResponse>;
+    listConversations(requestParameters: ListConversationsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ListConversations200Response>;
 
     /**
      * Creates request options for patchConversation without sending the request
@@ -319,7 +337,7 @@ export class ConversationsApi extends runtime.BaseAPI implements ConversationsAp
         }
 
 
-        let urlPath = `/v1/conversations/{conversation_id}`;
+        let urlPath = `/conversations/{conversation_id}`;
         urlPath = urlPath.replace('{conversation_id}', encodeURIComponent(String(requestParameters['conversationId'])));
 
         return {
@@ -374,7 +392,7 @@ export class ConversationsApi extends runtime.BaseAPI implements ConversationsAp
         }
 
 
-        let urlPath = `/v1/conversations/{conversation_id}`;
+        let urlPath = `/conversations/{conversation_id}`;
         urlPath = urlPath.replace('{conversation_id}', encodeURIComponent(String(requestParameters['conversationId'])));
 
         return {
@@ -432,7 +450,7 @@ export class ConversationsApi extends runtime.BaseAPI implements ConversationsAp
         }
 
 
-        let urlPath = `/v1/conversations/{conversation_id}/metrics/{metric_output_id}`;
+        let urlPath = `/conversations/{conversation_id}/metrics/{metric_output_id}`;
         urlPath = urlPath.replace('{conversation_id}', encodeURIComponent(String(requestParameters['conversationId'])));
         urlPath = urlPath.replace('{metric_output_id}', encodeURIComponent(String(requestParameters['metricOutputId'])));
 
@@ -445,7 +463,7 @@ export class ConversationsApi extends runtime.BaseAPI implements ConversationsAp
     }
 
     /**
-     * Retrieve metric output(s) for a conversation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID** (e.g. `01JCQR8Z9PQSTNVWXY12345678`):   returns a single metric output as `{ \"metric\": {...} }`. - **22-char Metric definition ID** (e.g. `29BlkepvvX19ebbLDB0y6Q`):   returns every output for that metric on the conversation as   `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
+     * Retrieve metric output(s) for a conversation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID** (e.g. `01JCQR8Z9PQSTNVWXY12345678`):   returns a single metric output as `{ \"metric\": {...} }`. - **22-char Metric definition ID** (e.g. `29BlkepvvX19ebbLDB0y6Q`):   returns every output for that metric on the conversation as   `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed.  This endpoint serves **monitoring conversations only**. To retrieve results for a simulation — including test-metric results from `POST /v1/metrics/{metric_id}/test` — use `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` instead. 
      * Get conversation metric output(s)
      */
     async getConversationMetricRaw(requestParameters: GetConversationMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetConversationMetric200Response>> {
@@ -456,7 +474,7 @@ export class ConversationsApi extends runtime.BaseAPI implements ConversationsAp
     }
 
     /**
-     * Retrieve metric output(s) for a conversation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID** (e.g. `01JCQR8Z9PQSTNVWXY12345678`):   returns a single metric output as `{ \"metric\": {...} }`. - **22-char Metric definition ID** (e.g. `29BlkepvvX19ebbLDB0y6Q`):   returns every output for that metric on the conversation as   `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
+     * Retrieve metric output(s) for a conversation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID** (e.g. `01JCQR8Z9PQSTNVWXY12345678`):   returns a single metric output as `{ \"metric\": {...} }`. - **22-char Metric definition ID** (e.g. `29BlkepvvX19ebbLDB0y6Q`):   returns every output for that metric on the conversation as   `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed.  This endpoint serves **monitoring conversations only**. To retrieve results for a simulation — including test-metric results from `POST /v1/metrics/{metric_id}/test` — use `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` instead. 
      * Get conversation metric output(s)
      */
     async getConversationMetric(requestParameters: GetConversationMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetConversationMetric200Response> {
@@ -500,7 +518,7 @@ export class ConversationsApi extends runtime.BaseAPI implements ConversationsAp
         }
 
 
-        let urlPath = `/v1/conversations/{conversation_id}/metrics`;
+        let urlPath = `/conversations/{conversation_id}/metrics`;
         urlPath = urlPath.replace('{conversation_id}', encodeURIComponent(String(requestParameters['conversationId'])));
 
         return {
@@ -553,6 +571,30 @@ export class ConversationsApi extends runtime.BaseAPI implements ConversationsAp
             queryParameters['order_by'] = requestParameters['orderBy'];
         }
 
+        if (requestParameters['view'] != null) {
+            queryParameters['view'] = requestParameters['view'];
+        }
+
+        if (requestParameters['metricId'] != null) {
+            queryParameters['metric_id'] = requestParameters['metricId'];
+        }
+
+        if (requestParameters['groupByMetadata'] != null) {
+            queryParameters['group_by_metadata'] = requestParameters['groupByMetadata'];
+        }
+
+        if (requestParameters['aggregation'] != null) {
+            queryParameters['aggregation'] = requestParameters['aggregation'];
+        }
+
+        if (requestParameters['startDate'] != null) {
+            queryParameters['start_date'] = (requestParameters['startDate'] as any).toISOString();
+        }
+
+        if (requestParameters['endDate'] != null) {
+            queryParameters['end_date'] = (requestParameters['endDate'] as any).toISOString();
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.apiKey) {
@@ -560,7 +602,7 @@ export class ConversationsApi extends runtime.BaseAPI implements ConversationsAp
         }
 
 
-        let urlPath = `/v1/conversations`;
+        let urlPath = `/conversations`;
 
         return {
             path: urlPath,
@@ -574,18 +616,18 @@ export class ConversationsApi extends runtime.BaseAPI implements ConversationsAp
      * List conversations with optional filtering, pagination, and ordering. 
      * List conversations
      */
-    async listConversationsRaw(requestParameters: ListConversationsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalConversationsAPIListConversationsResponse>> {
+    async listConversationsRaw(requestParameters: ListConversationsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ListConversations200Response>> {
         const requestOptions = await this.listConversationsRequestOpts(requestParameters);
         const response = await this.request(requestOptions, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CovalConversationsAPIListConversationsResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ListConversations200ResponseFromJSON(jsonValue));
     }
 
     /**
      * List conversations with optional filtering, pagination, and ordering. 
      * List conversations
      */
-    async listConversations(requestParameters: ListConversationsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalConversationsAPIListConversationsResponse> {
+    async listConversations(requestParameters: ListConversationsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ListConversations200Response> {
         const response = await this.listConversationsRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -619,7 +661,7 @@ export class ConversationsApi extends runtime.BaseAPI implements ConversationsAp
         }
 
 
-        let urlPath = `/v1/conversations/{conversation_id}`;
+        let urlPath = `/conversations/{conversation_id}`;
         urlPath = urlPath.replace('{conversation_id}', encodeURIComponent(String(requestParameters['conversationId'])));
 
         return {
@@ -673,7 +715,7 @@ export class ConversationsApi extends runtime.BaseAPI implements ConversationsAp
         }
 
 
-        let urlPath = `/v1/conversations:submit`;
+        let urlPath = `/conversations:submit`;
 
         return {
             path: urlPath,
@@ -705,3 +747,19 @@ export class ConversationsApi extends runtime.BaseAPI implements ConversationsAp
     }
 
 }
+
+/**
+ * @export
+ */
+export const ListConversationsViewEnum = {
+    MetricBreakdown: 'metric_breakdown'
+} as const;
+export type ListConversationsViewEnum = typeof ListConversationsViewEnum[keyof typeof ListConversationsViewEnum];
+/**
+ * @export
+ */
+export const ListConversationsAggregationEnum = {
+    Success: 'success',
+    Avg: 'avg'
+} as const;
+export type ListConversationsAggregationEnum = typeof ListConversationsAggregationEnum[keyof typeof ListConversationsAggregationEnum];

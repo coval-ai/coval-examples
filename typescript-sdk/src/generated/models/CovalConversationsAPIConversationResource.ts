@@ -105,6 +105,12 @@ export interface CovalConversationsAPIConversationResource {
      */
     metadata?: { [key: string]: any; };
     /**
+     * Tags applied to this conversation
+     * @type {Array<string>}
+     * @memberof CovalConversationsAPIConversationResource
+     */
+    tags?: Array<string>;
+    /**
      * List of metric IDs configured for this conversation.
      * 
      * Use GET /v1/conversations/{id}/metrics to retrieve computed metric values.
@@ -151,6 +157,7 @@ export function CovalConversationsAPIConversationResourceFromJSONTyped(json: any
         'persona_id': json['persona_id'] == null ? undefined : json['persona_id'],
         'progress': json['progress'] == null ? undefined : CovalConversationsAPIConversationProgressFromJSON(json['progress']),
         'metadata': json['metadata'] == null ? undefined : json['metadata'],
+        'tags': json['tags'] == null ? undefined : json['tags'],
         'metric_ids': json['metric_ids'] == null ? undefined : json['metric_ids'],
         'error': json['error'] == null ? undefined : json['error'],
     };
@@ -178,6 +185,7 @@ export function CovalConversationsAPIConversationResourceToJSONTyped(value?: Cov
         'persona_id': value['persona_id'],
         'progress': CovalConversationsAPIConversationProgressToJSON(value['progress']),
         'metadata': value['metadata'],
+        'tags': value['tags'],
         'metric_ids': value['metric_ids'],
         'error': value['error'],
     };

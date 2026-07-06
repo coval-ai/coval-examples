@@ -16,17 +16,18 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictBool, StrictStr
+from datetime import datetime
+from pydantic import Field, StrictBool, StrictStr, field_validator
 from typing import Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_conversations_api_delete_conversation_response import CovalConversationsAPIDeleteConversationResponse
 from coval_sdk.models.coval_conversations_api_get_conversation_response import CovalConversationsAPIGetConversationResponse
 from coval_sdk.models.coval_conversations_api_list_conversation_metrics_response import CovalConversationsAPIListConversationMetricsResponse
-from coval_sdk.models.coval_conversations_api_list_conversations_response import CovalConversationsAPIListConversationsResponse
 from coval_sdk.models.coval_conversations_api_patch_conversation_request import CovalConversationsAPIPatchConversationRequest
 from coval_sdk.models.coval_conversations_api_submit_conversation_request import CovalConversationsAPISubmitConversationRequest
 from coval_sdk.models.coval_conversations_api_submit_conversation_response import CovalConversationsAPISubmitConversationResponse
 from coval_sdk.models.get_conversation_metric200_response import GetConversationMetric200Response
+from coval_sdk.models.list_conversations200_response import ListConversations200Response
 
 from coval_sdk.api_client import ApiClient, RequestSerialized
 from coval_sdk.api_response import ApiResponse
@@ -300,7 +301,7 @@ class ConversationsApi:
 
         return self.api_client.param_serialize(
             method='DELETE',
-            resource_path='/v1/conversations/{conversation_id}',
+            resource_path='/conversations/{conversation_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -587,7 +588,7 @@ class ConversationsApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/v1/conversations/{conversation_id}',
+            resource_path='/conversations/{conversation_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -623,7 +624,7 @@ class ConversationsApi:
     ) -> GetConversationMetric200Response:
         """Get conversation metric output(s)
 
-        Retrieve metric output(s) for a conversation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID** (e.g. `01JCQR8Z9PQSTNVWXY12345678`):   returns a single metric output as `{ \"metric\": {...} }`. - **22-char Metric definition ID** (e.g. `29BlkepvvX19ebbLDB0y6Q`):   returns every output for that metric on the conversation as   `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
+        Retrieve metric output(s) for a conversation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID** (e.g. `01JCQR8Z9PQSTNVWXY12345678`):   returns a single metric output as `{ \"metric\": {...} }`. - **22-char Metric definition ID** (e.g. `29BlkepvvX19ebbLDB0y6Q`):   returns every output for that metric on the conversation as   `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed.  This endpoint serves **monitoring conversations only**. To retrieve results for a simulation — including test-metric results from `POST /v1/metrics/{metric_id}/test` — use `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` instead. 
 
         :param conversation_id: Unique conversation identifier (required)
         :type conversation_id: str
@@ -697,7 +698,7 @@ class ConversationsApi:
     ) -> ApiResponse[GetConversationMetric200Response]:
         """Get conversation metric output(s)
 
-        Retrieve metric output(s) for a conversation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID** (e.g. `01JCQR8Z9PQSTNVWXY12345678`):   returns a single metric output as `{ \"metric\": {...} }`. - **22-char Metric definition ID** (e.g. `29BlkepvvX19ebbLDB0y6Q`):   returns every output for that metric on the conversation as   `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
+        Retrieve metric output(s) for a conversation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID** (e.g. `01JCQR8Z9PQSTNVWXY12345678`):   returns a single metric output as `{ \"metric\": {...} }`. - **22-char Metric definition ID** (e.g. `29BlkepvvX19ebbLDB0y6Q`):   returns every output for that metric on the conversation as   `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed.  This endpoint serves **monitoring conversations only**. To retrieve results for a simulation — including test-metric results from `POST /v1/metrics/{metric_id}/test` — use `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` instead. 
 
         :param conversation_id: Unique conversation identifier (required)
         :type conversation_id: str
@@ -771,7 +772,7 @@ class ConversationsApi:
     ) -> RESTResponseType:
         """Get conversation metric output(s)
 
-        Retrieve metric output(s) for a conversation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID** (e.g. `01JCQR8Z9PQSTNVWXY12345678`):   returns a single metric output as `{ \"metric\": {...} }`. - **22-char Metric definition ID** (e.g. `29BlkepvvX19ebbLDB0y6Q`):   returns every output for that metric on the conversation as   `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
+        Retrieve metric output(s) for a conversation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID** (e.g. `01JCQR8Z9PQSTNVWXY12345678`):   returns a single metric output as `{ \"metric\": {...} }`. - **22-char Metric definition ID** (e.g. `29BlkepvvX19ebbLDB0y6Q`):   returns every output for that metric on the conversation as   `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed.  This endpoint serves **monitoring conversations only**. To retrieve results for a simulation — including test-metric results from `POST /v1/metrics/{metric_id}/test` — use `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` instead. 
 
         :param conversation_id: Unique conversation identifier (required)
         :type conversation_id: str
@@ -872,7 +873,7 @@ class ConversationsApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/v1/conversations/{conversation_id}/metrics/{metric_output_id}',
+            resource_path='/conversations/{conversation_id}/metrics/{metric_output_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1213,7 +1214,7 @@ class ConversationsApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/v1/conversations/{conversation_id}/metrics',
+            resource_path='/conversations/{conversation_id}/metrics',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1236,6 +1237,12 @@ class ConversationsApi:
         page_token: Annotated[Optional[StrictStr], Field(description="Token for retrieving next page (from previous response)")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  **Operators:** `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  **Fields:** - `status` - PENDING, IN_QUEUE, IN_PROGRESS, COMPLETED, FAILED, CANCELLED, DELETED - `external_conversation_id` - Your system's conversation ID - `create_time` - ISO 8601 timestamp - `occurred_at` - ISO 8601 timestamp - `metadata.{key}` - Custom metadata fields  **Examples:** - `status=COMPLETED` - `create_time>\"2025-11-01T00:00:00Z\"` - `status=COMPLETED AND occurred_at>=\"2025-11-01T00:00:00Z\"` - `external_conversation_id=external-call-abc` ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort field with optional `-` prefix for descending order.  **Fields:** `create_time`, `occurred_at`, `status`  **Examples:** - `create_time` (ascending) - `-create_time` (descending, most recent first) - `-occurred_at` (most recent conversations first) ")] = None,
+        view: Annotated[Optional[StrictStr], Field(description="Set to `metric_breakdown` to return an aggregate of one metric's scores grouped by a `customer_metadata` key (e.g. vendor), computed over the whole scored monitoring corpus, instead of the conversation list. Requires `metric_id` and `group_by_metadata`; the response is a metric-breakdown object (`{view, metric_id, group_by_metadata, aggregation, breakdown:[{metadata_value, value, count}], total_count}`). ")] = None,
+        metric_id: Annotated[Optional[StrictStr], Field(description="Required when `view=metric_breakdown`: the metric to aggregate.")] = None,
+        group_by_metadata: Annotated[Optional[StrictStr], Field(description="Required when `view=metric_breakdown`: the customer_metadata key to group by (e.g. nlp_provider).")] = None,
+        aggregation: Annotated[Optional[StrictStr], Field(description="Aggregation for `view=metric_breakdown`. Defaults to `success` (a YES/NO success rate) for binary/string metrics and `avg` (numeric mean) for float metrics. ")] = None,
+        start_date: Annotated[Optional[datetime], Field(description="Optional ISO-8601 lower bound (occurred_at) for `view=metric_breakdown`.")] = None,
+        end_date: Annotated[Optional[datetime], Field(description="Optional ISO-8601 upper bound (occurred_at) for `view=metric_breakdown`.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1248,7 +1255,7 @@ class ConversationsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CovalConversationsAPIListConversationsResponse:
+    ) -> ListConversations200Response:
         """List conversations
 
         List conversations with optional filtering, pagination, and ordering. 
@@ -1261,6 +1268,18 @@ class ConversationsApi:
         :type filter: str
         :param order_by: Sort field with optional `-` prefix for descending order.  **Fields:** `create_time`, `occurred_at`, `status`  **Examples:** - `create_time` (ascending) - `-create_time` (descending, most recent first) - `-occurred_at` (most recent conversations first) 
         :type order_by: str
+        :param view: Set to `metric_breakdown` to return an aggregate of one metric's scores grouped by a `customer_metadata` key (e.g. vendor), computed over the whole scored monitoring corpus, instead of the conversation list. Requires `metric_id` and `group_by_metadata`; the response is a metric-breakdown object (`{view, metric_id, group_by_metadata, aggregation, breakdown:[{metadata_value, value, count}], total_count}`). 
+        :type view: str
+        :param metric_id: Required when `view=metric_breakdown`: the metric to aggregate.
+        :type metric_id: str
+        :param group_by_metadata: Required when `view=metric_breakdown`: the customer_metadata key to group by (e.g. nlp_provider).
+        :type group_by_metadata: str
+        :param aggregation: Aggregation for `view=metric_breakdown`. Defaults to `success` (a YES/NO success rate) for binary/string metrics and `avg` (numeric mean) for float metrics. 
+        :type aggregation: str
+        :param start_date: Optional ISO-8601 lower bound (occurred_at) for `view=metric_breakdown`.
+        :type start_date: datetime
+        :param end_date: Optional ISO-8601 upper bound (occurred_at) for `view=metric_breakdown`.
+        :type end_date: datetime
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1288,6 +1307,12 @@ class ConversationsApi:
             page_token=page_token,
             filter=filter,
             order_by=order_by,
+            view=view,
+            metric_id=metric_id,
+            group_by_metadata=group_by_metadata,
+            aggregation=aggregation,
+            start_date=start_date,
+            end_date=end_date,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1295,9 +1320,10 @@ class ConversationsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CovalConversationsAPIListConversationsResponse",
+            '200': "ListConversations200Response",
             '400': "CovalConversationsAPIErrorResponse",
             '401': "CovalConversationsAPIErrorResponse",
+            '404': "CovalConversationsAPIErrorResponse",
             '500': "CovalConversationsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -1318,6 +1344,12 @@ class ConversationsApi:
         page_token: Annotated[Optional[StrictStr], Field(description="Token for retrieving next page (from previous response)")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  **Operators:** `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  **Fields:** - `status` - PENDING, IN_QUEUE, IN_PROGRESS, COMPLETED, FAILED, CANCELLED, DELETED - `external_conversation_id` - Your system's conversation ID - `create_time` - ISO 8601 timestamp - `occurred_at` - ISO 8601 timestamp - `metadata.{key}` - Custom metadata fields  **Examples:** - `status=COMPLETED` - `create_time>\"2025-11-01T00:00:00Z\"` - `status=COMPLETED AND occurred_at>=\"2025-11-01T00:00:00Z\"` - `external_conversation_id=external-call-abc` ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort field with optional `-` prefix for descending order.  **Fields:** `create_time`, `occurred_at`, `status`  **Examples:** - `create_time` (ascending) - `-create_time` (descending, most recent first) - `-occurred_at` (most recent conversations first) ")] = None,
+        view: Annotated[Optional[StrictStr], Field(description="Set to `metric_breakdown` to return an aggregate of one metric's scores grouped by a `customer_metadata` key (e.g. vendor), computed over the whole scored monitoring corpus, instead of the conversation list. Requires `metric_id` and `group_by_metadata`; the response is a metric-breakdown object (`{view, metric_id, group_by_metadata, aggregation, breakdown:[{metadata_value, value, count}], total_count}`). ")] = None,
+        metric_id: Annotated[Optional[StrictStr], Field(description="Required when `view=metric_breakdown`: the metric to aggregate.")] = None,
+        group_by_metadata: Annotated[Optional[StrictStr], Field(description="Required when `view=metric_breakdown`: the customer_metadata key to group by (e.g. nlp_provider).")] = None,
+        aggregation: Annotated[Optional[StrictStr], Field(description="Aggregation for `view=metric_breakdown`. Defaults to `success` (a YES/NO success rate) for binary/string metrics and `avg` (numeric mean) for float metrics. ")] = None,
+        start_date: Annotated[Optional[datetime], Field(description="Optional ISO-8601 lower bound (occurred_at) for `view=metric_breakdown`.")] = None,
+        end_date: Annotated[Optional[datetime], Field(description="Optional ISO-8601 upper bound (occurred_at) for `view=metric_breakdown`.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1330,7 +1362,7 @@ class ConversationsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CovalConversationsAPIListConversationsResponse]:
+    ) -> ApiResponse[ListConversations200Response]:
         """List conversations
 
         List conversations with optional filtering, pagination, and ordering. 
@@ -1343,6 +1375,18 @@ class ConversationsApi:
         :type filter: str
         :param order_by: Sort field with optional `-` prefix for descending order.  **Fields:** `create_time`, `occurred_at`, `status`  **Examples:** - `create_time` (ascending) - `-create_time` (descending, most recent first) - `-occurred_at` (most recent conversations first) 
         :type order_by: str
+        :param view: Set to `metric_breakdown` to return an aggregate of one metric's scores grouped by a `customer_metadata` key (e.g. vendor), computed over the whole scored monitoring corpus, instead of the conversation list. Requires `metric_id` and `group_by_metadata`; the response is a metric-breakdown object (`{view, metric_id, group_by_metadata, aggregation, breakdown:[{metadata_value, value, count}], total_count}`). 
+        :type view: str
+        :param metric_id: Required when `view=metric_breakdown`: the metric to aggregate.
+        :type metric_id: str
+        :param group_by_metadata: Required when `view=metric_breakdown`: the customer_metadata key to group by (e.g. nlp_provider).
+        :type group_by_metadata: str
+        :param aggregation: Aggregation for `view=metric_breakdown`. Defaults to `success` (a YES/NO success rate) for binary/string metrics and `avg` (numeric mean) for float metrics. 
+        :type aggregation: str
+        :param start_date: Optional ISO-8601 lower bound (occurred_at) for `view=metric_breakdown`.
+        :type start_date: datetime
+        :param end_date: Optional ISO-8601 upper bound (occurred_at) for `view=metric_breakdown`.
+        :type end_date: datetime
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1370,6 +1414,12 @@ class ConversationsApi:
             page_token=page_token,
             filter=filter,
             order_by=order_by,
+            view=view,
+            metric_id=metric_id,
+            group_by_metadata=group_by_metadata,
+            aggregation=aggregation,
+            start_date=start_date,
+            end_date=end_date,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1377,9 +1427,10 @@ class ConversationsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CovalConversationsAPIListConversationsResponse",
+            '200': "ListConversations200Response",
             '400': "CovalConversationsAPIErrorResponse",
             '401': "CovalConversationsAPIErrorResponse",
+            '404': "CovalConversationsAPIErrorResponse",
             '500': "CovalConversationsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -1400,6 +1451,12 @@ class ConversationsApi:
         page_token: Annotated[Optional[StrictStr], Field(description="Token for retrieving next page (from previous response)")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  **Operators:** `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  **Fields:** - `status` - PENDING, IN_QUEUE, IN_PROGRESS, COMPLETED, FAILED, CANCELLED, DELETED - `external_conversation_id` - Your system's conversation ID - `create_time` - ISO 8601 timestamp - `occurred_at` - ISO 8601 timestamp - `metadata.{key}` - Custom metadata fields  **Examples:** - `status=COMPLETED` - `create_time>\"2025-11-01T00:00:00Z\"` - `status=COMPLETED AND occurred_at>=\"2025-11-01T00:00:00Z\"` - `external_conversation_id=external-call-abc` ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort field with optional `-` prefix for descending order.  **Fields:** `create_time`, `occurred_at`, `status`  **Examples:** - `create_time` (ascending) - `-create_time` (descending, most recent first) - `-occurred_at` (most recent conversations first) ")] = None,
+        view: Annotated[Optional[StrictStr], Field(description="Set to `metric_breakdown` to return an aggregate of one metric's scores grouped by a `customer_metadata` key (e.g. vendor), computed over the whole scored monitoring corpus, instead of the conversation list. Requires `metric_id` and `group_by_metadata`; the response is a metric-breakdown object (`{view, metric_id, group_by_metadata, aggregation, breakdown:[{metadata_value, value, count}], total_count}`). ")] = None,
+        metric_id: Annotated[Optional[StrictStr], Field(description="Required when `view=metric_breakdown`: the metric to aggregate.")] = None,
+        group_by_metadata: Annotated[Optional[StrictStr], Field(description="Required when `view=metric_breakdown`: the customer_metadata key to group by (e.g. nlp_provider).")] = None,
+        aggregation: Annotated[Optional[StrictStr], Field(description="Aggregation for `view=metric_breakdown`. Defaults to `success` (a YES/NO success rate) for binary/string metrics and `avg` (numeric mean) for float metrics. ")] = None,
+        start_date: Annotated[Optional[datetime], Field(description="Optional ISO-8601 lower bound (occurred_at) for `view=metric_breakdown`.")] = None,
+        end_date: Annotated[Optional[datetime], Field(description="Optional ISO-8601 upper bound (occurred_at) for `view=metric_breakdown`.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1425,6 +1482,18 @@ class ConversationsApi:
         :type filter: str
         :param order_by: Sort field with optional `-` prefix for descending order.  **Fields:** `create_time`, `occurred_at`, `status`  **Examples:** - `create_time` (ascending) - `-create_time` (descending, most recent first) - `-occurred_at` (most recent conversations first) 
         :type order_by: str
+        :param view: Set to `metric_breakdown` to return an aggregate of one metric's scores grouped by a `customer_metadata` key (e.g. vendor), computed over the whole scored monitoring corpus, instead of the conversation list. Requires `metric_id` and `group_by_metadata`; the response is a metric-breakdown object (`{view, metric_id, group_by_metadata, aggregation, breakdown:[{metadata_value, value, count}], total_count}`). 
+        :type view: str
+        :param metric_id: Required when `view=metric_breakdown`: the metric to aggregate.
+        :type metric_id: str
+        :param group_by_metadata: Required when `view=metric_breakdown`: the customer_metadata key to group by (e.g. nlp_provider).
+        :type group_by_metadata: str
+        :param aggregation: Aggregation for `view=metric_breakdown`. Defaults to `success` (a YES/NO success rate) for binary/string metrics and `avg` (numeric mean) for float metrics. 
+        :type aggregation: str
+        :param start_date: Optional ISO-8601 lower bound (occurred_at) for `view=metric_breakdown`.
+        :type start_date: datetime
+        :param end_date: Optional ISO-8601 upper bound (occurred_at) for `view=metric_breakdown`.
+        :type end_date: datetime
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1452,6 +1521,12 @@ class ConversationsApi:
             page_token=page_token,
             filter=filter,
             order_by=order_by,
+            view=view,
+            metric_id=metric_id,
+            group_by_metadata=group_by_metadata,
+            aggregation=aggregation,
+            start_date=start_date,
+            end_date=end_date,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1459,9 +1534,10 @@ class ConversationsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CovalConversationsAPIListConversationsResponse",
+            '200': "ListConversations200Response",
             '400': "CovalConversationsAPIErrorResponse",
             '401': "CovalConversationsAPIErrorResponse",
+            '404': "CovalConversationsAPIErrorResponse",
             '500': "CovalConversationsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -1477,6 +1553,12 @@ class ConversationsApi:
         page_token,
         filter,
         order_by,
+        view,
+        metric_id,
+        group_by_metadata,
+        aggregation,
+        start_date,
+        end_date,
         _request_auth,
         _content_type,
         _headers,
@@ -1515,6 +1597,48 @@ class ConversationsApi:
             
             _query_params.append(('order_by', order_by))
             
+        if view is not None:
+            
+            _query_params.append(('view', view))
+            
+        if metric_id is not None:
+            
+            _query_params.append(('metric_id', metric_id))
+            
+        if group_by_metadata is not None:
+            
+            _query_params.append(('group_by_metadata', group_by_metadata))
+            
+        if aggregation is not None:
+            
+            _query_params.append(('aggregation', aggregation))
+            
+        if start_date is not None:
+            if isinstance(start_date, datetime):
+                _query_params.append(
+                    (
+                        'start_date',
+                        start_date.strftime(
+                            self.api_client.configuration.datetime_format
+                        )
+                    )
+                )
+            else:
+                _query_params.append(('start_date', start_date))
+            
+        if end_date is not None:
+            if isinstance(end_date, datetime):
+                _query_params.append(
+                    (
+                        'end_date',
+                        end_date.strftime(
+                            self.api_client.configuration.datetime_format
+                        )
+                    )
+                )
+            else:
+                _query_params.append(('end_date', end_date))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -1536,7 +1660,7 @@ class ConversationsApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/v1/conversations',
+            resource_path='/conversations',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1840,7 +1964,7 @@ class ConversationsApi:
 
         return self.api_client.param_serialize(
             method='PATCH',
-            resource_path='/v1/conversations/{conversation_id}',
+            resource_path='/conversations/{conversation_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -2129,7 +2253,7 @@ class ConversationsApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/v1/conversations:submit',
+            resource_path='/conversations:submit',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

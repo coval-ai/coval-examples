@@ -61,15 +61,11 @@ export interface CovalPersonasAPIPersonaResource {
      */
     language_code?: string | null;
     /**
-     * Background noise type. Use `backchanneling` to add short listener
-     * cues like "mm-hmm" and "yeah" that simulate an engaged caller.
-     * Use `off` to disable background sound. All remaining values add
-     * ambient environmental noise.
-     * 
-     * @type {CovalPersonasAPIPersonaResourceBackgroundSoundEnum}
+     * Built-in background sound id, or custom:<background_sound_id> for an active custom sound returned by GET /personas/background-sounds.
+     * @type {string}
      * @memberof CovalPersonasAPIPersonaResource
      */
-    background_sound?: CovalPersonasAPIPersonaResourceBackgroundSoundEnum | null;
+    background_sound?: string | null;
     /**
      * Volume level for background sound (>= 0.0, no upper limit). Default is provider-controlled when omitted.
      * @type {number}
@@ -136,34 +132,6 @@ export interface CovalPersonasAPIPersonaResource {
     update_time?: Date | null;
 }
 
-
-/**
- * @export
- */
-export const CovalPersonasAPIPersonaResourceBackgroundSoundEnum = {
-    Off: 'off',
-    Office: 'office',
-    Lounge: 'lounge',
-    Crowd: 'crowd',
-    Airport: 'airport',
-    Bus: 'bus',
-    Playground: 'playground',
-    Doorbell: 'doorbell',
-    TrainArrival: 'train-arrival',
-    PortableAirConditioner: 'portable-air-conditioner',
-    Skatepark: 'skatepark',
-    SmallDogBark: 'small-dog-bark',
-    Cafe: 'cafe',
-    FerryAndAnnouncement: 'ferry-and-announcement',
-    HeavyRain: 'heavy-rain',
-    ModerateWind: 'moderate-wind',
-    NewbornBabyCrying: 'newborn-baby-crying',
-    OfficeWithAlarm: 'office-with-alarm',
-    StreetWithSirens: 'street-with-sirens',
-    ConstructionWork: 'construction-work',
-    Backchanneling: 'backchanneling'
-} as const;
-export type CovalPersonasAPIPersonaResourceBackgroundSoundEnum = typeof CovalPersonasAPIPersonaResourceBackgroundSoundEnum[keyof typeof CovalPersonasAPIPersonaResourceBackgroundSoundEnum];
 
 /**
  * @export

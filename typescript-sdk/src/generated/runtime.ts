@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-export const BASE_PATH = "https://api.coval.dev".replace(/\/+$/, "");
+export const BASE_PATH = "https://api.coval.dev/v1".replace(/\/+$/, "");
 
 export interface ConfigurationParameters {
     basePath?: string; // override base path

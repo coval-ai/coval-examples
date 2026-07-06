@@ -234,7 +234,7 @@ export class ReviewProjectsApi extends runtime.BaseAPI implements ReviewProjects
         }
 
 
-        let urlPath = `/v1/review-projects`;
+        let urlPath = `/review-projects`;
 
         return {
             path: urlPath,
@@ -285,7 +285,7 @@ export class ReviewProjectsApi extends runtime.BaseAPI implements ReviewProjects
         }
 
 
-        let urlPath = `/v1/review-projects/{project_id}`;
+        let urlPath = `/review-projects/{project_id}`;
         urlPath = urlPath.replace('{project_id}', encodeURIComponent(String(requestParameters['projectId'])));
 
         return {
@@ -336,7 +336,7 @@ export class ReviewProjectsApi extends runtime.BaseAPI implements ReviewProjects
         }
 
 
-        let urlPath = `/v1/review-projects/{project_id}`;
+        let urlPath = `/review-projects/{project_id}`;
         urlPath = urlPath.replace('{project_id}', encodeURIComponent(String(requestParameters['projectId'])));
 
         return {
@@ -392,7 +392,7 @@ export class ReviewProjectsApi extends runtime.BaseAPI implements ReviewProjects
         }
 
 
-        let urlPath = `/v1/review-projects`;
+        let urlPath = `/review-projects`;
 
         return {
             path: urlPath,
@@ -451,7 +451,7 @@ export class ReviewProjectsApi extends runtime.BaseAPI implements ReviewProjects
         }
 
 
-        let urlPath = `/v1/review-projects/{project_id}`;
+        let urlPath = `/review-projects/{project_id}`;
         urlPath = urlPath.replace('{project_id}', encodeURIComponent(String(requestParameters['projectId'])));
 
         return {

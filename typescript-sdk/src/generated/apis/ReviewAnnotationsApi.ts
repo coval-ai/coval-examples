@@ -250,7 +250,7 @@ export class ReviewAnnotationsApi extends runtime.BaseAPI implements ReviewAnnot
         }
 
 
-        let urlPath = `/v1/review-annotations`;
+        let urlPath = `/review-annotations`;
 
         return {
             path: urlPath,
@@ -301,7 +301,7 @@ export class ReviewAnnotationsApi extends runtime.BaseAPI implements ReviewAnnot
         }
 
 
-        let urlPath = `/v1/review-annotations/{annotation_id}`;
+        let urlPath = `/review-annotations/{annotation_id}`;
         urlPath = urlPath.replace('{annotation_id}', encodeURIComponent(String(requestParameters['annotationId'])));
 
         return {
@@ -356,7 +356,7 @@ export class ReviewAnnotationsApi extends runtime.BaseAPI implements ReviewAnnot
         }
 
 
-        let urlPath = `/v1/review-annotations/{annotation_id}`;
+        let urlPath = `/review-annotations/{annotation_id}`;
         urlPath = urlPath.replace('{annotation_id}', encodeURIComponent(String(requestParameters['annotationId'])));
 
         return {
@@ -416,7 +416,7 @@ export class ReviewAnnotationsApi extends runtime.BaseAPI implements ReviewAnnot
         }
 
 
-        let urlPath = `/v1/review-annotations`;
+        let urlPath = `/review-annotations`;
 
         return {
             path: urlPath,
@@ -479,7 +479,7 @@ export class ReviewAnnotationsApi extends runtime.BaseAPI implements ReviewAnnot
         }
 
 
-        let urlPath = `/v1/review-annotations/{annotation_id}`;
+        let urlPath = `/review-annotations/{annotation_id}`;
         urlPath = urlPath.replace('{annotation_id}', encodeURIComponent(String(requestParameters['annotationId'])));
 
         return {

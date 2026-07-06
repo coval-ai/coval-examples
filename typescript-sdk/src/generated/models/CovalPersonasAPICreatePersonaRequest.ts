@@ -49,15 +49,11 @@ export interface CovalPersonasAPICreatePersonaRequest {
      */
     language_code: string;
     /**
-     * Background noise type. Use `backchanneling` to add short listener
-     * cues like "mm-hmm" and "yeah" that simulate an engaged caller.
-     * Use `off` to disable background sound. All remaining values add
-     * ambient environmental noise.
-     * 
-     * @type {CovalPersonasAPICreatePersonaRequestBackgroundSoundEnum}
+     * Built-in background sound id, or custom:<background_sound_id> for an active custom sound returned by GET /personas/background-sounds.
+     * @type {string}
      * @memberof CovalPersonasAPICreatePersonaRequest
      */
-    background_sound?: CovalPersonasAPICreatePersonaRequestBackgroundSoundEnum | null;
+    background_sound?: string | null;
     /**
      * Volume level for background sound (>= 0.0, no upper limit). Default is provider-controlled when omitted.
      * @type {number}
@@ -110,34 +106,6 @@ export interface CovalPersonasAPICreatePersonaRequest {
     tags?: Array<string> | null;
 }
 
-
-/**
- * @export
- */
-export const CovalPersonasAPICreatePersonaRequestBackgroundSoundEnum = {
-    Off: 'off',
-    Office: 'office',
-    Lounge: 'lounge',
-    Crowd: 'crowd',
-    Airport: 'airport',
-    Bus: 'bus',
-    Playground: 'playground',
-    Doorbell: 'doorbell',
-    TrainArrival: 'train-arrival',
-    PortableAirConditioner: 'portable-air-conditioner',
-    Skatepark: 'skatepark',
-    SmallDogBark: 'small-dog-bark',
-    Cafe: 'cafe',
-    FerryAndAnnouncement: 'ferry-and-announcement',
-    HeavyRain: 'heavy-rain',
-    ModerateWind: 'moderate-wind',
-    NewbornBabyCrying: 'newborn-baby-crying',
-    OfficeWithAlarm: 'office-with-alarm',
-    StreetWithSirens: 'street-with-sirens',
-    ConstructionWork: 'construction-work',
-    Backchanneling: 'backchanneling'
-} as const;
-export type CovalPersonasAPICreatePersonaRequestBackgroundSoundEnum = typeof CovalPersonasAPICreatePersonaRequestBackgroundSoundEnum[keyof typeof CovalPersonasAPICreatePersonaRequestBackgroundSoundEnum];
 
 /**
  * @export

@@ -47,6 +47,12 @@ export interface CovalSimulationsAPISimpleMetricOutput {
      */
     metric_id: string;
     /**
+     * ULID of the metric version this output was scored against (null for outputs produced before metric versioning landed).
+     * @type {string}
+     * @memberof CovalSimulationsAPISimpleMetricOutput
+     */
+    metric_version_ulid?: string | null;
+    /**
      * 
      * @type {CovalSimulationsAPISimpleMetricOutputValue}
      * @memberof CovalSimulationsAPISimpleMetricOutput
@@ -64,6 +70,18 @@ export interface CovalSimulationsAPISimpleMetricOutput {
      * @memberof CovalSimulationsAPISimpleMetricOutput
      */
     subvalues_by_timestamp?: Array<CovalSimulationsAPISubvalueByTimestamp> | null;
+    /**
+     * Structured metric result. Its keys depend on the metric type — for example llm for LLM-judge metrics, or stats/count for numeric metrics. The llm key is present only for LLM-judge metrics: the judge's reasoning is at result.llm.answer_explanation and the evaluation prompt at result.llm.prompt. Null for metrics that produce no structured result.
+     * @type {{ [key: string]: any; }}
+     * @memberof CovalSimulationsAPISimpleMetricOutput
+     */
+    result?: { [key: string]: any; } | null;
+    /**
+     * How the metric was computed at runtime, such as model version and trace context. Null when not recorded.
+     * @type {{ [key: string]: any; }}
+     * @memberof CovalSimulationsAPISimpleMetricOutput
+     */
+    runtime_metadata?: { [key: string]: any; } | null;
 }
 
 
@@ -101,9 +119,12 @@ export function CovalSimulationsAPISimpleMetricOutputFromJSONTyped(json: any, ig
         
         'metric_output_id': json['metric_output_id'],
         'metric_id': json['metric_id'],
+        'metric_version_ulid': json['metric_version_ulid'] == null ? undefined : json['metric_version_ulid'],
         'value': json['value'] == null ? undefined : CovalSimulationsAPISimpleMetricOutputValueFromJSON(json['value']),
         'status': json['status'],
         'subvalues_by_timestamp': json['subvalues_by_timestamp'] == null ? undefined : ((json['subvalues_by_timestamp'] as Array<any>).map(CovalSimulationsAPISubvalueByTimestampFromJSON)),
+        'result': json['result'] == null ? undefined : json['result'],
+        'runtime_metadata': json['runtime_metadata'] == null ? undefined : json['runtime_metadata'],
     };
 }
 
@@ -120,9 +141,12 @@ export function CovalSimulationsAPISimpleMetricOutputToJSONTyped(value?: CovalSi
         
         'metric_output_id': value['metric_output_id'],
         'metric_id': value['metric_id'],
+        'metric_version_ulid': value['metric_version_ulid'],
         'value': CovalSimulationsAPISimpleMetricOutputValueToJSON(value['value']),
         'status': value['status'],
         'subvalues_by_timestamp': value['subvalues_by_timestamp'] == null ? undefined : ((value['subvalues_by_timestamp'] as Array<any>).map(CovalSimulationsAPISubvalueByTimestampToJSON)),
+        'result': value['result'],
+        'runtime_metadata': value['runtime_metadata'],
     };
 }
 
