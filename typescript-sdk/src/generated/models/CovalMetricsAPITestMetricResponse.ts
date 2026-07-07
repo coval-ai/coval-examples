@@ -24,14 +24,13 @@ export interface CovalMetricsAPITestMetricResponse {
      * @type {string}
      * @memberof CovalMetricsAPITestMetricResponse
      */
-    metric_output_ulid: string;
+    metric_output_ulid?: string;
 }
 
 /**
  * Check if a given object implements the CovalMetricsAPITestMetricResponse interface.
  */
 export function instanceOfCovalMetricsAPITestMetricResponse(value: object): value is CovalMetricsAPITestMetricResponse {
-    if (!('metric_output_ulid' in value) || value['metric_output_ulid'] === undefined) return false;
     return true;
 }
 
@@ -45,7 +44,7 @@ export function CovalMetricsAPITestMetricResponseFromJSONTyped(json: any, ignore
     }
     return {
         
-        'metric_output_ulid': json['metric_output_ulid'],
+        'metric_output_ulid': json['metric_output_ulid'] == null ? undefined : json['metric_output_ulid'],
     };
 }
 

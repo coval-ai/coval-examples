@@ -14,6 +14,21 @@
 
 import * as runtime from '../runtime.js';
 import {
+    type CovalPersonasAPICompleteBackgroundSoundResponse,
+    CovalPersonasAPICompleteBackgroundSoundResponseFromJSON,
+    CovalPersonasAPICompleteBackgroundSoundResponseToJSON,
+} from '../models/CovalPersonasAPICompleteBackgroundSoundResponse.js';
+import {
+    type CovalPersonasAPICreateBackgroundSoundRequest,
+    CovalPersonasAPICreateBackgroundSoundRequestFromJSON,
+    CovalPersonasAPICreateBackgroundSoundRequestToJSON,
+} from '../models/CovalPersonasAPICreateBackgroundSoundRequest.js';
+import {
+    type CovalPersonasAPICreateBackgroundSoundResponse,
+    CovalPersonasAPICreateBackgroundSoundResponseFromJSON,
+    CovalPersonasAPICreateBackgroundSoundResponseToJSON,
+} from '../models/CovalPersonasAPICreateBackgroundSoundResponse.js';
+import {
     type CovalPersonasAPICreatePersonaRequest,
     CovalPersonasAPICreatePersonaRequestFromJSON,
     CovalPersonasAPICreatePersonaRequestToJSON,
@@ -34,6 +49,16 @@ import {
     CovalPersonasAPIGetPersonaResponseToJSON,
 } from '../models/CovalPersonasAPIGetPersonaResponse.js';
 import {
+    type CovalPersonasAPIListBackgroundSoundsResponse,
+    CovalPersonasAPIListBackgroundSoundsResponseFromJSON,
+    CovalPersonasAPIListBackgroundSoundsResponseToJSON,
+} from '../models/CovalPersonasAPIListBackgroundSoundsResponse.js';
+import {
+    type CovalPersonasAPIListPersonaVersionsResponse,
+    CovalPersonasAPIListPersonaVersionsResponseFromJSON,
+    CovalPersonasAPIListPersonaVersionsResponseToJSON,
+} from '../models/CovalPersonasAPIListPersonaVersionsResponse.js';
+import {
     type CovalPersonasAPIListPersonasResponse,
     CovalPersonasAPIListPersonasResponseFromJSON,
     CovalPersonasAPIListPersonasResponseToJSON,
@@ -49,6 +74,16 @@ import {
     CovalPersonasAPIListVoicesResponseToJSON,
 } from '../models/CovalPersonasAPIListVoicesResponse.js';
 import {
+    type CovalPersonasAPIUpdateBackgroundSoundRequest,
+    CovalPersonasAPIUpdateBackgroundSoundRequestFromJSON,
+    CovalPersonasAPIUpdateBackgroundSoundRequestToJSON,
+} from '../models/CovalPersonasAPIUpdateBackgroundSoundRequest.js';
+import {
+    type CovalPersonasAPIUpdateBackgroundSoundResponse,
+    CovalPersonasAPIUpdateBackgroundSoundResponseFromJSON,
+    CovalPersonasAPIUpdateBackgroundSoundResponseToJSON,
+} from '../models/CovalPersonasAPIUpdateBackgroundSoundResponse.js';
+import {
     type CovalPersonasAPIUpdatePersonaRequest,
     CovalPersonasAPIUpdatePersonaRequestFromJSON,
     CovalPersonasAPIUpdatePersonaRequestToJSON,
@@ -58,6 +93,14 @@ import {
     CovalPersonasAPIUpdatePersonaResponseFromJSON,
     CovalPersonasAPIUpdatePersonaResponseToJSON,
 } from '../models/CovalPersonasAPIUpdatePersonaResponse.js';
+
+export interface CompleteBackgroundSoundRequest {
+    backgroundSoundId: string;
+}
+
+export interface CreateBackgroundSoundRequest {
+    covalPersonasAPICreateBackgroundSoundRequest: CovalPersonasAPICreateBackgroundSoundRequest;
+}
 
 export interface CreatePersonaRequest {
     covalPersonasAPICreatePersonaRequest: CovalPersonasAPICreatePersonaRequest;
@@ -71,12 +114,30 @@ export interface GetPersonaRequest {
     personaId: string;
 }
 
+export interface ListBackgroundSoundsRequest {
+    includeArchived?: boolean;
+}
+
+export interface ListPersonaVersionsRequest {
+    personaId: string;
+}
+
 export interface ListPersonasRequest {
     pageSize?: number;
     pageToken?: string;
     filter?: string;
     orderBy?: string;
     tagFilters?: Array<string>;
+}
+
+export interface RevertPersonaVersionRequest {
+    personaId: string;
+    versionId: string;
+}
+
+export interface UpdateBackgroundSoundRequest {
+    backgroundSoundId: string;
+    covalPersonasAPIUpdateBackgroundSoundRequest: CovalPersonasAPIUpdateBackgroundSoundRequest;
 }
 
 export interface UpdatePersonaRequest {
@@ -91,6 +152,54 @@ export interface UpdatePersonaRequest {
  * @interface PersonasApiInterface
  */
 export interface PersonasApiInterface {
+    /**
+     * Creates request options for completeBackgroundSound without sending the request
+     * @param {string} backgroundSoundId 
+     * @throws {RequiredError}
+     * @memberof PersonasApiInterface
+     */
+    completeBackgroundSoundRequestOpts(requestParameters: CompleteBackgroundSoundRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * HEAD-validates the uploaded object and marks the custom background sound active.
+     * @summary Complete background sound upload
+     * @param {string} backgroundSoundId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PersonasApiInterface
+     */
+    completeBackgroundSoundRaw(requestParameters: CompleteBackgroundSoundRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalPersonasAPICompleteBackgroundSoundResponse>>;
+
+    /**
+     * HEAD-validates the uploaded object and marks the custom background sound active.
+     * Complete background sound upload
+     */
+    completeBackgroundSound(requestParameters: CompleteBackgroundSoundRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalPersonasAPICompleteBackgroundSoundResponse>;
+
+    /**
+     * Creates request options for createBackgroundSound without sending the request
+     * @param {CovalPersonasAPICreateBackgroundSoundRequest} covalPersonasAPICreateBackgroundSoundRequest 
+     * @throws {RequiredError}
+     * @memberof PersonasApiInterface
+     */
+    createBackgroundSoundRequestOpts(requestParameters: CreateBackgroundSoundRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Creates a pending custom background sound and returns a short-lived private S3 upload form.
+     * @summary Create background sound upload
+     * @param {CovalPersonasAPICreateBackgroundSoundRequest} covalPersonasAPICreateBackgroundSoundRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PersonasApiInterface
+     */
+    createBackgroundSoundRaw(requestParameters: CreateBackgroundSoundRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalPersonasAPICreateBackgroundSoundResponse>>;
+
+    /**
+     * Creates a pending custom background sound and returns a short-lived private S3 upload form.
+     * Create background sound upload
+     */
+    createBackgroundSound(requestParameters: CreateBackgroundSoundRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalPersonasAPICreateBackgroundSoundResponse>;
+
     /**
      * Creates request options for createPersona without sending the request
      * @param {CovalPersonasAPICreatePersonaRequest} covalPersonasAPICreatePersonaRequest 
@@ -162,6 +271,54 @@ export interface PersonasApiInterface {
      * Get persona
      */
     getPersona(requestParameters: GetPersonaRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalPersonasAPIGetPersonaResponse>;
+
+    /**
+     * Creates request options for listBackgroundSounds without sending the request
+     * @param {boolean} [includeArchived] Include archived custom background sounds.
+     * @throws {RequiredError}
+     * @memberof PersonasApiInterface
+     */
+    listBackgroundSoundsRequestOpts(requestParameters: ListBackgroundSoundsRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Returns built-in background sounds plus custom sounds owned by the authenticated organization.
+     * @summary List background sounds
+     * @param {boolean} [includeArchived] Include archived custom background sounds.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PersonasApiInterface
+     */
+    listBackgroundSoundsRaw(requestParameters: ListBackgroundSoundsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalPersonasAPIListBackgroundSoundsResponse>>;
+
+    /**
+     * Returns built-in background sounds plus custom sounds owned by the authenticated organization.
+     * List background sounds
+     */
+    listBackgroundSounds(requestParameters: ListBackgroundSoundsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalPersonasAPIListBackgroundSoundsResponse>;
+
+    /**
+     * Creates request options for listPersonaVersions without sending the request
+     * @param {string} personaId Persona resource ID
+     * @throws {RequiredError}
+     * @memberof PersonasApiInterface
+     */
+    listPersonaVersionsRequestOpts(requestParameters: ListPersonaVersionsRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * List the prior-state version history for a persona, newest first. The live persona is the current version and is not included here. Only behavioral config is versioned; display_name/avatar_url are not.
+     * @summary List persona versions
+     * @param {string} personaId Persona resource ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PersonasApiInterface
+     */
+    listPersonaVersionsRaw(requestParameters: ListPersonaVersionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalPersonasAPIListPersonaVersionsResponse>>;
+
+    /**
+     * List the prior-state version history for a persona, newest first. The live persona is the current version and is not included here. Only behavioral config is versioned; display_name/avatar_url are not.
+     * List persona versions
+     */
+    listPersonaVersions(requestParameters: ListPersonaVersionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalPersonasAPIListPersonaVersionsResponse>;
 
     /**
      * Creates request options for listPersonas without sending the request
@@ -240,6 +397,58 @@ export interface PersonasApiInterface {
     listPersonasVoices(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalPersonasAPIListVoicesResponse>;
 
     /**
+     * Creates request options for revertPersonaVersion without sending the request
+     * @param {string} personaId Persona resource ID
+     * @param {string} versionId ULID of the target version to re-apply
+     * @throws {RequiredError}
+     * @memberof PersonasApiInterface
+     */
+    revertPersonaVersionRequestOpts(requestParameters: RevertPersonaVersionRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Re-apply a prior version\'s behavioral configuration to the live persona. A revert is forward-only: it mints a new version (change_type=revert) and advances the persona, so the response reflects the persona\'s new live config. Reverting to the version the persona already points at is rejected with 400.
+     * @summary Revert persona version
+     * @param {string} personaId Persona resource ID
+     * @param {string} versionId ULID of the target version to re-apply
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PersonasApiInterface
+     */
+    revertPersonaVersionRaw(requestParameters: RevertPersonaVersionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalPersonasAPIGetPersonaResponse>>;
+
+    /**
+     * Re-apply a prior version\'s behavioral configuration to the live persona. A revert is forward-only: it mints a new version (change_type=revert) and advances the persona, so the response reflects the persona\'s new live config. Reverting to the version the persona already points at is rejected with 400.
+     * Revert persona version
+     */
+    revertPersonaVersion(requestParameters: RevertPersonaVersionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalPersonasAPIGetPersonaResponse>;
+
+    /**
+     * Creates request options for updateBackgroundSound without sending the request
+     * @param {string} backgroundSoundId 
+     * @param {CovalPersonasAPIUpdateBackgroundSoundRequest} covalPersonasAPIUpdateBackgroundSoundRequest 
+     * @throws {RequiredError}
+     * @memberof PersonasApiInterface
+     */
+    updateBackgroundSoundRequestOpts(requestParameters: UpdateBackgroundSoundRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Rename, set default volume, archive, or restore an organization-owned custom background sound.
+     * @summary Update background sound
+     * @param {string} backgroundSoundId 
+     * @param {CovalPersonasAPIUpdateBackgroundSoundRequest} covalPersonasAPIUpdateBackgroundSoundRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PersonasApiInterface
+     */
+    updateBackgroundSoundRaw(requestParameters: UpdateBackgroundSoundRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalPersonasAPIUpdateBackgroundSoundResponse>>;
+
+    /**
+     * Rename, set default volume, archive, or restore an organization-owned custom background sound.
+     * Update background sound
+     */
+    updateBackgroundSound(requestParameters: UpdateBackgroundSoundRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalPersonasAPIUpdateBackgroundSoundResponse>;
+
+    /**
      * Creates request options for updatePersona without sending the request
      * @param {string} personaId Persona resource ID
      * @param {CovalPersonasAPIUpdatePersonaRequest} covalPersonasAPIUpdatePersonaRequest 
@@ -271,6 +480,110 @@ export interface PersonasApiInterface {
  * 
  */
 export class PersonasApi extends runtime.BaseAPI implements PersonasApiInterface {
+
+    /**
+     * Creates request options for completeBackgroundSound without sending the request
+     */
+    async completeBackgroundSoundRequestOpts(requestParameters: CompleteBackgroundSoundRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['backgroundSoundId'] == null) {
+            throw new runtime.RequiredError(
+                'backgroundSoundId',
+                'Required parameter "backgroundSoundId" was null or undefined when calling completeBackgroundSound().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Personas_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/personas/background-sounds/{background_sound_id}/complete`;
+        urlPath = urlPath.replace('{background_sound_id}', encodeURIComponent(String(requestParameters['backgroundSoundId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * HEAD-validates the uploaded object and marks the custom background sound active.
+     * Complete background sound upload
+     */
+    async completeBackgroundSoundRaw(requestParameters: CompleteBackgroundSoundRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalPersonasAPICompleteBackgroundSoundResponse>> {
+        const requestOptions = await this.completeBackgroundSoundRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalPersonasAPICompleteBackgroundSoundResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * HEAD-validates the uploaded object and marks the custom background sound active.
+     * Complete background sound upload
+     */
+    async completeBackgroundSound(requestParameters: CompleteBackgroundSoundRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalPersonasAPICompleteBackgroundSoundResponse> {
+        const response = await this.completeBackgroundSoundRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for createBackgroundSound without sending the request
+     */
+    async createBackgroundSoundRequestOpts(requestParameters: CreateBackgroundSoundRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['covalPersonasAPICreateBackgroundSoundRequest'] == null) {
+            throw new runtime.RequiredError(
+                'covalPersonasAPICreateBackgroundSoundRequest',
+                'Required parameter "covalPersonasAPICreateBackgroundSoundRequest" was null or undefined when calling createBackgroundSound().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Personas_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/personas/background-sounds`;
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CovalPersonasAPICreateBackgroundSoundRequestToJSON(requestParameters['covalPersonasAPICreateBackgroundSoundRequest']),
+        };
+    }
+
+    /**
+     * Creates a pending custom background sound and returns a short-lived private S3 upload form.
+     * Create background sound upload
+     */
+    async createBackgroundSoundRaw(requestParameters: CreateBackgroundSoundRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalPersonasAPICreateBackgroundSoundResponse>> {
+        const requestOptions = await this.createBackgroundSoundRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalPersonasAPICreateBackgroundSoundResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Creates a pending custom background sound and returns a short-lived private S3 upload form.
+     * Create background sound upload
+     */
+    async createBackgroundSound(requestParameters: CreateBackgroundSoundRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalPersonasAPICreateBackgroundSoundResponse> {
+        const response = await this.createBackgroundSoundRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
 
     /**
      * Creates request options for createPersona without sending the request
@@ -428,6 +741,104 @@ export class PersonasApi extends runtime.BaseAPI implements PersonasApiInterface
     }
 
     /**
+     * Creates request options for listBackgroundSounds without sending the request
+     */
+    async listBackgroundSoundsRequestOpts(requestParameters: ListBackgroundSoundsRequest): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        if (requestParameters['includeArchived'] != null) {
+            queryParameters['include_archived'] = requestParameters['includeArchived'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Personas_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/personas/background-sounds`;
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Returns built-in background sounds plus custom sounds owned by the authenticated organization.
+     * List background sounds
+     */
+    async listBackgroundSoundsRaw(requestParameters: ListBackgroundSoundsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalPersonasAPIListBackgroundSoundsResponse>> {
+        const requestOptions = await this.listBackgroundSoundsRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalPersonasAPIListBackgroundSoundsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Returns built-in background sounds plus custom sounds owned by the authenticated organization.
+     * List background sounds
+     */
+    async listBackgroundSounds(requestParameters: ListBackgroundSoundsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalPersonasAPIListBackgroundSoundsResponse> {
+        const response = await this.listBackgroundSoundsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for listPersonaVersions without sending the request
+     */
+    async listPersonaVersionsRequestOpts(requestParameters: ListPersonaVersionsRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['personaId'] == null) {
+            throw new runtime.RequiredError(
+                'personaId',
+                'Required parameter "personaId" was null or undefined when calling listPersonaVersions().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Personas_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/personas/{persona_id}/versions`;
+        urlPath = urlPath.replace('{persona_id}', encodeURIComponent(String(requestParameters['personaId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * List the prior-state version history for a persona, newest first. The live persona is the current version and is not included here. Only behavioral config is versioned; display_name/avatar_url are not.
+     * List persona versions
+     */
+    async listPersonaVersionsRaw(requestParameters: ListPersonaVersionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalPersonasAPIListPersonaVersionsResponse>> {
+        const requestOptions = await this.listPersonaVersionsRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalPersonasAPIListPersonaVersionsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * List the prior-state version history for a persona, newest first. The live persona is the current version and is not included here. Only behavioral config is versioned; display_name/avatar_url are not.
+     * List persona versions
+     */
+    async listPersonaVersions(requestParameters: ListPersonaVersionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalPersonasAPIListPersonaVersionsResponse> {
+        const response = await this.listPersonaVersionsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for listPersonas without sending the request
      */
     async listPersonasRequestOpts(requestParameters: ListPersonasRequest): Promise<runtime.RequestOpts> {
@@ -573,6 +984,126 @@ export class PersonasApi extends runtime.BaseAPI implements PersonasApiInterface
      */
     async listPersonasVoices(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalPersonasAPIListVoicesResponse> {
         const response = await this.listPersonasVoicesRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for revertPersonaVersion without sending the request
+     */
+    async revertPersonaVersionRequestOpts(requestParameters: RevertPersonaVersionRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['personaId'] == null) {
+            throw new runtime.RequiredError(
+                'personaId',
+                'Required parameter "personaId" was null or undefined when calling revertPersonaVersion().'
+            );
+        }
+
+        if (requestParameters['versionId'] == null) {
+            throw new runtime.RequiredError(
+                'versionId',
+                'Required parameter "versionId" was null or undefined when calling revertPersonaVersion().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Personas_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/personas/{persona_id}/versions/{version_id}/revert`;
+        urlPath = urlPath.replace('{persona_id}', encodeURIComponent(String(requestParameters['personaId'])));
+        urlPath = urlPath.replace('{version_id}', encodeURIComponent(String(requestParameters['versionId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Re-apply a prior version\'s behavioral configuration to the live persona. A revert is forward-only: it mints a new version (change_type=revert) and advances the persona, so the response reflects the persona\'s new live config. Reverting to the version the persona already points at is rejected with 400.
+     * Revert persona version
+     */
+    async revertPersonaVersionRaw(requestParameters: RevertPersonaVersionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalPersonasAPIGetPersonaResponse>> {
+        const requestOptions = await this.revertPersonaVersionRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalPersonasAPIGetPersonaResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Re-apply a prior version\'s behavioral configuration to the live persona. A revert is forward-only: it mints a new version (change_type=revert) and advances the persona, so the response reflects the persona\'s new live config. Reverting to the version the persona already points at is rejected with 400.
+     * Revert persona version
+     */
+    async revertPersonaVersion(requestParameters: RevertPersonaVersionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalPersonasAPIGetPersonaResponse> {
+        const response = await this.revertPersonaVersionRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for updateBackgroundSound without sending the request
+     */
+    async updateBackgroundSoundRequestOpts(requestParameters: UpdateBackgroundSoundRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['backgroundSoundId'] == null) {
+            throw new runtime.RequiredError(
+                'backgroundSoundId',
+                'Required parameter "backgroundSoundId" was null or undefined when calling updateBackgroundSound().'
+            );
+        }
+
+        if (requestParameters['covalPersonasAPIUpdateBackgroundSoundRequest'] == null) {
+            throw new runtime.RequiredError(
+                'covalPersonasAPIUpdateBackgroundSoundRequest',
+                'Required parameter "covalPersonasAPIUpdateBackgroundSoundRequest" was null or undefined when calling updateBackgroundSound().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Personas_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/personas/background-sounds/{background_sound_id}`;
+        urlPath = urlPath.replace('{background_sound_id}', encodeURIComponent(String(requestParameters['backgroundSoundId'])));
+
+        return {
+            path: urlPath,
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CovalPersonasAPIUpdateBackgroundSoundRequestToJSON(requestParameters['covalPersonasAPIUpdateBackgroundSoundRequest']),
+        };
+    }
+
+    /**
+     * Rename, set default volume, archive, or restore an organization-owned custom background sound.
+     * Update background sound
+     */
+    async updateBackgroundSoundRaw(requestParameters: UpdateBackgroundSoundRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalPersonasAPIUpdateBackgroundSoundResponse>> {
+        const requestOptions = await this.updateBackgroundSoundRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalPersonasAPIUpdateBackgroundSoundResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Rename, set default volume, archive, or restore an organization-owned custom background sound.
+     * Update background sound
+     */
+    async updateBackgroundSound(requestParameters: UpdateBackgroundSoundRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalPersonasAPIUpdateBackgroundSoundResponse> {
+        const response = await this.updateBackgroundSoundRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

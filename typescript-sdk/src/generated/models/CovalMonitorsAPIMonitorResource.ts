@@ -122,6 +122,12 @@ export interface CovalMonitorsAPIMonitorResource {
      */
     required_tags?: Array<string> | null;
     /**
+     * Restrict to runs originating from these scheduled runs
+     * @type {Array<string>}
+     * @memberof CovalMonitorsAPIMonitorResource
+     */
+    scheduled_run_ids?: Array<string> | null;
+    /**
      * Number of times this monitor has triggered
      * @type {number}
      * @memberof CovalMonitorsAPIMonitorResource
@@ -210,6 +216,7 @@ export function CovalMonitorsAPIMonitorResourceFromJSONTyped(json: any, ignoreDi
         'custom_message_template': json['custom_message_template'] == null ? undefined : json['custom_message_template'],
         'agent_ids': json['agent_ids'] == null ? undefined : json['agent_ids'],
         'required_tags': json['required_tags'] == null ? undefined : json['required_tags'],
+        'scheduled_run_ids': json['scheduled_run_ids'] == null ? undefined : json['scheduled_run_ids'],
         'trigger_count': json['trigger_count'],
         'last_triggered_at': json['last_triggered_at'] == null ? undefined : (new Date(json['last_triggered_at'])),
         'conditions': ((json['conditions'] as Array<any>).map(CovalMonitorsAPIMonitorConditionFromJSON)),
@@ -241,6 +248,7 @@ export function CovalMonitorsAPIMonitorResourceToJSONTyped(value?: CovalMonitors
         'custom_message_template': value['custom_message_template'],
         'agent_ids': value['agent_ids'],
         'required_tags': value['required_tags'],
+        'scheduled_run_ids': value['scheduled_run_ids'],
         'trigger_count': value['trigger_count'],
         'last_triggered_at': value['last_triggered_at'] == null ? value['last_triggered_at'] : value['last_triggered_at'].toISOString(),
         'conditions': ((value['conditions'] as Array<any>).map(CovalMonitorsAPIMonitorConditionToJSON)),

@@ -266,7 +266,7 @@ export class SimulationsApi extends runtime.BaseAPI implements SimulationsApiInt
         }
 
 
-        let urlPath = `/v1/simulations/{simulation_id}`;
+        let urlPath = `/simulations/{simulation_id}`;
         urlPath = urlPath.replace('{simulation_id}', encodeURIComponent(String(requestParameters['simulationId'])));
 
         return {
@@ -317,7 +317,7 @@ export class SimulationsApi extends runtime.BaseAPI implements SimulationsApiInt
         }
 
 
-        let urlPath = `/v1/simulations/{simulation_id}/audio`;
+        let urlPath = `/simulations/{simulation_id}/audio`;
         urlPath = urlPath.replace('{simulation_id}', encodeURIComponent(String(requestParameters['simulationId'])));
 
         return {
@@ -368,7 +368,7 @@ export class SimulationsApi extends runtime.BaseAPI implements SimulationsApiInt
         }
 
 
-        let urlPath = `/v1/simulations/{simulation_id}`;
+        let urlPath = `/simulations/{simulation_id}`;
         urlPath = urlPath.replace('{simulation_id}', encodeURIComponent(String(requestParameters['simulationId'])));
 
         return {
@@ -428,7 +428,7 @@ export class SimulationsApi extends runtime.BaseAPI implements SimulationsApiInt
         }
 
 
-        let urlPath = `/v1/simulations`;
+        let urlPath = `/simulations`;
 
         return {
             path: urlPath,
@@ -480,7 +480,7 @@ export class SimulationsApi extends runtime.BaseAPI implements SimulationsApiInt
         }
 
 
-        let urlPath = `/v1/simulations/{simulation_id}/resimulate`;
+        let urlPath = `/simulations/{simulation_id}/resimulate`;
         urlPath = urlPath.replace('{simulation_id}', encodeURIComponent(String(requestParameters['simulationId'])));
 
         return {
@@ -534,7 +534,7 @@ export class SimulationsApi extends runtime.BaseAPI implements SimulationsApiInt
         }
 
 
-        let urlPath = `/v1/simulations/{simulation_id}`;
+        let urlPath = `/simulations/{simulation_id}`;
         urlPath = urlPath.replace('{simulation_id}', encodeURIComponent(String(requestParameters['simulationId'])));
 
         return {

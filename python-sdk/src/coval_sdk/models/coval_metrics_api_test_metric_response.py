@@ -19,7 +19,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
-from typing import Any, ClassVar, Dict
+from typing import Any, ClassVar, Dict, Optional
 from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
@@ -29,12 +29,15 @@ class CovalMetricsAPITestMetricResponse(BaseModel):
     """
     CovalMetricsAPITestMetricResponse
     """ # noqa: E501
-    metric_output_ulid: Annotated[str, Field(min_length=26, strict=True, max_length=26)] = Field(description="The ULID of the created metric output, used to track result")
+    metric_output_ulid: Optional[Annotated[str, Field(min_length=26, strict=True, max_length=26)]] = Field(default=None, description="The ULID of the created metric output, used to track result")
     __properties: ClassVar[List[str]] = ["metric_output_ulid"]
 
     @field_validator('metric_output_ulid')
     def metric_output_ulid_validate_regular_expression(cls, value):
         """Validates the regular expression"""
+        if value is None:
+            return value
+
         if not isinstance(value, str):
             value = str(value)
 

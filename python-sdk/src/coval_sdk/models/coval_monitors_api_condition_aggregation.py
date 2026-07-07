@@ -21,7 +21,7 @@ from typing_extensions import Self
 
 class CovalMonitorsAPIConditionAggregation(str, Enum):
     """
-    Aggregation mode for a condition. - SINGLE: Per-simulation value (average across sim outputs) - RUN_AVERAGE: Average from pre-computed run aggregate - RUN_FRACTION: Fraction matching a string value in the run - WINDOW_*: Rolling window aggregations across multiple runs 
+    Aggregation mode for a condition. - SINGLE: Per-simulation value (average across sim outputs) - RUN_AVERAGE: Average from pre-computed run aggregate - RUN_FRACTION: Fraction matching a string value in the run 
     """
 
     """
@@ -30,10 +30,6 @@ class CovalMonitorsAPIConditionAggregation(str, Enum):
     SINGLE = 'SINGLE'
     RUN_AVERAGE = 'RUN_AVERAGE'
     RUN_FRACTION = 'RUN_FRACTION'
-    WINDOW_AVERAGE = 'WINDOW_AVERAGE'
-    WINDOW_FRACTION = 'WINDOW_FRACTION'
-    WINDOW_MIN = 'WINDOW_MIN'
-    WINDOW_MAX = 'WINDOW_MAX'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

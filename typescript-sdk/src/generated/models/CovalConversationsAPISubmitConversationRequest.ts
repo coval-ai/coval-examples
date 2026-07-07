@@ -28,7 +28,7 @@ import {
  * - At least one of: `transcript`, `audio_url`, or `upload_id` must be provided
  * - `audio_url` and `upload_id` are mutually exclusive
  * 
- * **Payload Processing:** Large queued payloads are automatically offloaded for asynchronous processing. Metadata is accepted as an arbitrary JSON object without a separate character limit, but keep metadata reasonably small and use external references for very large metadata. The overall request body is still subject to infrastructure limits, including the API Gateway 10 MB request body cap.
+ * **Payload Size Limit:** The combined queued payload is subject to a 256 KB limit (including large `metadata` values); oversized payloads return 413 `PAYLOAD_TOO_LARGE`.
  * 
  * **Best Practices:**
  * - Provide both transcript and audio_url (or upload_id) when available (enables audio metrics)
@@ -112,23 +112,28 @@ export interface CovalConversationsAPISubmitConversationRequest {
      */
     metrics?: Array<string>;
     /**
-     * Custom metadata for conditional metrics and tracking. Accepted as an
-     * arbitrary JSON object without a separate character limit.
+     * Custom metadata for conditional metrics and tracking.
      * 
      * Used for:
      * - Triggering conditional metrics
      * - Filtering conversations
      * - Custom analytics and reporting
      * 
-     * Keep metadata reasonably small and prefer external references for
-     * very large metadata blobs. The overall request body is still subject
-     * to infrastructure limits, including the API Gateway 10 MB request
-     * body cap.
-     * 
      * @type {{ [key: string]: any; }}
      * @memberof CovalConversationsAPISubmitConversationRequest
      */
     metadata?: { [key: string]: any; };
+    /**
+     * Optional tags to apply to this conversation for filtering and organization.
+     * 
+     * Tags are normalized case-insensitively and stored on the monitoring
+     * conversation's backing run. Use them to group uploaded conversations
+     * by product, workflow, customer segment, or other operational slices.
+     * 
+     * @type {Array<string>}
+     * @memberof CovalConversationsAPISubmitConversationRequest
+     */
+    tags?: Array<string>;
     /**
      * External conversation ID from your system.
      * 
@@ -181,6 +186,7 @@ export function CovalConversationsAPISubmitConversationRequestFromJSONTyped(json
         'upload_id': json['upload_id'] == null ? undefined : json['upload_id'],
         'metrics': json['metrics'] == null ? undefined : json['metrics'],
         'metadata': json['metadata'] == null ? undefined : json['metadata'],
+        'tags': json['tags'] == null ? undefined : json['tags'],
         'external_conversation_id': json['external_conversation_id'] == null ? undefined : json['external_conversation_id'],
         'occurred_at': json['occurred_at'] == null ? undefined : (new Date(json['occurred_at'])),
         'agent_id': json['agent_id'] == null ? undefined : json['agent_id'],
@@ -203,6 +209,7 @@ export function CovalConversationsAPISubmitConversationRequestToJSONTyped(value?
         'upload_id': value['upload_id'],
         'metrics': value['metrics'],
         'metadata': value['metadata'],
+        'tags': value['tags'],
         'external_conversation_id': value['external_conversation_id'],
         'occurred_at': value['occurred_at'] == null ? value['occurred_at'] : value['occurred_at'].toISOString(),
         'agent_id': value['agent_id'],

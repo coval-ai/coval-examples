@@ -43,10 +43,11 @@ class CovalConversationsAPIConversationResource(BaseModel):
     persona_id: Optional[StrictStr] = Field(default=None, description="Reference to persona resource (typically null for monitoring)")
     progress: Optional[CovalConversationsAPIConversationProgress] = Field(default=None, description="Progress tracking (included when include_progress=true)")
     metadata: Optional[Dict[str, Any]] = Field(default=None, description="Customer-provided metadata")
+    tags: Optional[List[StrictStr]] = Field(default=None, description="Tags applied to this conversation")
     metric_ids: Optional[List[Annotated[str, Field(min_length=22, strict=True, max_length=26)]]] = Field(default=None, description="List of metric IDs configured for this conversation.  Use GET /v1/conversations/{id}/metrics to retrieve computed metric values. ")
     error: Optional[StrictStr] = Field(default=None, description="Error message (only present if status=FAILED)")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "conversation_id", "status", "create_time", "external_conversation_id", "occurred_at", "has_audio", "agent_id", "persona_id", "progress", "metadata", "metric_ids", "error"]
+    __properties: ClassVar[List[str]] = ["name", "conversation_id", "status", "create_time", "external_conversation_id", "occurred_at", "has_audio", "agent_id", "persona_id", "progress", "metadata", "tags", "metric_ids", "error"]
 
     @field_validator('agent_id')
     def agent_id_validate_regular_expression(cls, value):
@@ -148,6 +149,7 @@ class CovalConversationsAPIConversationResource(BaseModel):
             "persona_id": obj.get("persona_id"),
             "progress": CovalConversationsAPIConversationProgress.from_dict(obj["progress"]) if obj.get("progress") is not None else None,
             "metadata": obj.get("metadata"),
+            "tags": obj.get("tags"),
             "metric_ids": obj.get("metric_ids"),
             "error": obj.get("error")
         })

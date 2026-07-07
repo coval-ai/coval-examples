@@ -253,7 +253,7 @@ conf = coval_sdk.Configuration(
     ) -> None:
         """Constructor
         """
-        self._base_path = "https://api.coval.dev" if host is None else host
+        self._base_path = "https://api.coval.dev/v1" if host is None else host
         """Default Base url
         """
         self.server_index = 0 if server_index is None and host is None else server_index
@@ -745,12 +745,12 @@ conf = coval_sdk.Configuration(
         """
         return [
             {
-                'url': "https://api.coval.dev",
+                'url': "https://api.coval.dev/v1",
                 'description': "Production API",
             },
             {
-                'url': "https://api.coval.dev/v1",
-                'description': "No description provided",
+                'url': "https://api.coval.dev",
+                'description': "Production API",
             }
         ]
 

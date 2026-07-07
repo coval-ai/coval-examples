@@ -314,7 +314,7 @@ class ScheduledRunsApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/v1/scheduled-runs',
+            resource_path='/scheduled-runs',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -587,7 +587,7 @@ class ScheduledRunsApi:
 
         return self.api_client.param_serialize(
             method='DELETE',
-            resource_path='/v1/scheduled-runs/{scheduled_run_id}',
+            resource_path='/scheduled-runs/{scheduled_run_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -860,7 +860,7 @@ class ScheduledRunsApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/v1/scheduled-runs/{scheduled_run_id}',
+            resource_path='/scheduled-runs/{scheduled_run_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1183,7 +1183,7 @@ class ScheduledRunsApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/v1/scheduled-runs',
+            resource_path='/scheduled-runs',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1484,7 +1484,7 @@ class ScheduledRunsApi:
 
         return self.api_client.param_serialize(
             method='PATCH',
-            resource_path='/v1/scheduled-runs/{scheduled_run_id}',
+            resource_path='/scheduled-runs/{scheduled_run_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

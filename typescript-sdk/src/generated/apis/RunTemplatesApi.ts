@@ -234,7 +234,7 @@ export class RunTemplatesApi extends runtime.BaseAPI implements RunTemplatesApiI
         }
 
 
-        let urlPath = `/v1/run-templates`;
+        let urlPath = `/run-templates`;
 
         return {
             path: urlPath,
@@ -285,7 +285,7 @@ export class RunTemplatesApi extends runtime.BaseAPI implements RunTemplatesApiI
         }
 
 
-        let urlPath = `/v1/run-templates/{run_template_id}`;
+        let urlPath = `/run-templates/{run_template_id}`;
         urlPath = urlPath.replace('{run_template_id}', encodeURIComponent(String(requestParameters['runTemplateId'])));
 
         return {
@@ -335,7 +335,7 @@ export class RunTemplatesApi extends runtime.BaseAPI implements RunTemplatesApiI
         }
 
 
-        let urlPath = `/v1/run-templates/{run_template_id}`;
+        let urlPath = `/run-templates/{run_template_id}`;
         urlPath = urlPath.replace('{run_template_id}', encodeURIComponent(String(requestParameters['runTemplateId'])));
 
         return {
@@ -391,7 +391,7 @@ export class RunTemplatesApi extends runtime.BaseAPI implements RunTemplatesApiI
         }
 
 
-        let urlPath = `/v1/run-templates`;
+        let urlPath = `/run-templates`;
 
         return {
             path: urlPath,
@@ -450,7 +450,7 @@ export class RunTemplatesApi extends runtime.BaseAPI implements RunTemplatesApiI
         }
 
 
-        let urlPath = `/v1/run-templates/{run_template_id}`;
+        let urlPath = `/run-templates/{run_template_id}`;
         urlPath = urlPath.replace('{run_template_id}', encodeURIComponent(String(requestParameters['runTemplateId'])));
 
         return {

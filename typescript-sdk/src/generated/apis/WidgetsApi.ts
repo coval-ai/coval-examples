@@ -253,7 +253,7 @@ export class WidgetsApi extends runtime.BaseAPI implements WidgetsApiInterface {
         }
 
 
-        let urlPath = `/v1/dashboards/{dashboard_id}/widgets`;
+        let urlPath = `/dashboards/{dashboard_id}/widgets`;
         urlPath = urlPath.replace('{dashboard_id}', encodeURIComponent(String(requestParameters['dashboardId'])));
 
         return {
@@ -312,7 +312,7 @@ export class WidgetsApi extends runtime.BaseAPI implements WidgetsApiInterface {
         }
 
 
-        let urlPath = `/v1/dashboards/{dashboard_id}/widgets/{widget_id}`;
+        let urlPath = `/dashboards/{dashboard_id}/widgets/{widget_id}`;
         urlPath = urlPath.replace('{dashboard_id}', encodeURIComponent(String(requestParameters['dashboardId'])));
         urlPath = urlPath.replace('{widget_id}', encodeURIComponent(String(requestParameters['widgetId'])));
 
@@ -371,7 +371,7 @@ export class WidgetsApi extends runtime.BaseAPI implements WidgetsApiInterface {
         }
 
 
-        let urlPath = `/v1/dashboards/{dashboard_id}/widgets/{widget_id}`;
+        let urlPath = `/dashboards/{dashboard_id}/widgets/{widget_id}`;
         urlPath = urlPath.replace('{dashboard_id}', encodeURIComponent(String(requestParameters['dashboardId'])));
         urlPath = urlPath.replace('{widget_id}', encodeURIComponent(String(requestParameters['widgetId'])));
 
@@ -431,7 +431,7 @@ export class WidgetsApi extends runtime.BaseAPI implements WidgetsApiInterface {
         }
 
 
-        let urlPath = `/v1/dashboards/{dashboard_id}/widgets`;
+        let urlPath = `/dashboards/{dashboard_id}/widgets`;
         urlPath = urlPath.replace('{dashboard_id}', encodeURIComponent(String(requestParameters['dashboardId'])));
 
         return {
@@ -498,7 +498,7 @@ export class WidgetsApi extends runtime.BaseAPI implements WidgetsApiInterface {
         }
 
 
-        let urlPath = `/v1/dashboards/{dashboard_id}/widgets/{widget_id}`;
+        let urlPath = `/dashboards/{dashboard_id}/widgets/{widget_id}`;
         urlPath = urlPath.replace('{dashboard_id}', encodeURIComponent(String(requestParameters['dashboardId'])));
         urlPath = urlPath.replace('{widget_id}', encodeURIComponent(String(requestParameters['widgetId'])));
 

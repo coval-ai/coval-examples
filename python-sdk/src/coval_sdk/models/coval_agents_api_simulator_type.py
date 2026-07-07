@@ -21,7 +21,7 @@ from typing_extensions import Self
 
 class CovalAgentsAPISimulatorType(str, Enum):
     """
-    Agent type. Active types that can be created via the v1 API:  - **MODEL_TYPE_VOICE**: Inbound voice calls (requires phone_number in E.164 format or SIP address) - **MODEL_TYPE_OUTBOUND_VOICE**: Outbound voice calls (requires endpoint webhook URL) - **MODEL_TYPE_CHAT**: Text-based chat agents (requires metadata.chat_endpoint) - **MODEL_TYPE_CHAT_A2A**: A2A JSON-RPC chat agents (requires metadata.chat_endpoint) - **MODEL_TYPE_CHAT_WEBSOCKET**: Text chat over WebSocket (requires metadata.endpoint in direct mode) - **MODEL_TYPE_SMS**: SMS messaging agents (requires phone_number in E.164 format) - **MODEL_TYPE_WEBSOCKET**: WebSocket voice agents (requires metadata.endpoint wss:// URL in direct mode; metadata.initialization_json is optional) - **MODEL_TYPE_OPENAI_REALTIME**: OpenAI Realtime voice-to-voice agents - **MODEL_TYPE_GEMINI_REALTIME**: Gemini Live voice-to-voice agents 
+    Agent type. Active types that can be created via the v1 API:  - **MODEL_TYPE_VOICE**: Inbound voice calls (requires phone_number in E.164 format or SIP address) - **MODEL_TYPE_OUTBOUND_VOICE**: Outbound voice calls (requires endpoint webhook URL) - **MODEL_TYPE_CHAT**: Text-based chat agents (requires metadata.chat_endpoint) - **MODEL_TYPE_CHAT_A2A**: A2A JSON-RPC chat agents (requires metadata.chat_endpoint) - **MODEL_TYPE_CHAT_WEBSOCKET**: Text chat over WebSocket (requires metadata.endpoint in direct mode) - **MODEL_TYPE_SMS**: SMS messaging agents (requires phone_number in E.164 format) - **MODEL_TYPE_WEBSOCKET**: WebSocket voice agents (requires metadata.endpoint wss:// URL in direct mode; metadata.initialization_json is optional) - **MODEL_TYPE_OPENAI_REALTIME**: OpenAI Realtime voice-to-voice agents - **MODEL_TYPE_GEMINI_REALTIME**: Gemini Live voice-to-voice agents - **MODEL_TYPE_GROK_REALTIME**: Grok (xAI) Voice Agent voice-to-voice agents 
     """
 
     """
@@ -36,6 +36,7 @@ class CovalAgentsAPISimulatorType(str, Enum):
     MODEL_TYPE_WEBSOCKET = 'MODEL_TYPE_WEBSOCKET'
     MODEL_TYPE_OPENAI_REALTIME = 'MODEL_TYPE_OPENAI_REALTIME'
     MODEL_TYPE_GEMINI_REALTIME = 'MODEL_TYPE_GEMINI_REALTIME'
+    MODEL_TYPE_GROK_REALTIME = 'MODEL_TYPE_GROK_REALTIME'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

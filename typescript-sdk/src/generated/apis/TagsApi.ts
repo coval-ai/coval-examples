@@ -236,7 +236,7 @@ export class TagsApi extends runtime.BaseAPI implements TagsApiInterface {
         }
 
 
-        let urlPath = `/v1/tags`;
+        let urlPath = `/tags`;
 
         return {
             path: urlPath,
@@ -287,7 +287,7 @@ export class TagsApi extends runtime.BaseAPI implements TagsApiInterface {
         }
 
 
-        let urlPath = `/v1/tags/{tag_id}`;
+        let urlPath = `/tags/{tag_id}`;
         urlPath = urlPath.replace('{tag_id}', encodeURIComponent(String(requestParameters['tagId'])));
 
         return {
@@ -338,7 +338,7 @@ export class TagsApi extends runtime.BaseAPI implements TagsApiInterface {
         }
 
 
-        let urlPath = `/v1/tags/{tag_id}`;
+        let urlPath = `/tags/{tag_id}`;
         urlPath = urlPath.replace('{tag_id}', encodeURIComponent(String(requestParameters['tagId'])));
 
         return {
@@ -390,7 +390,7 @@ export class TagsApi extends runtime.BaseAPI implements TagsApiInterface {
         }
 
 
-        let urlPath = `/v1/tags`;
+        let urlPath = `/tags`;
 
         return {
             path: urlPath,
@@ -449,7 +449,7 @@ export class TagsApi extends runtime.BaseAPI implements TagsApiInterface {
         }
 
 
-        let urlPath = `/v1/tags/{tag_id}`;
+        let urlPath = `/tags/{tag_id}`;
         urlPath = urlPath.replace('{tag_id}', encodeURIComponent(String(requestParameters['tagId'])));
 
         return {

@@ -119,7 +119,7 @@ export class AudioApi extends runtime.BaseAPI implements AudioApiInterface {
         }
 
 
-        let urlPath = `/v1/audio:upload`;
+        let urlPath = `/audio:upload`;
 
         return {
             path: urlPath,
@@ -170,7 +170,7 @@ export class AudioApi extends runtime.BaseAPI implements AudioApiInterface {
         }
 
 
-        let urlPath = `/v1/conversations/{conversation_id}/audio`;
+        let urlPath = `/conversations/{conversation_id}/audio`;
         urlPath = urlPath.replace('{conversation_id}', encodeURIComponent(String(requestParameters['conversationId'])));
 
         return {

@@ -60,7 +60,7 @@ class MetricOutputsApi:
     ) -> SimulationsGetMetric200Response:
         """Get simulation metric output(s)
 
-        Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
+        Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed.  **Retrieving test-metric results:** after calling `POST /v1/metrics/{metric_id}/test`, poll this endpoint using the same simulation output ID you tested against as `simulation_id`, plus the returned 26-char `metric_output_ulid`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test-metric outputs belong to the simulation they ran against, so they are retrieved here, not via the conversations endpoint. 
 
         :param simulation_id: The simulation ID (required)
         :type simulation_id: str
@@ -134,7 +134,7 @@ class MetricOutputsApi:
     ) -> ApiResponse[SimulationsGetMetric200Response]:
         """Get simulation metric output(s)
 
-        Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
+        Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed.  **Retrieving test-metric results:** after calling `POST /v1/metrics/{metric_id}/test`, poll this endpoint using the same simulation output ID you tested against as `simulation_id`, plus the returned 26-char `metric_output_ulid`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test-metric outputs belong to the simulation they ran against, so they are retrieved here, not via the conversations endpoint. 
 
         :param simulation_id: The simulation ID (required)
         :type simulation_id: str
@@ -208,7 +208,7 @@ class MetricOutputsApi:
     ) -> RESTResponseType:
         """Get simulation metric output(s)
 
-        Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed. 
+        Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed.  **Retrieving test-metric results:** after calling `POST /v1/metrics/{metric_id}/test`, poll this endpoint using the same simulation output ID you tested against as `simulation_id`, plus the returned 26-char `metric_output_ulid`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test-metric outputs belong to the simulation they ran against, so they are retrieved here, not via the conversations endpoint. 
 
         :param simulation_id: The simulation ID (required)
         :type simulation_id: str
@@ -309,7 +309,7 @@ class MetricOutputsApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/v1/simulations/{simulation_id}/metrics/{metric_output_id}',
+            resource_path='/simulations/{simulation_id}/metrics/{metric_output_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -650,7 +650,7 @@ class MetricOutputsApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/v1/simulations/{simulation_id}/metrics',
+            resource_path='/simulations/{simulation_id}/metrics',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

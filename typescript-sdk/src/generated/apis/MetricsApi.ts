@@ -186,6 +186,11 @@ export interface ListMetricsRequest {
     tagFilters?: Array<string>;
 }
 
+export interface RevertMetricVersionRequest {
+    metricId: string;
+    versionId: string;
+}
+
 export interface TestMetricRequest {
     metricId: string;
     covalMetricsAPITestMetricRequest: CovalMetricsAPITestMetricRequest;
@@ -589,6 +594,32 @@ export interface MetricsApiInterface {
     listMetrics(requestParameters: ListMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListMetricsResponse>;
 
     /**
+     * Creates request options for revertMetricVersion without sending the request
+     * @param {string} metricId 22-character metric ID
+     * @param {string} versionId ULID of the target version to re-apply
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    revertMetricVersionRequestOpts(requestParameters: RevertMetricVersionRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Re-apply a prior version\'s scoring configuration to the live metric. A revert is forward-only: it mints a new version (change_type=revert) and advances the metric, so the response reflects the metric\'s new live config. Reverting to the version the metric already points at is rejected with 400.
+     * @summary Revert metric version
+     * @param {string} metricId 22-character metric ID
+     * @param {string} versionId ULID of the target version to re-apply
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    revertMetricVersionRaw(requestParameters: RevertMetricVersionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIGetMetricResponse>>;
+
+    /**
+     * Re-apply a prior version\'s scoring configuration to the live metric. A revert is forward-only: it mints a new version (change_type=revert) and advances the metric, so the response reflects the metric\'s new live config. Reverting to the version the metric already points at is rejected with 400.
+     * Revert metric version
+     */
+    revertMetricVersion(requestParameters: RevertMetricVersionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetMetricResponse>;
+
+    /**
      * Creates request options for testMetric without sending the request
      * @param {string} metricId The metric ID (22-character ShortUUID)
      * @param {CovalMetricsAPITestMetricRequest} covalMetricsAPITestMetricRequest 
@@ -598,7 +629,7 @@ export interface MetricsApiInterface {
     testMetricRequestOpts(requestParameters: TestMetricRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Trigger execution of a metric against a simulation output for testing purposes. This is an asynchronous operation that returns immediately with a metric output ULID. The metric output result can be retrieved once processing completes. 
+     * Trigger execution of a metric against a simulation output for testing purposes. This is an asynchronous operation that returns immediately with a metric output ULID.  **Retrieving the result:** poll `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` using the `simulation_output_id` you passed here as `simulation_id` and the returned 26-char `metric_output_ulid`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
      * @summary Trigger test metric execution
      * @param {string} metricId The metric ID (22-character ShortUUID)
      * @param {CovalMetricsAPITestMetricRequest} covalMetricsAPITestMetricRequest 
@@ -609,7 +640,7 @@ export interface MetricsApiInterface {
     testMetricRaw(requestParameters: TestMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPITestMetricResponse>>;
 
     /**
-     * Trigger execution of a metric against a simulation output for testing purposes. This is an asynchronous operation that returns immediately with a metric output ULID. The metric output result can be retrieved once processing completes. 
+     * Trigger execution of a metric against a simulation output for testing purposes. This is an asynchronous operation that returns immediately with a metric output ULID.  **Retrieving the result:** poll `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` using the `simulation_output_id` you passed here as `simulation_id` and the returned 26-char `metric_output_ulid`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
      * Trigger test metric execution
      */
     testMetric(requestParameters: TestMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPITestMetricResponse>;
@@ -723,7 +754,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
         }
 
 
-        let urlPath = `/v1/metrics`;
+        let urlPath = `/metrics`;
 
         return {
             path: urlPath,
@@ -783,7 +814,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
         }
 
 
-        let urlPath = `/v1/metrics/{metric_id}/baselines`;
+        let urlPath = `/metrics/{metric_id}/baselines`;
         urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
 
         return {
@@ -844,7 +875,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
         }
 
 
-        let urlPath = `/v1/metrics/{metric_id}/thresholds`;
+        let urlPath = `/metrics/{metric_id}/thresholds`;
         urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
 
         return {
@@ -896,7 +927,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
         }
 
 
-        let urlPath = `/v1/metrics/{metric_id}`;
+        let urlPath = `/metrics/{metric_id}`;
         urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
 
         return {
@@ -954,7 +985,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
         }
 
 
-        let urlPath = `/v1/metrics/{metric_id}/baselines/{baseline_id}`;
+        let urlPath = `/metrics/{metric_id}/baselines/{baseline_id}`;
         urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
         urlPath = urlPath.replace('{baseline_id}', encodeURIComponent(String(requestParameters['baselineId'])));
 
@@ -1012,7 +1043,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
         }
 
 
-        let urlPath = `/v1/metrics/{metric_id}/thresholds/{threshold_id}`;
+        let urlPath = `/metrics/{metric_id}/thresholds/{threshold_id}`;
         urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
         urlPath = urlPath.replace('{threshold_id}', encodeURIComponent(String(requestParameters['thresholdId'])));
 
@@ -1064,7 +1095,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
         }
 
 
-        let urlPath = `/v1/metrics/{metric_id}`;
+        let urlPath = `/metrics/{metric_id}`;
         urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
 
         return {
@@ -1126,7 +1157,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
         }
 
 
-        let urlPath = `/v1/metrics/{metric_id}/baselines/{baseline_id}`;
+        let urlPath = `/metrics/{metric_id}/baselines/{baseline_id}`;
         urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
         urlPath = urlPath.replace('{baseline_id}', encodeURIComponent(String(requestParameters['baselineId'])));
 
@@ -1178,7 +1209,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
         }
 
 
-        let urlPath = `/v1/metrics/{metric_id}/threshold`;
+        let urlPath = `/metrics/{metric_id}/threshold`;
         urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
 
         return {
@@ -1257,7 +1288,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
         }
 
 
-        let urlPath = `/v1/metrics/{metric_id}/baselines`;
+        let urlPath = `/metrics/{metric_id}/baselines`;
         urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
 
         return {
@@ -1301,7 +1332,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
         }
 
 
-        let urlPath = `/v1/models/metric`;
+        let urlPath = `/models/metric`;
 
         return {
             path: urlPath,
@@ -1359,7 +1390,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
         }
 
 
-        let urlPath = `/v1/metrics/{metric_id}/thresholds`;
+        let urlPath = `/metrics/{metric_id}/thresholds`;
         urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
 
         return {
@@ -1410,7 +1441,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
         }
 
 
-        let urlPath = `/v1/metrics/{metric_id}/versions`;
+        let urlPath = `/metrics/{metric_id}/versions`;
         urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
 
         return {
@@ -1478,7 +1509,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
         }
 
 
-        let urlPath = `/v1/metrics`;
+        let urlPath = `/metrics`;
 
         return {
             path: urlPath,
@@ -1505,6 +1536,65 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
      */
     async listMetrics(requestParameters: ListMetricsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListMetricsResponse> {
         const response = await this.listMetricsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for revertMetricVersion without sending the request
+     */
+    async revertMetricVersionRequestOpts(requestParameters: RevertMetricVersionRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['metricId'] == null) {
+            throw new runtime.RequiredError(
+                'metricId',
+                'Required parameter "metricId" was null or undefined when calling revertMetricVersion().'
+            );
+        }
+
+        if (requestParameters['versionId'] == null) {
+            throw new runtime.RequiredError(
+                'versionId',
+                'Required parameter "versionId" was null or undefined when calling revertMetricVersion().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/metrics/{metric_id}/versions/{version_id}/revert`;
+        urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
+        urlPath = urlPath.replace('{version_id}', encodeURIComponent(String(requestParameters['versionId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Re-apply a prior version\'s scoring configuration to the live metric. A revert is forward-only: it mints a new version (change_type=revert) and advances the metric, so the response reflects the metric\'s new live config. Reverting to the version the metric already points at is rejected with 400.
+     * Revert metric version
+     */
+    async revertMetricVersionRaw(requestParameters: RevertMetricVersionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIGetMetricResponse>> {
+        const requestOptions = await this.revertMetricVersionRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPIGetMetricResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Re-apply a prior version\'s scoring configuration to the live metric. A revert is forward-only: it mints a new version (change_type=revert) and advances the metric, so the response reflects the metric\'s new live config. Reverting to the version the metric already points at is rejected with 400.
+     * Revert metric version
+     */
+    async revertMetricVersion(requestParameters: RevertMetricVersionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetMetricResponse> {
+        const response = await this.revertMetricVersionRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -1537,7 +1627,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
         }
 
 
-        let urlPath = `/v1/metrics/{metric_id}/test`;
+        let urlPath = `/metrics/{metric_id}/test`;
         urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
 
         return {
@@ -1550,7 +1640,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Trigger execution of a metric against a simulation output for testing purposes. This is an asynchronous operation that returns immediately with a metric output ULID. The metric output result can be retrieved once processing completes. 
+     * Trigger execution of a metric against a simulation output for testing purposes. This is an asynchronous operation that returns immediately with a metric output ULID.  **Retrieving the result:** poll `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` using the `simulation_output_id` you passed here as `simulation_id` and the returned 26-char `metric_output_ulid`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
      * Trigger test metric execution
      */
     async testMetricRaw(requestParameters: TestMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPITestMetricResponse>> {
@@ -1561,7 +1651,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Trigger execution of a metric against a simulation output for testing purposes. This is an asynchronous operation that returns immediately with a metric output ULID. The metric output result can be retrieved once processing completes. 
+     * Trigger execution of a metric against a simulation output for testing purposes. This is an asynchronous operation that returns immediately with a metric output ULID.  **Retrieving the result:** poll `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` using the `simulation_output_id` you passed here as `simulation_id` and the returned 26-char `metric_output_ulid`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
      * Trigger test metric execution
      */
     async testMetric(requestParameters: TestMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPITestMetricResponse> {
@@ -1598,7 +1688,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
         }
 
 
-        let urlPath = `/v1/metrics/{metric_id}`;
+        let urlPath = `/metrics/{metric_id}`;
         urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
 
         return {
@@ -1666,7 +1756,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
         }
 
 
-        let urlPath = `/v1/metrics/{metric_id}/baselines/{baseline_id}`;
+        let urlPath = `/metrics/{metric_id}/baselines/{baseline_id}`;
         urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
         urlPath = urlPath.replace('{baseline_id}', encodeURIComponent(String(requestParameters['baselineId'])));
 
@@ -1728,7 +1818,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
         }
 
 
-        let urlPath = `/v1/metrics/{metric_id}/threshold`;
+        let urlPath = `/metrics/{metric_id}/threshold`;
         urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
 
         return {

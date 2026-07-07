@@ -201,7 +201,7 @@ export class APIKeysApi extends runtime.BaseAPI implements APIKeysApiInterface {
         }
 
 
-        let urlPath = `/v1/api-keys`;
+        let urlPath = `/api-keys`;
 
         return {
             path: urlPath,
@@ -252,7 +252,7 @@ export class APIKeysApi extends runtime.BaseAPI implements APIKeysApiInterface {
         }
 
 
-        let urlPath = `/v1/api-keys/{api_key_id}`;
+        let urlPath = `/api-keys/{api_key_id}`;
         urlPath = urlPath.replace('{api_key_id}', encodeURIComponent(String(requestParameters['apiKeyId'])));
 
         return {
@@ -307,7 +307,7 @@ export class APIKeysApi extends runtime.BaseAPI implements APIKeysApiInterface {
         }
 
 
-        let urlPath = `/v1/api-keys`;
+        let urlPath = `/api-keys`;
 
         return {
             path: urlPath,
@@ -366,7 +366,7 @@ export class APIKeysApi extends runtime.BaseAPI implements APIKeysApiInterface {
         }
 
 
-        let urlPath = `/v1/api-keys/{api_key_id}`;
+        let urlPath = `/api-keys/{api_key_id}`;
         urlPath = urlPath.replace('{api_key_id}', encodeURIComponent(String(requestParameters['apiKeyId'])));
 
         return {

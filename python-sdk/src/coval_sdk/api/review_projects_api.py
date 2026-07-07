@@ -311,7 +311,7 @@ class ReviewProjectsApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/v1/review-projects',
+            resource_path='/review-projects',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -581,7 +581,7 @@ class ReviewProjectsApi:
 
         return self.api_client.param_serialize(
             method='DELETE',
-            resource_path='/v1/review-projects/{project_id}',
+            resource_path='/review-projects/{project_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -851,7 +851,7 @@ class ReviewProjectsApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/v1/review-projects/{project_id}',
+            resource_path='/review-projects/{project_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1157,7 +1157,7 @@ class ReviewProjectsApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/v1/review-projects',
+            resource_path='/review-projects',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1458,7 +1458,7 @@ class ReviewProjectsApi:
 
         return self.api_client.param_serialize(
             method='PATCH',
-            resource_path='/v1/review-projects/{project_id}',
+            resource_path='/review-projects/{project_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

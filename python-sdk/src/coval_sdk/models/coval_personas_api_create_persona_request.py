@@ -33,7 +33,7 @@ class CovalPersonasAPICreatePersonaRequest(BaseModel):
     persona_prompt: Optional[StrictStr] = Field(default=None, description="Instructions describing persona behavior and personality")
     voice_name: StrictStr = Field(description="Coval voice name. Use GET /personas/voices to discover available voices and their supported language codes. ")
     language_code: StrictStr = Field(description="BCP-47 language code for voice synthesis. Must be supported by the selected voice. Use GET /personas/voices to discover valid voice and language combinations. ")
-    background_sound: Optional[Annotated[str, Field(strict=True, max_length=100)]] = Field(default=None, description="Background noise type. Use `backchanneling` to add short listener cues like \"mm-hmm\" and \"yeah\" that simulate an engaged caller. Use `off` to disable background sound. All remaining values add ambient environmental noise. ")
+    background_sound: Optional[Annotated[str, Field(strict=True, max_length=100)]] = Field(default=None, description="Built-in background sound id, or custom:<background_sound_id> for an active custom sound returned by GET /personas/background-sounds.")
     background_sound_volume: Optional[Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]]] = Field(default=None, description="Volume level for background sound (>= 0.0, no upper limit). Default is provider-controlled when omitted.")
     voice_volume: Optional[Union[Annotated[float, Field(le=2, strict=True, ge=0)], Annotated[int, Field(le=2, strict=True, ge=0)]]] = Field(default=None, description="Voice gain multiplier. 0.0 is silent, 1.0 is unchanged, and 2.0 is double volume.")
     voice_speed: Optional[Union[Annotated[float, Field(le=2, strict=True, ge=0.25)], Annotated[int, Field(le=2, strict=True, ge=1)]]] = Field(default=None, description="Voice speed multiplier accepted and stored from 0.25 to 2.0. 1.0 is unchanged. The selected voice may enforce a narrower effective range or ignore speed changes.")
@@ -46,13 +46,16 @@ class CovalPersonasAPICreatePersonaRequest(BaseModel):
     __properties: ClassVar[List[str]] = ["name", "persona_prompt", "voice_name", "language_code", "background_sound", "background_sound_volume", "voice_volume", "voice_speed", "wait_seconds", "conversation_initiation", "multi_language_stt", "hold_music_timeout_seconds", "tags"]
 
     @field_validator('background_sound')
-    def background_sound_validate_enum(cls, value):
-        """Validates the enum"""
+    def background_sound_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
         if value is None:
             return value
 
-        if value not in set(['off', 'office', 'lounge', 'crowd', 'airport', 'bus', 'playground', 'doorbell', 'train-arrival', 'portable-air-conditioner', 'skatepark', 'small-dog-bark', 'cafe', 'ferry-and-announcement', 'heavy-rain', 'moderate-wind', 'newborn-baby-crying', 'office-with-alarm', 'street-with-sirens', 'construction-work', 'backchanneling']):
-            raise ValueError("must be one of enum values ('off', 'office', 'lounge', 'crowd', 'airport', 'bus', 'playground', 'doorbell', 'train-arrival', 'portable-air-conditioner', 'skatepark', 'small-dog-bark', 'cafe', 'ferry-and-announcement', 'heavy-rain', 'moderate-wind', 'newborn-baby-crying', 'office-with-alarm', 'street-with-sirens', 'construction-work', 'backchanneling')")
+        if not isinstance(value, str):
+            value = str(value)
+
+        if not re.match(r"^(off|office|lounge|crowd|airport|bus|playground|doorbell|train-arrival|portable-air-conditioner|skatepark|small-dog-bark|cafe|ferry-and-announcement|heavy-rain|moderate-wind|newborn-baby-crying|office-with-alarm|street-with-sirens|construction-work|backchanneling|custom:[A-Za-z0-9_-]+)$", value):
+            raise ValueError(r"must validate the regular expression /^(off|office|lounge|crowd|airport|bus|playground|doorbell|train-arrival|portable-air-conditioner|skatepark|small-dog-bark|cafe|ferry-and-announcement|heavy-rain|moderate-wind|newborn-baby-crying|office-with-alarm|street-with-sirens|construction-work|backchanneling|custom:[A-Za-z0-9_-]+)$/")
         return value
 
     @field_validator('conversation_initiation')

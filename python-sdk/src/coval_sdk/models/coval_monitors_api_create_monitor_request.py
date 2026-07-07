@@ -43,10 +43,11 @@ class CovalMonitorsAPICreateMonitorRequest(BaseModel):
     custom_message_template: Optional[Annotated[str, Field(strict=True, max_length=5000)]] = None
     agent_ids: Optional[List[StrictStr]] = None
     required_tags: Optional[List[StrictStr]] = None
+    scheduled_run_ids: Optional[List[StrictStr]] = None
     conditions: Annotated[List[CovalMonitorsAPIConditionInput], Field(min_length=1)]
     channels: Optional[List[CovalMonitorsAPIChannelInput]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "description", "evaluation_type", "scope", "match_mode", "cooldown_seconds", "custom_message_template", "agent_ids", "required_tags", "conditions", "channels"]
+    __properties: ClassVar[List[str]] = ["name", "description", "evaluation_type", "scope", "match_mode", "cooldown_seconds", "custom_message_template", "agent_ids", "required_tags", "scheduled_run_ids", "conditions", "channels"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -123,6 +124,11 @@ class CovalMonitorsAPICreateMonitorRequest(BaseModel):
         if self.required_tags is None and "required_tags" in self.model_fields_set:
             _dict['required_tags'] = None
 
+        # set to None if scheduled_run_ids (nullable) is None
+        # and model_fields_set contains the field
+        if self.scheduled_run_ids is None and "scheduled_run_ids" in self.model_fields_set:
+            _dict['scheduled_run_ids'] = None
+
         return _dict
 
     @classmethod
@@ -144,6 +150,7 @@ class CovalMonitorsAPICreateMonitorRequest(BaseModel):
             "custom_message_template": obj.get("custom_message_template"),
             "agent_ids": obj.get("agent_ids"),
             "required_tags": obj.get("required_tags"),
+            "scheduled_run_ids": obj.get("scheduled_run_ids"),
             "conditions": [CovalMonitorsAPIConditionInput.from_dict(_item) for _item in obj["conditions"]] if obj.get("conditions") is not None else None,
             "channels": [CovalMonitorsAPIChannelInput.from_dict(_item) for _item in obj["channels"]] if obj.get("channels") is not None else None
         })

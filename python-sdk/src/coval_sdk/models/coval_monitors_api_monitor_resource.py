@@ -46,6 +46,7 @@ class CovalMonitorsAPIMonitorResource(BaseModel):
     custom_message_template: Optional[Annotated[str, Field(strict=True, max_length=5000)]] = Field(default=None, description="Custom notification message template")
     agent_ids: Optional[List[StrictStr]] = Field(default=None, description="Restrict to specific agent IDs")
     required_tags: Optional[List[StrictStr]] = Field(default=None, description="Restrict to runs with these tags")
+    scheduled_run_ids: Optional[List[StrictStr]] = Field(default=None, description="Restrict to runs originating from these scheduled runs")
     trigger_count: StrictInt = Field(description="Number of times this monitor has triggered")
     last_triggered_at: Optional[datetime] = Field(default=None, description="Last trigger timestamp")
     conditions: List[CovalMonitorsAPIMonitorCondition] = Field(description="Evaluation conditions")
@@ -53,7 +54,7 @@ class CovalMonitorsAPIMonitorResource(BaseModel):
     create_time: datetime = Field(description="Creation timestamp")
     update_time: datetime = Field(description="Last update timestamp")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["ulid", "name", "description", "status", "evaluation_type", "scope", "match_mode", "cooldown_seconds", "custom_message_template", "agent_ids", "required_tags", "trigger_count", "last_triggered_at", "conditions", "channels", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["ulid", "name", "description", "status", "evaluation_type", "scope", "match_mode", "cooldown_seconds", "custom_message_template", "agent_ids", "required_tags", "scheduled_run_ids", "trigger_count", "last_triggered_at", "conditions", "channels", "create_time", "update_time"]
 
     @field_validator('ulid')
     def ulid_validate_regular_expression(cls, value):
@@ -147,6 +148,11 @@ class CovalMonitorsAPIMonitorResource(BaseModel):
         if self.required_tags is None and "required_tags" in self.model_fields_set:
             _dict['required_tags'] = None
 
+        # set to None if scheduled_run_ids (nullable) is None
+        # and model_fields_set contains the field
+        if self.scheduled_run_ids is None and "scheduled_run_ids" in self.model_fields_set:
+            _dict['scheduled_run_ids'] = None
+
         # set to None if last_triggered_at (nullable) is None
         # and model_fields_set contains the field
         if self.last_triggered_at is None and "last_triggered_at" in self.model_fields_set:
@@ -175,6 +181,7 @@ class CovalMonitorsAPIMonitorResource(BaseModel):
             "custom_message_template": obj.get("custom_message_template"),
             "agent_ids": obj.get("agent_ids"),
             "required_tags": obj.get("required_tags"),
+            "scheduled_run_ids": obj.get("scheduled_run_ids"),
             "trigger_count": obj.get("trigger_count"),
             "last_triggered_at": obj.get("last_triggered_at"),
             "conditions": [CovalMonitorsAPIMonitorCondition.from_dict(_item) for _item in obj["conditions"]] if obj.get("conditions") is not None else None,

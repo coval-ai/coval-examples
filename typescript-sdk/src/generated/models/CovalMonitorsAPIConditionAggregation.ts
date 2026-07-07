@@ -18,18 +18,13 @@
  * - SINGLE: Per-simulation value (average across sim outputs)
  * - RUN_AVERAGE: Average from pre-computed run aggregate
  * - RUN_FRACTION: Fraction matching a string value in the run
- * - WINDOW_*: Rolling window aggregations across multiple runs
  * 
  * @export
  */
 export const CovalMonitorsAPIConditionAggregation = {
     Single: 'SINGLE',
     RunAverage: 'RUN_AVERAGE',
-    RunFraction: 'RUN_FRACTION',
-    WindowAverage: 'WINDOW_AVERAGE',
-    WindowFraction: 'WINDOW_FRACTION',
-    WindowMin: 'WINDOW_MIN',
-    WindowMax: 'WINDOW_MAX'
+    RunFraction: 'RUN_FRACTION'
 } as const;
 export type CovalMonitorsAPIConditionAggregation = typeof CovalMonitorsAPIConditionAggregation[keyof typeof CovalMonitorsAPIConditionAggregation];
 
