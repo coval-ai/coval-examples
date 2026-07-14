@@ -33,7 +33,13 @@ jobs:
           python-version: "3.12"
 
       - name: Install build tooling
-        run: python -m pip install --upgrade pip build twine
+        run: python -m pip install --upgrade pip
+
+      - name: Install SDK and run tests
+        working-directory: python-sdk
+        run: |
+          pip install -e ".[dev]"
+          pytest
 
       - name: Build sdist + wheel
         working-directory: python-sdk

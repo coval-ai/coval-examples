@@ -23,15 +23,11 @@ npm install @coval/sdk
 
 ### Python SDK
 
-Generated Python client for Coval's OpenAPI specs. This package is currently
-demo-grade and intentionally lighter than the TypeScript SDK wrapper. It is
-published in parity with `@coval/sdk` for customers using Python.
+Typed Python client generated from Coval's OpenAPI specs with a production
+wrapper for auth, safe retries, pagination, and all public v1 API resources.
 
 ```bash
 pip install coval-sdk
-
-# For latest main before the next PyPI release:
-# pip install "git+https://github.com/coval-ai/coval-examples.git#subdirectory=python-sdk"
 ```
 
 [View Python SDK](./python-sdk)

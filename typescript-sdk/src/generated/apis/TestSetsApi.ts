@@ -24,6 +24,11 @@ import {
     ListTestSets200ResponseToJSON,
 } from '../models/ListTestSets200Response.js';
 import {
+    type TestSetsAPIAddTestSetAgentsRequest,
+    TestSetsAPIAddTestSetAgentsRequestFromJSON,
+    TestSetsAPIAddTestSetAgentsRequestToJSON,
+} from '../models/TestSetsAPIAddTestSetAgentsRequest.js';
+import {
     type TestSetsAPICreateTestSetRequest,
     TestSetsAPICreateTestSetRequestFromJSON,
     TestSetsAPICreateTestSetRequestToJSON,
@@ -33,6 +38,11 @@ import {
     TestSetsAPIErrorResponseFromJSON,
     TestSetsAPIErrorResponseToJSON,
 } from '../models/TestSetsAPIErrorResponse.js';
+import {
+    type TestSetsAPIListTestSetAgentsResponse,
+    TestSetsAPIListTestSetAgentsResponseFromJSON,
+    TestSetsAPIListTestSetAgentsResponseToJSON,
+} from '../models/TestSetsAPIListTestSetAgentsResponse.js';
 import {
     type TestSetsAPIListTestSetVersionsResponse,
     TestSetsAPIListTestSetVersionsResponseFromJSON,
@@ -44,6 +54,11 @@ import {
     TestSetsAPIUpdateTestSetRequestToJSON,
 } from '../models/TestSetsAPIUpdateTestSetRequest.js';
 
+export interface AddTestSetAgentsRequest {
+    testSetId: string;
+    testSetsAPIAddTestSetAgentsRequest: TestSetsAPIAddTestSetAgentsRequest;
+}
+
 export interface CreateTestSetRequest {
     testSetsAPICreateTestSetRequest: TestSetsAPICreateTestSetRequest;
 }
@@ -52,7 +67,15 @@ export interface DeleteTestSetRequest {
     testSetId: string;
 }
 
+export interface DuplicateTestSetRequest {
+    testSetId: string;
+}
+
 export interface GetTestSetRequest {
+    testSetId: string;
+}
+
+export interface ListTestSetAgentsRequest {
     testSetId: string;
 }
 
@@ -66,6 +89,11 @@ export interface ListTestSetsRequest {
     pageToken?: string;
     orderBy?: string;
     tagFilters?: Array<string>;
+}
+
+export interface RemoveTestSetAgentRequest {
+    testSetId: string;
+    agentId: string;
 }
 
 export interface RevertTestSetVersionRequest {
@@ -85,6 +113,32 @@ export interface UpdateTestSetRequest {
  * @interface TestSetsApiInterface
  */
 export interface TestSetsApiInterface {
+    /**
+     * Creates request options for addTestSetAgents without sending the request
+     * @param {string} testSetId Test set ID (8-character ID)
+     * @param {TestSetsAPIAddTestSetAgentsRequest} testSetsAPIAddTestSetAgentsRequest 
+     * @throws {RequiredError}
+     * @memberof TestSetsApiInterface
+     */
+    addTestSetAgentsRequestOpts(requestParameters: AddTestSetAgentsRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Associate one or more agents with a test set. The operation is idempotent: already-associated agents are a no-op, and unknown or inactive agent IDs are ignored. The response reflects the resulting association set, so callers can confirm which IDs took effect.
+     * @summary Associate agents with a test set
+     * @param {string} testSetId Test set ID (8-character ID)
+     * @param {TestSetsAPIAddTestSetAgentsRequest} testSetsAPIAddTestSetAgentsRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TestSetsApiInterface
+     */
+    addTestSetAgentsRaw(requestParameters: AddTestSetAgentsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TestSetsAPIListTestSetAgentsResponse>>;
+
+    /**
+     * Associate one or more agents with a test set. The operation is idempotent: already-associated agents are a no-op, and unknown or inactive agent IDs are ignored. The response reflects the resulting association set, so callers can confirm which IDs took effect.
+     * Associate agents with a test set
+     */
+    addTestSetAgents(requestParameters: AddTestSetAgentsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TestSetsAPIListTestSetAgentsResponse>;
+
     /**
      * Creates request options for createTestSet without sending the request
      * @param {TestSetsAPICreateTestSetRequest} testSetsAPICreateTestSetRequest 
@@ -134,6 +188,30 @@ export interface TestSetsApiInterface {
     deleteTestSet(requestParameters: DeleteTestSetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object>;
 
     /**
+     * Creates request options for duplicateTestSet without sending the request
+     * @param {string} testSetId ID of the test set to duplicate
+     * @throws {RequiredError}
+     * @memberof TestSetsApiInterface
+     */
+    duplicateTestSetRequestOpts(requestParameters: DuplicateTestSetRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Clone an existing test set and its active test cases into a new test set. Returns the new test set.
+     * @summary Duplicate a test set
+     * @param {string} testSetId ID of the test set to duplicate
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TestSetsApiInterface
+     */
+    duplicateTestSetRaw(requestParameters: DuplicateTestSetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateTestSet201Response>>;
+
+    /**
+     * Clone an existing test set and its active test cases into a new test set. Returns the new test set.
+     * Duplicate a test set
+     */
+    duplicateTestSet(requestParameters: DuplicateTestSetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateTestSet201Response>;
+
+    /**
      * Creates request options for getTestSet without sending the request
      * @param {string} testSetId Test set ID (8-character ID)
      * @throws {RequiredError}
@@ -156,6 +234,30 @@ export interface TestSetsApiInterface {
      * Get test set
      */
     getTestSet(requestParameters: GetTestSetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateTestSet201Response>;
+
+    /**
+     * Creates request options for listTestSetAgents without sending the request
+     * @param {string} testSetId Test set ID (8-character ID)
+     * @throws {RequiredError}
+     * @memberof TestSetsApiInterface
+     */
+    listTestSetAgentsRequestOpts(requestParameters: ListTestSetAgentsRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * List the agents currently associated with a test set. Returns every associated agent (not paginated); associations are bounded per test set. An unknown test_set_id returns an empty list rather than 404.
+     * @summary List associated agents
+     * @param {string} testSetId Test set ID (8-character ID)
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TestSetsApiInterface
+     */
+    listTestSetAgentsRaw(requestParameters: ListTestSetAgentsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TestSetsAPIListTestSetAgentsResponse>>;
+
+    /**
+     * List the agents currently associated with a test set. Returns every associated agent (not paginated); associations are bounded per test set. An unknown test_set_id returns an empty list rather than 404.
+     * List associated agents
+     */
+    listTestSetAgents(requestParameters: ListTestSetAgentsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TestSetsAPIListTestSetAgentsResponse>;
 
     /**
      * Creates request options for listTestSetVersions without sending the request
@@ -212,6 +314,32 @@ export interface TestSetsApiInterface {
      * List test sets
      */
     listTestSets(requestParameters: ListTestSetsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ListTestSets200Response>;
+
+    /**
+     * Creates request options for removeTestSetAgent without sending the request
+     * @param {string} testSetId Test set ID (8-character ID)
+     * @param {string} agentId Agent ID (22-character ShortUUID)
+     * @throws {RequiredError}
+     * @memberof TestSetsApiInterface
+     */
+    removeTestSetAgentRequestOpts(requestParameters: RemoveTestSetAgentRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Remove one agent\'s association with a test set. Idempotent: returns 200 whether or not the association existed.
+     * @summary Remove an agent association
+     * @param {string} testSetId Test set ID (8-character ID)
+     * @param {string} agentId Agent ID (22-character ShortUUID)
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TestSetsApiInterface
+     */
+    removeTestSetAgentRaw(requestParameters: RemoveTestSetAgentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>>;
+
+    /**
+     * Remove one agent\'s association with a test set. Idempotent: returns 200 whether or not the association existed.
+     * Remove an agent association
+     */
+    removeTestSetAgent(requestParameters: RemoveTestSetAgentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object>;
 
     /**
      * Creates request options for revertTestSetVersion without sending the request
@@ -271,6 +399,67 @@ export interface TestSetsApiInterface {
  * 
  */
 export class TestSetsApi extends runtime.BaseAPI implements TestSetsApiInterface {
+
+    /**
+     * Creates request options for addTestSetAgents without sending the request
+     */
+    async addTestSetAgentsRequestOpts(requestParameters: AddTestSetAgentsRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['testSetId'] == null) {
+            throw new runtime.RequiredError(
+                'testSetId',
+                'Required parameter "testSetId" was null or undefined when calling addTestSetAgents().'
+            );
+        }
+
+        if (requestParameters['testSetsAPIAddTestSetAgentsRequest'] == null) {
+            throw new runtime.RequiredError(
+                'testSetsAPIAddTestSetAgentsRequest',
+                'Required parameter "testSetsAPIAddTestSetAgentsRequest" was null or undefined when calling addTestSetAgents().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Test_Sets_API_apiKey authentication
+        }
+
+
+        let urlPath = `/test-sets/{test_set_id}/agents:add`;
+        urlPath = urlPath.replace('{test_set_id}', encodeURIComponent(String(requestParameters['testSetId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: TestSetsAPIAddTestSetAgentsRequestToJSON(requestParameters['testSetsAPIAddTestSetAgentsRequest']),
+        };
+    }
+
+    /**
+     * Associate one or more agents with a test set. The operation is idempotent: already-associated agents are a no-op, and unknown or inactive agent IDs are ignored. The response reflects the resulting association set, so callers can confirm which IDs took effect.
+     * Associate agents with a test set
+     */
+    async addTestSetAgentsRaw(requestParameters: AddTestSetAgentsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TestSetsAPIListTestSetAgentsResponse>> {
+        const requestOptions = await this.addTestSetAgentsRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => TestSetsAPIListTestSetAgentsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Associate one or more agents with a test set. The operation is idempotent: already-associated agents are a no-op, and unknown or inactive agent IDs are ignored. The response reflects the resulting association set, so callers can confirm which IDs took effect.
+     * Associate agents with a test set
+     */
+    async addTestSetAgents(requestParameters: AddTestSetAgentsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TestSetsAPIListTestSetAgentsResponse> {
+        const response = await this.addTestSetAgentsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
 
     /**
      * Creates request options for createTestSet without sending the request
@@ -377,6 +566,57 @@ export class TestSetsApi extends runtime.BaseAPI implements TestSetsApiInterface
     }
 
     /**
+     * Creates request options for duplicateTestSet without sending the request
+     */
+    async duplicateTestSetRequestOpts(requestParameters: DuplicateTestSetRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['testSetId'] == null) {
+            throw new runtime.RequiredError(
+                'testSetId',
+                'Required parameter "testSetId" was null or undefined when calling duplicateTestSet().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Test_Sets_API_apiKey authentication
+        }
+
+
+        let urlPath = `/test-sets/{test_set_id}/duplicate`;
+        urlPath = urlPath.replace('{test_set_id}', encodeURIComponent(String(requestParameters['testSetId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Clone an existing test set and its active test cases into a new test set. Returns the new test set.
+     * Duplicate a test set
+     */
+    async duplicateTestSetRaw(requestParameters: DuplicateTestSetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateTestSet201Response>> {
+        const requestOptions = await this.duplicateTestSetRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CreateTestSet201ResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Clone an existing test set and its active test cases into a new test set. Returns the new test set.
+     * Duplicate a test set
+     */
+    async duplicateTestSet(requestParameters: DuplicateTestSetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateTestSet201Response> {
+        const response = await this.duplicateTestSetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for getTestSet without sending the request
      */
     async getTestSetRequestOpts(requestParameters: GetTestSetRequest): Promise<runtime.RequestOpts> {
@@ -424,6 +664,57 @@ export class TestSetsApi extends runtime.BaseAPI implements TestSetsApiInterface
      */
     async getTestSet(requestParameters: GetTestSetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateTestSet201Response> {
         const response = await this.getTestSetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for listTestSetAgents without sending the request
+     */
+    async listTestSetAgentsRequestOpts(requestParameters: ListTestSetAgentsRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['testSetId'] == null) {
+            throw new runtime.RequiredError(
+                'testSetId',
+                'Required parameter "testSetId" was null or undefined when calling listTestSetAgents().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Test_Sets_API_apiKey authentication
+        }
+
+
+        let urlPath = `/test-sets/{test_set_id}/agents`;
+        urlPath = urlPath.replace('{test_set_id}', encodeURIComponent(String(requestParameters['testSetId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * List the agents currently associated with a test set. Returns every associated agent (not paginated); associations are bounded per test set. An unknown test_set_id returns an empty list rather than 404.
+     * List associated agents
+     */
+    async listTestSetAgentsRaw(requestParameters: ListTestSetAgentsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TestSetsAPIListTestSetAgentsResponse>> {
+        const requestOptions = await this.listTestSetAgentsRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => TestSetsAPIListTestSetAgentsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * List the agents currently associated with a test set. Returns every associated agent (not paginated); associations are bounded per test set. An unknown test_set_id returns an empty list rather than 404.
+     * List associated agents
+     */
+    async listTestSetAgents(requestParameters: ListTestSetAgentsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TestSetsAPIListTestSetAgentsResponse> {
+        const response = await this.listTestSetAgentsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -538,6 +829,65 @@ export class TestSetsApi extends runtime.BaseAPI implements TestSetsApiInterface
      */
     async listTestSets(requestParameters: ListTestSetsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ListTestSets200Response> {
         const response = await this.listTestSetsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for removeTestSetAgent without sending the request
+     */
+    async removeTestSetAgentRequestOpts(requestParameters: RemoveTestSetAgentRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['testSetId'] == null) {
+            throw new runtime.RequiredError(
+                'testSetId',
+                'Required parameter "testSetId" was null or undefined when calling removeTestSetAgent().'
+            );
+        }
+
+        if (requestParameters['agentId'] == null) {
+            throw new runtime.RequiredError(
+                'agentId',
+                'Required parameter "agentId" was null or undefined when calling removeTestSetAgent().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Test_Sets_API_apiKey authentication
+        }
+
+
+        let urlPath = `/test-sets/{test_set_id}/agents/{agent_id}`;
+        urlPath = urlPath.replace('{test_set_id}', encodeURIComponent(String(requestParameters['testSetId'])));
+        urlPath = urlPath.replace('{agent_id}', encodeURIComponent(String(requestParameters['agentId'])));
+
+        return {
+            path: urlPath,
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Remove one agent\'s association with a test set. Idempotent: returns 200 whether or not the association existed.
+     * Remove an agent association
+     */
+    async removeTestSetAgentRaw(requestParameters: RemoveTestSetAgentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+        const requestOptions = await this.removeTestSetAgentRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * Remove one agent\'s association with a test set. Idempotent: returns 200 whether or not the association existed.
+     * Remove an agent association
+     */
+    async removeTestSetAgent(requestParameters: RemoveTestSetAgentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+        const response = await this.removeTestSetAgentRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

@@ -47,6 +47,21 @@ export interface CovalReportsAPICreateReportRequest {
      */
     run_ids: Array<string>;
     /**
+     * Optional simulation IDs pinning the report to a subset of simulations. When set,
+     * this is the report's authoritative scope. All must belong to the authenticated
+     * organization.
+     * 
+     * @type {Array<string>}
+     * @memberof CovalReportsAPICreateReportRequest
+     */
+    simulation_output_ids?: Array<string>;
+    /**
+     * Optional human review project the simulations were sourced from; `simulation_output_ids` must belong to it.
+     * @type {string}
+     * @memberof CovalReportsAPICreateReportRequest
+     */
+    source_human_review_project_id?: string | null;
+    /**
      * 
      * @type {CovalReportsAPICompareBy}
      * @memberof CovalReportsAPICreateReportRequest
@@ -91,6 +106,8 @@ export function CovalReportsAPICreateReportRequestFromJSONTyped(json: any, ignor
         
         'name': json['name'],
         'run_ids': json['run_ids'],
+        'simulation_output_ids': json['simulation_output_ids'] == null ? undefined : json['simulation_output_ids'],
+        'source_human_review_project_id': json['source_human_review_project_id'] == null ? undefined : json['source_human_review_project_id'],
         'compare_by': json['compare_by'] == null ? undefined : CovalReportsAPICompareByFromJSON(json['compare_by']),
         'metadata_key': json['metadata_key'] == null ? undefined : json['metadata_key'],
         'permissions': json['permissions'] == null ? undefined : CovalReportsAPIReportPermissionFromJSON(json['permissions']),
@@ -110,6 +127,8 @@ export function CovalReportsAPICreateReportRequestToJSONTyped(value?: CovalRepor
         
         'name': value['name'],
         'run_ids': value['run_ids'],
+        'simulation_output_ids': value['simulation_output_ids'],
+        'source_human_review_project_id': value['source_human_review_project_id'],
         'compare_by': CovalReportsAPICompareByToJSON(value['compare_by']),
         'metadata_key': value['metadata_key'],
         'permissions': CovalReportsAPIReportPermissionToJSON(value['permissions']),

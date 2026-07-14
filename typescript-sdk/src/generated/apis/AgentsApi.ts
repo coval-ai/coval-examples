@@ -53,6 +53,11 @@ import {
     CovalAgentsAPIUpdateAgentResponseFromJSON,
     CovalAgentsAPIUpdateAgentResponseToJSON,
 } from '../models/CovalAgentsAPIUpdateAgentResponse.js';
+import {
+    type DuplicateAgentRequest,
+    DuplicateAgentRequestFromJSON,
+    DuplicateAgentRequestToJSON,
+} from '../models/DuplicateAgentRequest.js';
 
 export interface CreateAgentRequest {
     covalAgentsAPICreateAgentRequest: CovalAgentsAPICreateAgentRequest;
@@ -60,6 +65,11 @@ export interface CreateAgentRequest {
 
 export interface DeleteAgentRequest {
     agentId: string;
+}
+
+export interface DuplicateAgentOperationRequest {
+    agentId: string;
+    duplicateAgentRequest?: DuplicateAgentRequest;
 }
 
 export interface GetAgentRequest {
@@ -142,6 +152,32 @@ export interface AgentsApiInterface {
      * Delete agent
      */
     deleteAgent(requestParameters: DeleteAgentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object>;
+
+    /**
+     * Creates request options for duplicateAgent without sending the request
+     * @param {string} agentId ID of the agent to duplicate
+     * @param {DuplicateAgentRequest} [duplicateAgentRequest] 
+     * @throws {RequiredError}
+     * @memberof AgentsApiInterface
+     */
+    duplicateAgentRequestOpts(requestParameters: DuplicateAgentOperationRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Clone an existing agent into a new agent owned by your organization. By default only the agent config is copied; set `include_associations` to also copy its metric and test-set associations. Returns the new agent in the same shape as create. 
+     * @summary Duplicate an agent
+     * @param {string} agentId ID of the agent to duplicate
+     * @param {DuplicateAgentRequest} [duplicateAgentRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AgentsApiInterface
+     */
+    duplicateAgentRaw(requestParameters: DuplicateAgentOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalAgentsAPICreateAgentResponse>>;
+
+    /**
+     * Clone an existing agent into a new agent owned by your organization. By default only the agent config is copied; set `include_associations` to also copy its metric and test-set associations. Returns the new agent in the same shape as create. 
+     * Duplicate an agent
+     */
+    duplicateAgent(requestParameters: DuplicateAgentOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalAgentsAPICreateAgentResponse>;
 
     /**
      * Creates request options for getAgent without sending the request
@@ -383,6 +419,60 @@ export class AgentsApi extends runtime.BaseAPI implements AgentsApiInterface {
      */
     async deleteAgent(requestParameters: DeleteAgentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
         const response = await this.deleteAgentRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for duplicateAgent without sending the request
+     */
+    async duplicateAgentRequestOpts(requestParameters: DuplicateAgentOperationRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['agentId'] == null) {
+            throw new runtime.RequiredError(
+                'agentId',
+                'Required parameter "agentId" was null or undefined when calling duplicateAgent().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Agents_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/agents/{agent_id}/duplicate`;
+        urlPath = urlPath.replace('{agent_id}', encodeURIComponent(String(requestParameters['agentId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: DuplicateAgentRequestToJSON(requestParameters['duplicateAgentRequest']),
+        };
+    }
+
+    /**
+     * Clone an existing agent into a new agent owned by your organization. By default only the agent config is copied; set `include_associations` to also copy its metric and test-set associations. Returns the new agent in the same shape as create. 
+     * Duplicate an agent
+     */
+    async duplicateAgentRaw(requestParameters: DuplicateAgentOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalAgentsAPICreateAgentResponse>> {
+        const requestOptions = await this.duplicateAgentRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalAgentsAPICreateAgentResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Clone an existing agent into a new agent owned by your organization. By default only the agent config is copied; set `include_associations` to also copy its metric and test-set associations. Returns the new agent in the same shape as create. 
+     * Duplicate an agent
+     */
+    async duplicateAgent(requestParameters: DuplicateAgentOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalAgentsAPICreateAgentResponse> {
+        const response = await this.duplicateAgentRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

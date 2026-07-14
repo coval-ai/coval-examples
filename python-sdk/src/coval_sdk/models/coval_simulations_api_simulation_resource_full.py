@@ -21,6 +21,8 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from coval_sdk.models.coval_simulations_api_simulation_resource_destination import CovalSimulationsAPISimulationResourceDestination
+from coval_sdk.models.coval_simulations_api_simulation_resource_source import CovalSimulationsAPISimulationResourceSource
 from coval_sdk.models.coval_simulations_api_transcript_message import CovalSimulationsAPITranscriptMessage
 from typing import Optional, Set
 from typing_extensions import Self
@@ -40,12 +42,16 @@ class CovalSimulationsAPISimulationResourceFull(BaseModel):
     test_set_id: Optional[StrictStr] = Field(default=None, description="Reference to test set resource")
     test_case_id: Optional[StrictStr] = Field(default=None, description="Reference to test case that was executed")
     has_audio: StrictBool = Field(description="Whether audio recording is available for this simulation")
+    source: Optional[CovalSimulationsAPISimulationResourceSource] = None
+    destination: Optional[CovalSimulationsAPISimulationResourceDestination] = None
     error_message: Optional[StrictStr] = Field(default=None, description="Error message if simulation failed or was cancelled")
     mutation_id: Optional[StrictStr] = Field(default=None, description="ID of the mutation variant used, or null for base agent simulations.")
     mutation_name: Optional[StrictStr] = Field(default=None, description="Display name of the mutation variant, or null for base agent simulations.")
+    notes: Optional[StrictStr] = Field(default=None, description="Free-text notes attached to the simulation. Settable via PATCH /simulations/{simulation_id}.")
+    is_public: Optional[StrictBool] = Field(default=None, description="Whether the simulation is shared via a public link. Settable via PATCH /simulations/{simulation_id}.")
     transcript: Optional[List[CovalSimulationsAPITranscriptMessage]] = Field(default=None, description="Full conversation transcript (only included in GET, not LIST)")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "simulation_id", "run_id", "status", "create_time", "agent_id", "persona_id", "test_set_id", "test_case_id", "has_audio", "error_message", "mutation_id", "mutation_name", "transcript"]
+    __properties: ClassVar[List[str]] = ["name", "simulation_id", "run_id", "status", "create_time", "agent_id", "persona_id", "test_set_id", "test_case_id", "has_audio", "source", "destination", "error_message", "mutation_id", "mutation_name", "notes", "is_public", "transcript"]
 
     @field_validator('status')
     def status_validate_enum(cls, value):
@@ -95,6 +101,12 @@ class CovalSimulationsAPISimulationResourceFull(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of source
+        if self.source:
+            _dict['source'] = self.source.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of destination
+        if self.destination:
+            _dict['destination'] = self.destination.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in transcript (list)
         _items = []
         if self.transcript:
@@ -127,6 +139,16 @@ class CovalSimulationsAPISimulationResourceFull(BaseModel):
         if self.test_case_id is None and "test_case_id" in self.model_fields_set:
             _dict['test_case_id'] = None
 
+        # set to None if source (nullable) is None
+        # and model_fields_set contains the field
+        if self.source is None and "source" in self.model_fields_set:
+            _dict['source'] = None
+
+        # set to None if destination (nullable) is None
+        # and model_fields_set contains the field
+        if self.destination is None and "destination" in self.model_fields_set:
+            _dict['destination'] = None
+
         # set to None if error_message (nullable) is None
         # and model_fields_set contains the field
         if self.error_message is None and "error_message" in self.model_fields_set:
@@ -141,6 +163,11 @@ class CovalSimulationsAPISimulationResourceFull(BaseModel):
         # and model_fields_set contains the field
         if self.mutation_name is None and "mutation_name" in self.model_fields_set:
             _dict['mutation_name'] = None
+
+        # set to None if notes (nullable) is None
+        # and model_fields_set contains the field
+        if self.notes is None and "notes" in self.model_fields_set:
+            _dict['notes'] = None
 
         # set to None if transcript (nullable) is None
         # and model_fields_set contains the field
@@ -169,9 +196,13 @@ class CovalSimulationsAPISimulationResourceFull(BaseModel):
             "test_set_id": obj.get("test_set_id"),
             "test_case_id": obj.get("test_case_id"),
             "has_audio": obj.get("has_audio"),
+            "source": CovalSimulationsAPISimulationResourceSource.from_dict(obj["source"]) if obj.get("source") is not None else None,
+            "destination": CovalSimulationsAPISimulationResourceDestination.from_dict(obj["destination"]) if obj.get("destination") is not None else None,
             "error_message": obj.get("error_message"),
             "mutation_id": obj.get("mutation_id"),
             "mutation_name": obj.get("mutation_name"),
+            "notes": obj.get("notes"),
+            "is_public": obj.get("is_public"),
             "transcript": [CovalSimulationsAPITranscriptMessage.from_dict(_item) for _item in obj["transcript"]] if obj.get("transcript") is not None else None
         })
         # store additional fields in additional_properties

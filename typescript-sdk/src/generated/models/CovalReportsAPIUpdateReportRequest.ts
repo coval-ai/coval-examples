@@ -47,6 +47,23 @@ export interface CovalReportsAPIUpdateReportRequest {
      */
     run_ids?: Array<string>;
     /**
+     * Replacement simulation IDs pinning the report to a subset of simulations. When set,
+     * this is the report's authoritative scope.
+     * 
+     * @type {Array<string>}
+     * @memberof CovalReportsAPIUpdateReportRequest
+     */
+    simulation_output_ids?: Array<string>;
+    /**
+     * Human review project the simulations were sourced from; `simulation_output_ids`
+     * must belong to it. Omit to leave unchanged — null is rejected, the linkage
+     * cannot be cleared via update.
+     * 
+     * @type {string}
+     * @memberof CovalReportsAPIUpdateReportRequest
+     */
+    source_human_review_project_id?: string;
+    /**
      * 
      * @type {CovalReportsAPICompareBy}
      * @memberof CovalReportsAPIUpdateReportRequest
@@ -87,6 +104,8 @@ export function CovalReportsAPIUpdateReportRequestFromJSONTyped(json: any, ignor
         
         'name': json['name'] == null ? undefined : json['name'],
         'run_ids': json['run_ids'] == null ? undefined : json['run_ids'],
+        'simulation_output_ids': json['simulation_output_ids'] == null ? undefined : json['simulation_output_ids'],
+        'source_human_review_project_id': json['source_human_review_project_id'] == null ? undefined : json['source_human_review_project_id'],
         'compare_by': json['compare_by'] == null ? undefined : CovalReportsAPICompareByFromJSON(json['compare_by']),
         'metadata_key': json['metadata_key'] == null ? undefined : json['metadata_key'],
         'permissions': json['permissions'] == null ? undefined : CovalReportsAPIReportPermissionFromJSON(json['permissions']),
@@ -106,6 +125,8 @@ export function CovalReportsAPIUpdateReportRequestToJSONTyped(value?: CovalRepor
         
         'name': value['name'],
         'run_ids': value['run_ids'],
+        'simulation_output_ids': value['simulation_output_ids'],
+        'source_human_review_project_id': value['source_human_review_project_id'],
         'compare_by': CovalReportsAPICompareByToJSON(value['compare_by']),
         'metadata_key': value['metadata_key'],
         'permissions': CovalReportsAPIReportPermissionToJSON(value['permissions']),

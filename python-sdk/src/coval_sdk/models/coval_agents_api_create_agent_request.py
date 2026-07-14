@@ -35,13 +35,16 @@ class CovalAgentsAPICreateAgentRequest(BaseModel):
     phone_number: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="Phone number in E.164 format (e.g., +12345678901) or SIP address (e.g., sip:user@domain.com).  **Required for:** - MODEL_TYPE_VOICE agents (E.164 or SIP) - MODEL_TYPE_SMS agents (E.164 only)  Optional for other agent types. ")
     endpoint: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="Webhook endpoint URL that Coval will POST to.  **Required for MODEL_TYPE_OUTBOUND_VOICE agents.** Must be a valid HTTP/HTTPS URL. ")
     prompt: Optional[Annotated[str, Field(strict=True, max_length=50000)]] = Field(default=None, description="Agent instructions/system prompt")
+    customer_agent_id: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=200)]] = Field(default=None, description="Your own external id for this agent. Defaults to the generated agent id when omitted.")
+    language: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="Primary language for the agent")
+    attributes: Optional[Dict[str, Any]] = Field(default=None, description="Free-form agent attributes; referenceable in metric prompts as `{{agent.<key>}}`.")
     metadata: Optional[Dict[str, Any]] = Field(default=None, description="Simulator-specific configuration (JSONB, max 10MB).  **For CHAT agents:**  *Required:* - `chat_endpoint` - Chat endpoint URL (validated, no private IPs/localhost)  *Authentication:* - `authorization_header` - Auth header (Bearer, X-API-Key, etc.)  *Initialization:* - `initialization_endpoint` - Init endpoint called before chat (validated URL) - `initialization_payload` - JSON payload for init request (max 16KB)  *Custom Data:* - `custom_data` - Organization/agent-level data (max 32KB JSON string) - `custom_persona_data` - Persona-specific data (max 16KB JSON string)  *Headers & Format:* - `custom_headers` - Additional headers with template variables, as a JSON object or JSON-encoded object string (max 16KB when encoded) - `response_format` - \"chat_completions\" (default) or \"responses\"  *Request/Response Processing:* - `input_template` - Custom JSON template for requests (validated JSON) - `payload_wrapper` - Wrapper field name (e.g., \"data\", \"request\") - `response_message_path` - Dot notation path to extract message - `strip_message_timestamps` - Remove timestamp fields (boolean, default: false)  *Tool Calls:* - `tool_call_extraction_config` - Configuration for extracting tool calls from custom responses  *Dynamic Configuration:* - `persona_id` - Reference persona for parameter substitution (22-char ShortUUID)  *Template Variables:* `{{sessionId}}`, `{{simulation_output_id}}`, `{{init_response.path}}`, `{{persona.field}}`, `{{messages}}`, `{{latest_message}}`, `{{custom_data.field}}`  **For OUTBOUND_VOICE agents:** - `trigger_call_headers` - JSON string with HTTP headers - `trigger_call_payload` - JSON string with base payload - `phone_number_key` - Field name for phone number (default: \"phone_number\")  **For WEBSOCKET agents:**  *Required:* - `endpoint` - WebSocket endpoint URL (must be wss://, validated). Required in `direct` connection mode.  *Connection mode:* - `connection_mode` - `direct` (default) or `http_first`. In `http_first` mode Coval issues an HTTP request first and dials the WebSocket URL returned in the response. - `http_url`, `http_method`, `http_request_body`, `http_headers`, `websocket_url_response_path` - HTTP-first setup fields when `connection_mode=http_first`.  *Authentication (optional):* - `authorization_header` - Auth header sent during the WebSocket handshake. Supports:   - `\"Bearer <token>\"` → sent as `Authorization: Bearer <token>`   - `\"Basic <base64-credentials>\"` → sent as `Authorization: Basic <base64-credentials>`   - `\"X-API-Key <key>\"` → sent as `X-API-Key: <key>` - `custom_headers` - JSON object or JSON-encoded object string of additional HTTP headers for the WebSocket handshake.  *Initialization & handshake (optional):* - `initialization_json` - JSON object or JSON string payload sent after the WebSocket upgrade and before any ready-message wait. - `handshake_ready_message_type` - Message type to wait for before streaming audio (default `session_ready` in direct mode and empty in `http_first`; empty string skips the ready-message wait). - `handshake_requires_session_id` - Whether the ready message must include `session_id` (default `true` in direct mode and `false` in `http_first`). - `handshake_timeout_seconds` - Seconds Coval waits for the ready message (default `30`).  *Audio format (optional):* - `send_audio_template` - JSON template for outbound audio. Must contain `{{audio_data}}`. Setting it exactly to `{{audio_data}}` sends raw PCM bytes (default `{\"type\":\"audio_chunk\",\"data\":\"{{audio_data}}\"}`). - `message_type_path` - Dot-notation path to the field naming the inbound message kind (default `type`). - `audio_message_type_value` - Value identifying an audio frame; use `*` to treat every JSON message as audio (default `audio_chunk`). - `audio_data_path` - Dot-notation path to the inbound base64 audio payload (default `data`). - `audio_encoding` - Inbound JSON audio payload encoding: `pcm` (default) or `mp3`. - `receive_audio_channels` - `1` for mono inbound JSON PCM or `2` for legacy stereo-to-mono averaging (default `2`). - `send_sample_rate_hertz` - Outbound sample rate. One of 8000, 16000, 24000, 48000 (default 16000). - `receive_sample_rate_hertz` - Inbound sample rate. One of 8000, 16000, 24000, 48000 (default 48000). - `pipeline_sample_rate_hertz` - Pipeline-internal rate; must remain 16000. - `pace_inbound_binary_audio` - Boolean, paces inbound binary PCM at real-time. Defaults on when outbound audio is configured for raw PCM bytes, off for JSON templates. - `send_media_template` - Outbound template for image attachments. Must contain `{{media_data}}`; may also include `{{media_name}}` and `{{mime_type}}`. Set exactly to `{{media_data}}` to send raw bytes, otherwise Coval base64-encodes the image into the JSON template.  *Non-audio event capture (optional):* - `non_audio_event_message_types` - List of message-type values to emit as `WebsocketEventFrame`s instead of dropping. Each match carries the message type, optional `event` name, and original payload. Useful for cart updates, transcript fragments, or session telemetry.  *Compatibility profile (optional):* - `websocket_compat_profile` - One of `generic` or `json_audio`. Forces the simulator routing decision. Use `json_audio` for the JSON audio preset shape. ")
     workflows: Optional[Dict[str, Any]] = Field(default=None, description="Workflow configuration (JSONB, max 10MB)")
     metric_ids: Optional[List[Annotated[str, Field(strict=True)]]] = Field(default=None, description="Associated metric IDs (22-char IDs)")
     test_set_ids: Optional[List[Annotated[str, Field(strict=True)]]] = Field(default=None, description="Associated test set IDs (8-char IDs)")
     tags: Optional[List[StrictStr]] = Field(default=None, description="Tags to associate with this agent. Null or omitted creates the agent with no tags. Pass [] for an empty tag list.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["display_name", "model_type", "phone_number", "endpoint", "prompt", "metadata", "workflows", "metric_ids", "test_set_ids", "tags"]
+    __properties: ClassVar[List[str]] = ["display_name", "model_type", "phone_number", "endpoint", "prompt", "customer_agent_id", "language", "attributes", "metadata", "workflows", "metric_ids", "test_set_ids", "tags"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -104,6 +107,21 @@ class CovalAgentsAPICreateAgentRequest(BaseModel):
         if self.prompt is None and "prompt" in self.model_fields_set:
             _dict['prompt'] = None
 
+        # set to None if customer_agent_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.customer_agent_id is None and "customer_agent_id" in self.model_fields_set:
+            _dict['customer_agent_id'] = None
+
+        # set to None if language (nullable) is None
+        # and model_fields_set contains the field
+        if self.language is None and "language" in self.model_fields_set:
+            _dict['language'] = None
+
+        # set to None if attributes (nullable) is None
+        # and model_fields_set contains the field
+        if self.attributes is None and "attributes" in self.model_fields_set:
+            _dict['attributes'] = None
+
         # set to None if tags (nullable) is None
         # and model_fields_set contains the field
         if self.tags is None and "tags" in self.model_fields_set:
@@ -126,6 +144,9 @@ class CovalAgentsAPICreateAgentRequest(BaseModel):
             "phone_number": obj.get("phone_number"),
             "endpoint": obj.get("endpoint"),
             "prompt": obj.get("prompt"),
+            "customer_agent_id": obj.get("customer_agent_id"),
+            "language": obj.get("language"),
+            "attributes": obj.get("attributes"),
             "metadata": obj.get("metadata"),
             "workflows": obj.get("workflows"),
             "metric_ids": obj.get("metric_ids"),

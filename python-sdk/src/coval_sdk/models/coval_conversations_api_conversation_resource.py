@@ -23,7 +23,10 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_conversations_api_conversation_progress import CovalConversationsAPIConversationProgress
+from coval_sdk.models.coval_conversations_api_conversation_resource_destination import CovalConversationsAPIConversationResourceDestination
+from coval_sdk.models.coval_conversations_api_conversation_resource_source import CovalConversationsAPIConversationResourceSource
 from coval_sdk.models.coval_conversations_api_conversation_status import CovalConversationsAPIConversationStatus
+from coval_sdk.models.coval_conversations_api_metric_output_resource import CovalConversationsAPIMetricOutputResource
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -41,13 +44,16 @@ class CovalConversationsAPIConversationResource(BaseModel):
     has_audio: Optional[StrictBool] = Field(default=None, description="Whether audio is available for this conversation.  Use GET /v1/conversations/{id}/audio to retrieve presigned URL. ")
     agent_id: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Agent resource ID (22-character ShortUUID), if one was provided at submission")
     persona_id: Optional[StrictStr] = Field(default=None, description="Reference to persona resource (typically null for monitoring)")
+    source: Optional[CovalConversationsAPIConversationResourceSource] = None
+    destination: Optional[CovalConversationsAPIConversationResourceDestination] = None
     progress: Optional[CovalConversationsAPIConversationProgress] = Field(default=None, description="Progress tracking (included when include_progress=true)")
     metadata: Optional[Dict[str, Any]] = Field(default=None, description="Customer-provided metadata")
     tags: Optional[List[StrictStr]] = Field(default=None, description="Tags applied to this conversation")
     metric_ids: Optional[List[Annotated[str, Field(min_length=22, strict=True, max_length=26)]]] = Field(default=None, description="List of metric IDs configured for this conversation.  Use GET /v1/conversations/{id}/metrics to retrieve computed metric values. ")
+    metric_outputs: Optional[List[CovalConversationsAPIMetricOutputResource]] = Field(default=None, description="Full outputs matching the requested metric_id. Present only when the list request sets include=metric_outputs; omitted from the default summary view. ")
     error: Optional[StrictStr] = Field(default=None, description="Error message (only present if status=FAILED)")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "conversation_id", "status", "create_time", "external_conversation_id", "occurred_at", "has_audio", "agent_id", "persona_id", "progress", "metadata", "tags", "metric_ids", "error"]
+    __properties: ClassVar[List[str]] = ["name", "conversation_id", "status", "create_time", "external_conversation_id", "occurred_at", "has_audio", "agent_id", "persona_id", "source", "destination", "progress", "metadata", "tags", "metric_ids", "metric_outputs", "error"]
 
     @field_validator('agent_id')
     def agent_id_validate_regular_expression(cls, value):
@@ -103,9 +109,22 @@ class CovalConversationsAPIConversationResource(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of source
+        if self.source:
+            _dict['source'] = self.source.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of destination
+        if self.destination:
+            _dict['destination'] = self.destination.to_dict()
         # override the default output from pydantic by calling `to_dict()` of progress
         if self.progress:
             _dict['progress'] = self.progress.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in metric_outputs (list)
+        _items = []
+        if self.metric_outputs:
+            for _item_metric_outputs in self.metric_outputs:
+                if _item_metric_outputs:
+                    _items.append(_item_metric_outputs.to_dict())
+            _dict['metric_outputs'] = _items
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -120,6 +139,21 @@ class CovalConversationsAPIConversationResource(BaseModel):
         # and model_fields_set contains the field
         if self.persona_id is None and "persona_id" in self.model_fields_set:
             _dict['persona_id'] = None
+
+        # set to None if source (nullable) is None
+        # and model_fields_set contains the field
+        if self.source is None and "source" in self.model_fields_set:
+            _dict['source'] = None
+
+        # set to None if destination (nullable) is None
+        # and model_fields_set contains the field
+        if self.destination is None and "destination" in self.model_fields_set:
+            _dict['destination'] = None
+
+        # set to None if metric_outputs (nullable) is None
+        # and model_fields_set contains the field
+        if self.metric_outputs is None and "metric_outputs" in self.model_fields_set:
+            _dict['metric_outputs'] = None
 
         # set to None if error (nullable) is None
         # and model_fields_set contains the field
@@ -147,10 +181,13 @@ class CovalConversationsAPIConversationResource(BaseModel):
             "has_audio": obj.get("has_audio"),
             "agent_id": obj.get("agent_id"),
             "persona_id": obj.get("persona_id"),
+            "source": CovalConversationsAPIConversationResourceSource.from_dict(obj["source"]) if obj.get("source") is not None else None,
+            "destination": CovalConversationsAPIConversationResourceDestination.from_dict(obj["destination"]) if obj.get("destination") is not None else None,
             "progress": CovalConversationsAPIConversationProgress.from_dict(obj["progress"]) if obj.get("progress") is not None else None,
             "metadata": obj.get("metadata"),
             "tags": obj.get("tags"),
             "metric_ids": obj.get("metric_ids"),
+            "metric_outputs": [CovalConversationsAPIMetricOutputResource.from_dict(_item) for _item in obj["metric_outputs"]] if obj.get("metric_outputs") is not None else None,
             "error": obj.get("error")
         })
         # store additional fields in additional_properties

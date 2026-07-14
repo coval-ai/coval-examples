@@ -53,6 +53,18 @@ export interface CovalReportsAPIReport {
      */
     run_ids: Array<string>;
     /**
+     * Simulation IDs pinning the saved report to a subset of simulations; empty for run-scoped reports.
+     * @type {Array<string>}
+     * @memberof CovalReportsAPIReport
+     */
+    simulation_output_ids?: Array<string>;
+    /**
+     * Human review project the pinned simulations were sourced from; null when not report-linked.
+     * @type {string}
+     * @memberof CovalReportsAPIReport
+     */
+    source_human_review_project_id?: string | null;
+    /**
      * 
      * @type {CovalReportsAPICompareBy}
      * @memberof CovalReportsAPIReport
@@ -100,6 +112,8 @@ export function CovalReportsAPIReportFromJSONTyped(json: any, ignoreDiscriminato
         'id': json['id'],
         'name': json['name'],
         'run_ids': json['run_ids'],
+        'simulation_output_ids': json['simulation_output_ids'] == null ? undefined : json['simulation_output_ids'],
+        'source_human_review_project_id': json['source_human_review_project_id'] == null ? undefined : json['source_human_review_project_id'],
         'compare_by': CovalReportsAPICompareByFromJSON(json['compare_by']),
         'metadata_key': json['metadata_key'],
         'permissions': CovalReportsAPIReportPermissionFromJSON(json['permissions']),
@@ -120,6 +134,8 @@ export function CovalReportsAPIReportToJSONTyped(value?: CovalReportsAPIReport |
         'id': value['id'],
         'name': value['name'],
         'run_ids': value['run_ids'],
+        'simulation_output_ids': value['simulation_output_ids'],
+        'source_human_review_project_id': value['source_human_review_project_id'],
         'compare_by': CovalReportsAPICompareByToJSON(value['compare_by']),
         'metadata_key': value['metadata_key'],
         'permissions': CovalReportsAPIReportPermissionToJSON(value['permissions']),

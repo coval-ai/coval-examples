@@ -1,0 +1,55 @@
+name: Publish @coval/sdk to npm
+
+# Configure npm trusted publishing for @coval/sdk with:
+# - GitHub organization: coval-ai
+# - Repository: coval-examples
+# - Workflow: publish-coval-npm.yml
+# - Allowed action: npm publish
+
+on:
+  push:
+    tags:
+      - "typescript-sdk-v*"
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: typescript-sdk
+    steps:
+      - name: Checkout coval-examples
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Use an OIDC-capable npm CLI
+        run: npm install --global npm@11.5.1
+
+      - name: Install, build, and test
+        run: |
+          npm ci
+          npm run build
+          npm test
+          npm pack --dry-run
+
+      - name: Verify tag matches package version
+        run: |
+          set -euo pipefail
+          version="$(node -p "require('./package.json').version")"
+          expected="typescript-sdk-v${version}"
+          if [ "${GITHUB_REF_NAME}" != "${expected}" ]; then
+            echo "Tag ${GITHUB_REF_NAME} does not match package version ${version}; expected ${expected}."
+            exit 1
+          fi
+
+      - name: Publish through npm trusted publishing
+        run: npm publish --access public

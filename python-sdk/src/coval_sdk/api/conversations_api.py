@@ -1238,7 +1238,8 @@ class ConversationsApi:
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  **Operators:** `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  **Fields:** - `status` - PENDING, IN_QUEUE, IN_PROGRESS, COMPLETED, FAILED, CANCELLED, DELETED - `external_conversation_id` - Your system's conversation ID - `create_time` - ISO 8601 timestamp - `occurred_at` - ISO 8601 timestamp - `metadata.{key}` - Custom metadata fields  **Examples:** - `status=COMPLETED` - `create_time>\"2025-11-01T00:00:00Z\"` - `status=COMPLETED AND occurred_at>=\"2025-11-01T00:00:00Z\"` - `external_conversation_id=external-call-abc` ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort field with optional `-` prefix for descending order.  **Fields:** `create_time`, `occurred_at`, `status`  **Examples:** - `create_time` (ascending) - `-create_time` (descending, most recent first) - `-occurred_at` (most recent conversations first) ")] = None,
         view: Annotated[Optional[StrictStr], Field(description="Set to `metric_breakdown` to return an aggregate of one metric's scores grouped by a `customer_metadata` key (e.g. vendor), computed over the whole scored monitoring corpus, instead of the conversation list. Requires `metric_id` and `group_by_metadata`; the response is a metric-breakdown object (`{view, metric_id, group_by_metadata, aggregation, breakdown:[{metadata_value, value, count}], total_count}`). ")] = None,
-        metric_id: Annotated[Optional[StrictStr], Field(description="Required when `view=metric_breakdown`: the metric to aggregate.")] = None,
+        metric_id: Annotated[Optional[StrictStr], Field(description="Metric to aggregate when `view=metric_breakdown`, or the metric whose full outputs should be embedded when `include=metric_outputs`. ")] = None,
+        include: Annotated[Optional[StrictStr], Field(description="Set to `metric_outputs` to embed full outputs for `metric_id` on every conversation in the returned page. Omitted by default to keep list payloads small. ")] = None,
         group_by_metadata: Annotated[Optional[StrictStr], Field(description="Required when `view=metric_breakdown`: the customer_metadata key to group by (e.g. nlp_provider).")] = None,
         aggregation: Annotated[Optional[StrictStr], Field(description="Aggregation for `view=metric_breakdown`. Defaults to `success` (a YES/NO success rate) for binary/string metrics and `avg` (numeric mean) for float metrics. ")] = None,
         start_date: Annotated[Optional[datetime], Field(description="Optional ISO-8601 lower bound (occurred_at) for `view=metric_breakdown`.")] = None,
@@ -1270,8 +1271,10 @@ class ConversationsApi:
         :type order_by: str
         :param view: Set to `metric_breakdown` to return an aggregate of one metric's scores grouped by a `customer_metadata` key (e.g. vendor), computed over the whole scored monitoring corpus, instead of the conversation list. Requires `metric_id` and `group_by_metadata`; the response is a metric-breakdown object (`{view, metric_id, group_by_metadata, aggregation, breakdown:[{metadata_value, value, count}], total_count}`). 
         :type view: str
-        :param metric_id: Required when `view=metric_breakdown`: the metric to aggregate.
+        :param metric_id: Metric to aggregate when `view=metric_breakdown`, or the metric whose full outputs should be embedded when `include=metric_outputs`. 
         :type metric_id: str
+        :param include: Set to `metric_outputs` to embed full outputs for `metric_id` on every conversation in the returned page. Omitted by default to keep list payloads small. 
+        :type include: str
         :param group_by_metadata: Required when `view=metric_breakdown`: the customer_metadata key to group by (e.g. nlp_provider).
         :type group_by_metadata: str
         :param aggregation: Aggregation for `view=metric_breakdown`. Defaults to `success` (a YES/NO success rate) for binary/string metrics and `avg` (numeric mean) for float metrics. 
@@ -1309,6 +1312,7 @@ class ConversationsApi:
             order_by=order_by,
             view=view,
             metric_id=metric_id,
+            include=include,
             group_by_metadata=group_by_metadata,
             aggregation=aggregation,
             start_date=start_date,
@@ -1345,7 +1349,8 @@ class ConversationsApi:
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  **Operators:** `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  **Fields:** - `status` - PENDING, IN_QUEUE, IN_PROGRESS, COMPLETED, FAILED, CANCELLED, DELETED - `external_conversation_id` - Your system's conversation ID - `create_time` - ISO 8601 timestamp - `occurred_at` - ISO 8601 timestamp - `metadata.{key}` - Custom metadata fields  **Examples:** - `status=COMPLETED` - `create_time>\"2025-11-01T00:00:00Z\"` - `status=COMPLETED AND occurred_at>=\"2025-11-01T00:00:00Z\"` - `external_conversation_id=external-call-abc` ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort field with optional `-` prefix for descending order.  **Fields:** `create_time`, `occurred_at`, `status`  **Examples:** - `create_time` (ascending) - `-create_time` (descending, most recent first) - `-occurred_at` (most recent conversations first) ")] = None,
         view: Annotated[Optional[StrictStr], Field(description="Set to `metric_breakdown` to return an aggregate of one metric's scores grouped by a `customer_metadata` key (e.g. vendor), computed over the whole scored monitoring corpus, instead of the conversation list. Requires `metric_id` and `group_by_metadata`; the response is a metric-breakdown object (`{view, metric_id, group_by_metadata, aggregation, breakdown:[{metadata_value, value, count}], total_count}`). ")] = None,
-        metric_id: Annotated[Optional[StrictStr], Field(description="Required when `view=metric_breakdown`: the metric to aggregate.")] = None,
+        metric_id: Annotated[Optional[StrictStr], Field(description="Metric to aggregate when `view=metric_breakdown`, or the metric whose full outputs should be embedded when `include=metric_outputs`. ")] = None,
+        include: Annotated[Optional[StrictStr], Field(description="Set to `metric_outputs` to embed full outputs for `metric_id` on every conversation in the returned page. Omitted by default to keep list payloads small. ")] = None,
         group_by_metadata: Annotated[Optional[StrictStr], Field(description="Required when `view=metric_breakdown`: the customer_metadata key to group by (e.g. nlp_provider).")] = None,
         aggregation: Annotated[Optional[StrictStr], Field(description="Aggregation for `view=metric_breakdown`. Defaults to `success` (a YES/NO success rate) for binary/string metrics and `avg` (numeric mean) for float metrics. ")] = None,
         start_date: Annotated[Optional[datetime], Field(description="Optional ISO-8601 lower bound (occurred_at) for `view=metric_breakdown`.")] = None,
@@ -1377,8 +1382,10 @@ class ConversationsApi:
         :type order_by: str
         :param view: Set to `metric_breakdown` to return an aggregate of one metric's scores grouped by a `customer_metadata` key (e.g. vendor), computed over the whole scored monitoring corpus, instead of the conversation list. Requires `metric_id` and `group_by_metadata`; the response is a metric-breakdown object (`{view, metric_id, group_by_metadata, aggregation, breakdown:[{metadata_value, value, count}], total_count}`). 
         :type view: str
-        :param metric_id: Required when `view=metric_breakdown`: the metric to aggregate.
+        :param metric_id: Metric to aggregate when `view=metric_breakdown`, or the metric whose full outputs should be embedded when `include=metric_outputs`. 
         :type metric_id: str
+        :param include: Set to `metric_outputs` to embed full outputs for `metric_id` on every conversation in the returned page. Omitted by default to keep list payloads small. 
+        :type include: str
         :param group_by_metadata: Required when `view=metric_breakdown`: the customer_metadata key to group by (e.g. nlp_provider).
         :type group_by_metadata: str
         :param aggregation: Aggregation for `view=metric_breakdown`. Defaults to `success` (a YES/NO success rate) for binary/string metrics and `avg` (numeric mean) for float metrics. 
@@ -1416,6 +1423,7 @@ class ConversationsApi:
             order_by=order_by,
             view=view,
             metric_id=metric_id,
+            include=include,
             group_by_metadata=group_by_metadata,
             aggregation=aggregation,
             start_date=start_date,
@@ -1452,7 +1460,8 @@ class ConversationsApi:
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  **Operators:** `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  **Fields:** - `status` - PENDING, IN_QUEUE, IN_PROGRESS, COMPLETED, FAILED, CANCELLED, DELETED - `external_conversation_id` - Your system's conversation ID - `create_time` - ISO 8601 timestamp - `occurred_at` - ISO 8601 timestamp - `metadata.{key}` - Custom metadata fields  **Examples:** - `status=COMPLETED` - `create_time>\"2025-11-01T00:00:00Z\"` - `status=COMPLETED AND occurred_at>=\"2025-11-01T00:00:00Z\"` - `external_conversation_id=external-call-abc` ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort field with optional `-` prefix for descending order.  **Fields:** `create_time`, `occurred_at`, `status`  **Examples:** - `create_time` (ascending) - `-create_time` (descending, most recent first) - `-occurred_at` (most recent conversations first) ")] = None,
         view: Annotated[Optional[StrictStr], Field(description="Set to `metric_breakdown` to return an aggregate of one metric's scores grouped by a `customer_metadata` key (e.g. vendor), computed over the whole scored monitoring corpus, instead of the conversation list. Requires `metric_id` and `group_by_metadata`; the response is a metric-breakdown object (`{view, metric_id, group_by_metadata, aggregation, breakdown:[{metadata_value, value, count}], total_count}`). ")] = None,
-        metric_id: Annotated[Optional[StrictStr], Field(description="Required when `view=metric_breakdown`: the metric to aggregate.")] = None,
+        metric_id: Annotated[Optional[StrictStr], Field(description="Metric to aggregate when `view=metric_breakdown`, or the metric whose full outputs should be embedded when `include=metric_outputs`. ")] = None,
+        include: Annotated[Optional[StrictStr], Field(description="Set to `metric_outputs` to embed full outputs for `metric_id` on every conversation in the returned page. Omitted by default to keep list payloads small. ")] = None,
         group_by_metadata: Annotated[Optional[StrictStr], Field(description="Required when `view=metric_breakdown`: the customer_metadata key to group by (e.g. nlp_provider).")] = None,
         aggregation: Annotated[Optional[StrictStr], Field(description="Aggregation for `view=metric_breakdown`. Defaults to `success` (a YES/NO success rate) for binary/string metrics and `avg` (numeric mean) for float metrics. ")] = None,
         start_date: Annotated[Optional[datetime], Field(description="Optional ISO-8601 lower bound (occurred_at) for `view=metric_breakdown`.")] = None,
@@ -1484,8 +1493,10 @@ class ConversationsApi:
         :type order_by: str
         :param view: Set to `metric_breakdown` to return an aggregate of one metric's scores grouped by a `customer_metadata` key (e.g. vendor), computed over the whole scored monitoring corpus, instead of the conversation list. Requires `metric_id` and `group_by_metadata`; the response is a metric-breakdown object (`{view, metric_id, group_by_metadata, aggregation, breakdown:[{metadata_value, value, count}], total_count}`). 
         :type view: str
-        :param metric_id: Required when `view=metric_breakdown`: the metric to aggregate.
+        :param metric_id: Metric to aggregate when `view=metric_breakdown`, or the metric whose full outputs should be embedded when `include=metric_outputs`. 
         :type metric_id: str
+        :param include: Set to `metric_outputs` to embed full outputs for `metric_id` on every conversation in the returned page. Omitted by default to keep list payloads small. 
+        :type include: str
         :param group_by_metadata: Required when `view=metric_breakdown`: the customer_metadata key to group by (e.g. nlp_provider).
         :type group_by_metadata: str
         :param aggregation: Aggregation for `view=metric_breakdown`. Defaults to `success` (a YES/NO success rate) for binary/string metrics and `avg` (numeric mean) for float metrics. 
@@ -1523,6 +1534,7 @@ class ConversationsApi:
             order_by=order_by,
             view=view,
             metric_id=metric_id,
+            include=include,
             group_by_metadata=group_by_metadata,
             aggregation=aggregation,
             start_date=start_date,
@@ -1555,6 +1567,7 @@ class ConversationsApi:
         order_by,
         view,
         metric_id,
+        include,
         group_by_metadata,
         aggregation,
         start_date,
@@ -1604,6 +1617,10 @@ class ConversationsApi:
         if metric_id is not None:
             
             _query_params.append(('metric_id', metric_id))
+            
+        if include is not None:
+            
+            _query_params.append(('include', include))
             
         if group_by_metadata is not None:
             

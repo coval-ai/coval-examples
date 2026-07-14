@@ -4,7 +4,7 @@
 //   - x-api-key auth (lowercase header — gateway is case-sensitive)
 //   - exponential-backoff retry on 408/429/5xx and on network errors
 //   - typed CovalApiError raised for non-2xx after retries are exhausted
-//   - a default base URL (https://api.coval.dev) — override for staging
+//   - a default base URL (https://api.coval.dev/v1) — override for staging
 //
 // Each API surface from the generated client (AgentsApi, ConversationsApi,
 // SimulationsApi, …) is constructed eagerly and exposed as a property so
@@ -27,24 +27,27 @@ import {
   MonitorEventsApi,
   MonitorsApi,
   MutationsApi,
+  OrganizationConversationsConfigApi,
   PersonasApi,
+  ReportsApi,
   ReviewAnnotationsApi,
   ReviewProjectsApi,
   RunsApi,
   RunTemplatesApi,
   ScheduledRunsApi,
   SimulationsApi,
-  TemplatesApi,
+  TagsApi,
   TestCasesApi,
   TestSetsApi,
   TracesApi,
+  WebhooksApi,
   WidgetsApi,
 } from './generated/index.js';
 
 export interface CovalClientOptions {
   /** Coval API key. Required. Sent as `x-api-key` (lowercase). */
   apiKey: string;
-  /** Base URL. Defaults to https://api.coval.dev. */
+  /** Base URL. Defaults to https://api.coval.dev/v1. */
   baseUrl?: string;
   /** Retry configuration. Defaults to 3 attempts, 200ms base, 5s cap. */
   retry?: RetryOptions | false;
@@ -54,7 +57,7 @@ export interface CovalClientOptions {
   fetch?: FetchAPI;
 }
 
-const DEFAULT_BASE_URL = 'https://api.coval.dev';
+const DEFAULT_BASE_URL = 'https://api.coval.dev/v1';
 
 export class CovalClient {
   readonly agents: AgentsApi;
@@ -67,17 +70,20 @@ export class CovalClient {
   readonly monitors: MonitorsApi;
   readonly monitorEvents: MonitorEventsApi;
   readonly mutations: MutationsApi;
+  readonly organizationConversationsConfig: OrganizationConversationsConfigApi;
   readonly personas: PersonasApi;
+  readonly reports: ReportsApi;
   readonly reviewAnnotations: ReviewAnnotationsApi;
   readonly reviewProjects: ReviewProjectsApi;
   readonly runs: RunsApi;
   readonly runTemplates: RunTemplatesApi;
   readonly scheduledRuns: ScheduledRunsApi;
   readonly simulations: SimulationsApi;
-  readonly templates: TemplatesApi;
+  readonly tags: TagsApi;
   readonly testCases: TestCasesApi;
   readonly testSets: TestSetsApi;
   readonly traces: TracesApi;
+  readonly webhooks: WebhooksApi;
   readonly widgets: WidgetsApi;
 
   readonly configuration: Configuration;
@@ -115,17 +121,20 @@ export class CovalClient {
     this.monitors = new MonitorsApi(this.configuration);
     this.monitorEvents = new MonitorEventsApi(this.configuration);
     this.mutations = new MutationsApi(this.configuration);
+    this.organizationConversationsConfig = new OrganizationConversationsConfigApi(this.configuration);
     this.personas = new PersonasApi(this.configuration);
+    this.reports = new ReportsApi(this.configuration);
     this.reviewAnnotations = new ReviewAnnotationsApi(this.configuration);
     this.reviewProjects = new ReviewProjectsApi(this.configuration);
     this.runs = new RunsApi(this.configuration);
     this.runTemplates = new RunTemplatesApi(this.configuration);
     this.scheduledRuns = new ScheduledRunsApi(this.configuration);
     this.simulations = new SimulationsApi(this.configuration);
-    this.templates = new TemplatesApi(this.configuration);
+    this.tags = new TagsApi(this.configuration);
     this.testCases = new TestCasesApi(this.configuration);
     this.testSets = new TestSetsApi(this.configuration);
     this.traces = new TracesApi(this.configuration);
+    this.webhooks = new WebhooksApi(this.configuration);
     this.widgets = new WidgetsApi(this.configuration);
   }
 }

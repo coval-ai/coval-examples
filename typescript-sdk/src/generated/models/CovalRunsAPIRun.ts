@@ -47,6 +47,12 @@ export interface CovalRunsAPIRun {
      */
     run_id: string;
     /**
+     * Human-readable name for the run, set via `metadata.display_name` at launch.
+     * @type {string}
+     * @memberof CovalRunsAPIRun
+     */
+    display_name?: string | null;
+    /**
      * Current status of the simulation run
      * @type {CovalRunsAPIRunStatusEnum}
      * @memberof CovalRunsAPIRun
@@ -153,6 +159,7 @@ export function CovalRunsAPIRunFromJSONTyped(json: any, ignoreDiscriminator: boo
         
         'name': json['name'],
         'run_id': json['run_id'],
+        'display_name': json['display_name'] == null ? undefined : json['display_name'],
         'status': json['status'],
         'create_time': (new Date(json['create_time'])),
         'update_time': json['update_time'] == null ? undefined : (new Date(json['update_time'])),
@@ -180,6 +187,7 @@ export function CovalRunsAPIRunToJSONTyped(value?: CovalRunsAPIRun | null, ignor
         
         'name': value['name'],
         'run_id': value['run_id'],
+        'display_name': value['display_name'],
         'status': value['status'],
         'create_time': value['create_time'].toISOString(),
         'update_time': value['update_time'] == null ? value['update_time'] : value['update_time'].toISOString(),

@@ -32,11 +32,14 @@ class CovalAgentsAPIAgentResource(BaseModel):
     Agent configuration resource.  Note: The `active` field (soft delete status) is managed internally and not exposed in API responses. 
     """ # noqa: E501
     id: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Agent resource ID")
+    customer_agent_id: StrictStr = Field(description="Customer-supplied external id for the agent. Defaults to `id` when not set at creation.")
     display_name: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=200)]] = Field(default=None, description="Human-readable agent name")
     model_type: Optional[CovalAgentsAPISimulatorType] = None
     phone_number: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="Phone number in E.164 format or SIP address for voice/SMS agents")
     endpoint: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="Custom API endpoint URL")
     prompt: Optional[StrictStr] = Field(default=None, description="Agent instructions/system prompt")
+    language: Optional[StrictStr] = Field(default=None, description="Primary language for the agent")
+    attributes: Optional[Dict[str, Any]] = Field(default=None, description="Free-form agent attributes; referenceable in metric prompts as `{{agent.<key>}}`.")
     metadata: Optional[Dict[str, Any]] = Field(default=None, description="Simulator-specific configuration (JSONB)")
     workflows: Optional[Dict[str, Any]] = Field(default=None, description="Workflow configuration (JSONB)")
     metric_ids: Optional[List[StrictStr]] = Field(default=None, description="Associated metric IDs")
@@ -46,7 +49,7 @@ class CovalAgentsAPIAgentResource(BaseModel):
     create_time: Optional[datetime] = Field(default=None, description="Creation timestamp (ISO 8601)")
     update_time: Optional[datetime] = Field(default=None, description="Last update timestamp (ISO 8601)")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["id", "display_name", "model_type", "phone_number", "endpoint", "prompt", "metadata", "workflows", "metric_ids", "test_set_ids", "knowledge_base_ids", "tags", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["id", "customer_agent_id", "display_name", "model_type", "phone_number", "endpoint", "prompt", "language", "attributes", "metadata", "workflows", "metric_ids", "test_set_ids", "knowledge_base_ids", "tags", "create_time", "update_time"]
 
     @field_validator('id')
     def id_validate_regular_expression(cls, value):
@@ -124,6 +127,16 @@ class CovalAgentsAPIAgentResource(BaseModel):
         if self.prompt is None and "prompt" in self.model_fields_set:
             _dict['prompt'] = None
 
+        # set to None if language (nullable) is None
+        # and model_fields_set contains the field
+        if self.language is None and "language" in self.model_fields_set:
+            _dict['language'] = None
+
+        # set to None if attributes (nullable) is None
+        # and model_fields_set contains the field
+        if self.attributes is None and "attributes" in self.model_fields_set:
+            _dict['attributes'] = None
+
         # set to None if update_time (nullable) is None
         # and model_fields_set contains the field
         if self.update_time is None and "update_time" in self.model_fields_set:
@@ -142,11 +155,14 @@ class CovalAgentsAPIAgentResource(BaseModel):
 
         _obj = cls.model_validate({
             "id": obj.get("id"),
+            "customer_agent_id": obj.get("customer_agent_id"),
             "display_name": obj.get("display_name"),
             "model_type": obj.get("model_type"),
             "phone_number": obj.get("phone_number"),
             "endpoint": obj.get("endpoint"),
             "prompt": obj.get("prompt"),
+            "language": obj.get("language"),
+            "attributes": obj.get("attributes"),
             "metadata": obj.get("metadata"),
             "workflows": obj.get("workflows"),
             "metric_ids": obj.get("metric_ids"),

@@ -1,0 +1,3 @@
+python-sdk/src/coval_sdk/api/** whitespace=-trailing-space
+python-sdk/src/coval_sdk/models/** whitespace=-trailing-space
+typescript-sdk/src/generated/** whitespace=-trailing-space

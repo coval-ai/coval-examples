@@ -72,6 +72,11 @@ jobs:
           distribution: temurin
           java-version: "21"
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
       - name: Install scripts deps
         run: npm ci --prefix scripts
 
@@ -111,12 +116,12 @@ jobs:
           npm run build
           npm test
 
-      - name: Install Python SDK + smoke import
+      - name: Install Python SDK + run tests
         working-directory: python-sdk
         run: |
           python -m pip install --upgrade pip
-          pip install -e .
-          python -c "import coval_sdk; print('coval-sdk version:', coval_sdk.__version__)"
+          pip install -e ".[dev]"
+          pytest
 
       - name: Open / update regen PR if there are changes
         uses: peter-evans/create-pull-request@v7
@@ -134,7 +139,7 @@ jobs:
             - Bundled `dist/coval-openapi.yaml`
             - Regenerated `typescript-sdk/src/generated/` + `python-sdk/src/coval_sdk/`
             - Determinism check passed (two consecutive runs produced identical output)
-            - TS tests passed, Python import smoke passed
+            - TS and Python test suites passed
 
             If only the OpenAPI marker timestamp changed, this PR can be closed
             without merging.

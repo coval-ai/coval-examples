@@ -9,8 +9,7 @@
     "generate": "bash generate-sdks.sh"
   },
   "dependencies": {
-    "@redocly/cli": "1.34.6",
-    "@hey-api/openapi-ts": "0.84.4",
-    "yaml": "2.6.1"
+    "@redocly/cli": "2.39.0",
+    "yaml": "2.9.0"
   }
 }

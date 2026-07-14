@@ -88,6 +88,7 @@ export interface ListConversationsRequest {
     orderBy?: string;
     view?: ListConversationsViewEnum;
     metricId?: string;
+    include?: ListConversationsIncludeEnum;
     groupByMetadata?: string;
     aggregation?: ListConversationsAggregationEnum;
     startDate?: Date;
@@ -225,7 +226,8 @@ export interface ConversationsApiInterface {
      * @param {string} [filter] Filter expression syntax.  **Operators:** &#x60;&#x3D;&#x60;, &#x60;!&#x3D;&#x60;, &#x60;&gt;&#x60;, &#x60;&lt;&#x60;, &#x60;&gt;&#x3D;&#x60;, &#x60;&lt;&#x3D;&#x60;, &#x60;AND&#x60;, &#x60;OR&#x60;  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  **Fields:** - &#x60;status&#x60; - PENDING, IN_QUEUE, IN_PROGRESS, COMPLETED, FAILED, CANCELLED, DELETED - &#x60;external_conversation_id&#x60; - Your system\&#39;s conversation ID - &#x60;create_time&#x60; - ISO 8601 timestamp - &#x60;occurred_at&#x60; - ISO 8601 timestamp - &#x60;metadata.{key}&#x60; - Custom metadata fields  **Examples:** - &#x60;status&#x3D;COMPLETED&#x60; - &#x60;create_time&gt;\&quot;2025-11-01T00:00:00Z\&quot;&#x60; - &#x60;status&#x3D;COMPLETED AND occurred_at&gt;&#x3D;\&quot;2025-11-01T00:00:00Z\&quot;&#x60; - &#x60;external_conversation_id&#x3D;external-call-abc&#x60; 
      * @param {string} [orderBy] Sort field with optional &#x60;-&#x60; prefix for descending order.  **Fields:** &#x60;create_time&#x60;, &#x60;occurred_at&#x60;, &#x60;status&#x60;  **Examples:** - &#x60;create_time&#x60; (ascending) - &#x60;-create_time&#x60; (descending, most recent first) - &#x60;-occurred_at&#x60; (most recent conversations first) 
      * @param {'metric_breakdown'} [view] Set to &#x60;metric_breakdown&#x60; to return an aggregate of one metric\&#39;s scores grouped by a &#x60;customer_metadata&#x60; key (e.g. vendor), computed over the whole scored monitoring corpus, instead of the conversation list. Requires &#x60;metric_id&#x60; and &#x60;group_by_metadata&#x60;; the response is a metric-breakdown object (&#x60;{view, metric_id, group_by_metadata, aggregation, breakdown:[{metadata_value, value, count}], total_count}&#x60;). 
-     * @param {string} [metricId] Required when &#x60;view&#x3D;metric_breakdown&#x60;: the metric to aggregate.
+     * @param {string} [metricId] Metric to aggregate when &#x60;view&#x3D;metric_breakdown&#x60;, or the metric whose full outputs should be embedded when &#x60;include&#x3D;metric_outputs&#x60;. 
+     * @param {'metric_outputs'} [include] Set to &#x60;metric_outputs&#x60; to embed full outputs for &#x60;metric_id&#x60; on every conversation in the returned page. Omitted by default to keep list payloads small. 
      * @param {string} [groupByMetadata] Required when &#x60;view&#x3D;metric_breakdown&#x60;: the customer_metadata key to group by (e.g. nlp_provider).
      * @param {'success' | 'avg'} [aggregation] Aggregation for &#x60;view&#x3D;metric_breakdown&#x60;. Defaults to &#x60;success&#x60; (a YES/NO success rate) for binary/string metrics and &#x60;avg&#x60; (numeric mean) for float metrics. 
      * @param {Date} [startDate] Optional ISO-8601 lower bound (occurred_at) for &#x60;view&#x3D;metric_breakdown&#x60;.
@@ -243,7 +245,8 @@ export interface ConversationsApiInterface {
      * @param {string} [filter] Filter expression syntax.  **Operators:** &#x60;&#x3D;&#x60;, &#x60;!&#x3D;&#x60;, &#x60;&gt;&#x60;, &#x60;&lt;&#x60;, &#x60;&gt;&#x3D;&#x60;, &#x60;&lt;&#x3D;&#x60;, &#x60;AND&#x60;, &#x60;OR&#x60;  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  **Fields:** - &#x60;status&#x60; - PENDING, IN_QUEUE, IN_PROGRESS, COMPLETED, FAILED, CANCELLED, DELETED - &#x60;external_conversation_id&#x60; - Your system\&#39;s conversation ID - &#x60;create_time&#x60; - ISO 8601 timestamp - &#x60;occurred_at&#x60; - ISO 8601 timestamp - &#x60;metadata.{key}&#x60; - Custom metadata fields  **Examples:** - &#x60;status&#x3D;COMPLETED&#x60; - &#x60;create_time&gt;\&quot;2025-11-01T00:00:00Z\&quot;&#x60; - &#x60;status&#x3D;COMPLETED AND occurred_at&gt;&#x3D;\&quot;2025-11-01T00:00:00Z\&quot;&#x60; - &#x60;external_conversation_id&#x3D;external-call-abc&#x60; 
      * @param {string} [orderBy] Sort field with optional &#x60;-&#x60; prefix for descending order.  **Fields:** &#x60;create_time&#x60;, &#x60;occurred_at&#x60;, &#x60;status&#x60;  **Examples:** - &#x60;create_time&#x60; (ascending) - &#x60;-create_time&#x60; (descending, most recent first) - &#x60;-occurred_at&#x60; (most recent conversations first) 
      * @param {'metric_breakdown'} [view] Set to &#x60;metric_breakdown&#x60; to return an aggregate of one metric\&#39;s scores grouped by a &#x60;customer_metadata&#x60; key (e.g. vendor), computed over the whole scored monitoring corpus, instead of the conversation list. Requires &#x60;metric_id&#x60; and &#x60;group_by_metadata&#x60;; the response is a metric-breakdown object (&#x60;{view, metric_id, group_by_metadata, aggregation, breakdown:[{metadata_value, value, count}], total_count}&#x60;). 
-     * @param {string} [metricId] Required when &#x60;view&#x3D;metric_breakdown&#x60;: the metric to aggregate.
+     * @param {string} [metricId] Metric to aggregate when &#x60;view&#x3D;metric_breakdown&#x60;, or the metric whose full outputs should be embedded when &#x60;include&#x3D;metric_outputs&#x60;. 
+     * @param {'metric_outputs'} [include] Set to &#x60;metric_outputs&#x60; to embed full outputs for &#x60;metric_id&#x60; on every conversation in the returned page. Omitted by default to keep list payloads small. 
      * @param {string} [groupByMetadata] Required when &#x60;view&#x3D;metric_breakdown&#x60;: the customer_metadata key to group by (e.g. nlp_provider).
      * @param {'success' | 'avg'} [aggregation] Aggregation for &#x60;view&#x3D;metric_breakdown&#x60;. Defaults to &#x60;success&#x60; (a YES/NO success rate) for binary/string metrics and &#x60;avg&#x60; (numeric mean) for float metrics. 
      * @param {Date} [startDate] Optional ISO-8601 lower bound (occurred_at) for &#x60;view&#x3D;metric_breakdown&#x60;.
@@ -579,6 +582,10 @@ export class ConversationsApi extends runtime.BaseAPI implements ConversationsAp
             queryParameters['metric_id'] = requestParameters['metricId'];
         }
 
+        if (requestParameters['include'] != null) {
+            queryParameters['include'] = requestParameters['include'];
+        }
+
         if (requestParameters['groupByMetadata'] != null) {
             queryParameters['group_by_metadata'] = requestParameters['groupByMetadata'];
         }
@@ -755,6 +762,13 @@ export const ListConversationsViewEnum = {
     MetricBreakdown: 'metric_breakdown'
 } as const;
 export type ListConversationsViewEnum = typeof ListConversationsViewEnum[keyof typeof ListConversationsViewEnum];
+/**
+ * @export
+ */
+export const ListConversationsIncludeEnum = {
+    MetricOutputs: 'metric_outputs'
+} as const;
+export type ListConversationsIncludeEnum = typeof ListConversationsIncludeEnum[keyof typeof ListConversationsIncludeEnum];
 /**
  * @export
  */

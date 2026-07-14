@@ -33,10 +33,12 @@ class CovalReportsAPICreateReportRequest(BaseModel):
     """ # noqa: E501
     name: Annotated[str, Field(min_length=1, strict=True, max_length=200)] = Field(description="Display name for the saved report.")
     run_ids: Annotated[List[StrictStr], Field(min_length=1, max_length=2000)] = Field(description="Run IDs to include in the report. All must belong to the authenticated organization.")
+    simulation_output_ids: Optional[Annotated[List[StrictStr], Field(max_length=10000)]] = Field(default=None, description="Optional simulation IDs pinning the report to a subset of simulations. When set, this is the report's authoritative scope. All must belong to the authenticated organization. ")
+    source_human_review_project_id: Optional[Annotated[str, Field(min_length=26, strict=True, max_length=26)]] = Field(default=None, description="Optional human review project the simulations were sourced from; `simulation_output_ids` must belong to it.")
     compare_by: Optional[CovalReportsAPICompareBy] = CovalReportsAPICompareBy.NONE
     metadata_key: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=200)]] = Field(default=None, description="Metadata key to group by. Required when `compare_by` is `metadata`; otherwise omit it. ")
     permissions: Optional[CovalReportsAPIReportPermission] = CovalReportsAPIReportPermission.PRIVATE
-    __properties: ClassVar[List[str]] = ["name", "run_ids", "compare_by", "metadata_key", "permissions"]
+    __properties: ClassVar[List[str]] = ["name", "run_ids", "simulation_output_ids", "source_human_review_project_id", "compare_by", "metadata_key", "permissions"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -77,6 +79,11 @@ class CovalReportsAPICreateReportRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if source_human_review_project_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.source_human_review_project_id is None and "source_human_review_project_id" in self.model_fields_set:
+            _dict['source_human_review_project_id'] = None
+
         # set to None if metadata_key (nullable) is None
         # and model_fields_set contains the field
         if self.metadata_key is None and "metadata_key" in self.model_fields_set:
@@ -96,6 +103,8 @@ class CovalReportsAPICreateReportRequest(BaseModel):
         _obj = cls.model_validate({
             "name": obj.get("name"),
             "run_ids": obj.get("run_ids"),
+            "simulation_output_ids": obj.get("simulation_output_ids"),
+            "source_human_review_project_id": obj.get("source_human_review_project_id"),
             "compare_by": obj.get("compare_by") if obj.get("compare_by") is not None else CovalReportsAPICompareBy.NONE,
             "metadata_key": obj.get("metadata_key"),
             "permissions": obj.get("permissions") if obj.get("permissions") is not None else CovalReportsAPIReportPermission.PRIVATE

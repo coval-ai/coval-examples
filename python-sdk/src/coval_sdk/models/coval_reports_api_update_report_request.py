@@ -33,10 +33,12 @@ class CovalReportsAPIUpdateReportRequest(BaseModel):
     """ # noqa: E501
     name: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=200)]] = Field(default=None, description="Display name for the saved report.")
     run_ids: Optional[Annotated[List[StrictStr], Field(min_length=1, max_length=2000)]] = Field(default=None, description="Replacement run IDs. All must belong to the authenticated organization.")
+    simulation_output_ids: Optional[Annotated[List[StrictStr], Field(max_length=10000)]] = Field(default=None, description="Replacement simulation IDs pinning the report to a subset of simulations. When set, this is the report's authoritative scope. ")
+    source_human_review_project_id: Optional[Annotated[str, Field(min_length=26, strict=True, max_length=26)]] = Field(default=None, description="Human review project the simulations were sourced from; `simulation_output_ids` must belong to it. Omit to leave unchanged — null is rejected, the linkage cannot be cleared via update. ")
     compare_by: Optional[CovalReportsAPICompareBy] = CovalReportsAPICompareBy.NONE
     metadata_key: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=200)]] = Field(default=None, description="Required when changing `compare_by` to `metadata`; otherwise omit it.")
     permissions: Optional[CovalReportsAPIReportPermission] = CovalReportsAPIReportPermission.PRIVATE
-    __properties: ClassVar[List[str]] = ["name", "run_ids", "compare_by", "metadata_key", "permissions"]
+    __properties: ClassVar[List[str]] = ["name", "run_ids", "simulation_output_ids", "source_human_review_project_id", "compare_by", "metadata_key", "permissions"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -96,6 +98,8 @@ class CovalReportsAPIUpdateReportRequest(BaseModel):
         _obj = cls.model_validate({
             "name": obj.get("name"),
             "run_ids": obj.get("run_ids"),
+            "simulation_output_ids": obj.get("simulation_output_ids"),
+            "source_human_review_project_id": obj.get("source_human_review_project_id"),
             "compare_by": obj.get("compare_by") if obj.get("compare_by") is not None else CovalReportsAPICompareBy.NONE,
             "metadata_key": obj.get("metadata_key"),
             "permissions": obj.get("permissions") if obj.get("permissions") is not None else CovalReportsAPIReportPermission.PRIVATE

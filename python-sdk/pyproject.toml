@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "coval-sdk"
-version = "0.2.0"
+version = "0.3.0"
 description = "Typed Python client for the Coval evaluation platform API."
 readme = "README.md"
 license = "MIT"
@@ -17,12 +17,21 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
     "urllib3 >= 2.1.0, < 3.0.0",
     "python-dateutil >= 2.8.2",
     "pydantic >= 2.11",
     "typing-extensions >= 4.7.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "build >= 1.2",
+    "pytest >= 8",
+    "twine >= 6",
 ]
 
 [project.urls]
@@ -36,3 +45,6 @@ package-dir = { "" = "src" }
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["coval_sdk*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

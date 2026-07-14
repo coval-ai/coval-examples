@@ -35,13 +35,16 @@ class CovalAgentsAPIUpdateAgentRequest(BaseModel):
     phone_number: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="Phone number in E.164 format or SIP address for voice/SMS agents")
     endpoint: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="Custom API endpoint URL")
     prompt: Optional[StrictStr] = Field(default=None, description="Agent instructions/system prompt")
+    customer_agent_id: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=200)]] = Field(default=None, description="New external id for the agent")
+    language: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="Primary language for the agent")
+    attributes: Optional[Dict[str, Any]] = Field(default=None, description="Free-form agent attributes. None means don't update; {} clears them.")
     metadata: Optional[Dict[str, Any]] = Field(default=None, description="Simulator-specific configuration (null = no change, {} = clear)")
     workflows: Optional[Dict[str, Any]] = Field(default=None, description="Workflow configuration (null = no change, {} = clear)")
     metric_ids: Optional[List[StrictStr]] = Field(default=None, description="Associated metric IDs (null = no change, [] = clear)")
     test_set_ids: Optional[List[StrictStr]] = Field(default=None, description="Associated test set IDs (null = no change, [] = clear)")
     tags: Optional[List[StrictStr]] = Field(default=None, description="Tags to associate with this agent. Null or omitted leaves tags unchanged. Pass [] to clear all tags.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["display_name", "model_type", "phone_number", "endpoint", "prompt", "metadata", "workflows", "metric_ids", "test_set_ids", "tags"]
+    __properties: ClassVar[List[str]] = ["display_name", "model_type", "phone_number", "endpoint", "prompt", "customer_agent_id", "language", "attributes", "metadata", "workflows", "metric_ids", "test_set_ids", "tags"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -104,6 +107,21 @@ class CovalAgentsAPIUpdateAgentRequest(BaseModel):
         if self.prompt is None and "prompt" in self.model_fields_set:
             _dict['prompt'] = None
 
+        # set to None if customer_agent_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.customer_agent_id is None and "customer_agent_id" in self.model_fields_set:
+            _dict['customer_agent_id'] = None
+
+        # set to None if language (nullable) is None
+        # and model_fields_set contains the field
+        if self.language is None and "language" in self.model_fields_set:
+            _dict['language'] = None
+
+        # set to None if attributes (nullable) is None
+        # and model_fields_set contains the field
+        if self.attributes is None and "attributes" in self.model_fields_set:
+            _dict['attributes'] = None
+
         # set to None if metadata (nullable) is None
         # and model_fields_set contains the field
         if self.metadata is None and "metadata" in self.model_fields_set:
@@ -146,6 +164,9 @@ class CovalAgentsAPIUpdateAgentRequest(BaseModel):
             "phone_number": obj.get("phone_number"),
             "endpoint": obj.get("endpoint"),
             "prompt": obj.get("prompt"),
+            "customer_agent_id": obj.get("customer_agent_id"),
+            "language": obj.get("language"),
+            "attributes": obj.get("attributes"),
             "metadata": obj.get("metadata"),
             "workflows": obj.get("workflows"),
             "metric_ids": obj.get("metric_ids"),

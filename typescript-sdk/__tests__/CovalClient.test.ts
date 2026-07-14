@@ -6,6 +6,7 @@ import {
   createRetryingFetch,
   paginate,
 } from '../src/index.js';
+import * as generatedApis from '../src/generated/apis/index.js';
 
 describe('apiKeyAuthMiddleware', () => {
   it('attaches lowercase x-api-key to every request', async () => {
@@ -24,6 +25,7 @@ describe('apiKeyAuthMiddleware', () => {
 
     expect(calls).toHaveLength(1);
     const headers = new Headers(calls[0]?.init?.headers);
+    expect(calls[0]?.url).toBe('https://api.coval.dev/v1/agents');
     expect(headers.get('x-api-key')).toBe('test-key');
     // It must be lowercase — uppercase X-API-Key is rejected by the gateway.
     expect(Array.from(headers.entries()).map(([k]) => k)).toContain('x-api-key');
@@ -31,6 +33,25 @@ describe('apiKeyAuthMiddleware', () => {
 
   it('throws if apiKey is missing', () => {
     expect(() => new CovalClient({ apiKey: '' })).toThrow(/apiKey is required/);
+  });
+
+  it('exposes every generated API surface', () => {
+    const coval = new CovalClient({ apiKey: 'test-key' });
+    const properties = [
+      'agents', 'apiKeys', 'audio', 'conversations', 'dashboards', 'metricOutputs',
+      'metrics', 'monitorEvents', 'monitors', 'mutations', 'organizationConversationsConfig',
+      'personas', 'reports', 'reviewAnnotations', 'reviewProjects', 'runs', 'runTemplates',
+      'scheduledRuns', 'simulations', 'tags', 'testCases', 'testSets',
+      'traces', 'webhooks', 'widgets',
+    ] as const;
+
+    for (const property of properties) {
+      expect(coval[property]).toBeDefined();
+    }
+
+    const exposedApiNames = properties.map((property) => coval[property].constructor.name).sort();
+    const generatedApiNames = Object.keys(generatedApis).filter((name) => name.endsWith('Api')).sort();
+    expect(exposedApiNames).toEqual(generatedApiNames);
   });
 });
 
@@ -140,6 +161,22 @@ describe('createRetryingFetch', () => {
     await expect(
       retrying('https://api.coval.dev/v1/agents', { method: 'GET' }),
     ).rejects.toBeInstanceOf(CovalNetworkError);
+  });
+
+  it('does not retry side-effecting methods by default', async () => {
+    let attempts = 0;
+    const fakeFetch = vi.fn(async () => {
+      attempts += 1;
+      return new Response('upstream', { status: 503 });
+    }) as unknown as typeof fetch;
+    const retrying = createRetryingFetch(
+      { maxAttempts: 3, baseDelayMs: 1, jitter: () => 0 },
+      { fetch: fakeFetch, sleep: async () => {} },
+    );
+
+    const response = await retrying('https://api.coval.dev/v1/agents', { method: 'POST' });
+    expect(response.status).toBe(503);
+    expect(attempts).toBe(1);
   });
 });
 

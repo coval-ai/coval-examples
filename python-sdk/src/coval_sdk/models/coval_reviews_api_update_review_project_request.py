@@ -34,12 +34,14 @@ class CovalReviewsAPIUpdateReviewProjectRequest(BaseModel):
     description: Optional[StrictStr] = Field(default=None, description="Updated description")
     assignees: Optional[List[StrictStr]] = Field(default=None, description="Updated assignee list")
     linked_simulation_ids: Optional[List[StrictStr]] = Field(default=None, description="Updated simulation IDs")
+    add_linked_simulation_ids: Optional[Annotated[List[StrictStr], Field(min_length=1)]] = Field(default=None, description="Simulation IDs to add atomically; cannot be combined with other project updates")
+    remove_linked_simulation_ids: Optional[Annotated[List[StrictStr], Field(min_length=1)]] = Field(default=None, description="Simulation IDs to remove atomically; cannot be combined with other project updates")
     linked_metric_ids: Optional[List[StrictStr]] = Field(default=None, description="Updated metric IDs")
     notifications: Optional[StrictBool] = Field(default=None, description="Updated notification setting")
     project_rules: Optional[List[CovalReviewsAPIProjectRule]] = Field(default=None, description="Updated project rules")
     opted_out_assignees: Optional[List[StrictStr]] = Field(default=None, description="Assignees who opted out of notifications")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["display_name", "description", "assignees", "linked_simulation_ids", "linked_metric_ids", "notifications", "project_rules", "opted_out_assignees"]
+    __properties: ClassVar[List[str]] = ["display_name", "description", "assignees", "linked_simulation_ids", "add_linked_simulation_ids", "remove_linked_simulation_ids", "linked_metric_ids", "notifications", "project_rules", "opted_out_assignees"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -107,6 +109,16 @@ class CovalReviewsAPIUpdateReviewProjectRequest(BaseModel):
         if self.linked_simulation_ids is None and "linked_simulation_ids" in self.model_fields_set:
             _dict['linked_simulation_ids'] = None
 
+        # set to None if add_linked_simulation_ids (nullable) is None
+        # and model_fields_set contains the field
+        if self.add_linked_simulation_ids is None and "add_linked_simulation_ids" in self.model_fields_set:
+            _dict['add_linked_simulation_ids'] = None
+
+        # set to None if remove_linked_simulation_ids (nullable) is None
+        # and model_fields_set contains the field
+        if self.remove_linked_simulation_ids is None and "remove_linked_simulation_ids" in self.model_fields_set:
+            _dict['remove_linked_simulation_ids'] = None
+
         # set to None if linked_metric_ids (nullable) is None
         # and model_fields_set contains the field
         if self.linked_metric_ids is None and "linked_metric_ids" in self.model_fields_set:
@@ -143,6 +155,8 @@ class CovalReviewsAPIUpdateReviewProjectRequest(BaseModel):
             "description": obj.get("description"),
             "assignees": obj.get("assignees"),
             "linked_simulation_ids": obj.get("linked_simulation_ids"),
+            "add_linked_simulation_ids": obj.get("add_linked_simulation_ids"),
+            "remove_linked_simulation_ids": obj.get("remove_linked_simulation_ids"),
             "linked_metric_ids": obj.get("linked_metric_ids"),
             "notifications": obj.get("notifications"),
             "project_rules": obj.get("project_rules"),

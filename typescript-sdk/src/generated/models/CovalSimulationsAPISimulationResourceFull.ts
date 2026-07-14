@@ -20,6 +20,20 @@ import {
     CovalSimulationsAPITranscriptMessageToJSON,
     CovalSimulationsAPITranscriptMessageToJSONTyped,
 } from './CovalSimulationsAPITranscriptMessage.js';
+import type { CovalSimulationsAPISimulationResourceDestination } from './CovalSimulationsAPISimulationResourceDestination.js';
+import {
+    CovalSimulationsAPISimulationResourceDestinationFromJSON,
+    CovalSimulationsAPISimulationResourceDestinationFromJSONTyped,
+    CovalSimulationsAPISimulationResourceDestinationToJSON,
+    CovalSimulationsAPISimulationResourceDestinationToJSONTyped,
+} from './CovalSimulationsAPISimulationResourceDestination.js';
+import type { CovalSimulationsAPISimulationResourceSource } from './CovalSimulationsAPISimulationResourceSource.js';
+import {
+    CovalSimulationsAPISimulationResourceSourceFromJSON,
+    CovalSimulationsAPISimulationResourceSourceFromJSONTyped,
+    CovalSimulationsAPISimulationResourceSourceToJSON,
+    CovalSimulationsAPISimulationResourceSourceToJSONTyped,
+} from './CovalSimulationsAPISimulationResourceSource.js';
 
 /**
  * 
@@ -88,6 +102,18 @@ export interface CovalSimulationsAPISimulationResourceFull {
      */
     has_audio: boolean;
     /**
+     * 
+     * @type {CovalSimulationsAPISimulationResourceSource}
+     * @memberof CovalSimulationsAPISimulationResourceFull
+     */
+    source?: CovalSimulationsAPISimulationResourceSource | null;
+    /**
+     * 
+     * @type {CovalSimulationsAPISimulationResourceDestination}
+     * @memberof CovalSimulationsAPISimulationResourceFull
+     */
+    destination?: CovalSimulationsAPISimulationResourceDestination | null;
+    /**
      * Error message if simulation failed or was cancelled
      * @type {string}
      * @memberof CovalSimulationsAPISimulationResourceFull
@@ -105,6 +131,18 @@ export interface CovalSimulationsAPISimulationResourceFull {
      * @memberof CovalSimulationsAPISimulationResourceFull
      */
     mutation_name?: string | null;
+    /**
+     * Free-text notes attached to the simulation. Settable via PATCH /simulations/{simulation_id}.
+     * @type {string}
+     * @memberof CovalSimulationsAPISimulationResourceFull
+     */
+    notes?: string | null;
+    /**
+     * Whether the simulation is shared via a public link. Settable via PATCH /simulations/{simulation_id}.
+     * @type {boolean}
+     * @memberof CovalSimulationsAPISimulationResourceFull
+     */
+    is_public?: boolean;
     /**
      * Full conversation transcript (only included in GET, not LIST)
      * @type {Array<CovalSimulationsAPITranscriptMessage>}
@@ -162,9 +200,13 @@ export function CovalSimulationsAPISimulationResourceFullFromJSONTyped(json: any
         'test_set_id': json['test_set_id'] == null ? undefined : json['test_set_id'],
         'test_case_id': json['test_case_id'] == null ? undefined : json['test_case_id'],
         'has_audio': json['has_audio'],
+        'source': json['source'] == null ? undefined : CovalSimulationsAPISimulationResourceSourceFromJSON(json['source']),
+        'destination': json['destination'] == null ? undefined : CovalSimulationsAPISimulationResourceDestinationFromJSON(json['destination']),
         'error_message': json['error_message'] == null ? undefined : json['error_message'],
         'mutation_id': json['mutation_id'] == null ? undefined : json['mutation_id'],
         'mutation_name': json['mutation_name'] == null ? undefined : json['mutation_name'],
+        'notes': json['notes'] == null ? undefined : json['notes'],
+        'is_public': json['is_public'] == null ? undefined : json['is_public'],
         'transcript': json['transcript'] == null ? undefined : ((json['transcript'] as Array<any>).map(CovalSimulationsAPITranscriptMessageFromJSON)),
     };
 }
@@ -190,9 +232,13 @@ export function CovalSimulationsAPISimulationResourceFullToJSONTyped(value?: Cov
         'test_set_id': value['test_set_id'],
         'test_case_id': value['test_case_id'],
         'has_audio': value['has_audio'],
+        'source': CovalSimulationsAPISimulationResourceSourceToJSON(value['source']),
+        'destination': CovalSimulationsAPISimulationResourceDestinationToJSON(value['destination']),
         'error_message': value['error_message'],
         'mutation_id': value['mutation_id'],
         'mutation_name': value['mutation_name'],
+        'notes': value['notes'],
+        'is_public': value['is_public'],
         'transcript': value['transcript'] == null ? undefined : ((value['transcript'] as Array<any>).map(CovalSimulationsAPITranscriptMessageToJSON)),
     };
 }

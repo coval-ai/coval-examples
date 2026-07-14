@@ -14,25 +14,25 @@
 
 import { mapValues } from '../runtime.js';
 /**
- * Target condition for metric evaluation.
+ * The metric's success criteria — the rule that decides which output value counts as a pass/success. It is a comparison operator plus a target value, stored in the metric's config and used to compute pass/fail and dashboard success rates. Set it via create or update so no manual UI step is needed. For a yes/no (binary) metric where "YES" is a pass, use `{"comparison_operator": "in", "target_values": ["YES"]}`; for a 1-5 numeric metric where >= 4 is a pass, use `{"comparison_operator": "gte", "target_float": 4}`.
  * @export
  * @interface CovalMetricsAPITargetCondition
  */
 export interface CovalMetricsAPITargetCondition {
     /**
-     * 
+     * How the metric output is compared to the target. Use a numeric operator (`eq`/`neq`/`gt`/`gte`/`lt`/`lte`) with `target_float`, or a membership operator (`in`/`nin`) with `target_values`.
      * @type {CovalMetricsAPITargetConditionComparisonOperatorEnum}
      * @memberof CovalMetricsAPITargetCondition
      */
     comparison_operator: CovalMetricsAPITargetConditionComparisonOperatorEnum;
     /**
-     * Target float value (for eq/neq/gt/gte/lt/lte)
+     * Target number for the numeric operators (eq/neq/gt/gte/lt/lte).
      * @type {number}
      * @memberof CovalMetricsAPITargetCondition
      */
     target_float?: number | null;
     /**
-     * Target values (for in/nin)
+     * Target value(s) for the membership operators (in/nin), e.g. `["YES"]`.
      * @type {Array<string>}
      * @memberof CovalMetricsAPITargetCondition
      */
