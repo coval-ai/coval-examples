@@ -43,10 +43,10 @@ RetryConfig = Union[Retry, int, bool]
 
 def _default_retry_policy() -> Retry:
   return Retry(
-    total=3,
-    connect=3,
-    read=3,
-    status=3,
+    total=2,
+    connect=2,
+    read=2,
+    status=2,
     backoff_factor=0.2,
     status_forcelist=(408, 429, 500, 502, 503, 504),
     allowed_methods=frozenset({"GET", "HEAD", "OPTIONS"}),

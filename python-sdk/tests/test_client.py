@@ -54,6 +54,7 @@ def test_default_retries_only_idempotent_methods() -> None:
   try:
     retries = client.configuration.retries
     assert isinstance(retries, Retry)
+    assert retries.total == 2
     assert retries.allowed_methods == frozenset({"GET", "HEAD", "OPTIONS"})
     assert retries.status_forcelist == (408, 429, 500, 502, 503, 504)
   finally:
