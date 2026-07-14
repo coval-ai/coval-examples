@@ -1,3 +1,5 @@
+from typing import Union
+
 from urllib3.util import Retry
 
 import pytest
@@ -59,6 +61,23 @@ def test_default_retries_only_idempotent_methods() -> None:
     assert retries.status_forcelist == (408, 429, 500, 502, 503, 504)
   finally:
     client.close()
+
+
+@pytest.mark.parametrize(("configured", "total"), [(True, 2), (4, 4)])
+def test_retry_shortcuts_preserve_safe_methods(configured: Union[bool, int], total: int) -> None:
+  client = CovalClient("test-key", retries=configured)
+  try:
+    retries = client.configuration.retries
+    assert isinstance(retries, Retry)
+    assert retries.total == total
+    assert retries.allowed_methods == frozenset({"GET", "HEAD", "OPTIONS"})
+  finally:
+    client.close()
+
+
+def test_retry_count_must_be_non_negative() -> None:
+  with pytest.raises(ValueError, match="retries must be non-negative"):
+    CovalClient("test-key", retries=-1)
 
 
 def test_client_requires_api_key() -> None:

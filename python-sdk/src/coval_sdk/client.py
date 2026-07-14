@@ -41,17 +41,29 @@ DEFAULT_BASE_URL = "https://api.coval.dev/v1"
 RetryConfig = Union[Retry, int, bool]
 
 
-def _default_retry_policy() -> Retry:
+def _retry_policy(total_retries: int = 2) -> Retry:
   return Retry(
-    total=2,
-    connect=2,
-    read=2,
-    status=2,
+    total=total_retries,
+    connect=total_retries,
+    read=total_retries,
+    status=total_retries,
     backoff_factor=0.2,
     status_forcelist=(408, 429, 500, 502, 503, 504),
     allowed_methods=frozenset({"GET", "HEAD", "OPTIONS"}),
     respect_retry_after_header=True,
   )
+
+
+def _normalize_retries(retries: Optional[RetryConfig]) -> Union[Retry, bool]:
+  if retries is None or retries is True:
+    return _retry_policy()
+  if retries is False:
+    return False
+  if isinstance(retries, int):
+    if retries < 0:
+      raise ValueError("CovalClient: retries must be non-negative")
+    return _retry_policy(retries)
+  return retries
 
 
 class CovalClient:
@@ -69,7 +81,7 @@ class CovalClient:
 
     self.configuration = Configuration(
       host=base_url.rstrip("/"),
-      retries=_default_retry_policy() if retries is None else retries,
+      retries=_normalize_retries(retries),
     )
     self.api_client = ApiClient(self.configuration)
     self.api_client.set_default_header("x-api-key", api_key)
