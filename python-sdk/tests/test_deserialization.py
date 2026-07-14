@@ -68,6 +68,14 @@ def test_invalid_top_level_response_still_raises_validation_error() -> None:
     ListTestSets200Response.from_dict([])
 
 
+@pytest.mark.parametrize("invalid_items", ["not-a-list", {"id": "12345678"}])
+def test_invalid_list_container_still_raises_validation_error(invalid_items) -> None:
+  payload = _test_sets_payload()
+  payload["test_sets"] = invalid_items
+  with pytest.raises(ValidationError):
+    _deserialize_test_sets(payload)
+
+
 def test_unexpected_deserializer_error_is_not_masked() -> None:
   class BrokenModel:
     @classmethod

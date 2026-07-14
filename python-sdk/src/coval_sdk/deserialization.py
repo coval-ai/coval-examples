@@ -5,7 +5,7 @@ from __future__ import annotations
 import warnings
 from contextlib import contextmanager
 from contextvars import ContextVar
-from typing import Iterable, Iterator, List, Type, TypeVar
+from typing import Iterable, Iterator, List, Type, TypeVar, cast
 
 from pydantic import BaseModel, ValidationError
 
@@ -50,6 +50,9 @@ def deserialize_model_list(
   field: str,
 ) -> List[ModelT]:
   """Deserialize model items independently so one malformed resource is isolated."""
+  if not isinstance(items, list):
+    return cast(List[ModelT], items)
+
   deserialized: List[ModelT] = []
   for index, item in enumerate(items):
     try:
