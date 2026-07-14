@@ -75,6 +75,7 @@ class CovalClient:
     *,
     base_url: str = DEFAULT_BASE_URL,
     retries: Optional[RetryConfig] = None,
+    strict_response_validation: bool = False,
   ) -> None:
     if not api_key:
       raise ValueError("CovalClient: api_key is required")
@@ -83,6 +84,7 @@ class CovalClient:
       host=base_url.rstrip("/"),
       retries=_normalize_retries(retries),
     )
+    self.configuration.strict_response_validation = strict_response_validation
     self.api_client = ApiClient(self.configuration)
     self.api_client.set_default_header("x-api-key", api_key)
 

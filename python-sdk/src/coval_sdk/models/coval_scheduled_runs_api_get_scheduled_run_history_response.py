@@ -14,6 +14,7 @@
 
 
 from __future__ import annotations
+from coval_sdk.deserialization import deserialize_model_list
 import pprint
 import re  # noqa: F401
 import json
@@ -98,7 +99,7 @@ class CovalScheduledRunsAPIGetScheduledRunHistoryResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "runs": [CovalScheduledRunsAPIScheduledRunHistoryEntry.from_dict(_item) for _item in obj["runs"]] if obj.get("runs") is not None else None
+            "runs": deserialize_model_list(obj["runs"], CovalScheduledRunsAPIScheduledRunHistoryEntry, response_model="CovalScheduledRunsAPIGetScheduledRunHistoryResponse", field="runs") if obj.get("runs") is not None else None
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

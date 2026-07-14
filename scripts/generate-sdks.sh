@@ -95,7 +95,7 @@ npx --yes @openapitools/openapi-generator-cli@2.13.4 generate \
     exit 1
   }
 
-for handwritten in client.py pagination.py; do
+for handwritten in client.py deserialization.py pagination.py; do
   if [[ -f "$PY_OUT/coval_sdk/$handwritten" ]]; then
     cp "$PY_OUT/coval_sdk/$handwritten" "$PY_HANDWRITTEN/$handwritten"
   fi

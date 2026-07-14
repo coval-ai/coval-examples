@@ -14,6 +14,7 @@
 
 
 from __future__ import annotations
+from coval_sdk.deserialization import deserialize_model_list
 import pprint
 import re  # noqa: F401
 import json
@@ -104,7 +105,7 @@ class CovalAgentsAPIListAgentsResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "agents": [CovalAgentsAPIAgentResource.from_dict(_item) for _item in obj["agents"]] if obj.get("agents") is not None else None,
+            "agents": deserialize_model_list(obj["agents"], CovalAgentsAPIAgentResource, response_model="CovalAgentsAPIListAgentsResponse", field="agents") if obj.get("agents") is not None else None,
             "next_page_token": obj.get("next_page_token")
         })
         # store additional fields in additional_properties

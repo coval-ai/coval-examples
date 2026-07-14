@@ -14,6 +14,7 @@
 
 
 from __future__ import annotations
+from coval_sdk.deserialization import deserialize_model_list
 import pprint
 import re  # noqa: F401
 import json
@@ -105,7 +106,7 @@ class CovalMetricsAPIListMetricBaselinesResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "baselines": [CovalMetricsAPIBaseline.from_dict(_item) for _item in obj["baselines"]] if obj.get("baselines") is not None else None,
+            "baselines": deserialize_model_list(obj["baselines"], CovalMetricsAPIBaseline, response_model="CovalMetricsAPIListMetricBaselinesResponse", field="baselines") if obj.get("baselines") is not None else None,
             "next_page_token": obj.get("next_page_token"),
             "total_count": obj.get("total_count") if obj.get("total_count") is not None else 0
         })

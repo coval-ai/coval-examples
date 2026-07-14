@@ -14,6 +14,7 @@
 
 
 from __future__ import annotations
+from coval_sdk.deserialization import deserialize_model_list
 import pprint
 import re  # noqa: F401
 import json
@@ -98,7 +99,7 @@ class CovalMetricsAPIListMetricVersionsResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "versions": [CovalMetricsAPIMetricVersionResource.from_dict(_item) for _item in obj["versions"]] if obj.get("versions") is not None else None
+            "versions": deserialize_model_list(obj["versions"], CovalMetricsAPIMetricVersionResource, response_model="CovalMetricsAPIListMetricVersionsResponse", field="versions") if obj.get("versions") is not None else None
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

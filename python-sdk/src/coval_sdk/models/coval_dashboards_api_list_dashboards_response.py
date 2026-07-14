@@ -14,6 +14,7 @@
 
 
 from __future__ import annotations
+from coval_sdk.deserialization import deserialize_model_list
 import pprint
 import re  # noqa: F401
 import json
@@ -104,7 +105,7 @@ class CovalDashboardsAPIListDashboardsResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "dashboards": [CovalDashboardsAPIDashboardResource.from_dict(_item) for _item in obj["dashboards"]] if obj.get("dashboards") is not None else None,
+            "dashboards": deserialize_model_list(obj["dashboards"], CovalDashboardsAPIDashboardResource, response_model="CovalDashboardsAPIListDashboardsResponse", field="dashboards") if obj.get("dashboards") is not None else None,
             "next_page_token": obj.get("next_page_token")
         })
         # store additional fields in additional_properties
