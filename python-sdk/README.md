@@ -62,6 +62,24 @@ with ApiClient(config) as client:
   page = AgentsApi(client).list_agents(page_size=50)
 ```
 
+## Malformed list resources
+
+List responses validate each resource independently. If one resource does not
+match the published schema, the SDK omits that item, returns the remaining
+typed resources, and emits `InvalidListItemWarning`. The warning identifies the
+response field and list index but does not include resource contents.
+
+Applications that prefer strict failure can enable it on the client:
+
+```python
+from coval_sdk import CovalClient
+
+coval = CovalClient(api_key, strict_response_validation=True)
+```
+
+Single-resource and malformed top-level responses still raise Pydantic
+validation errors.
+
 ## What's included
 
 - 25 typed API classes, including agents, conversations, runs, run templates,
@@ -69,6 +87,7 @@ with ApiClient(config) as client:
 - Pydantic v2 request and response models
 - Lowercase API-key authentication and connection pooling
 - Safe retry and token-pagination helpers
+- Warning-backed isolation for malformed resources in list responses
 
 ## Development
 

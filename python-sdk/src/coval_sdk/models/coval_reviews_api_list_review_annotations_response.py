@@ -14,6 +14,7 @@
 
 
 from __future__ import annotations
+from coval_sdk.deserialization import deserialize_model_list
 import pprint
 import re  # noqa: F401
 import json
@@ -104,7 +105,7 @@ class CovalReviewsAPIListReviewAnnotationsResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "review_annotations": [CovalReviewsAPIReviewAnnotationResource.from_dict(_item) for _item in obj["review_annotations"]] if obj.get("review_annotations") is not None else None,
+            "review_annotations": deserialize_model_list(obj["review_annotations"], CovalReviewsAPIReviewAnnotationResource, response_model="CovalReviewsAPIListReviewAnnotationsResponse", field="review_annotations") if obj.get("review_annotations") is not None else None,
             "next_page_token": obj.get("next_page_token")
         })
         # store additional fields in additional_properties

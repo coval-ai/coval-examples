@@ -14,6 +14,7 @@
 
 
 from __future__ import annotations
+from coval_sdk.deserialization import deserialize_model_list
 import pprint
 import re  # noqa: F401
 import json
@@ -98,7 +99,7 @@ class CovalWebhooksAPIListWebhooksResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "webhooks": [CovalWebhooksAPIWebhookResource.from_dict(_item) for _item in obj["webhooks"]] if obj.get("webhooks") is not None else None
+            "webhooks": deserialize_model_list(obj["webhooks"], CovalWebhooksAPIWebhookResource, response_model="CovalWebhooksAPIListWebhooksResponse", field="webhooks") if obj.get("webhooks") is not None else None
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

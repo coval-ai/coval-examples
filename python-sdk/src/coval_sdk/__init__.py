@@ -15,11 +15,12 @@
 """  # noqa: E501
 
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 
 # Define package exports
 __all__ = [
     "paginate",
+    "InvalidListItemWarning",
     "CovalClient",
     "APIKeysApi",
     "AgentsApi",
@@ -762,5 +763,7 @@ from coval_sdk.models.traces_api_error_response_error import TracesAPIErrorRespo
 from coval_sdk.models.traces_api_error_response_error_details_inner import TracesAPIErrorResponseErrorDetailsInner as TracesAPIErrorResponseErrorDetailsInner
 
 from coval_sdk.client import CovalClient
+
+from coval_sdk.deserialization import InvalidListItemWarning
 
 from coval_sdk.pagination import paginate

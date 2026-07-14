@@ -1,6 +1,6 @@
 {
   "name": "@coval/sdk",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Typed TypeScript client for the Coval evaluation platform API.",
   "license": "MIT",
   "author": "Coval <support@coval.dev>",

@@ -28,6 +28,7 @@ from typing import Tuple, Optional, List, Dict, Union
 from pydantic import SecretStr
 
 from coval_sdk.configuration import Configuration
+from coval_sdk.deserialization import invalid_list_item_policy
 from coval_sdk.api_response import ApiResponse, T as ApiResponseT
 import coval_sdk.models
 from coval_sdk import rest
@@ -92,7 +93,7 @@ class ApiClient:
             self.default_headers[header_name] = header_value
         self.cookie = cookie
         # Set default User-Agent.
-        self.user_agent = 'OpenAPI-Generator/0.3.0/python'
+        self.user_agent = 'OpenAPI-Generator/0.3.1/python'
         self.client_side_validation = configuration.client_side_validation
 
     def __enter__(self):
@@ -802,4 +803,7 @@ class ApiClient:
         :return: model object.
         """
 
-        return klass.from_dict(data)
+        with invalid_list_item_policy(
+            strict=getattr(self.configuration, 'strict_response_validation', False)
+        ):
+            return klass.from_dict(data)

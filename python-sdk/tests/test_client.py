@@ -51,6 +51,28 @@ def test_client_exposes_every_generated_api() -> None:
     client.close()
 
 
+def test_generated_apis_share_the_canonical_v1_base_path() -> None:
+  client = CovalClient("test-key")
+  serialize_args = {
+    "filter": None,
+    "page_size": None,
+    "page_token": None,
+    "order_by": None,
+    "tag_filters": None,
+    "_request_auth": None,
+    "_content_type": None,
+    "_headers": None,
+    "_host_index": 0,
+  }
+  try:
+    agents_request = client.agents._list_agents_serialize(**serialize_args)
+    test_sets_request = client.test_sets._list_test_sets_serialize(**serialize_args)
+    assert agents_request[1] == "https://api.coval.dev/v1/agents"
+    assert test_sets_request[1] == "https://api.coval.dev/v1/test-sets"
+  finally:
+    client.close()
+
+
 def test_default_retries_only_idempotent_methods() -> None:
   client = CovalClient("test-key")
   try:
@@ -85,6 +107,14 @@ def test_client_requires_api_key() -> None:
     CovalClient("")
 
 
+def test_client_can_restore_strict_response_validation() -> None:
+  client = CovalClient("test-key", strict_response_validation=True)
+  try:
+    assert client.configuration.strict_response_validation is True
+  finally:
+    client.close()
+
+
 def test_top_level_exports_and_version_match() -> None:
   assert coval_sdk.CovalClient is CovalClient
-  assert coval_sdk.__version__ == "0.3.0"
+  assert coval_sdk.__version__ == "0.3.1"
