@@ -58,6 +58,24 @@ export interface CovalAgentsAPIUpdateAgentRequest {
      */
     prompt?: string | null;
     /**
+     * New external id for the agent
+     * @type {string}
+     * @memberof CovalAgentsAPIUpdateAgentRequest
+     */
+    customer_agent_id?: string | null;
+    /**
+     * Primary language for the agent
+     * @type {string}
+     * @memberof CovalAgentsAPIUpdateAgentRequest
+     */
+    language?: string | null;
+    /**
+     * Free-form agent attributes. None means don't update; {} clears them.
+     * @type {{ [key: string]: any; }}
+     * @memberof CovalAgentsAPIUpdateAgentRequest
+     */
+    attributes?: { [key: string]: any; } | null;
+    /**
      * Simulator-specific configuration (null = no change, {} = clear)
      * @type {{ [key: string]: any; }}
      * @memberof CovalAgentsAPIUpdateAgentRequest
@@ -113,6 +131,9 @@ export function CovalAgentsAPIUpdateAgentRequestFromJSONTyped(json: any, ignoreD
         'phone_number': json['phone_number'] == null ? undefined : json['phone_number'],
         'endpoint': json['endpoint'] == null ? undefined : json['endpoint'],
         'prompt': json['prompt'] == null ? undefined : json['prompt'],
+        'customer_agent_id': json['customer_agent_id'] == null ? undefined : json['customer_agent_id'],
+        'language': json['language'] == null ? undefined : json['language'],
+        'attributes': json['attributes'] == null ? undefined : json['attributes'],
         'metadata': json['metadata'] == null ? undefined : json['metadata'],
         'workflows': json['workflows'] == null ? undefined : json['workflows'],
         'metric_ids': json['metric_ids'] == null ? undefined : json['metric_ids'],
@@ -137,6 +158,9 @@ export function CovalAgentsAPIUpdateAgentRequestToJSONTyped(value?: CovalAgentsA
         'phone_number': value['phone_number'],
         'endpoint': value['endpoint'],
         'prompt': value['prompt'],
+        'customer_agent_id': value['customer_agent_id'],
+        'language': value['language'],
+        'attributes': value['attributes'],
         'metadata': value['metadata'],
         'workflows': value['workflows'],
         'metric_ids': value['metric_ids'],

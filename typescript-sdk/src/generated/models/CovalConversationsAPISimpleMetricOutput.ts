@@ -58,6 +58,18 @@ export interface CovalConversationsAPISimpleMetricOutput {
      * @memberof CovalConversationsAPISimpleMetricOutput
      */
     status: CovalConversationsAPISimpleMetricOutputStatusEnum;
+    /**
+     * The LLM judge's reasoning for this metric output, as a flat string. Null for metrics that produce no explanation (non-judge metrics) or when the output is not yet computed. This is a convenience surfacing of the reasoning that otherwise lives nested under result.llm.answer_explanation (or result.explanation); it is populated in both the list and single-output responses so callers do not have to request the full result object to read it.
+     * @type {string}
+     * @memberof CovalConversationsAPISimpleMetricOutput
+     */
+    explanation?: string | null;
+    /**
+     * Structured metric result. Its keys depend on the metric type — for LLM-judge metrics the judge's reasoning is at result.llm.answer_explanation and the evaluation prompt at result.llm.prompt. Null for metrics that produce no structured result.
+     * @type {{ [key: string]: any; }}
+     * @memberof CovalConversationsAPISimpleMetricOutput
+     */
+    result?: { [key: string]: any; } | null;
 }
 
 
@@ -98,6 +110,8 @@ export function CovalConversationsAPISimpleMetricOutputFromJSONTyped(json: any, 
         'metric_version_ulid': json['metric_version_ulid'] == null ? undefined : json['metric_version_ulid'],
         'value': json['value'] == null ? undefined : CovalConversationsAPISimpleMetricOutputValueFromJSON(json['value']),
         'status': json['status'],
+        'explanation': json['explanation'] == null ? undefined : json['explanation'],
+        'result': json['result'] == null ? undefined : json['result'],
     };
 }
 
@@ -117,6 +131,8 @@ export function CovalConversationsAPISimpleMetricOutputToJSONTyped(value?: Coval
         'metric_version_ulid': value['metric_version_ulid'],
         'value': CovalConversationsAPISimpleMetricOutputValueToJSON(value['value']),
         'status': value['status'],
+        'explanation': value['explanation'],
+        'result': value['result'],
     };
 }
 

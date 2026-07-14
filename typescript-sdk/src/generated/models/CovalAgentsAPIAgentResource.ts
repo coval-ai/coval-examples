@@ -37,6 +37,12 @@ export interface CovalAgentsAPIAgentResource {
      */
     id?: string;
     /**
+     * Customer-supplied external id for the agent. Defaults to `id` when not set at creation.
+     * @type {string}
+     * @memberof CovalAgentsAPIAgentResource
+     */
+    customer_agent_id: string;
+    /**
      * Human-readable agent name
      * @type {string}
      * @memberof CovalAgentsAPIAgentResource
@@ -66,6 +72,18 @@ export interface CovalAgentsAPIAgentResource {
      * @memberof CovalAgentsAPIAgentResource
      */
     prompt?: string | null;
+    /**
+     * Primary language for the agent
+     * @type {string}
+     * @memberof CovalAgentsAPIAgentResource
+     */
+    language?: string | null;
+    /**
+     * Free-form agent attributes; referenceable in metric prompts as `{{agent.<key>}}`.
+     * @type {{ [key: string]: any; }}
+     * @memberof CovalAgentsAPIAgentResource
+     */
+    attributes?: { [key: string]: any; } | null;
     /**
      * Simulator-specific configuration (JSONB)
      * @type {{ [key: string]: any; }}
@@ -122,6 +140,7 @@ export interface CovalAgentsAPIAgentResource {
  * Check if a given object implements the CovalAgentsAPIAgentResource interface.
  */
 export function instanceOfCovalAgentsAPIAgentResource(value: object): value is CovalAgentsAPIAgentResource {
+    if (!('customer_agent_id' in value) || value['customer_agent_id'] === undefined) return false;
     return true;
 }
 
@@ -136,11 +155,14 @@ export function CovalAgentsAPIAgentResourceFromJSONTyped(json: any, ignoreDiscri
     return {
         
         'id': json['id'] == null ? undefined : json['id'],
+        'customer_agent_id': json['customer_agent_id'],
         'display_name': json['display_name'] == null ? undefined : json['display_name'],
         'model_type': json['model_type'] == null ? undefined : CovalAgentsAPISimulatorTypeFromJSON(json['model_type']),
         'phone_number': json['phone_number'] == null ? undefined : json['phone_number'],
         'endpoint': json['endpoint'] == null ? undefined : json['endpoint'],
         'prompt': json['prompt'] == null ? undefined : json['prompt'],
+        'language': json['language'] == null ? undefined : json['language'],
+        'attributes': json['attributes'] == null ? undefined : json['attributes'],
         'metadata': json['metadata'] == null ? undefined : json['metadata'],
         'workflows': json['workflows'] == null ? undefined : json['workflows'],
         'metric_ids': json['metric_ids'] == null ? undefined : json['metric_ids'],
@@ -164,11 +186,14 @@ export function CovalAgentsAPIAgentResourceToJSONTyped(value?: Omit<CovalAgentsA
     return {
         
         'id': value['id'],
+        'customer_agent_id': value['customer_agent_id'],
         'display_name': value['display_name'],
         'model_type': CovalAgentsAPISimulatorTypeToJSON(value['model_type']),
         'phone_number': value['phone_number'],
         'endpoint': value['endpoint'],
         'prompt': value['prompt'],
+        'language': value['language'],
+        'attributes': value['attributes'],
         'metadata': value['metadata'],
         'workflows': value['workflows'],
         'metric_ids': value['metric_ids'],

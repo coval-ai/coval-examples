@@ -110,6 +110,10 @@ export interface DeletePersonaRequest {
     personaId: string;
 }
 
+export interface DuplicatePersonaRequest {
+    personaId: string;
+}
+
 export interface GetPersonaRequest {
     personaId: string;
 }
@@ -247,6 +251,30 @@ export interface PersonasApiInterface {
      * Delete persona
      */
     deletePersona(requestParameters: DeletePersonaRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object>;
+
+    /**
+     * Creates request options for duplicatePersona without sending the request
+     * @param {string} personaId ID of the persona to duplicate
+     * @throws {RequiredError}
+     * @memberof PersonasApiInterface
+     */
+    duplicatePersonaRequestOpts(requestParameters: DuplicatePersonaRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Clone an existing persona into a new persona owned by your organization. Returns the new persona.
+     * @summary Duplicate a persona
+     * @param {string} personaId ID of the persona to duplicate
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PersonasApiInterface
+     */
+    duplicatePersonaRaw(requestParameters: DuplicatePersonaRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalPersonasAPICreatePersonaResponse>>;
+
+    /**
+     * Clone an existing persona into a new persona owned by your organization. Returns the new persona.
+     * Duplicate a persona
+     */
+    duplicatePersona(requestParameters: DuplicatePersonaRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalPersonasAPICreatePersonaResponse>;
 
     /**
      * Creates request options for getPersona without sending the request
@@ -686,6 +714,57 @@ export class PersonasApi extends runtime.BaseAPI implements PersonasApiInterface
      */
     async deletePersona(requestParameters: DeletePersonaRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
         const response = await this.deletePersonaRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for duplicatePersona without sending the request
+     */
+    async duplicatePersonaRequestOpts(requestParameters: DuplicatePersonaRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['personaId'] == null) {
+            throw new runtime.RequiredError(
+                'personaId',
+                'Required parameter "personaId" was null or undefined when calling duplicatePersona().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Personas_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/personas/{persona_id}/duplicate`;
+        urlPath = urlPath.replace('{persona_id}', encodeURIComponent(String(requestParameters['personaId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Clone an existing persona into a new persona owned by your organization. Returns the new persona.
+     * Duplicate a persona
+     */
+    async duplicatePersonaRaw(requestParameters: DuplicatePersonaRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalPersonasAPICreatePersonaResponse>> {
+        const requestOptions = await this.duplicatePersonaRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalPersonasAPICreatePersonaResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Clone an existing persona into a new persona owned by your organization. Returns the new persona.
+     * Duplicate a persona
+     */
+    async duplicatePersona(requestParameters: DuplicatePersonaRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalPersonasAPICreatePersonaResponse> {
+        const response = await this.duplicatePersonaRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

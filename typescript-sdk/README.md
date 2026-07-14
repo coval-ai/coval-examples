@@ -50,9 +50,11 @@ lowercase `x-api-key`, so you don't have to think about it.
 
 ### Retries with exponential backoff
 
-The client retries automatically on `408`, `429`, and `5xx` responses, plus
-network errors. Defaults: 3 attempts, 200ms base delay with jitter, 5s cap.
-`Retry-After` headers (both seconds and HTTP-date) are respected.
+For idempotent `GET`, `HEAD`, and `OPTIONS` requests, the client retries
+automatically on `408`, `429`, and `5xx` responses, plus network errors.
+Defaults: 3 attempts, 200ms base delay with jitter, 5s cap. `Retry-After`
+headers (both seconds and HTTP-date) are respected. Mutating requests are not
+retried unless you explicitly add their method to `retryableMethods`.
 
 ```ts
 const coval = new CovalClient({
@@ -113,7 +115,7 @@ const all = await collectAll({
 ```ts
 const coval = new CovalClient({
   apiKey,
-  baseUrl: 'https://staging.api.coval.dev',
+  baseUrl: 'https://staging.api.coval.dev/v1',
 });
 ```
 

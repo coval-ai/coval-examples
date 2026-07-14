@@ -10,6 +10,7 @@ import { CovalNetworkError } from './errors.js';
 import type { FetchAPI } from './generated/runtime.js';
 
 const RETRYABLE_STATUSES = new Set([408, 429, 500, 502, 503, 504]);
+const RETRYABLE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
 
 export interface RetryOptions {
   /** Max total attempts including the first. Default 3. */
@@ -22,6 +23,8 @@ export interface RetryOptions {
   jitter?: () => number;
   /** Statuses considered retryable. Defaults to {408,429,500,502,503,504}. */
   retryableStatuses?: Set<number>;
+  /** HTTP methods eligible for retry. Defaults to idempotent GET/HEAD/OPTIONS only. */
+  retryableMethods?: Set<string>;
 }
 
 export interface RetryDeps {
@@ -35,6 +38,7 @@ export function createRetryingFetch(options: RetryOptions = {}, deps: RetryDeps 
   const maxDelay = options.maxDelayMs ?? 5_000;
   const jitter = options.jitter ?? Math.random;
   const retryable = options.retryableStatuses ?? RETRYABLE_STATUSES;
+  const retryableMethods = options.retryableMethods ?? RETRYABLE_METHODS;
   const innerFetch: FetchAPI = deps.fetch ?? (globalThis.fetch as FetchAPI);
   const sleep = deps.sleep ?? ((ms: number) => new Promise((resolve) => setTimeout(resolve, ms)));
 
@@ -42,6 +46,20 @@ export function createRetryingFetch(options: RetryOptions = {}, deps: RetryDeps 
     let lastError: unknown;
     const method = (init?.method ?? 'GET').toUpperCase();
     const url = typeof input === 'string' ? input : input instanceof URL ? input.toString() : input.url;
+
+    if (!retryableMethods.has(method)) {
+      try {
+        return await innerFetch(input, init);
+      } catch (err) {
+        throw new CovalNetworkError({
+          message: `Coval API request failed: ${stringifyError(err)}`,
+          url,
+          method,
+          attempts: 1,
+          cause: err,
+        });
+      }
+    }
 
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       try {

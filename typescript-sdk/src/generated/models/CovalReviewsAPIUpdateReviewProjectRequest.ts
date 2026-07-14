@@ -52,6 +52,18 @@ export interface CovalReviewsAPIUpdateReviewProjectRequest {
      */
     linked_simulation_ids?: Array<string> | null;
     /**
+     * Simulation IDs to add atomically; cannot be combined with other project updates
+     * @type {Array<string>}
+     * @memberof CovalReviewsAPIUpdateReviewProjectRequest
+     */
+    add_linked_simulation_ids?: Array<string> | null;
+    /**
+     * Simulation IDs to remove atomically; cannot be combined with other project updates
+     * @type {Array<string>}
+     * @memberof CovalReviewsAPIUpdateReviewProjectRequest
+     */
+    remove_linked_simulation_ids?: Array<string> | null;
+    /**
      * Updated metric IDs
      * @type {Array<string>}
      * @memberof CovalReviewsAPIUpdateReviewProjectRequest
@@ -98,6 +110,8 @@ export function CovalReviewsAPIUpdateReviewProjectRequestFromJSONTyped(json: any
         'description': json['description'] == null ? undefined : json['description'],
         'assignees': json['assignees'] == null ? undefined : json['assignees'],
         'linked_simulation_ids': json['linked_simulation_ids'] == null ? undefined : json['linked_simulation_ids'],
+        'add_linked_simulation_ids': json['add_linked_simulation_ids'] == null ? undefined : json['add_linked_simulation_ids'],
+        'remove_linked_simulation_ids': json['remove_linked_simulation_ids'] == null ? undefined : json['remove_linked_simulation_ids'],
         'linked_metric_ids': json['linked_metric_ids'] == null ? undefined : json['linked_metric_ids'],
         'notifications': json['notifications'] == null ? undefined : json['notifications'],
         'project_rules': json['project_rules'] == null ? undefined : ((json['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleFromJSON)),
@@ -120,6 +134,8 @@ export function CovalReviewsAPIUpdateReviewProjectRequestToJSONTyped(value?: Cov
         'description': value['description'],
         'assignees': value['assignees'],
         'linked_simulation_ids': value['linked_simulation_ids'],
+        'add_linked_simulation_ids': value['add_linked_simulation_ids'],
+        'remove_linked_simulation_ids': value['remove_linked_simulation_ids'],
         'linked_metric_ids': value['linked_metric_ids'],
         'notifications': value['notifications'],
         'project_rules': value['project_rules'] == null ? undefined : ((value['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleToJSON)),

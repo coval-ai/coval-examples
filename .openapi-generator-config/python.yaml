@@ -5,7 +5,6 @@
 
 packageName: coval_sdk
 projectName: coval-sdk
-packageVersion: "0.1.0"
 packageUrl: "https://github.com/coval-ai/coval-examples"
 library: urllib3
 generateSourceCodeOnly: false

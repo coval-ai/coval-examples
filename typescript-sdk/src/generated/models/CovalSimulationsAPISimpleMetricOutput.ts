@@ -65,6 +65,12 @@ export interface CovalSimulationsAPISimpleMetricOutput {
      */
     status: CovalSimulationsAPISimpleMetricOutputStatusEnum;
     /**
+     * The LLM judge's reasoning for this metric output, as a flat string. Null for metrics that produce no explanation (non-judge metrics) or when the output is not yet computed. This is a convenience surfacing of the reasoning that otherwise lives nested under result.llm.answer_explanation (or result.explanation); it is populated in both the list and single-output responses so callers do not have to request the full result object to read it.
+     * @type {string}
+     * @memberof CovalSimulationsAPISimpleMetricOutput
+     */
+    explanation?: string | null;
+    /**
      * Time-series metric values anchored to time ranges
      * @type {Array<CovalSimulationsAPISubvalueByTimestamp>}
      * @memberof CovalSimulationsAPISimpleMetricOutput
@@ -122,6 +128,7 @@ export function CovalSimulationsAPISimpleMetricOutputFromJSONTyped(json: any, ig
         'metric_version_ulid': json['metric_version_ulid'] == null ? undefined : json['metric_version_ulid'],
         'value': json['value'] == null ? undefined : CovalSimulationsAPISimpleMetricOutputValueFromJSON(json['value']),
         'status': json['status'],
+        'explanation': json['explanation'] == null ? undefined : json['explanation'],
         'subvalues_by_timestamp': json['subvalues_by_timestamp'] == null ? undefined : ((json['subvalues_by_timestamp'] as Array<any>).map(CovalSimulationsAPISubvalueByTimestampFromJSON)),
         'result': json['result'] == null ? undefined : json['result'],
         'runtime_metadata': json['runtime_metadata'] == null ? undefined : json['runtime_metadata'],
@@ -144,6 +151,7 @@ export function CovalSimulationsAPISimpleMetricOutputToJSONTyped(value?: CovalSi
         'metric_version_ulid': value['metric_version_ulid'],
         'value': CovalSimulationsAPISimpleMetricOutputValueToJSON(value['value']),
         'status': value['status'],
+        'explanation': value['explanation'],
         'subvalues_by_timestamp': value['subvalues_by_timestamp'] == null ? undefined : ((value['subvalues_by_timestamp'] as Array<any>).map(CovalSimulationsAPISubvalueByTimestampToJSON)),
         'result': value['result'],
         'runtime_metadata': value['runtime_metadata'],

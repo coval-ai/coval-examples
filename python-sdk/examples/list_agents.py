@@ -39,7 +39,7 @@ def main() -> int:
     # spec, the security scheme is split per-tag (Coval_Agents_API_ApiKeyAuth,
     # Coval_Conversations_API_ApiKeyAuth, …), so the cleanest pattern is to
     # set the header directly on the client.
-    config = Configuration(host="https://api.coval.dev")
+    config = Configuration(host="https://api.coval.dev/v1")
 
     with ApiClient(config) as client:
         client.set_default_header("x-api-key", api_key)

@@ -1,81 +1,83 @@
 # coval-sdk (Python)
 
-Generated Python client for the [Coval](https://coval.dev) evaluation
-platform API. Built from the public OpenAPI specs via
-[openapi-generator](https://openapi-generator.tech/docs/generators/python).
-
-This package is currently **demo-grade**: it's the generated client without a
-hand-written ergonomic wrapper layer. The TypeScript SDK (`@coval/sdk`)
-ships with auth/retry/pagination helpers — those are still in flight on the
-Python side and will follow in a subsequent release.
+Typed Python client for the [Coval](https://coval.dev) evaluation platform
+API. The API classes and Pydantic v2 models are generated from the same public
+OpenAPI specs that power the API reference. `CovalClient` adds authentication,
+safe retries, pagination, and one entry point for every public v1 resource.
 
 ## Install
 
 ```bash
 pip install coval-sdk
-
-# For latest main before the next PyPI release:
-# pip install "git+https://github.com/coval-ai/coval-examples.git#subdirectory=python-sdk"
-
-# For local SDK development from the coval-examples repo:
-# pip install -e ./python-sdk
 ```
 
 Requires Python 3.9+.
 
-## Usage
+## Quick start
 
 ```python
 import os
+
+from coval_sdk import CovalClient, paginate
+
+with CovalClient(os.environ["COVAL_API_KEY"]) as coval:
+  for agent in paginate(
+    coval.agents.list_agents,
+    items_field="agents",
+    page_size=50,
+  ):
+    print(agent.id, agent.display_name)
+```
+
+The client sends the required lowercase `x-api-key` header and defaults to
+`https://api.coval.dev/v1`.
+
+## Retries
+
+`GET`, `HEAD`, and `OPTIONS` requests retry `408`, `429`, and transient `5xx`
+responses up to three total attempts with exponential backoff. Mutating
+requests are not retried by default, which avoids duplicating side effects.
+
+```python
+from coval_sdk import CovalClient
+
+# Disable transport retries.
+coval = CovalClient(api_key, retries=False)
+
+# Use a custom base URL.
+staging = CovalClient(api_key, base_url="https://staging.api.coval.dev/v1")
+```
+
+## Generated client
+
+All generated API classes, models, `ApiClient`, `Configuration`, and typed
+exceptions remain available for lower-level usage:
+
+```python
 from coval_sdk import AgentsApi, ApiClient, Configuration
 
-config = Configuration(host="https://api.coval.dev")
+config = Configuration(host="https://api.coval.dev/v1")
 with ApiClient(config) as client:
-    # Coval's gateway requires lowercase x-api-key. The bundled spec splits
-    # the auth scheme per tag, so the cleanest pattern is to set the header
-    # directly on the client:
-    client.set_default_header("x-api-key", os.environ["COVAL_API_KEY"])
-
-    agents_api = AgentsApi(client)
-    page = agents_api.list_agents(page_size=50)
-    for a in page.agents:
-        print(a.id, a.display_name)
+  client.set_default_header("x-api-key", api_key)
+  page = AgentsApi(client).list_agents(page_size=50)
 ```
 
-## Run the example
+## What's included
+
+- 25 typed API classes, including agents, conversations, runs, run templates,
+  metrics, monitors, reports, tags, webhooks, and organization configuration
+- Pydantic v2 request and response models
+- Lowercase API-key authentication and connection pooling
+- Safe retry and token-pagination helpers
+
+## Development
+
+From the repository root:
 
 ```bash
-COVAL_API_KEY=... python examples/list_agents.py
-COVAL_API_KEY=... python examples/list_agents.py --raw   # bypass pydantic validation
-```
-
-### Why `--raw` exists
-
-The generated models enforce strict pydantic validation on responses
-(including regex patterns on IDs). If your org has any historical data that
-predates the current spec — for instance, an `agent_id` that doesn't match
-the `^[A-Za-z0-9]{22}$` regex — pydantic will raise a `ValidationError`
-mid-stream. The `--raw` flag falls back to
-`list_agents_without_preload_content()` which returns the raw HTTP response,
-so you can parse it manually.
-
-For production use, prefer the typed call. If you hit ValidationErrors,
-file a docs/spec issue so we can either fix the data or relax the
-constraint.
-
-## What's in the box
-
-- 21 typed API classes (`AgentsApi`, `ConversationsApi`, `MetricsApi`, …)
-- Pydantic v2 models for every request and response shape
-- `urllib3`-based transport
-
-## Regenerating
-
-From the repo root:
-
-```bash
-node scripts/bundle-spec.mjs
+COVAL_SPECS_DIR=../docs/api-reference/v1 node scripts/bundle-spec.mjs
 bash scripts/generate-sdks.sh
+python -m pytest python-sdk/tests
 ```
 
 ## License

@@ -36,11 +36,12 @@ class CovalSimulationsAPISimpleMetricOutput(BaseModel):
     metric_version_ulid: Optional[Annotated[str, Field(min_length=26, strict=True, max_length=26)]] = Field(default=None, description="ULID of the metric version this output was scored against (null for outputs produced before metric versioning landed).")
     value: Optional[CovalSimulationsAPISimpleMetricOutputValue] = None
     status: StrictStr = Field(description="Current status of the metric computation")
+    explanation: Optional[StrictStr] = Field(default=None, description="The LLM judge's reasoning for this metric output, as a flat string. Null for metrics that produce no explanation (non-judge metrics) or when the output is not yet computed. This is a convenience surfacing of the reasoning that otherwise lives nested under result.llm.answer_explanation (or result.explanation); it is populated in both the list and single-output responses so callers do not have to request the full result object to read it.")
     subvalues_by_timestamp: Optional[List[CovalSimulationsAPISubvalueByTimestamp]] = Field(default=None, description="Time-series metric values anchored to time ranges")
     result: Optional[Dict[str, Any]] = Field(default=None, description="Structured metric result. Its keys depend on the metric type — for example llm for LLM-judge metrics, or stats/count for numeric metrics. The llm key is present only for LLM-judge metrics: the judge's reasoning is at result.llm.answer_explanation and the evaluation prompt at result.llm.prompt. Null for metrics that produce no structured result.")
     runtime_metadata: Optional[Dict[str, Any]] = Field(default=None, description="How the metric was computed at runtime, such as model version and trace context. Null when not recorded.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["metric_output_id", "metric_id", "metric_version_ulid", "value", "status", "subvalues_by_timestamp", "result", "runtime_metadata"]
+    __properties: ClassVar[List[str]] = ["metric_output_id", "metric_id", "metric_version_ulid", "value", "status", "explanation", "subvalues_by_timestamp", "result", "runtime_metadata"]
 
     @field_validator('status')
     def status_validate_enum(cls, value):
@@ -110,6 +111,11 @@ class CovalSimulationsAPISimpleMetricOutput(BaseModel):
         if self.metric_version_ulid is None and "metric_version_ulid" in self.model_fields_set:
             _dict['metric_version_ulid'] = None
 
+        # set to None if explanation (nullable) is None
+        # and model_fields_set contains the field
+        if self.explanation is None and "explanation" in self.model_fields_set:
+            _dict['explanation'] = None
+
         # set to None if subvalues_by_timestamp (nullable) is None
         # and model_fields_set contains the field
         if self.subvalues_by_timestamp is None and "subvalues_by_timestamp" in self.model_fields_set:
@@ -142,6 +148,7 @@ class CovalSimulationsAPISimpleMetricOutput(BaseModel):
             "metric_version_ulid": obj.get("metric_version_ulid"),
             "value": CovalSimulationsAPISimpleMetricOutputValue.from_dict(obj["value"]) if obj.get("value") is not None else None,
             "status": obj.get("status"),
+            "explanation": obj.get("explanation"),
             "subvalues_by_timestamp": [CovalSimulationsAPISubvalueByTimestamp.from_dict(_item) for _item in obj["subvalues_by_timestamp"]] if obj.get("subvalues_by_timestamp") is not None else None,
             "result": obj.get("result"),
             "runtime_metadata": obj.get("runtime_metadata")

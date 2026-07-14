@@ -119,6 +119,7 @@ AuthSettings = TypedDict(
         "Coval_Metrics_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_Monitors_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_Agent_Mutations_API_ApiKeyAuth": APIKeyAuthSetting,
+        "Coval_Organization_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_Personas_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_Reports_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_Reviews_API_ApiKeyAuth": APIKeyAuthSetting,
@@ -127,10 +128,10 @@ AuthSettings = TypedDict(
         "Coval_Scheduled_Runs_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_Simulations_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_Tags_API_ApiKeyAuth": APIKeyAuthSetting,
-        "Coval_Templates_API_ApiKeyAuth": APIKeyAuthSetting,
         "Test_Cases_API_apiKey": APIKeyAuthSetting,
         "Test_Sets_API_apiKey": APIKeyAuthSetting,
         "Traces_API_apiKey": APIKeyAuthSetting,
+        "Coval_Webhooks_API_ApiKeyAuth": APIKeyAuthSetting,
     },
     total=False,
 )
@@ -616,6 +617,15 @@ conf = coval_sdk.Configuration(
                     'Coval_Agent_Mutations_API_ApiKeyAuth',
                 ),
             }
+        if 'Coval_Organization_API_ApiKeyAuth' in self.api_key:
+            auth['Coval_Organization_API_ApiKeyAuth'] = {
+                'type': 'api_key',
+                'in': 'header',
+                'key': 'x-api-key',
+                'value': self.get_api_key_with_prefix(
+                    'Coval_Organization_API_ApiKeyAuth',
+                ),
+            }
         if 'Coval_Personas_API_ApiKeyAuth' in self.api_key:
             auth['Coval_Personas_API_ApiKeyAuth'] = {
                 'type': 'api_key',
@@ -688,15 +698,6 @@ conf = coval_sdk.Configuration(
                     'Coval_Tags_API_ApiKeyAuth',
                 ),
             }
-        if 'Coval_Templates_API_ApiKeyAuth' in self.api_key:
-            auth['Coval_Templates_API_ApiKeyAuth'] = {
-                'type': 'api_key',
-                'in': 'header',
-                'key': 'X-API-Key',
-                'value': self.get_api_key_with_prefix(
-                    'Coval_Templates_API_ApiKeyAuth',
-                ),
-            }
         if 'Test_Cases_API_apiKey' in self.api_key:
             auth['Test_Cases_API_apiKey'] = {
                 'type': 'api_key',
@@ -724,6 +725,15 @@ conf = coval_sdk.Configuration(
                     'Traces_API_apiKey',
                 ),
             }
+        if 'Coval_Webhooks_API_ApiKeyAuth' in self.api_key:
+            auth['Coval_Webhooks_API_ApiKeyAuth'] = {
+                'type': 'api_key',
+                'in': 'header',
+                'key': 'X-API-Key',
+                'value': self.get_api_key_with_prefix(
+                    'Coval_Webhooks_API_ApiKeyAuth',
+                ),
+            }
         return auth
 
     def to_debug_report(self) -> str:
@@ -735,7 +745,7 @@ conf = coval_sdk.Configuration(
                "OS: {env}\n"\
                "Python Version: {pyversion}\n"\
                "Version of the API: 1.0.0\n"\
-               "SDK Package Version: 0.1.0".\
+               "SDK Package Version: 0.3.0".\
                format(env=sys.platform, pyversion=sys.version)
 
     def get_host_settings(self) -> List[HostSetting]:
@@ -746,11 +756,7 @@ conf = coval_sdk.Configuration(
         return [
             {
                 'url': "https://api.coval.dev/v1",
-                'description': "Production API",
-            },
-            {
-                'url': "https://api.coval.dev",
-                'description': "Production API",
+                'description': "No description provided",
             }
         ]
 

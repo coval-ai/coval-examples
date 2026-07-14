@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime.js';
+import type { CovalConversationsAPIMetricOutputResource } from './CovalConversationsAPIMetricOutputResource.js';
+import {
+    CovalConversationsAPIMetricOutputResourceFromJSON,
+    CovalConversationsAPIMetricOutputResourceFromJSONTyped,
+    CovalConversationsAPIMetricOutputResourceToJSON,
+    CovalConversationsAPIMetricOutputResourceToJSONTyped,
+} from './CovalConversationsAPIMetricOutputResource.js';
 import type { CovalConversationsAPIConversationProgress } from './CovalConversationsAPIConversationProgress.js';
 import {
     CovalConversationsAPIConversationProgressFromJSON,
@@ -20,6 +27,20 @@ import {
     CovalConversationsAPIConversationProgressToJSON,
     CovalConversationsAPIConversationProgressToJSONTyped,
 } from './CovalConversationsAPIConversationProgress.js';
+import type { CovalConversationsAPIConversationResourceDestination } from './CovalConversationsAPIConversationResourceDestination.js';
+import {
+    CovalConversationsAPIConversationResourceDestinationFromJSON,
+    CovalConversationsAPIConversationResourceDestinationFromJSONTyped,
+    CovalConversationsAPIConversationResourceDestinationToJSON,
+    CovalConversationsAPIConversationResourceDestinationToJSONTyped,
+} from './CovalConversationsAPIConversationResourceDestination.js';
+import type { CovalConversationsAPIConversationResourceSource } from './CovalConversationsAPIConversationResourceSource.js';
+import {
+    CovalConversationsAPIConversationResourceSourceFromJSON,
+    CovalConversationsAPIConversationResourceSourceFromJSONTyped,
+    CovalConversationsAPIConversationResourceSourceToJSON,
+    CovalConversationsAPIConversationResourceSourceToJSONTyped,
+} from './CovalConversationsAPIConversationResourceSource.js';
 import type { CovalConversationsAPIConversationStatus } from './CovalConversationsAPIConversationStatus.js';
 import {
     CovalConversationsAPIConversationStatusFromJSON,
@@ -93,6 +114,18 @@ export interface CovalConversationsAPIConversationResource {
      */
     persona_id?: string | null;
     /**
+     * 
+     * @type {CovalConversationsAPIConversationResourceSource}
+     * @memberof CovalConversationsAPIConversationResource
+     */
+    source?: CovalConversationsAPIConversationResourceSource | null;
+    /**
+     * 
+     * @type {CovalConversationsAPIConversationResourceDestination}
+     * @memberof CovalConversationsAPIConversationResource
+     */
+    destination?: CovalConversationsAPIConversationResourceDestination | null;
+    /**
      * Progress tracking (included when include_progress=true)
      * @type {CovalConversationsAPIConversationProgress}
      * @memberof CovalConversationsAPIConversationResource
@@ -119,6 +152,14 @@ export interface CovalConversationsAPIConversationResource {
      * @memberof CovalConversationsAPIConversationResource
      */
     metric_ids?: Array<string>;
+    /**
+     * Full outputs matching the requested metric_id. Present only when the list
+     * request sets include=metric_outputs; omitted from the default summary view.
+     * 
+     * @type {Array<CovalConversationsAPIMetricOutputResource>}
+     * @memberof CovalConversationsAPIConversationResource
+     */
+    metric_outputs?: Array<CovalConversationsAPIMetricOutputResource> | null;
     /**
      * Error message (only present if status=FAILED)
      * @type {string}
@@ -155,10 +196,13 @@ export function CovalConversationsAPIConversationResourceFromJSONTyped(json: any
         'has_audio': json['has_audio'] == null ? undefined : json['has_audio'],
         'agent_id': json['agent_id'] == null ? undefined : json['agent_id'],
         'persona_id': json['persona_id'] == null ? undefined : json['persona_id'],
+        'source': json['source'] == null ? undefined : CovalConversationsAPIConversationResourceSourceFromJSON(json['source']),
+        'destination': json['destination'] == null ? undefined : CovalConversationsAPIConversationResourceDestinationFromJSON(json['destination']),
         'progress': json['progress'] == null ? undefined : CovalConversationsAPIConversationProgressFromJSON(json['progress']),
         'metadata': json['metadata'] == null ? undefined : json['metadata'],
         'tags': json['tags'] == null ? undefined : json['tags'],
         'metric_ids': json['metric_ids'] == null ? undefined : json['metric_ids'],
+        'metric_outputs': json['metric_outputs'] == null ? undefined : ((json['metric_outputs'] as Array<any>).map(CovalConversationsAPIMetricOutputResourceFromJSON)),
         'error': json['error'] == null ? undefined : json['error'],
     };
 }
@@ -183,10 +227,13 @@ export function CovalConversationsAPIConversationResourceToJSONTyped(value?: Cov
         'has_audio': value['has_audio'],
         'agent_id': value['agent_id'],
         'persona_id': value['persona_id'],
+        'source': CovalConversationsAPIConversationResourceSourceToJSON(value['source']),
+        'destination': CovalConversationsAPIConversationResourceDestinationToJSON(value['destination']),
         'progress': CovalConversationsAPIConversationProgressToJSON(value['progress']),
         'metadata': value['metadata'],
         'tags': value['tags'],
         'metric_ids': value['metric_ids'],
+        'metric_outputs': value['metric_outputs'] == null ? undefined : ((value['metric_outputs'] as Array<any>).map(CovalConversationsAPIMetricOutputResourceToJSON)),
         'error': value['error'],
     };
 }

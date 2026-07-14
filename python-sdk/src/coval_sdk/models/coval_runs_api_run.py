@@ -34,6 +34,7 @@ class CovalRunsAPIRun(BaseModel):
     """ # noqa: E501
     name: StrictStr = Field(description="Resource name in format \"runs/{run_id}\"")
     run_id: Annotated[str, Field(min_length=22, strict=True, max_length=22)] = Field(description="Unique identifier for this simulation run")
+    display_name: Optional[StrictStr] = Field(default=None, description="Human-readable name for the run, set via `metadata.display_name` at launch.")
     status: StrictStr = Field(description="Current status of the simulation run")
     create_time: datetime = Field(description="Timestamp when the run was created (ISO 8601)")
     update_time: Optional[datetime] = Field(default=None, description="Timestamp when the run was last updated (ISO 8601)")
@@ -46,7 +47,7 @@ class CovalRunsAPIRun(BaseModel):
     metadata: Optional[Dict[str, Any]] = Field(default=None, description="Custom metadata provided during launch")
     error: Optional[StrictStr] = Field(default=None, description="Error message if status is FAILED")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "run_id", "status", "create_time", "update_time", "agent_id", "persona_id", "test_set_id", "tags", "progress", "results", "metadata", "error"]
+    __properties: ClassVar[List[str]] = ["name", "run_id", "display_name", "status", "create_time", "update_time", "agent_id", "persona_id", "test_set_id", "tags", "progress", "results", "metadata", "error"]
 
     @field_validator('status')
     def status_validate_enum(cls, value):
@@ -107,6 +108,11 @@ class CovalRunsAPIRun(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if display_name (nullable) is None
+        # and model_fields_set contains the field
+        if self.display_name is None and "display_name" in self.model_fields_set:
+            _dict['display_name'] = None
+
         # set to None if agent_id (nullable) is None
         # and model_fields_set contains the field
         if self.agent_id is None and "agent_id" in self.model_fields_set:
@@ -146,6 +152,7 @@ class CovalRunsAPIRun(BaseModel):
         _obj = cls.model_validate({
             "name": obj.get("name"),
             "run_id": obj.get("run_id"),
+            "display_name": obj.get("display_name"),
             "status": obj.get("status"),
             "create_time": obj.get("create_time"),
             "update_time": obj.get("update_time"),

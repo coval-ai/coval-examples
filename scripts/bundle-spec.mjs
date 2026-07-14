@@ -33,6 +33,11 @@ const SOURCE_DIR =
   process.env.COVAL_SPECS_DIR || resolve(repoRoot, '../coval/docs/api-reference/v1');
 const OUT_DIR = resolve(repoRoot, 'dist');
 const OUTPUT = join(OUT_DIR, 'coval-openapi.yaml');
+const CANONICAL_SERVER = 'https://api.coval.dev/v1';
+const ALLOWED_SOURCE_SERVERS = new Set([
+  'https://api.coval.dev',
+  CANONICAL_SERVER,
+]);
 
 if (!existsSync(SOURCE_DIR) || !statSync(SOURCE_DIR).isDirectory()) {
   console.error(`✗ Specs directory not found: ${SOURCE_DIR}`);
@@ -59,6 +64,7 @@ const slugFromFile = (filename) => basename(filename, '.yaml').replace(/-v1$/, '
 
 const seenOperationIds = new Map();
 const renamed = [];
+const normalizedPaths = [];
 
 const tmpRoot = join(tmpdir(), `coval-sdk-bundle-${process.pid}`);
 rmSync(tmpRoot, { recursive: true, force: true });
@@ -68,6 +74,32 @@ for (const filename of sourceFiles) {
   const filepath = join(SOURCE_DIR, filename);
   const doc = parse(readFileSync(filepath, 'utf8'));
   const slug = slugFromFile(filename);
+
+  const sourceServers = (doc.servers ?? []).map((server) => server?.url).filter(Boolean);
+  const unexpectedServers = sourceServers.filter((url) => !ALLOWED_SOURCE_SERVERS.has(url));
+  if (unexpectedServers.length > 0) {
+    console.error(`Unexpected server URL in ${filename}: ${unexpectedServers.join(', ')}`);
+    process.exit(1);
+  }
+
+  const paths = {};
+  for (const [pathKey, pathItem] of Object.entries(doc.paths ?? {})) {
+    const normalized = pathKey === '/v1'
+      ? '/'
+      : pathKey.startsWith('/v1/')
+        ? pathKey.slice(3)
+        : pathKey;
+    if (Object.hasOwn(paths, normalized)) {
+      console.error(`Path collision in ${filename}: ${pathKey} normalizes to ${normalized}`);
+      process.exit(1);
+    }
+    paths[normalized] = pathItem;
+    if (normalized !== pathKey) {
+      normalizedPaths.push({ filename, from: pathKey, to: normalized });
+    }
+  }
+  doc.paths = paths;
+  doc.servers = [{ url: CANONICAL_SERVER }];
 
   for (const [pathKey, pathItem] of Object.entries(doc.paths ?? {})) {
     if (!pathItem || typeof pathItem !== 'object') continue;
@@ -100,12 +132,24 @@ if (renamed.length > 0) {
   }
 }
 
+if (normalizedPaths.length > 0) {
+  console.log('\nNormalized version-prefixed paths for the canonical /v1 server:');
+  for (const path of normalizedPaths) {
+    console.log(`  ${path.filename}: ${path.from} -> ${path.to}`);
+  }
+}
+
 mkdirSync(OUT_DIR, { recursive: true });
 
 const specPaths = sourceFiles.map((f) => join(tmpRoot, f));
 const quoted = (s) => `"${s.replace(/"/g, '\\"')}"`;
+const redocly = join(repoRoot, 'scripts', 'node_modules', '.bin', 'redocly');
+if (!existsSync(redocly)) {
+  console.error('Redocly CLI is not installed. Run `npm ci --prefix scripts`.');
+  process.exit(1);
+}
 const cmd = [
-  'npx --yes @redocly/cli@1',
+  quoted(redocly),
   'join',
   ...specPaths.map(quoted),
   '-o',

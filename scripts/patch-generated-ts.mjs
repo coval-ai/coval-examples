@@ -1,8 +1,6 @@
 #!/usr/bin/env node
-// Post-process the typescript-fetch generator output to fix a known bug:
-// inline enum properties inside `oneOf` models reference a type
-// `<ModelName><PropName>Enum` that the generator declares neither in the
-// owning file nor anywhere else, causing TS2304 "Cannot find name" errors.
+// Post-process typescript-fetch output for two upstream generator bugs:
+// missing inline-enum declarations and empty aliases for inline oneOf fields.
 //
 // We walk the bundled spec, find any inline string enums on object properties
 // whose owning schema participates in a `oneOf`/`anyOf`, and emit the missing
@@ -79,6 +77,7 @@ const enumValueIdent = (v) =>
 const enumMemberName = (v) => propToPascal(enumValueIdent(v));
 
 let patches = 0;
+let unionPatches = 0;
 
 for (const [schemaName, schema] of Object.entries(schemas)) {
   if (!schema || typeof schema !== 'object') continue;
@@ -112,4 +111,57 @@ for (const [schemaName, schema] of Object.entries(schemas)) {
   }
 }
 
-console.log(`\n✓ Applied ${patches} enum patch${patches === 1 ? '' : 'es'}.`);
+for (const [schemaName, schema] of Object.entries(schemas)) {
+  if (!schema || typeof schema !== 'object') continue;
+  const props = schema.properties ?? {};
+  for (const [propName, prop] of Object.entries(props)) {
+    if (!prop || typeof prop !== 'object' || !Array.isArray(prop.oneOf)) continue;
+    const members = prop.oneOf
+      .map((member) => member?.$ref)
+      .filter(Boolean)
+      .map((ref) => schemaToFileName(ref.split('/').at(-1)));
+    if (members.length === 0) continue;
+
+    const aliasName = `${schemaToFileName(schemaName)}${propToPascal(propName)}`;
+    const modelFile = join(MODELS_DIR, `${aliasName}.ts`);
+    if (!existsSync(modelFile)) continue;
+    let contents = readFileSync(modelFile, 'utf8');
+    const emptyAlias = `export type ${aliasName} = ;`;
+    if (!contents.includes(emptyAlias)) continue;
+
+    const missingImports = members.filter(
+      (member) => !contents.includes(`import type { ${member} }`),
+    );
+    if (missingImports.length > 0) {
+      console.error(
+        `Cannot repair ${aliasName}; generated file is missing imports for ${missingImports.join(', ')}`,
+      );
+      process.exit(1);
+    }
+
+    contents = contents.replace(
+      emptyAlias,
+      `export type ${aliasName} = ${members.join(' | ')};`,
+    );
+    writeFileSync(modelFile, contents);
+    unionPatches += 1;
+    console.log(`  + ${schemaName}.${propName} -> ${members.join(' | ')}`);
+  }
+}
+
+const emptyAliases = [];
+for (const file of walkTsFiles(GENERATED_ROOT)) {
+  const contents = readFileSync(file, 'utf8');
+  if (/export type [A-Za-z0-9_]+\s*=\s*;/.test(contents)) {
+    emptyAliases.push(file);
+  }
+}
+if (emptyAliases.length > 0) {
+  console.error(`Unrepaired empty generated aliases:\n${emptyAliases.join('\n')}`);
+  process.exit(1);
+}
+
+console.log(
+  `\n✓ Applied ${patches} enum patch${patches === 1 ? '' : 'es'} and ` +
+  `${unionPatches} union patch${unionPatches === 1 ? '' : 'es'}.`,
+);

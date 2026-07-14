@@ -29,6 +29,11 @@ import {
     CovalScheduledRunsAPIErrorResponseToJSON,
 } from '../models/CovalScheduledRunsAPIErrorResponse.js';
 import {
+    type CovalScheduledRunsAPIGetScheduledRunHistoryResponse,
+    CovalScheduledRunsAPIGetScheduledRunHistoryResponseFromJSON,
+    CovalScheduledRunsAPIGetScheduledRunHistoryResponseToJSON,
+} from '../models/CovalScheduledRunsAPIGetScheduledRunHistoryResponse.js';
+import {
     type CovalScheduledRunsAPIGetScheduledRunResponse,
     CovalScheduledRunsAPIGetScheduledRunResponseFromJSON,
     CovalScheduledRunsAPIGetScheduledRunResponseToJSON,
@@ -58,6 +63,10 @@ export interface DeleteScheduledRunRequest {
 }
 
 export interface GetScheduledRunRequest {
+    scheduledRunId: string;
+}
+
+export interface ListScheduledRunHistoryRequest {
     scheduledRunId: string;
 }
 
@@ -151,6 +160,30 @@ export interface ScheduledRunsApiInterface {
      * Get scheduled run
      */
     getScheduledRun(requestParameters: GetScheduledRunRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalScheduledRunsAPIGetScheduledRunResponse>;
+
+    /**
+     * Creates request options for listScheduledRunHistory without sending the request
+     * @param {string} scheduledRunId Scheduled run resource ID
+     * @throws {RequiredError}
+     * @memberof ScheduledRunsApiInterface
+     */
+    listScheduledRunHistoryRequestOpts(requestParameters: ListScheduledRunHistoryRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Retrieve the runs a scheduled run has produced, most recent first (capped at the 500 most recent). Useful for programmatically checking what a schedule created via `POST /scheduled-runs`. 
+     * @summary List a scheduled run\'s produced runs
+     * @param {string} scheduledRunId Scheduled run resource ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ScheduledRunsApiInterface
+     */
+    listScheduledRunHistoryRaw(requestParameters: ListScheduledRunHistoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalScheduledRunsAPIGetScheduledRunHistoryResponse>>;
+
+    /**
+     * Retrieve the runs a scheduled run has produced, most recent first (capped at the 500 most recent). Useful for programmatically checking what a schedule created via `POST /scheduled-runs`. 
+     * List a scheduled run\'s produced runs
+     */
+    listScheduledRunHistory(requestParameters: ListScheduledRunHistoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalScheduledRunsAPIGetScheduledRunHistoryResponse>;
 
     /**
      * Creates request options for listScheduledRuns without sending the request
@@ -366,6 +399,57 @@ export class ScheduledRunsApi extends runtime.BaseAPI implements ScheduledRunsAp
      */
     async getScheduledRun(requestParameters: GetScheduledRunRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalScheduledRunsAPIGetScheduledRunResponse> {
         const response = await this.getScheduledRunRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for listScheduledRunHistory without sending the request
+     */
+    async listScheduledRunHistoryRequestOpts(requestParameters: ListScheduledRunHistoryRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['scheduledRunId'] == null) {
+            throw new runtime.RequiredError(
+                'scheduledRunId',
+                'Required parameter "scheduledRunId" was null or undefined when calling listScheduledRunHistory().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Scheduled_Runs_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/scheduled-runs/{scheduled_run_id}/runs`;
+        urlPath = urlPath.replace('{scheduled_run_id}', encodeURIComponent(String(requestParameters['scheduledRunId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Retrieve the runs a scheduled run has produced, most recent first (capped at the 500 most recent). Useful for programmatically checking what a schedule created via `POST /scheduled-runs`. 
+     * List a scheduled run\'s produced runs
+     */
+    async listScheduledRunHistoryRaw(requestParameters: ListScheduledRunHistoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalScheduledRunsAPIGetScheduledRunHistoryResponse>> {
+        const requestOptions = await this.listScheduledRunHistoryRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalScheduledRunsAPIGetScheduledRunHistoryResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Retrieve the runs a scheduled run has produced, most recent first (capped at the 500 most recent). Useful for programmatically checking what a schedule created via `POST /scheduled-runs`. 
+     * List a scheduled run\'s produced runs
+     */
+    async listScheduledRunHistory(requestParameters: ListScheduledRunHistoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalScheduledRunsAPIGetScheduledRunHistoryResponse> {
+        const response = await this.listScheduledRunHistoryRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
