@@ -16,11 +16,14 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictStr
+from datetime import datetime
+from pydantic import Field, StrictStr, field_validator
 from typing import Any, Dict, Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_reviews_api_create_review_project_request import CovalReviewsAPICreateReviewProjectRequest
 from coval_sdk.models.coval_reviews_api_create_review_project_response import CovalReviewsAPICreateReviewProjectResponse
+from coval_sdk.models.coval_reviews_api_get_human_review_project_insights_response import CovalReviewsAPIGetHumanReviewProjectInsightsResponse
+from coval_sdk.models.coval_reviews_api_get_project_metric_agreement_response import CovalReviewsAPIGetProjectMetricAgreementResponse
 from coval_sdk.models.coval_reviews_api_get_review_project_response import CovalReviewsAPIGetReviewProjectResponse
 from coval_sdk.models.coval_reviews_api_list_review_projects_response import CovalReviewsAPIListReviewProjectsResponse
 from coval_sdk.models.coval_reviews_api_update_review_project_request import CovalReviewsAPIUpdateReviewProjectRequest
@@ -852,6 +855,630 @@ class ReviewProjectsApi:
         return self.api_client.param_serialize(
             method='GET',
             resource_path='/review-projects/{project_id}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def get_review_project_insights(
+        self,
+        project_id: Annotated[StrictStr, Field(description="The project ID (ULID)")],
+        start_date: Annotated[datetime, Field(description="Start of the insights window (ISO-8601).")],
+        end_date: Annotated[datetime, Field(description="End of the insights window (ISO-8601); must be after start_date.")],
+        label_triage_time_basis: Annotated[Optional[StrictStr], Field(description="Whether label triage timing is anchored to the simulation or the label.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> CovalReviewsAPIGetHumanReviewProjectInsightsResponse:
+        """Get project insights
+
+        Project-level human-review insights (label and metric stats) over a date range.
+
+        :param project_id: The project ID (ULID) (required)
+        :type project_id: str
+        :param start_date: Start of the insights window (ISO-8601). (required)
+        :type start_date: datetime
+        :param end_date: End of the insights window (ISO-8601); must be after start_date. (required)
+        :type end_date: datetime
+        :param label_triage_time_basis: Whether label triage timing is anchored to the simulation or the label.
+        :type label_triage_time_basis: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_review_project_insights_serialize(
+            project_id=project_id,
+            start_date=start_date,
+            end_date=end_date,
+            label_triage_time_basis=label_triage_time_basis,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalReviewsAPIGetHumanReviewProjectInsightsResponse",
+            '400': "CovalReviewsAPIErrorResponse",
+            '401': "CovalReviewsAPIErrorResponse",
+            '403': "CovalReviewsAPIErrorResponse",
+            '404': "CovalReviewsAPIErrorResponse",
+            '500': "CovalReviewsAPIErrorResponse",
+            '503': "CovalReviewsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def get_review_project_insights_with_http_info(
+        self,
+        project_id: Annotated[StrictStr, Field(description="The project ID (ULID)")],
+        start_date: Annotated[datetime, Field(description="Start of the insights window (ISO-8601).")],
+        end_date: Annotated[datetime, Field(description="End of the insights window (ISO-8601); must be after start_date.")],
+        label_triage_time_basis: Annotated[Optional[StrictStr], Field(description="Whether label triage timing is anchored to the simulation or the label.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[CovalReviewsAPIGetHumanReviewProjectInsightsResponse]:
+        """Get project insights
+
+        Project-level human-review insights (label and metric stats) over a date range.
+
+        :param project_id: The project ID (ULID) (required)
+        :type project_id: str
+        :param start_date: Start of the insights window (ISO-8601). (required)
+        :type start_date: datetime
+        :param end_date: End of the insights window (ISO-8601); must be after start_date. (required)
+        :type end_date: datetime
+        :param label_triage_time_basis: Whether label triage timing is anchored to the simulation or the label.
+        :type label_triage_time_basis: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_review_project_insights_serialize(
+            project_id=project_id,
+            start_date=start_date,
+            end_date=end_date,
+            label_triage_time_basis=label_triage_time_basis,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalReviewsAPIGetHumanReviewProjectInsightsResponse",
+            '400': "CovalReviewsAPIErrorResponse",
+            '401': "CovalReviewsAPIErrorResponse",
+            '403': "CovalReviewsAPIErrorResponse",
+            '404': "CovalReviewsAPIErrorResponse",
+            '500': "CovalReviewsAPIErrorResponse",
+            '503': "CovalReviewsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def get_review_project_insights_without_preload_content(
+        self,
+        project_id: Annotated[StrictStr, Field(description="The project ID (ULID)")],
+        start_date: Annotated[datetime, Field(description="Start of the insights window (ISO-8601).")],
+        end_date: Annotated[datetime, Field(description="End of the insights window (ISO-8601); must be after start_date.")],
+        label_triage_time_basis: Annotated[Optional[StrictStr], Field(description="Whether label triage timing is anchored to the simulation or the label.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Get project insights
+
+        Project-level human-review insights (label and metric stats) over a date range.
+
+        :param project_id: The project ID (ULID) (required)
+        :type project_id: str
+        :param start_date: Start of the insights window (ISO-8601). (required)
+        :type start_date: datetime
+        :param end_date: End of the insights window (ISO-8601); must be after start_date. (required)
+        :type end_date: datetime
+        :param label_triage_time_basis: Whether label triage timing is anchored to the simulation or the label.
+        :type label_triage_time_basis: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_review_project_insights_serialize(
+            project_id=project_id,
+            start_date=start_date,
+            end_date=end_date,
+            label_triage_time_basis=label_triage_time_basis,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalReviewsAPIGetHumanReviewProjectInsightsResponse",
+            '400': "CovalReviewsAPIErrorResponse",
+            '401': "CovalReviewsAPIErrorResponse",
+            '403': "CovalReviewsAPIErrorResponse",
+            '404': "CovalReviewsAPIErrorResponse",
+            '500': "CovalReviewsAPIErrorResponse",
+            '503': "CovalReviewsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _get_review_project_insights_serialize(
+        self,
+        project_id,
+        start_date,
+        end_date,
+        label_triage_time_basis,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if project_id is not None:
+            _path_params['project_id'] = project_id
+        # process the query parameters
+        if start_date is not None:
+            if isinstance(start_date, datetime):
+                _query_params.append(
+                    (
+                        'start_date',
+                        start_date.strftime(
+                            self.api_client.configuration.datetime_format
+                        )
+                    )
+                )
+            else:
+                _query_params.append(('start_date', start_date))
+            
+        if end_date is not None:
+            if isinstance(end_date, datetime):
+                _query_params.append(
+                    (
+                        'end_date',
+                        end_date.strftime(
+                            self.api_client.configuration.datetime_format
+                        )
+                    )
+                )
+            else:
+                _query_params.append(('end_date', end_date))
+            
+        if label_triage_time_basis is not None:
+            
+            _query_params.append(('label_triage_time_basis', label_triage_time_basis))
+            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'Coval_Reviews_API_ApiKeyAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/review-projects/{project_id}/insights',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def get_review_project_metric_agreement(
+        self,
+        project_id: Annotated[StrictStr, Field(description="The project ID (ULID)")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> CovalReviewsAPIGetProjectMetricAgreementResponse:
+        """Get project metric agreement
+
+        Machine-vs-human agreement by metric for one review project. The project resolves to its linked simulations and metrics; agreement is computed over that derived scope.
+
+        :param project_id: The project ID (ULID) (required)
+        :type project_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_review_project_metric_agreement_serialize(
+            project_id=project_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalReviewsAPIGetProjectMetricAgreementResponse",
+            '401': "CovalReviewsAPIErrorResponse",
+            '403': "CovalReviewsAPIErrorResponse",
+            '404': "CovalReviewsAPIErrorResponse",
+            '500': "CovalReviewsAPIErrorResponse",
+            '503': "CovalReviewsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def get_review_project_metric_agreement_with_http_info(
+        self,
+        project_id: Annotated[StrictStr, Field(description="The project ID (ULID)")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[CovalReviewsAPIGetProjectMetricAgreementResponse]:
+        """Get project metric agreement
+
+        Machine-vs-human agreement by metric for one review project. The project resolves to its linked simulations and metrics; agreement is computed over that derived scope.
+
+        :param project_id: The project ID (ULID) (required)
+        :type project_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_review_project_metric_agreement_serialize(
+            project_id=project_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalReviewsAPIGetProjectMetricAgreementResponse",
+            '401': "CovalReviewsAPIErrorResponse",
+            '403': "CovalReviewsAPIErrorResponse",
+            '404': "CovalReviewsAPIErrorResponse",
+            '500': "CovalReviewsAPIErrorResponse",
+            '503': "CovalReviewsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def get_review_project_metric_agreement_without_preload_content(
+        self,
+        project_id: Annotated[StrictStr, Field(description="The project ID (ULID)")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Get project metric agreement
+
+        Machine-vs-human agreement by metric for one review project. The project resolves to its linked simulations and metrics; agreement is computed over that derived scope.
+
+        :param project_id: The project ID (ULID) (required)
+        :type project_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_review_project_metric_agreement_serialize(
+            project_id=project_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalReviewsAPIGetProjectMetricAgreementResponse",
+            '401': "CovalReviewsAPIErrorResponse",
+            '403': "CovalReviewsAPIErrorResponse",
+            '404': "CovalReviewsAPIErrorResponse",
+            '500': "CovalReviewsAPIErrorResponse",
+            '503': "CovalReviewsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _get_review_project_metric_agreement_serialize(
+        self,
+        project_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if project_id is not None:
+            _path_params['project_id'] = project_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'Coval_Reviews_API_ApiKeyAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/review-projects/{project_id}/metric-agreement',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

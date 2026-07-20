@@ -54,6 +54,11 @@ import {
     CovalMetricsAPIGetMetricResponseToJSON,
 } from '../models/CovalMetricsAPIGetMetricResponse.js';
 import {
+    type CovalMetricsAPIGetMetricTemplateVariablesResponse,
+    CovalMetricsAPIGetMetricTemplateVariablesResponseFromJSON,
+    CovalMetricsAPIGetMetricTemplateVariablesResponseToJSON,
+} from '../models/CovalMetricsAPIGetMetricTemplateVariablesResponse.js';
+import {
     type CovalMetricsAPIGetThresholdResponse,
     CovalMetricsAPIGetThresholdResponseFromJSON,
     CovalMetricsAPIGetThresholdResponseToJSON,
@@ -78,6 +83,11 @@ import {
     CovalMetricsAPIListMetricsResponseFromJSON,
     CovalMetricsAPIListMetricsResponseToJSON,
 } from '../models/CovalMetricsAPIListMetricsResponse.js';
+import {
+    type CovalMetricsAPIListRecentlyDeletedMetricsResponse,
+    CovalMetricsAPIListRecentlyDeletedMetricsResponseFromJSON,
+    CovalMetricsAPIListRecentlyDeletedMetricsResponseToJSON,
+} from '../models/CovalMetricsAPIListRecentlyDeletedMetricsResponse.js';
 import {
     type CovalMetricsAPIListThresholdsResponse,
     CovalMetricsAPIListThresholdsResponseFromJSON,
@@ -184,6 +194,10 @@ export interface ListMetricsRequest {
     filter?: string;
     includeBuiltin?: boolean;
     tagFilters?: Array<string>;
+}
+
+export interface RestoreMetricRequest {
+    metricId: string;
 }
 
 export interface RevertMetricVersionRequest {
@@ -508,6 +522,28 @@ export interface MetricsApiInterface {
     listMetricModels(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListMetricModelsResponse>;
 
     /**
+     * Creates request options for listMetricTemplateVariables without sending the request
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    listMetricTemplateVariablesRequestOpts(): Promise<runtime.RequestOpts>;
+
+    /**
+     * Return the catalog of `{{prefix.key}}` template variables that can be used in LLM-judge metric prompts (e.g. `{{agent.company_name}}`, `{{expected_output.balance}}`, `{{customer_metadata.call_id}}`). These are substituted at evaluation time from the agent\'s `attributes`, the test case\'s `expected_output`, and the run\'s `customer_metadata` respectively. 
+     * @summary List metric template variables
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    listMetricTemplateVariablesRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIGetMetricTemplateVariablesResponse>>;
+
+    /**
+     * Return the catalog of `{{prefix.key}}` template variables that can be used in LLM-judge metric prompts (e.g. `{{agent.company_name}}`, `{{expected_output.balance}}`, `{{customer_metadata.call_id}}`). These are substituted at evaluation time from the agent\'s `attributes`, the test case\'s `expected_output`, and the run\'s `customer_metadata` respectively. 
+     * List metric template variables
+     */
+    listMetricTemplateVariables(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetMetricTemplateVariablesResponse>;
+
+    /**
      * Creates request options for listMetricThresholds without sending the request
      * @param {string} metricId 22-character metric ID
      * @param {number} [pageSize] Maximum results per page
@@ -592,6 +628,52 @@ export interface MetricsApiInterface {
      * List metrics
      */
     listMetrics(requestParameters: ListMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListMetricsResponse>;
+
+    /**
+     * Creates request options for listRecentlyDeletedMetrics without sending the request
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    listRecentlyDeletedMetricsRequestOpts(): Promise<runtime.RequestOpts>;
+
+    /**
+     * List the organization\'s soft-deleted metrics still within the recovery window, newest first. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
+     * @summary List recently-deleted metrics
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    listRecentlyDeletedMetricsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIListRecentlyDeletedMetricsResponse>>;
+
+    /**
+     * List the organization\'s soft-deleted metrics still within the recovery window, newest first. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
+     * List recently-deleted metrics
+     */
+    listRecentlyDeletedMetrics(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListRecentlyDeletedMetricsResponse>;
+
+    /**
+     * Creates request options for restoreMetric without sending the request
+     * @param {string} metricId 22-character metric ID
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    restoreMetricRequestOpts(requestParameters: RestoreMetricRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged returns 404.
+     * @summary Restore a recently-deleted metric
+     * @param {string} metricId 22-character metric ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    restoreMetricRaw(requestParameters: RestoreMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIGetMetricResponse>>;
+
+    /**
+     * Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged returns 404.
+     * Restore a recently-deleted metric
+     */
+    restoreMetric(requestParameters: RestoreMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetMetricResponse>;
 
     /**
      * Creates request options for revertMetricVersion without sending the request
@@ -1363,6 +1445,49 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
+     * Creates request options for listMetricTemplateVariables without sending the request
+     */
+    async listMetricTemplateVariablesRequestOpts(): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/metrics/template-variables`;
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Return the catalog of `{{prefix.key}}` template variables that can be used in LLM-judge metric prompts (e.g. `{{agent.company_name}}`, `{{expected_output.balance}}`, `{{customer_metadata.call_id}}`). These are substituted at evaluation time from the agent\'s `attributes`, the test case\'s `expected_output`, and the run\'s `customer_metadata` respectively. 
+     * List metric template variables
+     */
+    async listMetricTemplateVariablesRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIGetMetricTemplateVariablesResponse>> {
+        const requestOptions = await this.listMetricTemplateVariablesRequestOpts();
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPIGetMetricTemplateVariablesResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Return the catalog of `{{prefix.key}}` template variables that can be used in LLM-judge metric prompts (e.g. `{{agent.company_name}}`, `{{expected_output.balance}}`, `{{customer_metadata.call_id}}`). These are substituted at evaluation time from the agent\'s `attributes`, the test case\'s `expected_output`, and the run\'s `customer_metadata` respectively. 
+     * List metric template variables
+     */
+    async listMetricTemplateVariables(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetMetricTemplateVariablesResponse> {
+        const response = await this.listMetricTemplateVariablesRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for listMetricThresholds without sending the request
      */
     async listMetricThresholdsRequestOpts(requestParameters: ListMetricThresholdsRequest): Promise<runtime.RequestOpts> {
@@ -1536,6 +1661,100 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
      */
     async listMetrics(requestParameters: ListMetricsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListMetricsResponse> {
         const response = await this.listMetricsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for listRecentlyDeletedMetrics without sending the request
+     */
+    async listRecentlyDeletedMetricsRequestOpts(): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/metrics/recently-deleted`;
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * List the organization\'s soft-deleted metrics still within the recovery window, newest first. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
+     * List recently-deleted metrics
+     */
+    async listRecentlyDeletedMetricsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIListRecentlyDeletedMetricsResponse>> {
+        const requestOptions = await this.listRecentlyDeletedMetricsRequestOpts();
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPIListRecentlyDeletedMetricsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * List the organization\'s soft-deleted metrics still within the recovery window, newest first. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
+     * List recently-deleted metrics
+     */
+    async listRecentlyDeletedMetrics(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListRecentlyDeletedMetricsResponse> {
+        const response = await this.listRecentlyDeletedMetricsRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for restoreMetric without sending the request
+     */
+    async restoreMetricRequestOpts(requestParameters: RestoreMetricRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['metricId'] == null) {
+            throw new runtime.RequiredError(
+                'metricId',
+                'Required parameter "metricId" was null or undefined when calling restoreMetric().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/metrics/{metric_id}/restore`;
+        urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged returns 404.
+     * Restore a recently-deleted metric
+     */
+    async restoreMetricRaw(requestParameters: RestoreMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIGetMetricResponse>> {
+        const requestOptions = await this.restoreMetricRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPIGetMetricResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged returns 404.
+     * Restore a recently-deleted metric
+     */
+    async restoreMetric(requestParameters: RestoreMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetMetricResponse> {
+        const response = await this.restoreMetricRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

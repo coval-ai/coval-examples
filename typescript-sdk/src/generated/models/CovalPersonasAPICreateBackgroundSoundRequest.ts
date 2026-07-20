@@ -44,6 +44,15 @@ export interface CovalPersonasAPICreateBackgroundSoundRequest {
      */
     default_volume?: number;
     /**
+     * Acoustic rendering behavior for this sound.
+     * - ambient: mixed like room ambience.
+     * - point_source: rendered from a specific location when a situate_speaker preset is set; otherwise mixed like ambient.
+     * 
+     * @type {CovalPersonasAPICreateBackgroundSoundRequestAcousticSourceTypeEnum}
+     * @memberof CovalPersonasAPICreateBackgroundSoundRequest
+     */
+    acoustic_source_type?: CovalPersonasAPICreateBackgroundSoundRequestAcousticSourceTypeEnum | null;
+    /**
      * 
      * @type {{ [key: string]: any; }}
      * @memberof CovalPersonasAPICreateBackgroundSoundRequest
@@ -64,6 +73,15 @@ export const CovalPersonasAPICreateBackgroundSoundRequestContentTypeEnum = {
     AudioVndWave: 'audio/vnd.wave'
 } as const;
 export type CovalPersonasAPICreateBackgroundSoundRequestContentTypeEnum = typeof CovalPersonasAPICreateBackgroundSoundRequestContentTypeEnum[keyof typeof CovalPersonasAPICreateBackgroundSoundRequestContentTypeEnum];
+
+/**
+ * @export
+ */
+export const CovalPersonasAPICreateBackgroundSoundRequestAcousticSourceTypeEnum = {
+    Ambient: 'ambient',
+    PointSource: 'point_source'
+} as const;
+export type CovalPersonasAPICreateBackgroundSoundRequestAcousticSourceTypeEnum = typeof CovalPersonasAPICreateBackgroundSoundRequestAcousticSourceTypeEnum[keyof typeof CovalPersonasAPICreateBackgroundSoundRequestAcousticSourceTypeEnum];
 
 
 /**
@@ -90,6 +108,7 @@ export function CovalPersonasAPICreateBackgroundSoundRequestFromJSONTyped(json: 
         'original_filename': json['original_filename'],
         'content_type': json['content_type'],
         'default_volume': json['default_volume'] == null ? undefined : json['default_volume'],
+        'acoustic_source_type': json['acoustic_source_type'] == null ? undefined : json['acoustic_source_type'],
         'metadata': json['metadata'] == null ? undefined : json['metadata'],
     };
 }
@@ -109,6 +128,7 @@ export function CovalPersonasAPICreateBackgroundSoundRequestToJSONTyped(value?: 
         'original_filename': value['original_filename'],
         'content_type': value['content_type'],
         'default_volume': value['default_volume'],
+        'acoustic_source_type': value['acoustic_source_type'],
         'metadata': value['metadata'],
     };
 }

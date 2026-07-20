@@ -30,7 +30,7 @@ class CovalOrganizationAPIUpdateMonitoringMetricsRequest(BaseModel):
     """
     Partial update. Provide at least one of default_monitoring_metrics or conditional_monitoring_metrics; each field provided fully replaces the stored value.
     """ # noqa: E501
-    default_monitoring_metrics: Optional[Annotated[List[StrictStr], Field(max_length=500)]] = Field(default=None, description="Metric IDs run on every monitored conversation.")
+    default_monitoring_metrics: Optional[Annotated[List[StrictStr], Field(max_length=500)]] = Field(default=None, description="Metric IDs run on every conversation.")
     conditional_monitoring_metrics: Optional[Annotated[List[CovalOrganizationAPIMonitoringRule], Field(max_length=500)]] = Field(default=None, description="Rules that add metrics when run metadata matches.")
     __properties: ClassVar[List[str]] = ["default_monitoring_metrics", "conditional_monitoring_metrics"]
 

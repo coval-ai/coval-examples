@@ -29,6 +29,16 @@ import {
     CovalReviewsAPIErrorResponseToJSON,
 } from '../models/CovalReviewsAPIErrorResponse.js';
 import {
+    type CovalReviewsAPIGetHumanReviewProjectInsightsResponse,
+    CovalReviewsAPIGetHumanReviewProjectInsightsResponseFromJSON,
+    CovalReviewsAPIGetHumanReviewProjectInsightsResponseToJSON,
+} from '../models/CovalReviewsAPIGetHumanReviewProjectInsightsResponse.js';
+import {
+    type CovalReviewsAPIGetProjectMetricAgreementResponse,
+    CovalReviewsAPIGetProjectMetricAgreementResponseFromJSON,
+    CovalReviewsAPIGetProjectMetricAgreementResponseToJSON,
+} from '../models/CovalReviewsAPIGetProjectMetricAgreementResponse.js';
+import {
     type CovalReviewsAPIGetReviewProjectResponse,
     CovalReviewsAPIGetReviewProjectResponseFromJSON,
     CovalReviewsAPIGetReviewProjectResponseToJSON,
@@ -58,6 +68,17 @@ export interface DeleteReviewProjectRequest {
 }
 
 export interface GetReviewProjectRequest {
+    projectId: string;
+}
+
+export interface GetReviewProjectInsightsRequest {
+    projectId: string;
+    startDate: Date;
+    endDate: Date;
+    labelTriageTimeBasis?: GetReviewProjectInsightsLabelTriageTimeBasisEnum;
+}
+
+export interface GetReviewProjectMetricAgreementRequest {
     projectId: string;
 }
 
@@ -150,6 +171,60 @@ export interface ReviewProjectsApiInterface {
      * Get review project
      */
     getReviewProject(requestParameters: GetReviewProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPIGetReviewProjectResponse>;
+
+    /**
+     * Creates request options for getReviewProjectInsights without sending the request
+     * @param {string} projectId The project ID (ULID)
+     * @param {Date} startDate Start of the insights window (ISO-8601).
+     * @param {Date} endDate End of the insights window (ISO-8601); must be after start_date.
+     * @param {'simulation' | 'label'} [labelTriageTimeBasis] Whether label triage timing is anchored to the simulation or the label.
+     * @throws {RequiredError}
+     * @memberof ReviewProjectsApiInterface
+     */
+    getReviewProjectInsightsRequestOpts(requestParameters: GetReviewProjectInsightsRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Project-level human-review insights (label and metric stats) over a date range.
+     * @summary Get project insights
+     * @param {string} projectId The project ID (ULID)
+     * @param {Date} startDate Start of the insights window (ISO-8601).
+     * @param {Date} endDate End of the insights window (ISO-8601); must be after start_date.
+     * @param {'simulation' | 'label'} [labelTriageTimeBasis] Whether label triage timing is anchored to the simulation or the label.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ReviewProjectsApiInterface
+     */
+    getReviewProjectInsightsRaw(requestParameters: GetReviewProjectInsightsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReviewsAPIGetHumanReviewProjectInsightsResponse>>;
+
+    /**
+     * Project-level human-review insights (label and metric stats) over a date range.
+     * Get project insights
+     */
+    getReviewProjectInsights(requestParameters: GetReviewProjectInsightsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPIGetHumanReviewProjectInsightsResponse>;
+
+    /**
+     * Creates request options for getReviewProjectMetricAgreement without sending the request
+     * @param {string} projectId The project ID (ULID)
+     * @throws {RequiredError}
+     * @memberof ReviewProjectsApiInterface
+     */
+    getReviewProjectMetricAgreementRequestOpts(requestParameters: GetReviewProjectMetricAgreementRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Machine-vs-human agreement by metric for one review project. The project resolves to its linked simulations and metrics; agreement is computed over that derived scope.
+     * @summary Get project metric agreement
+     * @param {string} projectId The project ID (ULID)
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ReviewProjectsApiInterface
+     */
+    getReviewProjectMetricAgreementRaw(requestParameters: GetReviewProjectMetricAgreementRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReviewsAPIGetProjectMetricAgreementResponse>>;
+
+    /**
+     * Machine-vs-human agreement by metric for one review project. The project resolves to its linked simulations and metrics; agreement is computed over that derived scope.
+     * Get project metric agreement
+     */
+    getReviewProjectMetricAgreement(requestParameters: GetReviewProjectMetricAgreementRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPIGetProjectMetricAgreementResponse>;
 
     /**
      * Creates request options for listReviewProjects without sending the request
@@ -368,6 +443,134 @@ export class ReviewProjectsApi extends runtime.BaseAPI implements ReviewProjects
     }
 
     /**
+     * Creates request options for getReviewProjectInsights without sending the request
+     */
+    async getReviewProjectInsightsRequestOpts(requestParameters: GetReviewProjectInsightsRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['projectId'] == null) {
+            throw new runtime.RequiredError(
+                'projectId',
+                'Required parameter "projectId" was null or undefined when calling getReviewProjectInsights().'
+            );
+        }
+
+        if (requestParameters['startDate'] == null) {
+            throw new runtime.RequiredError(
+                'startDate',
+                'Required parameter "startDate" was null or undefined when calling getReviewProjectInsights().'
+            );
+        }
+
+        if (requestParameters['endDate'] == null) {
+            throw new runtime.RequiredError(
+                'endDate',
+                'Required parameter "endDate" was null or undefined when calling getReviewProjectInsights().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['startDate'] != null) {
+            queryParameters['start_date'] = (requestParameters['startDate'] as any).toISOString();
+        }
+
+        if (requestParameters['endDate'] != null) {
+            queryParameters['end_date'] = (requestParameters['endDate'] as any).toISOString();
+        }
+
+        if (requestParameters['labelTriageTimeBasis'] != null) {
+            queryParameters['label_triage_time_basis'] = requestParameters['labelTriageTimeBasis'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Reviews_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/review-projects/{project_id}/insights`;
+        urlPath = urlPath.replace('{project_id}', encodeURIComponent(String(requestParameters['projectId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Project-level human-review insights (label and metric stats) over a date range.
+     * Get project insights
+     */
+    async getReviewProjectInsightsRaw(requestParameters: GetReviewProjectInsightsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReviewsAPIGetHumanReviewProjectInsightsResponse>> {
+        const requestOptions = await this.getReviewProjectInsightsRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalReviewsAPIGetHumanReviewProjectInsightsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Project-level human-review insights (label and metric stats) over a date range.
+     * Get project insights
+     */
+    async getReviewProjectInsights(requestParameters: GetReviewProjectInsightsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPIGetHumanReviewProjectInsightsResponse> {
+        const response = await this.getReviewProjectInsightsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for getReviewProjectMetricAgreement without sending the request
+     */
+    async getReviewProjectMetricAgreementRequestOpts(requestParameters: GetReviewProjectMetricAgreementRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['projectId'] == null) {
+            throw new runtime.RequiredError(
+                'projectId',
+                'Required parameter "projectId" was null or undefined when calling getReviewProjectMetricAgreement().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Reviews_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/review-projects/{project_id}/metric-agreement`;
+        urlPath = urlPath.replace('{project_id}', encodeURIComponent(String(requestParameters['projectId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Machine-vs-human agreement by metric for one review project. The project resolves to its linked simulations and metrics; agreement is computed over that derived scope.
+     * Get project metric agreement
+     */
+    async getReviewProjectMetricAgreementRaw(requestParameters: GetReviewProjectMetricAgreementRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReviewsAPIGetProjectMetricAgreementResponse>> {
+        const requestOptions = await this.getReviewProjectMetricAgreementRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalReviewsAPIGetProjectMetricAgreementResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Machine-vs-human agreement by metric for one review project. The project resolves to its linked simulations and metrics; agreement is computed over that derived scope.
+     * Get project metric agreement
+     */
+    async getReviewProjectMetricAgreement(requestParameters: GetReviewProjectMetricAgreementRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPIGetProjectMetricAgreementResponse> {
+        const response = await this.getReviewProjectMetricAgreementRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for listReviewProjects without sending the request
      */
     async listReviewProjectsRequestOpts(requestParameters: ListReviewProjectsRequest): Promise<runtime.RequestOpts> {
@@ -484,3 +687,12 @@ export class ReviewProjectsApi extends runtime.BaseAPI implements ReviewProjects
     }
 
 }
+
+/**
+ * @export
+ */
+export const GetReviewProjectInsightsLabelTriageTimeBasisEnum = {
+    Simulation: 'simulation',
+    Label: 'label'
+} as const;
+export type GetReviewProjectInsightsLabelTriageTimeBasisEnum = typeof GetReviewProjectInsightsLabelTriageTimeBasisEnum[keyof typeof GetReviewProjectInsightsLabelTriageTimeBasisEnum];

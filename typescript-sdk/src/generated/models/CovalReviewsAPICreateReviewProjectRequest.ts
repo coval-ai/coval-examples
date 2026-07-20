@@ -82,6 +82,12 @@ export interface CovalReviewsAPICreateReviewProjectRequest {
      * @memberof CovalReviewsAPICreateReviewProjectRequest
      */
     project_rules?: Array<CovalReviewsAPIProjectRule> | null;
+    /**
+     * Metric IDs whose machine score stays visible during blind labeling
+     * @type {Array<string>}
+     * @memberof CovalReviewsAPICreateReviewProjectRequest
+     */
+    blind_labeling_shown_metric_ids?: Array<string> | null;
 }
 
 
@@ -115,6 +121,7 @@ export function CovalReviewsAPICreateReviewProjectRequestFromJSONTyped(json: any
         'project_type': json['project_type'] == null ? undefined : CovalReviewsAPIProjectTypeFromJSON(json['project_type']),
         'notifications': json['notifications'] == null ? undefined : json['notifications'],
         'project_rules': json['project_rules'] == null ? undefined : ((json['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleFromJSON)),
+        'blind_labeling_shown_metric_ids': json['blind_labeling_shown_metric_ids'] == null ? undefined : json['blind_labeling_shown_metric_ids'],
     };
 }
 
@@ -137,6 +144,7 @@ export function CovalReviewsAPICreateReviewProjectRequestToJSONTyped(value?: Cov
         'project_type': CovalReviewsAPIProjectTypeToJSON(value['project_type']),
         'notifications': value['notifications'],
         'project_rules': value['project_rules'] == null ? undefined : ((value['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleToJSON)),
+        'blind_labeling_shown_metric_ids': value['blind_labeling_shown_metric_ids'],
     };
 }
 

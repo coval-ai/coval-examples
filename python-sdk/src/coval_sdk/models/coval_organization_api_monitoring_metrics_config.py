@@ -27,9 +27,9 @@ from pydantic_core import to_jsonable_python
 
 class CovalOrganizationAPIMonitoringMetricsConfig(BaseModel):
     """
-    The organization's monitoring-metric configuration.
+    The organization's conversation metrics configuration.
     """ # noqa: E501
-    default_monitoring_metrics: Optional[List[StrictStr]] = Field(default=None, description="Metric IDs run on every monitored conversation.")
+    default_monitoring_metrics: Optional[List[StrictStr]] = Field(default=None, description="Metric IDs run on every conversation.")
     conditional_monitoring_metrics: Optional[List[CovalOrganizationAPIMonitoringRule]] = Field(default=None, description="Rules that add metrics when run metadata matches.")
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["default_monitoring_metrics", "conditional_monitoring_metrics"]

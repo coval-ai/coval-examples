@@ -34,6 +34,16 @@ import {
     CovalSimulationsAPIListSimulationsResponseToJSON,
 } from '../models/CovalSimulationsAPIListSimulationsResponse.js';
 import {
+    type CovalSimulationsAPIRerunMetricsRequest,
+    CovalSimulationsAPIRerunMetricsRequestFromJSON,
+    CovalSimulationsAPIRerunMetricsRequestToJSON,
+} from '../models/CovalSimulationsAPIRerunMetricsRequest.js';
+import {
+    type CovalSimulationsAPIRerunMetricsResponse,
+    CovalSimulationsAPIRerunMetricsResponseFromJSON,
+    CovalSimulationsAPIRerunMetricsResponseToJSON,
+} from '../models/CovalSimulationsAPIRerunMetricsResponse.js';
+import {
     type CovalSimulationsAPIResimulateSimulationResponse,
     CovalSimulationsAPIResimulateSimulationResponseFromJSON,
     CovalSimulationsAPIResimulateSimulationResponseToJSON,
@@ -66,6 +76,10 @@ export interface ListSimulationsRequest {
     pageSize?: number;
     pageToken?: string;
     orderBy?: string;
+}
+
+export interface RerunMetricsRequest {
+    covalSimulationsAPIRerunMetricsRequest: CovalSimulationsAPIRerunMetricsRequest;
 }
 
 export interface ResimulateSimulationRequest {
@@ -186,6 +200,30 @@ export interface SimulationsApiInterface {
      * List simulations
      */
     listSimulations(requestParameters: ListSimulationsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalSimulationsAPIListSimulationsResponse>;
+
+    /**
+     * Creates request options for rerunMetrics without sending the request
+     * @param {CovalSimulationsAPIRerunMetricsRequest} covalSimulationsAPIRerunMetricsRequest 
+     * @throws {RequiredError}
+     * @memberof SimulationsApiInterface
+     */
+    rerunMetricsRequestOpts(requestParameters: RerunMetricsRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Re-score a set of metrics against a set of existing simulations without re-running the simulations. The same metrics are applied to every simulation (metrics x simulations). Limits: up to 100 simulations, up to 500 metrics, and at most 500 total reruns (simulation_ids x metric_ids) per call. Best-effort per simulation: valid simulations are queued and a per-simulation status is returned. Existing metric results are overwritten when each rerun completes. 
+     * @summary Batch rerun metrics
+     * @param {CovalSimulationsAPIRerunMetricsRequest} covalSimulationsAPIRerunMetricsRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SimulationsApiInterface
+     */
+    rerunMetricsRaw(requestParameters: RerunMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalSimulationsAPIRerunMetricsResponse>>;
+
+    /**
+     * Re-score a set of metrics against a set of existing simulations without re-running the simulations. The same metrics are applied to every simulation (metrics x simulations). Limits: up to 100 simulations, up to 500 metrics, and at most 500 total reruns (simulation_ids x metric_ids) per call. Best-effort per simulation: valid simulations are queued and a per-simulation status is returned. Existing metric results are overwritten when each rerun completes. 
+     * Batch rerun metrics
+     */
+    rerunMetrics(requestParameters: RerunMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalSimulationsAPIRerunMetricsResponse>;
 
     /**
      * Creates request options for resimulateSimulation without sending the request
@@ -455,6 +493,59 @@ export class SimulationsApi extends runtime.BaseAPI implements SimulationsApiInt
      */
     async listSimulations(requestParameters: ListSimulationsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalSimulationsAPIListSimulationsResponse> {
         const response = await this.listSimulationsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for rerunMetrics without sending the request
+     */
+    async rerunMetricsRequestOpts(requestParameters: RerunMetricsRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['covalSimulationsAPIRerunMetricsRequest'] == null) {
+            throw new runtime.RequiredError(
+                'covalSimulationsAPIRerunMetricsRequest',
+                'Required parameter "covalSimulationsAPIRerunMetricsRequest" was null or undefined when calling rerunMetrics().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Simulations_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/simulations:rerunMetrics`;
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CovalSimulationsAPIRerunMetricsRequestToJSON(requestParameters['covalSimulationsAPIRerunMetricsRequest']),
+        };
+    }
+
+    /**
+     * Re-score a set of metrics against a set of existing simulations without re-running the simulations. The same metrics are applied to every simulation (metrics x simulations). Limits: up to 100 simulations, up to 500 metrics, and at most 500 total reruns (simulation_ids x metric_ids) per call. Best-effort per simulation: valid simulations are queued and a per-simulation status is returned. Existing metric results are overwritten when each rerun completes. 
+     * Batch rerun metrics
+     */
+    async rerunMetricsRaw(requestParameters: RerunMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalSimulationsAPIRerunMetricsResponse>> {
+        const requestOptions = await this.rerunMetricsRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalSimulationsAPIRerunMetricsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Re-score a set of metrics against a set of existing simulations without re-running the simulations. The same metrics are applied to every simulation (metrics x simulations). Limits: up to 100 simulations, up to 500 metrics, and at most 500 total reruns (simulation_ids x metric_ids) per call. Best-effort per simulation: valid simulations are queued and a per-simulation status is returned. Existing metric results are overwritten when each rerun completes. 
+     * Batch rerun metrics
+     */
+    async rerunMetrics(requestParameters: RerunMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalSimulationsAPIRerunMetricsResponse> {
+        const response = await this.rerunMetricsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

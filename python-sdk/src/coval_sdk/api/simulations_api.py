@@ -22,6 +22,8 @@ from typing_extensions import Annotated
 from coval_sdk.models.coval_simulations_api_get_audio_url_response import CovalSimulationsAPIGetAudioURLResponse
 from coval_sdk.models.coval_simulations_api_get_simulation_response import CovalSimulationsAPIGetSimulationResponse
 from coval_sdk.models.coval_simulations_api_list_simulations_response import CovalSimulationsAPIListSimulationsResponse
+from coval_sdk.models.coval_simulations_api_rerun_metrics_request import CovalSimulationsAPIRerunMetricsRequest
+from coval_sdk.models.coval_simulations_api_rerun_metrics_response import CovalSimulationsAPIRerunMetricsResponse
 from coval_sdk.models.coval_simulations_api_resimulate_simulation_response import CovalSimulationsAPIResimulateSimulationResponse
 from coval_sdk.models.coval_simulations_api_update_simulation_request import CovalSimulationsAPIUpdateSimulationRequest
 from coval_sdk.models.coval_simulations_api_update_simulation_response import CovalSimulationsAPIUpdateSimulationResponse
@@ -1162,6 +1164,298 @@ class SimulationsApi:
         return self.api_client.param_serialize(
             method='GET',
             resource_path='/simulations',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def rerun_metrics(
+        self,
+        coval_simulations_api_rerun_metrics_request: CovalSimulationsAPIRerunMetricsRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> CovalSimulationsAPIRerunMetricsResponse:
+        """Batch rerun metrics
+
+        Re-score a set of metrics against a set of existing simulations without re-running the simulations. The same metrics are applied to every simulation (metrics x simulations). Limits: up to 100 simulations, up to 500 metrics, and at most 500 total reruns (simulation_ids x metric_ids) per call. Best-effort per simulation: valid simulations are queued and a per-simulation status is returned. Existing metric results are overwritten when each rerun completes. 
+
+        :param coval_simulations_api_rerun_metrics_request: (required)
+        :type coval_simulations_api_rerun_metrics_request: CovalSimulationsAPIRerunMetricsRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rerun_metrics_serialize(
+            coval_simulations_api_rerun_metrics_request=coval_simulations_api_rerun_metrics_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '202': "CovalSimulationsAPIRerunMetricsResponse",
+            '207': "CovalSimulationsAPIRerunMetricsResponse",
+            '400': "CovalSimulationsAPIErrorResponse",
+            '401': "CovalSimulationsAPIErrorResponse",
+            '404': "CovalSimulationsAPIErrorResponse",
+            '500': "CovalSimulationsAPIErrorResponse",
+            '503': "CovalSimulationsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def rerun_metrics_with_http_info(
+        self,
+        coval_simulations_api_rerun_metrics_request: CovalSimulationsAPIRerunMetricsRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[CovalSimulationsAPIRerunMetricsResponse]:
+        """Batch rerun metrics
+
+        Re-score a set of metrics against a set of existing simulations without re-running the simulations. The same metrics are applied to every simulation (metrics x simulations). Limits: up to 100 simulations, up to 500 metrics, and at most 500 total reruns (simulation_ids x metric_ids) per call. Best-effort per simulation: valid simulations are queued and a per-simulation status is returned. Existing metric results are overwritten when each rerun completes. 
+
+        :param coval_simulations_api_rerun_metrics_request: (required)
+        :type coval_simulations_api_rerun_metrics_request: CovalSimulationsAPIRerunMetricsRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rerun_metrics_serialize(
+            coval_simulations_api_rerun_metrics_request=coval_simulations_api_rerun_metrics_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '202': "CovalSimulationsAPIRerunMetricsResponse",
+            '207': "CovalSimulationsAPIRerunMetricsResponse",
+            '400': "CovalSimulationsAPIErrorResponse",
+            '401': "CovalSimulationsAPIErrorResponse",
+            '404': "CovalSimulationsAPIErrorResponse",
+            '500': "CovalSimulationsAPIErrorResponse",
+            '503': "CovalSimulationsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def rerun_metrics_without_preload_content(
+        self,
+        coval_simulations_api_rerun_metrics_request: CovalSimulationsAPIRerunMetricsRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Batch rerun metrics
+
+        Re-score a set of metrics against a set of existing simulations without re-running the simulations. The same metrics are applied to every simulation (metrics x simulations). Limits: up to 100 simulations, up to 500 metrics, and at most 500 total reruns (simulation_ids x metric_ids) per call. Best-effort per simulation: valid simulations are queued and a per-simulation status is returned. Existing metric results are overwritten when each rerun completes. 
+
+        :param coval_simulations_api_rerun_metrics_request: (required)
+        :type coval_simulations_api_rerun_metrics_request: CovalSimulationsAPIRerunMetricsRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rerun_metrics_serialize(
+            coval_simulations_api_rerun_metrics_request=coval_simulations_api_rerun_metrics_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '202': "CovalSimulationsAPIRerunMetricsResponse",
+            '207': "CovalSimulationsAPIRerunMetricsResponse",
+            '400': "CovalSimulationsAPIErrorResponse",
+            '401': "CovalSimulationsAPIErrorResponse",
+            '404': "CovalSimulationsAPIErrorResponse",
+            '500': "CovalSimulationsAPIErrorResponse",
+            '503': "CovalSimulationsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _rerun_metrics_serialize(
+        self,
+        coval_simulations_api_rerun_metrics_request,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if coval_simulations_api_rerun_metrics_request is not None:
+            _body_params = coval_simulations_api_rerun_metrics_request
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'Coval_Simulations_API_ApiKeyAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/simulations:rerunMetrics',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

@@ -33,15 +33,26 @@ class CovalPersonasAPICreateBackgroundSoundRequest(BaseModel):
     original_filename: Annotated[str, Field(min_length=1, strict=True, max_length=255)]
     content_type: StrictStr = Field(description="WAV or MP3 content type.")
     default_volume: Optional[Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]]] = 0.3
+    acoustic_source_type: Optional[StrictStr] = Field(default=None, description="Acoustic rendering behavior for this sound. - ambient: mixed like room ambience. - point_source: rendered from a specific location when a situate_speaker preset is set; otherwise mixed like ambient. ")
     metadata: Optional[Dict[str, Any]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["display_name", "original_filename", "content_type", "default_volume", "metadata"]
+    __properties: ClassVar[List[str]] = ["display_name", "original_filename", "content_type", "default_volume", "acoustic_source_type", "metadata"]
 
     @field_validator('content_type')
     def content_type_validate_enum(cls, value):
         """Validates the enum"""
         if value not in set(['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/x-wav', 'audio/wave', 'audio/vnd.wave']):
             raise ValueError("must be one of enum values ('audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/x-wav', 'audio/wave', 'audio/vnd.wave')")
+        return value
+
+    @field_validator('acoustic_source_type')
+    def acoustic_source_type_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['ambient', 'point_source']):
+            raise ValueError("must be one of enum values ('ambient', 'point_source')")
         return value
 
     model_config = ConfigDict(
@@ -90,6 +101,11 @@ class CovalPersonasAPICreateBackgroundSoundRequest(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if acoustic_source_type (nullable) is None
+        # and model_fields_set contains the field
+        if self.acoustic_source_type is None and "acoustic_source_type" in self.model_fields_set:
+            _dict['acoustic_source_type'] = None
+
         return _dict
 
     @classmethod
@@ -106,6 +122,7 @@ class CovalPersonasAPICreateBackgroundSoundRequest(BaseModel):
             "original_filename": obj.get("original_filename"),
             "content_type": obj.get("content_type"),
             "default_volume": obj.get("default_volume") if obj.get("default_volume") is not None else 0.3,
+            "acoustic_source_type": obj.get("acoustic_source_type"),
             "metadata": obj.get("metadata")
         })
         # store additional fields in additional_properties

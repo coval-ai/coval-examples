@@ -82,6 +82,12 @@ export interface CovalReviewsAPIUpdateReviewProjectRequest {
      */
     project_rules?: Array<CovalReviewsAPIProjectRule> | null;
     /**
+     * Metric IDs whose machine score stays visible during blind labeling
+     * @type {Array<string>}
+     * @memberof CovalReviewsAPIUpdateReviewProjectRequest
+     */
+    blind_labeling_shown_metric_ids?: Array<string> | null;
+    /**
      * Assignees who opted out of notifications
      * @type {Array<string>}
      * @memberof CovalReviewsAPIUpdateReviewProjectRequest
@@ -115,6 +121,7 @@ export function CovalReviewsAPIUpdateReviewProjectRequestFromJSONTyped(json: any
         'linked_metric_ids': json['linked_metric_ids'] == null ? undefined : json['linked_metric_ids'],
         'notifications': json['notifications'] == null ? undefined : json['notifications'],
         'project_rules': json['project_rules'] == null ? undefined : ((json['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleFromJSON)),
+        'blind_labeling_shown_metric_ids': json['blind_labeling_shown_metric_ids'] == null ? undefined : json['blind_labeling_shown_metric_ids'],
         'opted_out_assignees': json['opted_out_assignees'] == null ? undefined : json['opted_out_assignees'],
     };
 }
@@ -139,6 +146,7 @@ export function CovalReviewsAPIUpdateReviewProjectRequestToJSONTyped(value?: Cov
         'linked_metric_ids': value['linked_metric_ids'],
         'notifications': value['notifications'],
         'project_rules': value['project_rules'] == null ? undefined : ((value['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleToJSON)),
+        'blind_labeling_shown_metric_ids': value['blind_labeling_shown_metric_ids'],
         'opted_out_assignees': value['opted_out_assignees'],
     };
 }

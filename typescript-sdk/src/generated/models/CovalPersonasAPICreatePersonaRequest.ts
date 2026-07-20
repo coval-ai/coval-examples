@@ -99,6 +99,15 @@ export interface CovalPersonasAPICreatePersonaRequest {
      */
     hold_music_timeout_seconds?: number | null;
     /**
+     * Persona placement preset.
+     * - speakerphone-easy: User speaking from a distance from the microphone
+     * - speakerphone-hard: User speaking from a distance from the microphone in an acoustically challenging environment.
+     * 
+     * @type {CovalPersonasAPICreatePersonaRequestSituateSpeakerEnum}
+     * @memberof CovalPersonasAPICreatePersonaRequest
+     */
+    situate_speaker?: CovalPersonasAPICreatePersonaRequestSituateSpeakerEnum | null;
+    /**
      * Tags to associate with this persona. Null or omitted creates the persona with no tags. Pass [] for an empty tag list.
      * @type {Array<string>}
      * @memberof CovalPersonasAPICreatePersonaRequest
@@ -115,6 +124,15 @@ export const CovalPersonasAPICreatePersonaRequestConversationInitiationEnum = {
     WaitForUser: 'wait_for_user'
 } as const;
 export type CovalPersonasAPICreatePersonaRequestConversationInitiationEnum = typeof CovalPersonasAPICreatePersonaRequestConversationInitiationEnum[keyof typeof CovalPersonasAPICreatePersonaRequestConversationInitiationEnum];
+
+/**
+ * @export
+ */
+export const CovalPersonasAPICreatePersonaRequestSituateSpeakerEnum = {
+    SpeakerphoneEasy: 'speakerphone-easy',
+    SpeakerphoneHard: 'speakerphone-hard'
+} as const;
+export type CovalPersonasAPICreatePersonaRequestSituateSpeakerEnum = typeof CovalPersonasAPICreatePersonaRequestSituateSpeakerEnum[keyof typeof CovalPersonasAPICreatePersonaRequestSituateSpeakerEnum];
 
 
 /**
@@ -149,6 +167,7 @@ export function CovalPersonasAPICreatePersonaRequestFromJSONTyped(json: any, ign
         'conversation_initiation': json['conversation_initiation'] == null ? undefined : json['conversation_initiation'],
         'multi_language_stt': json['multi_language_stt'] == null ? undefined : json['multi_language_stt'],
         'hold_music_timeout_seconds': json['hold_music_timeout_seconds'] == null ? undefined : json['hold_music_timeout_seconds'],
+        'situate_speaker': json['situate_speaker'] == null ? undefined : json['situate_speaker'],
         'tags': json['tags'] == null ? undefined : json['tags'],
     };
 }
@@ -176,6 +195,7 @@ export function CovalPersonasAPICreatePersonaRequestToJSONTyped(value?: CovalPer
         'conversation_initiation': value['conversation_initiation'],
         'multi_language_stt': value['multi_language_stt'],
         'hold_music_timeout_seconds': value['hold_music_timeout_seconds'],
+        'situate_speaker': value['situate_speaker'],
         'tags': value['tags'],
     };
 }

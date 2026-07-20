@@ -29,6 +29,21 @@ import {
     CovalReviewsAPIErrorResponseToJSON,
 } from '../models/CovalReviewsAPIErrorResponse.js';
 import {
+    type CovalReviewsAPIGetAnnotationsWithMetricOutputsRequest,
+    CovalReviewsAPIGetAnnotationsWithMetricOutputsRequestFromJSON,
+    CovalReviewsAPIGetAnnotationsWithMetricOutputsRequestToJSON,
+} from '../models/CovalReviewsAPIGetAnnotationsWithMetricOutputsRequest.js';
+import {
+    type CovalReviewsAPIGetAnnotationsWithMetricOutputsResponse,
+    CovalReviewsAPIGetAnnotationsWithMetricOutputsResponseFromJSON,
+    CovalReviewsAPIGetAnnotationsWithMetricOutputsResponseToJSON,
+} from '../models/CovalReviewsAPIGetAnnotationsWithMetricOutputsResponse.js';
+import {
+    type CovalReviewsAPIGetMetricHealthStatsResponse,
+    CovalReviewsAPIGetMetricHealthStatsResponseFromJSON,
+    CovalReviewsAPIGetMetricHealthStatsResponseToJSON,
+} from '../models/CovalReviewsAPIGetMetricHealthStatsResponse.js';
+import {
     type CovalReviewsAPIGetReviewAnnotationResponse,
     CovalReviewsAPIGetReviewAnnotationResponseFromJSON,
     CovalReviewsAPIGetReviewAnnotationResponseToJSON,
@@ -61,6 +76,14 @@ export interface DeleteReviewAnnotationRequest {
 export interface GetReviewAnnotationRequest {
     annotationId: string;
     projectId?: string;
+}
+
+export interface GetReviewAnnotationsWithMetricOutputsRequest {
+    covalReviewsAPIGetAnnotationsWithMetricOutputsRequest?: CovalReviewsAPIGetAnnotationsWithMetricOutputsRequest;
+}
+
+export interface GetReviewMetricHealthStatsRequest {
+    metricId: string;
 }
 
 export interface ListReviewAnnotationsRequest {
@@ -158,6 +181,54 @@ export interface ReviewAnnotationsApiInterface {
      * Get review annotation
      */
     getReviewAnnotation(requestParameters: GetReviewAnnotationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPIGetReviewAnnotationResponse>;
+
+    /**
+     * Creates request options for getReviewAnnotationsWithMetricOutputs without sending the request
+     * @param {CovalReviewsAPIGetAnnotationsWithMetricOutputsRequest} [covalReviewsAPIGetAnnotationsWithMetricOutputsRequest] 
+     * @throws {RequiredError}
+     * @memberof ReviewAnnotationsApiInterface
+     */
+    getReviewAnnotationsWithMetricOutputsRequestOpts(requestParameters: GetReviewAnnotationsWithMetricOutputsRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Review annotations grouped by metric plus the latest pipeline metric outputs, scoped by any of metric_ids / simulation_output_ids / project_ids (all optional). Offset-paginated via page_token / page_size.
+     * @summary Get annotations with metric outputs
+     * @param {CovalReviewsAPIGetAnnotationsWithMetricOutputsRequest} [covalReviewsAPIGetAnnotationsWithMetricOutputsRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ReviewAnnotationsApiInterface
+     */
+    getReviewAnnotationsWithMetricOutputsRaw(requestParameters: GetReviewAnnotationsWithMetricOutputsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReviewsAPIGetAnnotationsWithMetricOutputsResponse>>;
+
+    /**
+     * Review annotations grouped by metric plus the latest pipeline metric outputs, scoped by any of metric_ids / simulation_output_ids / project_ids (all optional). Offset-paginated via page_token / page_size.
+     * Get annotations with metric outputs
+     */
+    getReviewAnnotationsWithMetricOutputs(requestParameters: GetReviewAnnotationsWithMetricOutputsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPIGetAnnotationsWithMetricOutputsResponse>;
+
+    /**
+     * Creates request options for getReviewMetricHealthStats without sending the request
+     * @param {string} metricId The metric ID (22-char ShortUUID).
+     * @throws {RequiredError}
+     * @memberof ReviewAnnotationsApiInterface
+     */
+    getReviewMetricHealthStatsRequestOpts(requestParameters: GetReviewMetricHealthStatsRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Compact machine-vs-human and human-vs-human agreement health for one metric, computed from its review annotations. Metric-scoped (no project).
+     * @summary Get metric health stats
+     * @param {string} metricId The metric ID (22-char ShortUUID).
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ReviewAnnotationsApiInterface
+     */
+    getReviewMetricHealthStatsRaw(requestParameters: GetReviewMetricHealthStatsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReviewsAPIGetMetricHealthStatsResponse>>;
+
+    /**
+     * Compact machine-vs-human and human-vs-human agreement health for one metric, computed from its review annotations. Metric-scoped (no project).
+     * Get metric health stats
+     */
+    getReviewMetricHealthStats(requestParameters: GetReviewMetricHealthStatsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPIGetMetricHealthStatsResponse>;
 
     /**
      * Creates request options for listReviewAnnotations without sending the request
@@ -384,6 +455,106 @@ export class ReviewAnnotationsApi extends runtime.BaseAPI implements ReviewAnnot
      */
     async getReviewAnnotation(requestParameters: GetReviewAnnotationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPIGetReviewAnnotationResponse> {
         const response = await this.getReviewAnnotationRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for getReviewAnnotationsWithMetricOutputs without sending the request
+     */
+    async getReviewAnnotationsWithMetricOutputsRequestOpts(requestParameters: GetReviewAnnotationsWithMetricOutputsRequest): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Reviews_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/review-annotations:withMetricOutputs`;
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CovalReviewsAPIGetAnnotationsWithMetricOutputsRequestToJSON(requestParameters['covalReviewsAPIGetAnnotationsWithMetricOutputsRequest']),
+        };
+    }
+
+    /**
+     * Review annotations grouped by metric plus the latest pipeline metric outputs, scoped by any of metric_ids / simulation_output_ids / project_ids (all optional). Offset-paginated via page_token / page_size.
+     * Get annotations with metric outputs
+     */
+    async getReviewAnnotationsWithMetricOutputsRaw(requestParameters: GetReviewAnnotationsWithMetricOutputsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReviewsAPIGetAnnotationsWithMetricOutputsResponse>> {
+        const requestOptions = await this.getReviewAnnotationsWithMetricOutputsRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalReviewsAPIGetAnnotationsWithMetricOutputsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Review annotations grouped by metric plus the latest pipeline metric outputs, scoped by any of metric_ids / simulation_output_ids / project_ids (all optional). Offset-paginated via page_token / page_size.
+     * Get annotations with metric outputs
+     */
+    async getReviewAnnotationsWithMetricOutputs(requestParameters: GetReviewAnnotationsWithMetricOutputsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPIGetAnnotationsWithMetricOutputsResponse> {
+        const response = await this.getReviewAnnotationsWithMetricOutputsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for getReviewMetricHealthStats without sending the request
+     */
+    async getReviewMetricHealthStatsRequestOpts(requestParameters: GetReviewMetricHealthStatsRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['metricId'] == null) {
+            throw new runtime.RequiredError(
+                'metricId',
+                'Required parameter "metricId" was null or undefined when calling getReviewMetricHealthStats().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['metricId'] != null) {
+            queryParameters['metric_id'] = requestParameters['metricId'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Reviews_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/review-annotations/metric-health-stats`;
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Compact machine-vs-human and human-vs-human agreement health for one metric, computed from its review annotations. Metric-scoped (no project).
+     * Get metric health stats
+     */
+    async getReviewMetricHealthStatsRaw(requestParameters: GetReviewMetricHealthStatsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReviewsAPIGetMetricHealthStatsResponse>> {
+        const requestOptions = await this.getReviewMetricHealthStatsRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalReviewsAPIGetMetricHealthStatsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Compact machine-vs-human and human-vs-human agreement health for one metric, computed from its review annotations. Metric-scoped (no project).
+     * Get metric health stats
+     */
+    async getReviewMetricHealthStats(requestParameters: GetReviewMetricHealthStatsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPIGetMetricHealthStatsResponse> {
+        const response = await this.getReviewMetricHealthStatsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

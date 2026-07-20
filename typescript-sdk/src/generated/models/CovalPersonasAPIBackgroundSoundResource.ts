@@ -80,6 +80,15 @@ export interface CovalPersonasAPIBackgroundSoundResource {
      */
     original_filename?: string | null;
     /**
+     * Acoustic rendering behavior for this sound.
+     * - ambient: mixed like room ambience.
+     * - point_source: rendered from a specific location when a situate_speaker preset is set; otherwise mixed like ambient.
+     * 
+     * @type {CovalPersonasAPIBackgroundSoundResourceAcousticSourceTypeEnum}
+     * @memberof CovalPersonasAPIBackgroundSoundResource
+     */
+    acoustic_source_type?: CovalPersonasAPIBackgroundSoundResourceAcousticSourceTypeEnum | null;
+    /**
      * 
      * @type {{ [key: string]: any; }}
      * @memberof CovalPersonasAPIBackgroundSoundResource
@@ -119,6 +128,15 @@ export const CovalPersonasAPIBackgroundSoundResourceStatusEnum = {
 } as const;
 export type CovalPersonasAPIBackgroundSoundResourceStatusEnum = typeof CovalPersonasAPIBackgroundSoundResourceStatusEnum[keyof typeof CovalPersonasAPIBackgroundSoundResourceStatusEnum];
 
+/**
+ * @export
+ */
+export const CovalPersonasAPIBackgroundSoundResourceAcousticSourceTypeEnum = {
+    Ambient: 'ambient',
+    PointSource: 'point_source'
+} as const;
+export type CovalPersonasAPIBackgroundSoundResourceAcousticSourceTypeEnum = typeof CovalPersonasAPIBackgroundSoundResourceAcousticSourceTypeEnum[keyof typeof CovalPersonasAPIBackgroundSoundResourceAcousticSourceTypeEnum];
+
 
 /**
  * Check if a given object implements the CovalPersonasAPIBackgroundSoundResource interface.
@@ -153,6 +171,7 @@ export function CovalPersonasAPIBackgroundSoundResourceFromJSONTyped(json: any, 
         'default_volume': json['default_volume'],
         'content_type': json['content_type'] == null ? undefined : json['content_type'],
         'original_filename': json['original_filename'] == null ? undefined : json['original_filename'],
+        'acoustic_source_type': json['acoustic_source_type'] == null ? undefined : json['acoustic_source_type'],
         'metadata': json['metadata'] == null ? undefined : json['metadata'],
         'created_at': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
         'last_updated_at': json['last_updated_at'] == null ? undefined : (new Date(json['last_updated_at'])),
@@ -180,6 +199,7 @@ export function CovalPersonasAPIBackgroundSoundResourceToJSONTyped(value?: Coval
         'default_volume': value['default_volume'],
         'content_type': value['content_type'],
         'original_filename': value['original_filename'],
+        'acoustic_source_type': value['acoustic_source_type'],
         'metadata': value['metadata'],
         'created_at': value['created_at'] == null ? value['created_at'] : value['created_at'].toISOString(),
         'last_updated_at': value['last_updated_at'] == null ? value['last_updated_at'] : value['last_updated_at'].toISOString(),
