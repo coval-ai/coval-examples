@@ -31,9 +31,20 @@ class CovalPersonasAPIUpdateBackgroundSoundRequest(BaseModel):
     """ # noqa: E501
     display_name: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=200)]] = None
     default_volume: Optional[Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]]] = None
+    acoustic_source_type: Optional[StrictStr] = Field(default=None, description="Acoustic rendering behavior for this sound. - ambient: mixed like room ambience. - point_source: rendered from a specific location when a situate_speaker preset is set; otherwise mixed like ambient. ")
     status: Optional[StrictStr] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["display_name", "default_volume", "status"]
+    __properties: ClassVar[List[str]] = ["display_name", "default_volume", "acoustic_source_type", "status"]
+
+    @field_validator('acoustic_source_type')
+    def acoustic_source_type_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['ambient', 'point_source']):
+            raise ValueError("must be one of enum values ('ambient', 'point_source')")
+        return value
 
     @field_validator('status')
     def status_validate_enum(cls, value):
@@ -91,6 +102,11 @@ class CovalPersonasAPIUpdateBackgroundSoundRequest(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if acoustic_source_type (nullable) is None
+        # and model_fields_set contains the field
+        if self.acoustic_source_type is None and "acoustic_source_type" in self.model_fields_set:
+            _dict['acoustic_source_type'] = None
+
         return _dict
 
     @classmethod
@@ -105,6 +121,7 @@ class CovalPersonasAPIUpdateBackgroundSoundRequest(BaseModel):
         _obj = cls.model_validate({
             "display_name": obj.get("display_name"),
             "default_volume": obj.get("default_volume"),
+            "acoustic_source_type": obj.get("acoustic_source_type"),
             "status": obj.get("status")
         })
         # store additional fields in additional_properties

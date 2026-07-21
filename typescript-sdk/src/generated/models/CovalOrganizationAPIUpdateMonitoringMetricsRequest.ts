@@ -28,7 +28,7 @@ import {
  */
 export interface CovalOrganizationAPIUpdateMonitoringMetricsRequest {
     /**
-     * Metric IDs run on every monitored conversation.
+     * Metric IDs run on every conversation.
      * @type {Array<string>}
      * @memberof CovalOrganizationAPIUpdateMonitoringMetricsRequest
      */

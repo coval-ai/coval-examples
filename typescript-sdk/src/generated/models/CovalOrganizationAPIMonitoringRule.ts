@@ -22,7 +22,7 @@ import {
 } from './CovalOrganizationAPIMonitoringRuleMetadataValue.js';
 
 /**
- * A conditional monitoring rule that adds metric(s) when run metadata matches.
+ * A conditional rule that adds metric(s) to a conversation when run metadata matches.
  * @export
  * @interface CovalOrganizationAPIMonitoringRule
  */

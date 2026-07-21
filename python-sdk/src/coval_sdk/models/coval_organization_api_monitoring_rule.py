@@ -28,7 +28,7 @@ from pydantic_core import to_jsonable_python
 
 class CovalOrganizationAPIMonitoringRule(BaseModel):
     """
-    A conditional monitoring rule that adds metric(s) when run metadata matches.
+    A conditional rule that adds metric(s) to a conversation when run metadata matches.
     """ # noqa: E501
     id: Annotated[str, Field(min_length=1, strict=True, max_length=200)] = Field(description="Caller-defined rule identifier.")
     type: StrictStr = Field(description="Rule kind. Only RUN_METADATA is supported.")

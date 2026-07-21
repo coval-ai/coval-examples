@@ -22,13 +22,13 @@ import {
 } from './CovalOrganizationAPIMonitoringRule.js';
 
 /**
- * The organization's monitoring-metric configuration.
+ * The organization's conversation metrics configuration.
  * @export
  * @interface CovalOrganizationAPIMonitoringMetricsConfig
  */
 export interface CovalOrganizationAPIMonitoringMetricsConfig {
     /**
-     * Metric IDs run on every monitored conversation.
+     * Metric IDs run on every conversation.
      * @type {Array<string>}
      * @memberof CovalOrganizationAPIMonitoringMetricsConfig
      */

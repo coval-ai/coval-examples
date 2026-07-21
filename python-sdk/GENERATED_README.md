@@ -137,9 +137,12 @@ Class | Method | HTTP request | Description
 *MetricsApi* | [**get_metric_threshold**](docs/MetricsApi.md#get_metric_threshold) | **GET** /metrics/{metric_id}/threshold | Get metric threshold
 *MetricsApi* | [**list_metric_baselines**](docs/MetricsApi.md#list_metric_baselines) | **GET** /metrics/{metric_id}/baselines | List metric baselines
 *MetricsApi* | [**list_metric_models**](docs/MetricsApi.md#list_metric_models) | **GET** /models/metric | List available metric models
+*MetricsApi* | [**list_metric_template_variables**](docs/MetricsApi.md#list_metric_template_variables) | **GET** /metrics/template-variables | List metric template variables
 *MetricsApi* | [**list_metric_thresholds**](docs/MetricsApi.md#list_metric_thresholds) | **GET** /metrics/{metric_id}/thresholds | List metric thresholds
 *MetricsApi* | [**list_metric_versions**](docs/MetricsApi.md#list_metric_versions) | **GET** /metrics/{metric_id}/versions | List metric versions
 *MetricsApi* | [**list_metrics**](docs/MetricsApi.md#list_metrics) | **GET** /metrics | List metrics
+*MetricsApi* | [**list_recently_deleted_metrics**](docs/MetricsApi.md#list_recently_deleted_metrics) | **GET** /metrics/recently-deleted | List recently-deleted metrics
+*MetricsApi* | [**restore_metric**](docs/MetricsApi.md#restore_metric) | **POST** /metrics/{metric_id}/restore | Restore a recently-deleted metric
 *MetricsApi* | [**revert_metric_version**](docs/MetricsApi.md#revert_metric_version) | **POST** /metrics/{metric_id}/versions/{version_id}/revert | Revert metric version
 *MetricsApi* | [**test_metric**](docs/MetricsApi.md#test_metric) | **POST** /metrics/{metric_id}/test | Trigger test metric execution
 *MetricsApi* | [**update_metric**](docs/MetricsApi.md#update_metric) | **PATCH** /metrics/{metric_id} | Update metric
@@ -157,8 +160,8 @@ Class | Method | HTTP request | Description
 *MutationsApi* | [**get_mutation**](docs/MutationsApi.md#get_mutation) | **GET** /agents/{agent_id}/mutations/{mutation_id} | Get mutation
 *MutationsApi* | [**list_mutations**](docs/MutationsApi.md#list_mutations) | **GET** /agents/{agent_id}/mutations | List mutations
 *MutationsApi* | [**update_mutation**](docs/MutationsApi.md#update_mutation) | **PATCH** /agents/{agent_id}/mutations/{mutation_id} | Update mutation
-*OrganizationConversationsConfigApi* | [**get_monitoring_metrics**](docs/OrganizationConversationsConfigApi.md#get_monitoring_metrics) | **GET** /organization/monitoring-metrics | Get monitoring-metrics config
-*OrganizationConversationsConfigApi* | [**update_monitoring_metrics**](docs/OrganizationConversationsConfigApi.md#update_monitoring_metrics) | **PATCH** /organization/monitoring-metrics | Update monitoring-metrics config
+*OrganizationConversationsConfigApi* | [**get_monitoring_metrics**](docs/OrganizationConversationsConfigApi.md#get_monitoring_metrics) | **GET** /organization/monitoring-metrics | Get conversation metrics config
+*OrganizationConversationsConfigApi* | [**update_monitoring_metrics**](docs/OrganizationConversationsConfigApi.md#update_monitoring_metrics) | **PATCH** /organization/monitoring-metrics | Update conversation metrics config
 *PersonasApi* | [**complete_background_sound**](docs/PersonasApi.md#complete_background_sound) | **POST** /personas/background-sounds/{background_sound_id}/complete | Complete background sound upload
 *PersonasApi* | [**create_background_sound**](docs/PersonasApi.md#create_background_sound) | **POST** /personas/background-sounds | Create background sound upload
 *PersonasApi* | [**create_persona**](docs/PersonasApi.md#create_persona) | **POST** /personas | Create persona
@@ -181,11 +184,15 @@ Class | Method | HTTP request | Description
 *ReviewAnnotationsApi* | [**create_review_annotation**](docs/ReviewAnnotationsApi.md#create_review_annotation) | **POST** /review-annotations | Create review annotation
 *ReviewAnnotationsApi* | [**delete_review_annotation**](docs/ReviewAnnotationsApi.md#delete_review_annotation) | **DELETE** /review-annotations/{annotation_id} | Delete review annotation
 *ReviewAnnotationsApi* | [**get_review_annotation**](docs/ReviewAnnotationsApi.md#get_review_annotation) | **GET** /review-annotations/{annotation_id} | Get review annotation
+*ReviewAnnotationsApi* | [**get_review_annotations_with_metric_outputs**](docs/ReviewAnnotationsApi.md#get_review_annotations_with_metric_outputs) | **POST** /review-annotations:withMetricOutputs | Get annotations with metric outputs
+*ReviewAnnotationsApi* | [**get_review_metric_health_stats**](docs/ReviewAnnotationsApi.md#get_review_metric_health_stats) | **GET** /review-annotations/metric-health-stats | Get metric health stats
 *ReviewAnnotationsApi* | [**list_review_annotations**](docs/ReviewAnnotationsApi.md#list_review_annotations) | **GET** /review-annotations | List review annotations
 *ReviewAnnotationsApi* | [**update_review_annotation**](docs/ReviewAnnotationsApi.md#update_review_annotation) | **PATCH** /review-annotations/{annotation_id} | Update review annotation
 *ReviewProjectsApi* | [**create_review_project**](docs/ReviewProjectsApi.md#create_review_project) | **POST** /review-projects | Create review project
 *ReviewProjectsApi* | [**delete_review_project**](docs/ReviewProjectsApi.md#delete_review_project) | **DELETE** /review-projects/{project_id} | Delete review project
 *ReviewProjectsApi* | [**get_review_project**](docs/ReviewProjectsApi.md#get_review_project) | **GET** /review-projects/{project_id} | Get review project
+*ReviewProjectsApi* | [**get_review_project_insights**](docs/ReviewProjectsApi.md#get_review_project_insights) | **GET** /review-projects/{project_id}/insights | Get project insights
+*ReviewProjectsApi* | [**get_review_project_metric_agreement**](docs/ReviewProjectsApi.md#get_review_project_metric_agreement) | **GET** /review-projects/{project_id}/metric-agreement | Get project metric agreement
 *ReviewProjectsApi* | [**list_review_projects**](docs/ReviewProjectsApi.md#list_review_projects) | **GET** /review-projects | List review projects
 *ReviewProjectsApi* | [**update_review_project**](docs/ReviewProjectsApi.md#update_review_project) | **PATCH** /review-projects/{project_id} | Update review project
 *RunTemplatesApi* | [**create_run_template**](docs/RunTemplatesApi.md#create_run_template) | **POST** /run-templates | Create run template
@@ -208,6 +215,7 @@ Class | Method | HTTP request | Description
 *SimulationsApi* | [**get_audio_url**](docs/SimulationsApi.md#get_audio_url) | **GET** /simulations/{simulation_id}/audio | Get audio file URL
 *SimulationsApi* | [**get_simulation**](docs/SimulationsApi.md#get_simulation) | **GET** /simulations/{simulation_id} | Get simulation
 *SimulationsApi* | [**list_simulations**](docs/SimulationsApi.md#list_simulations) | **GET** /simulations | List simulations
+*SimulationsApi* | [**rerun_metrics**](docs/SimulationsApi.md#rerun_metrics) | **POST** /simulations:rerunMetrics | Batch rerun metrics
 *SimulationsApi* | [**resimulate_simulation**](docs/SimulationsApi.md#resimulate_simulation) | **POST** /simulations/{simulation_id}/resimulate | Rerun a simulation
 *SimulationsApi* | [**update_simulation**](docs/SimulationsApi.md#update_simulation) | **PATCH** /simulations/{simulation_id} | Update simulation
 *TagsApi* | [**create_tag**](docs/TagsApi.md#create_tag) | **POST** /tags | Create tag
@@ -358,22 +366,26 @@ Class | Method | HTTP request | Description
  - [CovalMetricsAPIErrorResponseError](docs/CovalMetricsAPIErrorResponseError.md)
  - [CovalMetricsAPIErrorResponseErrorDetailsInner](docs/CovalMetricsAPIErrorResponseErrorDetailsInner.md)
  - [CovalMetricsAPIGetMetricResponse](docs/CovalMetricsAPIGetMetricResponse.md)
+ - [CovalMetricsAPIGetMetricTemplateVariablesResponse](docs/CovalMetricsAPIGetMetricTemplateVariablesResponse.md)
  - [CovalMetricsAPIGetThresholdResponse](docs/CovalMetricsAPIGetThresholdResponse.md)
  - [CovalMetricsAPIListMetricBaselinesResponse](docs/CovalMetricsAPIListMetricBaselinesResponse.md)
  - [CovalMetricsAPIListMetricModelsResponse](docs/CovalMetricsAPIListMetricModelsResponse.md)
  - [CovalMetricsAPIListMetricVersionsResponse](docs/CovalMetricsAPIListMetricVersionsResponse.md)
  - [CovalMetricsAPIListMetricsResponse](docs/CovalMetricsAPIListMetricsResponse.md)
+ - [CovalMetricsAPIListRecentlyDeletedMetricsResponse](docs/CovalMetricsAPIListRecentlyDeletedMetricsResponse.md)
  - [CovalMetricsAPIListThresholdsResponse](docs/CovalMetricsAPIListThresholdsResponse.md)
  - [CovalMetricsAPIMetadataFieldType](docs/CovalMetricsAPIMetadataFieldType.md)
  - [CovalMetricsAPIMetricModelResource](docs/CovalMetricsAPIMetricModelResource.md)
  - [CovalMetricsAPIMetricResource](docs/CovalMetricsAPIMetricResource.md)
  - [CovalMetricsAPIMetricRuntimeConfig](docs/CovalMetricsAPIMetricRuntimeConfig.md)
+ - [CovalMetricsAPIMetricTemplateVariableCategory](docs/CovalMetricsAPIMetricTemplateVariableCategory.md)
  - [CovalMetricsAPIMetricThresholdResource](docs/CovalMetricsAPIMetricThresholdResource.md)
  - [CovalMetricsAPIMetricType](docs/CovalMetricsAPIMetricType.md)
  - [CovalMetricsAPIMetricVersionChangeType](docs/CovalMetricsAPIMetricVersionChangeType.md)
  - [CovalMetricsAPIMetricVersionResource](docs/CovalMetricsAPIMetricVersionResource.md)
  - [CovalMetricsAPIPatchThresholdRequest](docs/CovalMetricsAPIPatchThresholdRequest.md)
  - [CovalMetricsAPIPatchThresholdResponse](docs/CovalMetricsAPIPatchThresholdResponse.md)
+ - [CovalMetricsAPIRecentlyDeletedMetricResource](docs/CovalMetricsAPIRecentlyDeletedMetricResource.md)
  - [CovalMetricsAPITargetCondition](docs/CovalMetricsAPITargetCondition.md)
  - [CovalMetricsAPITestMetricRequest](docs/CovalMetricsAPITestMetricRequest.md)
  - [CovalMetricsAPITestMetricResponse](docs/CovalMetricsAPITestMetricResponse.md)
@@ -456,13 +468,22 @@ Class | Method | HTTP request | Description
  - [CovalReviewsAPICreateReviewProjectResponse](docs/CovalReviewsAPICreateReviewProjectResponse.md)
  - [CovalReviewsAPIErrorResponse](docs/CovalReviewsAPIErrorResponse.md)
  - [CovalReviewsAPIErrorResponseError](docs/CovalReviewsAPIErrorResponseError.md)
+ - [CovalReviewsAPIGetAnnotationsWithMetricOutputsRequest](docs/CovalReviewsAPIGetAnnotationsWithMetricOutputsRequest.md)
+ - [CovalReviewsAPIGetAnnotationsWithMetricOutputsResponse](docs/CovalReviewsAPIGetAnnotationsWithMetricOutputsResponse.md)
+ - [CovalReviewsAPIGetHumanReviewProjectInsightsResponse](docs/CovalReviewsAPIGetHumanReviewProjectInsightsResponse.md)
+ - [CovalReviewsAPIGetHumanReviewProjectInsightsResponseProject](docs/CovalReviewsAPIGetHumanReviewProjectInsightsResponseProject.md)
+ - [CovalReviewsAPIGetMetricHealthStatsResponse](docs/CovalReviewsAPIGetMetricHealthStatsResponse.md)
+ - [CovalReviewsAPIGetProjectMetricAgreementResponse](docs/CovalReviewsAPIGetProjectMetricAgreementResponse.md)
  - [CovalReviewsAPIGetReviewAnnotationResponse](docs/CovalReviewsAPIGetReviewAnnotationResponse.md)
  - [CovalReviewsAPIGetReviewProjectResponse](docs/CovalReviewsAPIGetReviewProjectResponse.md)
+ - [CovalReviewsAPIHumanAgreementStatsResource](docs/CovalReviewsAPIHumanAgreementStatsResource.md)
  - [CovalReviewsAPIListReviewAnnotationsResponse](docs/CovalReviewsAPIListReviewAnnotationsResponse.md)
  - [CovalReviewsAPIListReviewProjectsResponse](docs/CovalReviewsAPIListReviewProjectsResponse.md)
+ - [CovalReviewsAPIProjectMetricAgreementResource](docs/CovalReviewsAPIProjectMetricAgreementResource.md)
  - [CovalReviewsAPIProjectRule](docs/CovalReviewsAPIProjectRule.md)
  - [CovalReviewsAPIProjectType](docs/CovalReviewsAPIProjectType.md)
  - [CovalReviewsAPIReviewAnnotationResource](docs/CovalReviewsAPIReviewAnnotationResource.md)
+ - [CovalReviewsAPIReviewMetricOutputForAnnotationResource](docs/CovalReviewsAPIReviewMetricOutputForAnnotationResource.md)
  - [CovalReviewsAPIReviewProjectResource](docs/CovalReviewsAPIReviewProjectResource.md)
  - [CovalReviewsAPIUpdateReviewAnnotationRequest](docs/CovalReviewsAPIUpdateReviewAnnotationRequest.md)
  - [CovalReviewsAPIUpdateReviewAnnotationResponse](docs/CovalReviewsAPIUpdateReviewAnnotationResponse.md)
@@ -511,6 +532,9 @@ Class | Method | HTTP request | Description
  - [CovalSimulationsAPIListSimulationsResponse](docs/CovalSimulationsAPIListSimulationsResponse.md)
  - [CovalSimulationsAPIMetricOutputCollection](docs/CovalSimulationsAPIMetricOutputCollection.md)
  - [CovalSimulationsAPIPhoneEndpoint](docs/CovalSimulationsAPIPhoneEndpoint.md)
+ - [CovalSimulationsAPIRerunMetricsRequest](docs/CovalSimulationsAPIRerunMetricsRequest.md)
+ - [CovalSimulationsAPIRerunMetricsResponse](docs/CovalSimulationsAPIRerunMetricsResponse.md)
+ - [CovalSimulationsAPIRerunMetricsResultItem](docs/CovalSimulationsAPIRerunMetricsResultItem.md)
  - [CovalSimulationsAPIResimulateSimulationResponse](docs/CovalSimulationsAPIResimulateSimulationResponse.md)
  - [CovalSimulationsAPISimpleMetricOutput](docs/CovalSimulationsAPISimpleMetricOutput.md)
  - [CovalSimulationsAPISimpleMetricOutputValue](docs/CovalSimulationsAPISimpleMetricOutputValue.md)

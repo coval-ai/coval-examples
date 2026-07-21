@@ -53,9 +53,9 @@ class OrganizationConversationsConfigApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> CovalOrganizationAPIMonitoringMetricsConfig:
-        """Get monitoring-metrics config
+        """Get conversation metrics config
 
-        Return the organization's monitoring-metrics configuration: the default metric IDs run on every monitored conversation, plus the conditional rules that add metrics based on run metadata.
+        Return the organization's conversation metrics configuration: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -120,9 +120,9 @@ class OrganizationConversationsConfigApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[CovalOrganizationAPIMonitoringMetricsConfig]:
-        """Get monitoring-metrics config
+        """Get conversation metrics config
 
-        Return the organization's monitoring-metrics configuration: the default metric IDs run on every monitored conversation, plus the conditional rules that add metrics based on run metadata.
+        Return the organization's conversation metrics configuration: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -187,9 +187,9 @@ class OrganizationConversationsConfigApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Get monitoring-metrics config
+        """Get conversation metrics config
 
-        Return the organization's monitoring-metrics configuration: the default metric IDs run on every monitored conversation, plus the conditional rules that add metrics based on run metadata.
+        Return the organization's conversation metrics configuration: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -312,9 +312,9 @@ class OrganizationConversationsConfigApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> CovalOrganizationAPIMonitoringMetricsConfig:
-        """Update monitoring-metrics config
+        """Update conversation metrics config
 
-        Partially update the organization's monitoring-metrics configuration. Provide at least one of `default_monitoring_metrics` or `conditional_monitoring_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
+        Partially update the organization's conversation metrics configuration. Provide at least one of `default_monitoring_metrics` or `conditional_monitoring_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
 
         :param coval_organization_api_update_monitoring_metrics_request: (required)
         :type coval_organization_api_update_monitoring_metrics_request: CovalOrganizationAPIUpdateMonitoringMetricsRequest
@@ -384,9 +384,9 @@ class OrganizationConversationsConfigApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[CovalOrganizationAPIMonitoringMetricsConfig]:
-        """Update monitoring-metrics config
+        """Update conversation metrics config
 
-        Partially update the organization's monitoring-metrics configuration. Provide at least one of `default_monitoring_metrics` or `conditional_monitoring_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
+        Partially update the organization's conversation metrics configuration. Provide at least one of `default_monitoring_metrics` or `conditional_monitoring_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
 
         :param coval_organization_api_update_monitoring_metrics_request: (required)
         :type coval_organization_api_update_monitoring_metrics_request: CovalOrganizationAPIUpdateMonitoringMetricsRequest
@@ -456,9 +456,9 @@ class OrganizationConversationsConfigApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Update monitoring-metrics config
+        """Update conversation metrics config
 
-        Partially update the organization's monitoring-metrics configuration. Provide at least one of `default_monitoring_metrics` or `conditional_monitoring_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
+        Partially update the organization's conversation metrics configuration. Provide at least one of `default_monitoring_metrics` or `conditional_monitoring_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
 
         :param coval_organization_api_update_monitoring_metrics_request: (required)
         :type coval_organization_api_update_monitoring_metrics_request: CovalOrganizationAPIUpdateMonitoringMetricsRequest

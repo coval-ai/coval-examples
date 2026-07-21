@@ -39,9 +39,10 @@ class CovalReviewsAPIUpdateReviewProjectRequest(BaseModel):
     linked_metric_ids: Optional[List[StrictStr]] = Field(default=None, description="Updated metric IDs")
     notifications: Optional[StrictBool] = Field(default=None, description="Updated notification setting")
     project_rules: Optional[List[CovalReviewsAPIProjectRule]] = Field(default=None, description="Updated project rules")
+    blind_labeling_shown_metric_ids: Optional[List[StrictStr]] = Field(default=None, description="Metric IDs whose machine score stays visible during blind labeling")
     opted_out_assignees: Optional[List[StrictStr]] = Field(default=None, description="Assignees who opted out of notifications")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["display_name", "description", "assignees", "linked_simulation_ids", "add_linked_simulation_ids", "remove_linked_simulation_ids", "linked_metric_ids", "notifications", "project_rules", "opted_out_assignees"]
+    __properties: ClassVar[List[str]] = ["display_name", "description", "assignees", "linked_simulation_ids", "add_linked_simulation_ids", "remove_linked_simulation_ids", "linked_metric_ids", "notifications", "project_rules", "blind_labeling_shown_metric_ids", "opted_out_assignees"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -134,6 +135,11 @@ class CovalReviewsAPIUpdateReviewProjectRequest(BaseModel):
         if self.project_rules is None and "project_rules" in self.model_fields_set:
             _dict['project_rules'] = None
 
+        # set to None if blind_labeling_shown_metric_ids (nullable) is None
+        # and model_fields_set contains the field
+        if self.blind_labeling_shown_metric_ids is None and "blind_labeling_shown_metric_ids" in self.model_fields_set:
+            _dict['blind_labeling_shown_metric_ids'] = None
+
         # set to None if opted_out_assignees (nullable) is None
         # and model_fields_set contains the field
         if self.opted_out_assignees is None and "opted_out_assignees" in self.model_fields_set:
@@ -160,6 +166,7 @@ class CovalReviewsAPIUpdateReviewProjectRequest(BaseModel):
             "linked_metric_ids": obj.get("linked_metric_ids"),
             "notifications": obj.get("notifications"),
             "project_rules": obj.get("project_rules"),
+            "blind_labeling_shown_metric_ids": obj.get("blind_labeling_shown_metric_ids"),
             "opted_out_assignees": obj.get("opted_out_assignees")
         })
         # store additional fields in additional_properties

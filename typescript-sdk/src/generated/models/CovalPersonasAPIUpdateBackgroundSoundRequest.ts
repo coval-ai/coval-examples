@@ -32,6 +32,15 @@ export interface CovalPersonasAPIUpdateBackgroundSoundRequest {
      */
     default_volume?: number;
     /**
+     * Acoustic rendering behavior for this sound.
+     * - ambient: mixed like room ambience.
+     * - point_source: rendered from a specific location when a situate_speaker preset is set; otherwise mixed like ambient.
+     * 
+     * @type {CovalPersonasAPIUpdateBackgroundSoundRequestAcousticSourceTypeEnum}
+     * @memberof CovalPersonasAPIUpdateBackgroundSoundRequest
+     */
+    acoustic_source_type?: CovalPersonasAPIUpdateBackgroundSoundRequestAcousticSourceTypeEnum | null;
+    /**
      * 
      * @type {CovalPersonasAPIUpdateBackgroundSoundRequestStatusEnum}
      * @memberof CovalPersonasAPIUpdateBackgroundSoundRequest
@@ -39,6 +48,15 @@ export interface CovalPersonasAPIUpdateBackgroundSoundRequest {
     status?: CovalPersonasAPIUpdateBackgroundSoundRequestStatusEnum;
 }
 
+
+/**
+ * @export
+ */
+export const CovalPersonasAPIUpdateBackgroundSoundRequestAcousticSourceTypeEnum = {
+    Ambient: 'ambient',
+    PointSource: 'point_source'
+} as const;
+export type CovalPersonasAPIUpdateBackgroundSoundRequestAcousticSourceTypeEnum = typeof CovalPersonasAPIUpdateBackgroundSoundRequestAcousticSourceTypeEnum[keyof typeof CovalPersonasAPIUpdateBackgroundSoundRequestAcousticSourceTypeEnum];
 
 /**
  * @export
@@ -69,6 +87,7 @@ export function CovalPersonasAPIUpdateBackgroundSoundRequestFromJSONTyped(json: 
         
         'display_name': json['display_name'] == null ? undefined : json['display_name'],
         'default_volume': json['default_volume'] == null ? undefined : json['default_volume'],
+        'acoustic_source_type': json['acoustic_source_type'] == null ? undefined : json['acoustic_source_type'],
         'status': json['status'] == null ? undefined : json['status'],
     };
 }
@@ -86,6 +105,7 @@ export function CovalPersonasAPIUpdateBackgroundSoundRequestToJSONTyped(value?: 
         
         'display_name': value['display_name'],
         'default_volume': value['default_volume'],
+        'acoustic_source_type': value['acoustic_source_type'],
         'status': value['status'],
     };
 }

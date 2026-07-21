@@ -48,8 +48,8 @@ export interface OrganizationConversationsConfigApiInterface {
     getMonitoringMetricsRequestOpts(): Promise<runtime.RequestOpts>;
 
     /**
-     * Return the organization\'s monitoring-metrics configuration: the default metric IDs run on every monitored conversation, plus the conditional rules that add metrics based on run metadata.
-     * @summary Get monitoring-metrics config
+     * Return the organization\'s conversation metrics configuration: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata.
+     * @summary Get conversation metrics config
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof OrganizationConversationsConfigApiInterface
@@ -57,8 +57,8 @@ export interface OrganizationConversationsConfigApiInterface {
     getMonitoringMetricsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIMonitoringMetricsConfig>>;
 
     /**
-     * Return the organization\'s monitoring-metrics configuration: the default metric IDs run on every monitored conversation, plus the conditional rules that add metrics based on run metadata.
-     * Get monitoring-metrics config
+     * Return the organization\'s conversation metrics configuration: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata.
+     * Get conversation metrics config
      */
     getMonitoringMetrics(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIMonitoringMetricsConfig>;
 
@@ -71,8 +71,8 @@ export interface OrganizationConversationsConfigApiInterface {
     updateMonitoringMetricsRequestOpts(requestParameters: UpdateMonitoringMetricsRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Partially update the organization\'s monitoring-metrics configuration. Provide at least one of `default_monitoring_metrics` or `conditional_monitoring_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
-     * @summary Update monitoring-metrics config
+     * Partially update the organization\'s conversation metrics configuration. Provide at least one of `default_monitoring_metrics` or `conditional_monitoring_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
+     * @summary Update conversation metrics config
      * @param {CovalOrganizationAPIUpdateMonitoringMetricsRequest} covalOrganizationAPIUpdateMonitoringMetricsRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -81,8 +81,8 @@ export interface OrganizationConversationsConfigApiInterface {
     updateMonitoringMetricsRaw(requestParameters: UpdateMonitoringMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIMonitoringMetricsConfig>>;
 
     /**
-     * Partially update the organization\'s monitoring-metrics configuration. Provide at least one of `default_monitoring_metrics` or `conditional_monitoring_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
-     * Update monitoring-metrics config
+     * Partially update the organization\'s conversation metrics configuration. Provide at least one of `default_monitoring_metrics` or `conditional_monitoring_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
+     * Update conversation metrics config
      */
     updateMonitoringMetrics(requestParameters: UpdateMonitoringMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIMonitoringMetricsConfig>;
 
@@ -117,8 +117,8 @@ export class OrganizationConversationsConfigApi extends runtime.BaseAPI implemen
     }
 
     /**
-     * Return the organization\'s monitoring-metrics configuration: the default metric IDs run on every monitored conversation, plus the conditional rules that add metrics based on run metadata.
-     * Get monitoring-metrics config
+     * Return the organization\'s conversation metrics configuration: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata.
+     * Get conversation metrics config
      */
     async getMonitoringMetricsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIMonitoringMetricsConfig>> {
         const requestOptions = await this.getMonitoringMetricsRequestOpts();
@@ -128,8 +128,8 @@ export class OrganizationConversationsConfigApi extends runtime.BaseAPI implemen
     }
 
     /**
-     * Return the organization\'s monitoring-metrics configuration: the default metric IDs run on every monitored conversation, plus the conditional rules that add metrics based on run metadata.
-     * Get monitoring-metrics config
+     * Return the organization\'s conversation metrics configuration: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata.
+     * Get conversation metrics config
      */
     async getMonitoringMetrics(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIMonitoringMetricsConfig> {
         const response = await this.getMonitoringMetricsRaw(initOverrides);
@@ -170,8 +170,8 @@ export class OrganizationConversationsConfigApi extends runtime.BaseAPI implemen
     }
 
     /**
-     * Partially update the organization\'s monitoring-metrics configuration. Provide at least one of `default_monitoring_metrics` or `conditional_monitoring_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
-     * Update monitoring-metrics config
+     * Partially update the organization\'s conversation metrics configuration. Provide at least one of `default_monitoring_metrics` or `conditional_monitoring_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
+     * Update conversation metrics config
      */
     async updateMonitoringMetricsRaw(requestParameters: UpdateMonitoringMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIMonitoringMetricsConfig>> {
         const requestOptions = await this.updateMonitoringMetricsRequestOpts(requestParameters);
@@ -181,8 +181,8 @@ export class OrganizationConversationsConfigApi extends runtime.BaseAPI implemen
     }
 
     /**
-     * Partially update the organization\'s monitoring-metrics configuration. Provide at least one of `default_monitoring_metrics` or `conditional_monitoring_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
-     * Update monitoring-metrics config
+     * Partially update the organization\'s conversation metrics configuration. Provide at least one of `default_monitoring_metrics` or `conditional_monitoring_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
+     * Update conversation metrics config
      */
     async updateMonitoringMetrics(requestParameters: UpdateMonitoringMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIMonitoringMetricsConfig> {
         const response = await this.updateMonitoringMetricsRaw(requestParameters, initOverrides);

@@ -40,11 +40,12 @@ class CovalPersonasAPIBackgroundSoundResource(BaseModel):
     default_volume: Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]]
     content_type: Optional[StrictStr] = None
     original_filename: Optional[StrictStr] = None
+    acoustic_source_type: Optional[StrictStr] = Field(default=None, description="Acoustic rendering behavior for this sound. - ambient: mixed like room ambience. - point_source: rendered from a specific location when a situate_speaker preset is set; otherwise mixed like ambient. ")
     metadata: Optional[Dict[str, Any]] = None
     created_at: Optional[datetime] = None
     last_updated_at: Optional[datetime] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["id", "value", "source", "display_name", "status", "preview_url", "preview_url_expires_at", "default_volume", "content_type", "original_filename", "metadata", "created_at", "last_updated_at"]
+    __properties: ClassVar[List[str]] = ["id", "value", "source", "display_name", "status", "preview_url", "preview_url_expires_at", "default_volume", "content_type", "original_filename", "acoustic_source_type", "metadata", "created_at", "last_updated_at"]
 
     @field_validator('source')
     def source_validate_enum(cls, value):
@@ -58,6 +59,16 @@ class CovalPersonasAPIBackgroundSoundResource(BaseModel):
         """Validates the enum"""
         if value not in set(['pending_upload', 'active', 'archived']):
             raise ValueError("must be one of enum values ('pending_upload', 'active', 'archived')")
+        return value
+
+    @field_validator('acoustic_source_type')
+    def acoustic_source_type_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['ambient', 'point_source']):
+            raise ValueError("must be one of enum values ('ambient', 'point_source')")
         return value
 
     model_config = ConfigDict(
@@ -126,6 +137,11 @@ class CovalPersonasAPIBackgroundSoundResource(BaseModel):
         if self.original_filename is None and "original_filename" in self.model_fields_set:
             _dict['original_filename'] = None
 
+        # set to None if acoustic_source_type (nullable) is None
+        # and model_fields_set contains the field
+        if self.acoustic_source_type is None and "acoustic_source_type" in self.model_fields_set:
+            _dict['acoustic_source_type'] = None
+
         # set to None if created_at (nullable) is None
         # and model_fields_set contains the field
         if self.created_at is None and "created_at" in self.model_fields_set:
@@ -158,6 +174,7 @@ class CovalPersonasAPIBackgroundSoundResource(BaseModel):
             "default_volume": obj.get("default_volume"),
             "content_type": obj.get("content_type"),
             "original_filename": obj.get("original_filename"),
+            "acoustic_source_type": obj.get("acoustic_source_type"),
             "metadata": obj.get("metadata"),
             "created_at": obj.get("created_at"),
             "last_updated_at": obj.get("last_updated_at")
