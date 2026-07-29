@@ -49,6 +49,7 @@ class CovalMetricsAPIMetricResource(BaseModel):
     regex_pattern: Optional[StrictStr] = Field(default=None, description="Regex pattern (for METRIC_TRANSCRIPT_REGEX)")
     role: Optional[StrictStr] = Field(default=None, description="Speaker role filter (for METRIC_TRANSCRIPT_REGEX)")
     min_pause_duration_seconds: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum pause duration (for METRIC_PAUSE_ANALYSIS)")
+    sql_query: Optional[StrictStr] = Field(default=None, description="SQL query that defines the metric (for METRIC_SQL_FLOAT)")
     include_traces: Optional[StrictBool] = Field(default=None, description="Whether OTel trace context is injected into the LLM judge prompt during evaluation. Supported for LLM judge metric types only (`METRIC_LLM_BINARY`, `METRIC_CATEGORICAL`, `METRIC_NUMERICAL_LLM_JUDGE`, `METRIC_AUDIO_LLM_BINARY`, `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`). ")
     runtime_config: Optional[CovalMetricsAPIMetricRuntimeConfig] = Field(default=None, description="LLM model and thinking configuration for this metric. Not supported for audio metric types (`METRIC_AUDIO_LLM_BINARY`, `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`), which always use the platform-default audio model. ")
     target_condition: Optional[CovalMetricsAPITargetCondition] = Field(default=None, description="Target condition for metric evaluation")
@@ -58,7 +59,7 @@ class CovalMetricsAPIMetricResource(BaseModel):
     update_time: Optional[datetime] = Field(default=None, description="Last update timestamp")
     current_version: Optional[CovalMetricsAPICurrentMetricVersion] = Field(default=None, description="The metric's live version. Null for pre-versioning metrics that have not yet been saved or run under the versioning system. Full history at GET /v1/metrics/{metric_id}/versions.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "id", "metric_name", "description", "metric_type", "prompt", "categories", "min_value", "max_value", "metadata_field_type", "metadata_field_key", "regex_pattern", "role", "min_pause_duration_seconds", "include_traces", "runtime_config", "target_condition", "tags", "created_by", "create_time", "update_time", "current_version"]
+    __properties: ClassVar[List[str]] = ["name", "id", "metric_name", "description", "metric_type", "prompt", "categories", "min_value", "max_value", "metadata_field_type", "metadata_field_key", "regex_pattern", "role", "min_pause_duration_seconds", "sql_query", "include_traces", "runtime_config", "target_condition", "tags", "created_by", "create_time", "update_time", "current_version"]
 
     @field_validator('role')
     def role_validate_enum(cls, value):
@@ -170,6 +171,11 @@ class CovalMetricsAPIMetricResource(BaseModel):
         if self.min_pause_duration_seconds is None and "min_pause_duration_seconds" in self.model_fields_set:
             _dict['min_pause_duration_seconds'] = None
 
+        # set to None if sql_query (nullable) is None
+        # and model_fields_set contains the field
+        if self.sql_query is None and "sql_query" in self.model_fields_set:
+            _dict['sql_query'] = None
+
         # set to None if include_traces (nullable) is None
         # and model_fields_set contains the field
         if self.include_traces is None and "include_traces" in self.model_fields_set:
@@ -221,6 +227,7 @@ class CovalMetricsAPIMetricResource(BaseModel):
             "regex_pattern": obj.get("regex_pattern"),
             "role": obj.get("role"),
             "min_pause_duration_seconds": obj.get("min_pause_duration_seconds"),
+            "sql_query": obj.get("sql_query"),
             "include_traces": obj.get("include_traces"),
             "runtime_config": CovalMetricsAPIMetricRuntimeConfig.from_dict(obj["runtime_config"]) if obj.get("runtime_config") is not None else None,
             "target_condition": CovalMetricsAPITargetCondition.from_dict(obj["target_condition"]) if obj.get("target_condition") is not None else None,

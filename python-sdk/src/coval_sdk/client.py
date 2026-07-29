@@ -12,6 +12,7 @@ from coval_sdk.api import (
   AudioApi,
   ConversationsApi,
   DashboardsApi,
+  IntegrationsApi,
   MetricOutputsApi,
   MetricsApi,
   MonitorEventsApi,
@@ -93,6 +94,7 @@ class CovalClient:
     self.audio = AudioApi(self.api_client)
     self.conversations = ConversationsApi(self.api_client)
     self.dashboards = DashboardsApi(self.api_client)
+    self.integrations = IntegrationsApi(self.api_client)
     self.metric_outputs = MetricOutputsApi(self.api_client)
     self.metrics = MetricsApi(self.api_client)
     self.monitor_events = MonitorEventsApi(self.api_client)

@@ -13,13 +13,13 @@
  */
 
 import { mapValues } from '../runtime.js';
-import type { CovalSimulationsAPISimpleMetricOutputValue } from './CovalSimulationsAPISimpleMetricOutputValue.js';
+import type { CovalMetricsAPISimpleMetricOutputValue } from './CovalMetricsAPISimpleMetricOutputValue.js';
 import {
-    CovalSimulationsAPISimpleMetricOutputValueFromJSON,
-    CovalSimulationsAPISimpleMetricOutputValueFromJSONTyped,
-    CovalSimulationsAPISimpleMetricOutputValueToJSON,
-    CovalSimulationsAPISimpleMetricOutputValueToJSONTyped,
-} from './CovalSimulationsAPISimpleMetricOutputValue.js';
+    CovalMetricsAPISimpleMetricOutputValueFromJSON,
+    CovalMetricsAPISimpleMetricOutputValueFromJSONTyped,
+    CovalMetricsAPISimpleMetricOutputValueToJSON,
+    CovalMetricsAPISimpleMetricOutputValueToJSONTyped,
+} from './CovalMetricsAPISimpleMetricOutputValue.js';
 import type { CovalSimulationsAPISubvalueByTimestamp } from './CovalSimulationsAPISubvalueByTimestamp.js';
 import {
     CovalSimulationsAPISubvalueByTimestampFromJSON,
@@ -54,16 +54,22 @@ export interface CovalSimulationsAPISimpleMetricOutput {
     metric_version_ulid?: string | null;
     /**
      * 
-     * @type {CovalSimulationsAPISimpleMetricOutputValue}
+     * @type {CovalMetricsAPISimpleMetricOutputValue}
      * @memberof CovalSimulationsAPISimpleMetricOutput
      */
-    value?: CovalSimulationsAPISimpleMetricOutputValue;
+    value?: CovalMetricsAPISimpleMetricOutputValue;
     /**
      * Current status of the metric computation
      * @type {CovalSimulationsAPISimpleMetricOutputStatusEnum}
      * @memberof CovalSimulationsAPISimpleMetricOutput
      */
     status: CovalSimulationsAPISimpleMetricOutputStatusEnum;
+    /**
+     * Stored reason for the current status, including the actionable reason a metric was skipped or failed. Null when no reason was recorded.
+     * @type {string}
+     * @memberof CovalSimulationsAPISimpleMetricOutput
+     */
+    status_reason?: string | null;
     /**
      * The LLM judge's reasoning for this metric output, as a flat string. Null for metrics that produce no explanation (non-judge metrics) or when the output is not yet computed. This is a convenience surfacing of the reasoning that otherwise lives nested under result.llm.answer_explanation (or result.explanation); it is populated in both the list and single-output responses so callers do not have to request the full result object to read it.
      * @type {string}
@@ -98,7 +104,9 @@ export const CovalSimulationsAPISimpleMetricOutputStatusEnum = {
     InQueue: 'IN QUEUE',
     InProgress: 'IN PROGRESS',
     Completed: 'COMPLETED',
-    Failed: 'FAILED'
+    Skipped: 'SKIPPED',
+    Failed: 'FAILED',
+    Cancelled: 'CANCELLED'
 } as const;
 export type CovalSimulationsAPISimpleMetricOutputStatusEnum = typeof CovalSimulationsAPISimpleMetricOutputStatusEnum[keyof typeof CovalSimulationsAPISimpleMetricOutputStatusEnum];
 
@@ -126,8 +134,9 @@ export function CovalSimulationsAPISimpleMetricOutputFromJSONTyped(json: any, ig
         'metric_output_id': json['metric_output_id'],
         'metric_id': json['metric_id'],
         'metric_version_ulid': json['metric_version_ulid'] == null ? undefined : json['metric_version_ulid'],
-        'value': json['value'] == null ? undefined : CovalSimulationsAPISimpleMetricOutputValueFromJSON(json['value']),
+        'value': json['value'] == null ? undefined : CovalMetricsAPISimpleMetricOutputValueFromJSON(json['value']),
         'status': json['status'],
+        'status_reason': json['status_reason'] == null ? undefined : json['status_reason'],
         'explanation': json['explanation'] == null ? undefined : json['explanation'],
         'subvalues_by_timestamp': json['subvalues_by_timestamp'] == null ? undefined : ((json['subvalues_by_timestamp'] as Array<any>).map(CovalSimulationsAPISubvalueByTimestampFromJSON)),
         'result': json['result'] == null ? undefined : json['result'],
@@ -149,8 +158,9 @@ export function CovalSimulationsAPISimpleMetricOutputToJSONTyped(value?: CovalSi
         'metric_output_id': value['metric_output_id'],
         'metric_id': value['metric_id'],
         'metric_version_ulid': value['metric_version_ulid'],
-        'value': CovalSimulationsAPISimpleMetricOutputValueToJSON(value['value']),
+        'value': CovalMetricsAPISimpleMetricOutputValueToJSON(value['value']),
         'status': value['status'],
+        'status_reason': value['status_reason'],
         'explanation': value['explanation'],
         'subvalues_by_timestamp': value['subvalues_by_timestamp'] == null ? undefined : ((value['subvalues_by_timestamp'] as Array<any>).map(CovalSimulationsAPISubvalueByTimestampToJSON)),
         'result': value['result'],

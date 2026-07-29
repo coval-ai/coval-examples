@@ -39,6 +39,11 @@ import {
     CovalReportsAPIGetReportResponseToJSON,
 } from '../models/CovalReportsAPIGetReportResponse.js';
 import {
+    type CovalReportsAPIListReportRowsResponse,
+    CovalReportsAPIListReportRowsResponseFromJSON,
+    CovalReportsAPIListReportRowsResponseToJSON,
+} from '../models/CovalReportsAPIListReportRowsResponse.js';
+import {
     type CovalReportsAPIListReportsResponse,
     CovalReportsAPIListReportsResponseFromJSON,
     CovalReportsAPIListReportsResponseToJSON,
@@ -64,6 +69,14 @@ export interface DeleteReportRequest {
 
 export interface GetReportRequest {
     reportId: string;
+}
+
+export interface ListReportRowsRequest {
+    reportId: string;
+    cursor?: string;
+    limit?: number;
+    metricIds?: string;
+    simulationOutputIds?: string;
 }
 
 export interface ListReportsRequest {
@@ -154,6 +167,38 @@ export interface ReportsApiInterface {
      * Get report
      */
     getReport(requestParameters: GetReportRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReportsAPIGetReportResponse>;
+
+    /**
+     * Creates request options for listReportRows without sending the request
+     * @param {string} reportId Saved report ULID.
+     * @param {string} [cursor] Pagination cursor from a prior response\&#39;s next_page_token.
+     * @param {number} [limit] Max rows per page (1-2000).
+     * @param {string} [metricIds] Comma-separated metric ids to include.
+     * @param {string} [simulationOutputIds] Comma-separated simulation output ids to restrict to.
+     * @throws {RequiredError}
+     * @memberof ReportsApiInterface
+     */
+    listReportRowsRequestOpts(requestParameters: ListReportRowsRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * List a report\'s per-simulation rows, each with its metric outputs inline. Cursor-paginated. Optionally narrow with `metric_ids` and `simulation_output_ids` (comma-separated). 
+     * @summary List report rows
+     * @param {string} reportId Saved report ULID.
+     * @param {string} [cursor] Pagination cursor from a prior response\&#39;s next_page_token.
+     * @param {number} [limit] Max rows per page (1-2000).
+     * @param {string} [metricIds] Comma-separated metric ids to include.
+     * @param {string} [simulationOutputIds] Comma-separated simulation output ids to restrict to.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ReportsApiInterface
+     */
+    listReportRowsRaw(requestParameters: ListReportRowsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReportsAPIListReportRowsResponse>>;
+
+    /**
+     * List a report\'s per-simulation rows, each with its metric outputs inline. Cursor-paginated. Optionally narrow with `metric_ids` and `simulation_output_ids` (comma-separated). 
+     * List report rows
+     */
+    listReportRows(requestParameters: ListReportRowsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReportsAPIListReportRowsResponse>;
 
     /**
      * Creates request options for listReports without sending the request
@@ -366,6 +411,73 @@ export class ReportsApi extends runtime.BaseAPI implements ReportsApiInterface {
      */
     async getReport(requestParameters: GetReportRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReportsAPIGetReportResponse> {
         const response = await this.getReportRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for listReportRows without sending the request
+     */
+    async listReportRowsRequestOpts(requestParameters: ListReportRowsRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['reportId'] == null) {
+            throw new runtime.RequiredError(
+                'reportId',
+                'Required parameter "reportId" was null or undefined when calling listReportRows().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cursor'] != null) {
+            queryParameters['cursor'] = requestParameters['cursor'];
+        }
+
+        if (requestParameters['limit'] != null) {
+            queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        if (requestParameters['metricIds'] != null) {
+            queryParameters['metric_ids'] = requestParameters['metricIds'];
+        }
+
+        if (requestParameters['simulationOutputIds'] != null) {
+            queryParameters['simulation_output_ids'] = requestParameters['simulationOutputIds'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Reports_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/reports/{report_id}/rows`;
+        urlPath = urlPath.replace('{report_id}', encodeURIComponent(String(requestParameters['reportId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * List a report\'s per-simulation rows, each with its metric outputs inline. Cursor-paginated. Optionally narrow with `metric_ids` and `simulation_output_ids` (comma-separated). 
+     * List report rows
+     */
+    async listReportRowsRaw(requestParameters: ListReportRowsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReportsAPIListReportRowsResponse>> {
+        const requestOptions = await this.listReportRowsRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalReportsAPIListReportRowsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * List a report\'s per-simulation rows, each with its metric outputs inline. Cursor-paginated. Optionally narrow with `metric_ids` and `simulation_output_ids` (comma-separated). 
+     * List report rows
+     */
+    async listReportRows(requestParameters: ListReportRowsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReportsAPIListReportRowsResponse> {
+        const response = await this.listReportRowsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

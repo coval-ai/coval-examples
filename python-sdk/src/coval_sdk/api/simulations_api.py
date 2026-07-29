@@ -16,7 +16,7 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictStr
+from pydantic import Field, StrictStr, field_validator
 from typing import Any, Dict, Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_simulations_api_get_audio_url_response import CovalSimulationsAPIGetAudioURLResponse
@@ -859,10 +859,11 @@ class SimulationsApi:
     @validate_call
     def list_simulations(
         self,
-        filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `test_case_id`, `run_id`, `external_conversation_id`, `mutation_id`, `mutation_name`, `create_time`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`).  The `external_conversation_id` field is your system's conversation ID for cross-system lookup.  **Mutation Filtering:** Use `mutation_id` or `mutation_name` to filter simulations by agent mutation variant. Base agent simulations have both `mutation_id` and `mutation_name` = null. To get only base agent results, filter for simulations where `mutation_id` is not set. ")] = None,
+        filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `test_case_id`, `run_id`, `external_conversation_id`, `mutation_id`, `mutation_name`, `create_time`, `metric.{metric_id}`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  A `metric.{metric_id}` predicate (score filtering; number and string metrics, type inferred from the literal) returns only simulations whose metric matches, with each simulation's value per metric embedded inline (`metric_values`). On this path the request is keyset-paginated, ordered newest-first by creation time, and supports only `AND` alongside `create_time`, `agent_id`, `status`, `test_set_id`, and `persona_id`; other fields and any non-default `order_by` are rejected with 400, and `page_size` is capped at 100.  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`).  The `external_conversation_id` field is your system's conversation ID for cross-system lookup.  **Mutation Filtering:** Use `mutation_id` or `mutation_name` to filter simulations by agent mutation variant. Base agent simulations have both `mutation_id` and `mutation_name` = null. To get only base agent results, filter for simulations where `mutation_id` is not set. ")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `create_time`, `status` ")] = None,
+        include: Annotated[Optional[StrictStr], Field(description="Set to `metric_values` to embed each simulation's value per metric inline. Served by the keyset engine (newest-first, `page_size` capped at 100). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -880,7 +881,7 @@ class SimulationsApi:
 
         List simulations with optional filtering and sorting.
 
-        :param filter: Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `test_case_id`, `run_id`, `external_conversation_id`, `mutation_id`, `mutation_name`, `create_time`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`).  The `external_conversation_id` field is your system's conversation ID for cross-system lookup.  **Mutation Filtering:** Use `mutation_id` or `mutation_name` to filter simulations by agent mutation variant. Base agent simulations have both `mutation_id` and `mutation_name` = null. To get only base agent results, filter for simulations where `mutation_id` is not set. 
+        :param filter: Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `test_case_id`, `run_id`, `external_conversation_id`, `mutation_id`, `mutation_name`, `create_time`, `metric.{metric_id}`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  A `metric.{metric_id}` predicate (score filtering; number and string metrics, type inferred from the literal) returns only simulations whose metric matches, with each simulation's value per metric embedded inline (`metric_values`). On this path the request is keyset-paginated, ordered newest-first by creation time, and supports only `AND` alongside `create_time`, `agent_id`, `status`, `test_set_id`, and `persona_id`; other fields and any non-default `order_by` are rejected with 400, and `page_size` is capped at 100.  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`).  The `external_conversation_id` field is your system's conversation ID for cross-system lookup.  **Mutation Filtering:** Use `mutation_id` or `mutation_name` to filter simulations by agent mutation variant. Base agent simulations have both `mutation_id` and `mutation_name` = null. To get only base agent results, filter for simulations where `mutation_id` is not set. 
         :type filter: str
         :param page_size: Maximum number of results per page
         :type page_size: int
@@ -888,6 +889,8 @@ class SimulationsApi:
         :type page_token: str
         :param order_by: Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `create_time`, `status` 
         :type order_by: str
+        :param include: Set to `metric_values` to embed each simulation's value per metric inline. Served by the keyset engine (newest-first, `page_size` capped at 100). 
+        :type include: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -915,6 +918,7 @@ class SimulationsApi:
             page_size=page_size,
             page_token=page_token,
             order_by=order_by,
+            include=include,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -941,10 +945,11 @@ class SimulationsApi:
     @validate_call
     def list_simulations_with_http_info(
         self,
-        filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `test_case_id`, `run_id`, `external_conversation_id`, `mutation_id`, `mutation_name`, `create_time`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`).  The `external_conversation_id` field is your system's conversation ID for cross-system lookup.  **Mutation Filtering:** Use `mutation_id` or `mutation_name` to filter simulations by agent mutation variant. Base agent simulations have both `mutation_id` and `mutation_name` = null. To get only base agent results, filter for simulations where `mutation_id` is not set. ")] = None,
+        filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `test_case_id`, `run_id`, `external_conversation_id`, `mutation_id`, `mutation_name`, `create_time`, `metric.{metric_id}`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  A `metric.{metric_id}` predicate (score filtering; number and string metrics, type inferred from the literal) returns only simulations whose metric matches, with each simulation's value per metric embedded inline (`metric_values`). On this path the request is keyset-paginated, ordered newest-first by creation time, and supports only `AND` alongside `create_time`, `agent_id`, `status`, `test_set_id`, and `persona_id`; other fields and any non-default `order_by` are rejected with 400, and `page_size` is capped at 100.  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`).  The `external_conversation_id` field is your system's conversation ID for cross-system lookup.  **Mutation Filtering:** Use `mutation_id` or `mutation_name` to filter simulations by agent mutation variant. Base agent simulations have both `mutation_id` and `mutation_name` = null. To get only base agent results, filter for simulations where `mutation_id` is not set. ")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `create_time`, `status` ")] = None,
+        include: Annotated[Optional[StrictStr], Field(description="Set to `metric_values` to embed each simulation's value per metric inline. Served by the keyset engine (newest-first, `page_size` capped at 100). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -962,7 +967,7 @@ class SimulationsApi:
 
         List simulations with optional filtering and sorting.
 
-        :param filter: Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `test_case_id`, `run_id`, `external_conversation_id`, `mutation_id`, `mutation_name`, `create_time`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`).  The `external_conversation_id` field is your system's conversation ID for cross-system lookup.  **Mutation Filtering:** Use `mutation_id` or `mutation_name` to filter simulations by agent mutation variant. Base agent simulations have both `mutation_id` and `mutation_name` = null. To get only base agent results, filter for simulations where `mutation_id` is not set. 
+        :param filter: Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `test_case_id`, `run_id`, `external_conversation_id`, `mutation_id`, `mutation_name`, `create_time`, `metric.{metric_id}`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  A `metric.{metric_id}` predicate (score filtering; number and string metrics, type inferred from the literal) returns only simulations whose metric matches, with each simulation's value per metric embedded inline (`metric_values`). On this path the request is keyset-paginated, ordered newest-first by creation time, and supports only `AND` alongside `create_time`, `agent_id`, `status`, `test_set_id`, and `persona_id`; other fields and any non-default `order_by` are rejected with 400, and `page_size` is capped at 100.  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`).  The `external_conversation_id` field is your system's conversation ID for cross-system lookup.  **Mutation Filtering:** Use `mutation_id` or `mutation_name` to filter simulations by agent mutation variant. Base agent simulations have both `mutation_id` and `mutation_name` = null. To get only base agent results, filter for simulations where `mutation_id` is not set. 
         :type filter: str
         :param page_size: Maximum number of results per page
         :type page_size: int
@@ -970,6 +975,8 @@ class SimulationsApi:
         :type page_token: str
         :param order_by: Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `create_time`, `status` 
         :type order_by: str
+        :param include: Set to `metric_values` to embed each simulation's value per metric inline. Served by the keyset engine (newest-first, `page_size` capped at 100). 
+        :type include: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -997,6 +1004,7 @@ class SimulationsApi:
             page_size=page_size,
             page_token=page_token,
             order_by=order_by,
+            include=include,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1023,10 +1031,11 @@ class SimulationsApi:
     @validate_call
     def list_simulations_without_preload_content(
         self,
-        filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `test_case_id`, `run_id`, `external_conversation_id`, `mutation_id`, `mutation_name`, `create_time`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`).  The `external_conversation_id` field is your system's conversation ID for cross-system lookup.  **Mutation Filtering:** Use `mutation_id` or `mutation_name` to filter simulations by agent mutation variant. Base agent simulations have both `mutation_id` and `mutation_name` = null. To get only base agent results, filter for simulations where `mutation_id` is not set. ")] = None,
+        filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `test_case_id`, `run_id`, `external_conversation_id`, `mutation_id`, `mutation_name`, `create_time`, `metric.{metric_id}`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  A `metric.{metric_id}` predicate (score filtering; number and string metrics, type inferred from the literal) returns only simulations whose metric matches, with each simulation's value per metric embedded inline (`metric_values`). On this path the request is keyset-paginated, ordered newest-first by creation time, and supports only `AND` alongside `create_time`, `agent_id`, `status`, `test_set_id`, and `persona_id`; other fields and any non-default `order_by` are rejected with 400, and `page_size` is capped at 100.  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`).  The `external_conversation_id` field is your system's conversation ID for cross-system lookup.  **Mutation Filtering:** Use `mutation_id` or `mutation_name` to filter simulations by agent mutation variant. Base agent simulations have both `mutation_id` and `mutation_name` = null. To get only base agent results, filter for simulations where `mutation_id` is not set. ")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `create_time`, `status` ")] = None,
+        include: Annotated[Optional[StrictStr], Field(description="Set to `metric_values` to embed each simulation's value per metric inline. Served by the keyset engine (newest-first, `page_size` capped at 100). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1044,7 +1053,7 @@ class SimulationsApi:
 
         List simulations with optional filtering and sorting.
 
-        :param filter: Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `test_case_id`, `run_id`, `external_conversation_id`, `mutation_id`, `mutation_name`, `create_time`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`).  The `external_conversation_id` field is your system's conversation ID for cross-system lookup.  **Mutation Filtering:** Use `mutation_id` or `mutation_name` to filter simulations by agent mutation variant. Base agent simulations have both `mutation_id` and `mutation_name` = null. To get only base agent results, filter for simulations where `mutation_id` is not set. 
+        :param filter: Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `test_case_id`, `run_id`, `external_conversation_id`, `mutation_id`, `mutation_name`, `create_time`, `metric.{metric_id}`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  A `metric.{metric_id}` predicate (score filtering; number and string metrics, type inferred from the literal) returns only simulations whose metric matches, with each simulation's value per metric embedded inline (`metric_values`). On this path the request is keyset-paginated, ordered newest-first by creation time, and supports only `AND` alongside `create_time`, `agent_id`, `status`, `test_set_id`, and `persona_id`; other fields and any non-default `order_by` are rejected with 400, and `page_size` is capped at 100.  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`).  The `external_conversation_id` field is your system's conversation ID for cross-system lookup.  **Mutation Filtering:** Use `mutation_id` or `mutation_name` to filter simulations by agent mutation variant. Base agent simulations have both `mutation_id` and `mutation_name` = null. To get only base agent results, filter for simulations where `mutation_id` is not set. 
         :type filter: str
         :param page_size: Maximum number of results per page
         :type page_size: int
@@ -1052,6 +1061,8 @@ class SimulationsApi:
         :type page_token: str
         :param order_by: Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `create_time`, `status` 
         :type order_by: str
+        :param include: Set to `metric_values` to embed each simulation's value per metric inline. Served by the keyset engine (newest-first, `page_size` capped at 100). 
+        :type include: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1079,6 +1090,7 @@ class SimulationsApi:
             page_size=page_size,
             page_token=page_token,
             order_by=order_by,
+            include=include,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1104,6 +1116,7 @@ class SimulationsApi:
         page_size,
         page_token,
         order_by,
+        include,
         _request_auth,
         _content_type,
         _headers,
@@ -1141,6 +1154,10 @@ class SimulationsApi:
         if order_by is not None:
             
             _query_params.append(('order_by', order_by))
+            
+        if include is not None:
+            
+            _query_params.append(('include', include))
             
         # process the header parameters
         # process the form parameters

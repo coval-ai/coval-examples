@@ -47,8 +47,9 @@ class CovalRunTemplatesAPIRunTemplateResource(BaseModel):
     tags: Optional[List[StrictStr]] = Field(default=None, description="Tags associated with this run template")
     create_time: datetime = Field(description="Creation timestamp (ISO 8601)")
     update_time: Optional[datetime] = Field(default=None, description="Last update timestamp (ISO 8601)")
+    created_by_user_id: Optional[StrictStr] = Field(default=None, description="ULID of the user who created the template")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "id", "display_name", "description", "agent_id", "persona_id", "test_set_id", "metric_ids", "mutation_ids", "iteration_count", "concurrency", "sub_sample_size", "sub_sample_seed", "metadata", "tags", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["name", "id", "display_name", "description", "agent_id", "persona_id", "test_set_id", "metric_ids", "mutation_ids", "iteration_count", "concurrency", "sub_sample_size", "sub_sample_seed", "metadata", "tags", "create_time", "update_time", "created_by_user_id"]
 
     @field_validator('id')
     def id_validate_regular_expression(cls, value):
@@ -146,6 +147,11 @@ class CovalRunTemplatesAPIRunTemplateResource(BaseModel):
         if self.update_time is None and "update_time" in self.model_fields_set:
             _dict['update_time'] = None
 
+        # set to None if created_by_user_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.created_by_user_id is None and "created_by_user_id" in self.model_fields_set:
+            _dict['created_by_user_id'] = None
+
         return _dict
 
     @classmethod
@@ -174,7 +180,8 @@ class CovalRunTemplatesAPIRunTemplateResource(BaseModel):
             "metadata": obj.get("metadata"),
             "tags": obj.get("tags"),
             "create_time": obj.get("create_time"),
-            "update_time": obj.get("update_time")
+            "update_time": obj.get("update_time"),
+            "created_by_user_id": obj.get("created_by_user_id")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

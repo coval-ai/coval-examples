@@ -121,6 +121,17 @@ export interface CovalMetricsAPICreateMetricRequest {
      */
     min_pause_duration_seconds?: number;
     /**
+     * SQL query run against the simulation's data. Required for METRIC_SQL_FLOAT.
+     * The query returns one row per timestamp with a numeric `value` and a
+     * `start_offset_milliseconds`; set `aggregation_method` (SUM, AVERAGE, MIN, MAX,
+     * or COUNT; default AVERAGE) to reduce those rows to a single value, and `unit`
+     * for the reported unit.
+     * 
+     * @type {string}
+     * @memberof CovalMetricsAPICreateMetricRequest
+     */
+    sql_query?: string;
+    /**
      * Inject OTel trace context into the LLM judge prompt during evaluation.
      * Supported for LLM judge metric types only (`METRIC_LLM_BINARY`, `METRIC_CATEGORICAL`,
      * `METRIC_NUMERICAL_LLM_JUDGE`, `METRIC_AUDIO_LLM_BINARY`, `METRIC_AUDIO_LLM_CATEGORICAL`,
@@ -198,6 +209,7 @@ export function CovalMetricsAPICreateMetricRequestFromJSONTyped(json: any, ignor
         'regex_pattern': json['regex_pattern'] == null ? undefined : json['regex_pattern'],
         'role': json['role'] == null ? undefined : json['role'],
         'min_pause_duration_seconds': json['min_pause_duration_seconds'] == null ? undefined : json['min_pause_duration_seconds'],
+        'sql_query': json['sql_query'] == null ? undefined : json['sql_query'],
         'include_traces': json['include_traces'] == null ? undefined : json['include_traces'],
         'runtime_config': json['runtime_config'] == null ? undefined : CovalMetricsAPIMetricRuntimeConfigFromJSON(json['runtime_config']),
         'target_condition': json['target_condition'] == null ? undefined : CovalMetricsAPITargetConditionFromJSON(json['target_condition']),
@@ -228,6 +240,7 @@ export function CovalMetricsAPICreateMetricRequestToJSONTyped(value?: CovalMetri
         'regex_pattern': value['regex_pattern'],
         'role': value['role'],
         'min_pause_duration_seconds': value['min_pause_duration_seconds'],
+        'sql_query': value['sql_query'],
         'include_traces': value['include_traces'],
         'runtime_config': CovalMetricsAPIMetricRuntimeConfigToJSON(value['runtime_config']),
         'target_condition': CovalMetricsAPITargetConditionToJSON(value['target_condition']),

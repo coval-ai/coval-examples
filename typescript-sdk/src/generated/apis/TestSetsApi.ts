@@ -44,6 +44,11 @@ import {
     TestSetsAPIListTestSetAgentsResponseToJSON,
 } from '../models/TestSetsAPIListTestSetAgentsResponse.js';
 import {
+    type TestSetsAPIListTestSetRecordsResponse,
+    TestSetsAPIListTestSetRecordsResponseFromJSON,
+    TestSetsAPIListTestSetRecordsResponseToJSON,
+} from '../models/TestSetsAPIListTestSetRecordsResponse.js';
+import {
     type TestSetsAPIListTestSetVersionsResponse,
     TestSetsAPIListTestSetVersionsResponseFromJSON,
     TestSetsAPIListTestSetVersionsResponseToJSON,
@@ -76,6 +81,10 @@ export interface GetTestSetRequest {
 }
 
 export interface ListTestSetAgentsRequest {
+    testSetId: string;
+}
+
+export interface ListTestSetRecordsRequest {
     testSetId: string;
 }
 
@@ -258,6 +267,30 @@ export interface TestSetsApiInterface {
      * List associated agents
      */
     listTestSetAgents(requestParameters: ListTestSetAgentsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TestSetsAPIListTestSetAgentsResponse>;
+
+    /**
+     * Creates request options for listTestSetRecords without sending the request
+     * @param {string} testSetId Test set id.
+     * @throws {RequiredError}
+     * @memberof TestSetsApiInterface
+     */
+    listTestSetRecordsRequestOpts(requestParameters: ListTestSetRecordsRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * List the test-case records in a test set.
+     * @summary List test set records
+     * @param {string} testSetId Test set id.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TestSetsApiInterface
+     */
+    listTestSetRecordsRaw(requestParameters: ListTestSetRecordsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TestSetsAPIListTestSetRecordsResponse>>;
+
+    /**
+     * List the test-case records in a test set.
+     * List test set records
+     */
+    listTestSetRecords(requestParameters: ListTestSetRecordsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TestSetsAPIListTestSetRecordsResponse>;
 
     /**
      * Creates request options for listTestSetVersions without sending the request
@@ -715,6 +748,57 @@ export class TestSetsApi extends runtime.BaseAPI implements TestSetsApiInterface
      */
     async listTestSetAgents(requestParameters: ListTestSetAgentsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TestSetsAPIListTestSetAgentsResponse> {
         const response = await this.listTestSetAgentsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for listTestSetRecords without sending the request
+     */
+    async listTestSetRecordsRequestOpts(requestParameters: ListTestSetRecordsRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['testSetId'] == null) {
+            throw new runtime.RequiredError(
+                'testSetId',
+                'Required parameter "testSetId" was null or undefined when calling listTestSetRecords().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Test_Sets_API_apiKey authentication
+        }
+
+
+        let urlPath = `/test-sets/{test_set_id}/records`;
+        urlPath = urlPath.replace('{test_set_id}', encodeURIComponent(String(requestParameters['testSetId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * List the test-case records in a test set.
+     * List test set records
+     */
+    async listTestSetRecordsRaw(requestParameters: ListTestSetRecordsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TestSetsAPIListTestSetRecordsResponse>> {
+        const requestOptions = await this.listTestSetRecordsRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => TestSetsAPIListTestSetRecordsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * List the test-case records in a test set.
+     * List test set records
+     */
+    async listTestSetRecords(requestParameters: ListTestSetRecordsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TestSetsAPIListTestSetRecordsResponse> {
+        const response = await this.listTestSetRecordsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

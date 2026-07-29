@@ -19,7 +19,9 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictBytes, StrictStr
 from typing import Optional, Tuple, Union
 from typing_extensions import Annotated
+from coval_sdk.models.get_trace_quality_summary200_response import GetTraceQualitySummary200Response
 from coval_sdk.models.ingest_traces200_response import IngestTraces200Response
+from coval_sdk.models.traces_api_simulation_traces_response import TracesAPISimulationTracesResponse
 
 from coval_sdk.api_client import ApiClient, RequestSerialized
 from coval_sdk.api_response import ApiResponse
@@ -37,6 +39,304 @@ class TracesApi:
         if api_client is None:
             api_client = ApiClient.get_default()
         self.api_client = api_client
+
+
+    @validate_call
+    def get_trace_quality_summary(
+        self,
+        simulation_id: Annotated[Optional[Annotated[str, Field(strict=True, max_length=200)]], Field(description="Exact simulation output ID. Mutually exclusive with `conversation_id`.")] = None,
+        conversation_id: Annotated[Optional[Annotated[str, Field(strict=True, max_length=200)]], Field(description="Exact monitoring conversation ID. Mutually exclusive with `simulation_id`.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> GetTraceQualitySummary200Response:
+        """Inspect trace quality and signal coverage
+
+        Returns a bounded, organization-scoped summary of the trace data received for one simulation output or monitoring conversation. The response contains span names, counts, timing and status distributions, structural integrity checks, and attribute key/type coverage. It never returns attribute values, prompt text, tool arguments or results, status messages, events, or links.  Provide exactly one of `simulation_id` or `conversation_id`. A truncated response reports `is_truncated: true`; do not treat its counts as complete. 
+
+        :param simulation_id: Exact simulation output ID. Mutually exclusive with `conversation_id`.
+        :type simulation_id: str
+        :param conversation_id: Exact monitoring conversation ID. Mutually exclusive with `simulation_id`.
+        :type conversation_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_trace_quality_summary_serialize(
+            simulation_id=simulation_id,
+            conversation_id=conversation_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetTraceQualitySummary200Response",
+            '400': "TracesAPIErrorResponse",
+            '401': "TracesAPIErrorResponse",
+            '403': "TracesAPIErrorResponse",
+            '404': "TracesAPIErrorResponse",
+            '500': "TracesAPIErrorResponse",
+            '503': "TracesAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def get_trace_quality_summary_with_http_info(
+        self,
+        simulation_id: Annotated[Optional[Annotated[str, Field(strict=True, max_length=200)]], Field(description="Exact simulation output ID. Mutually exclusive with `conversation_id`.")] = None,
+        conversation_id: Annotated[Optional[Annotated[str, Field(strict=True, max_length=200)]], Field(description="Exact monitoring conversation ID. Mutually exclusive with `simulation_id`.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[GetTraceQualitySummary200Response]:
+        """Inspect trace quality and signal coverage
+
+        Returns a bounded, organization-scoped summary of the trace data received for one simulation output or monitoring conversation. The response contains span names, counts, timing and status distributions, structural integrity checks, and attribute key/type coverage. It never returns attribute values, prompt text, tool arguments or results, status messages, events, or links.  Provide exactly one of `simulation_id` or `conversation_id`. A truncated response reports `is_truncated: true`; do not treat its counts as complete. 
+
+        :param simulation_id: Exact simulation output ID. Mutually exclusive with `conversation_id`.
+        :type simulation_id: str
+        :param conversation_id: Exact monitoring conversation ID. Mutually exclusive with `simulation_id`.
+        :type conversation_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_trace_quality_summary_serialize(
+            simulation_id=simulation_id,
+            conversation_id=conversation_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetTraceQualitySummary200Response",
+            '400': "TracesAPIErrorResponse",
+            '401': "TracesAPIErrorResponse",
+            '403': "TracesAPIErrorResponse",
+            '404': "TracesAPIErrorResponse",
+            '500': "TracesAPIErrorResponse",
+            '503': "TracesAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def get_trace_quality_summary_without_preload_content(
+        self,
+        simulation_id: Annotated[Optional[Annotated[str, Field(strict=True, max_length=200)]], Field(description="Exact simulation output ID. Mutually exclusive with `conversation_id`.")] = None,
+        conversation_id: Annotated[Optional[Annotated[str, Field(strict=True, max_length=200)]], Field(description="Exact monitoring conversation ID. Mutually exclusive with `simulation_id`.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Inspect trace quality and signal coverage
+
+        Returns a bounded, organization-scoped summary of the trace data received for one simulation output or monitoring conversation. The response contains span names, counts, timing and status distributions, structural integrity checks, and attribute key/type coverage. It never returns attribute values, prompt text, tool arguments or results, status messages, events, or links.  Provide exactly one of `simulation_id` or `conversation_id`. A truncated response reports `is_truncated: true`; do not treat its counts as complete. 
+
+        :param simulation_id: Exact simulation output ID. Mutually exclusive with `conversation_id`.
+        :type simulation_id: str
+        :param conversation_id: Exact monitoring conversation ID. Mutually exclusive with `simulation_id`.
+        :type conversation_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_trace_quality_summary_serialize(
+            simulation_id=simulation_id,
+            conversation_id=conversation_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetTraceQualitySummary200Response",
+            '400': "TracesAPIErrorResponse",
+            '401': "TracesAPIErrorResponse",
+            '403': "TracesAPIErrorResponse",
+            '404': "TracesAPIErrorResponse",
+            '500': "TracesAPIErrorResponse",
+            '503': "TracesAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _get_trace_quality_summary_serialize(
+        self,
+        simulation_id,
+        conversation_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        # process the query parameters
+        if simulation_id is not None:
+            
+            _query_params.append(('simulation_id', simulation_id))
+            
+        if conversation_id is not None:
+            
+            _query_params.append(('conversation_id', conversation_id))
+            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'Traces_API_apiKey'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/traces/summary',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
 
 
     @validate_call
@@ -355,6 +655,321 @@ class TracesApi:
         return self.api_client.param_serialize(
             method='POST',
             resource_path='/traces',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def list_simulation_traces(
+        self,
+        simulation_output_id: Annotated[str, Field(min_length=1, strict=True, description="The simulation output whose trace spans to list.")],
+        limit: Annotated[Optional[Annotated[int, Field(le=200, strict=True, ge=1)]], Field(description="Max spans to return (1-200, default 50).")] = None,
+        offset: Annotated[Optional[Annotated[int, Field(le=100000, strict=True, ge=0)]], Field(description="Number of spans to skip for pagination (max 100000).")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> TracesAPISimulationTracesResponse:
+        """List trace spans for a simulation output
+
+        Read back the raw OTLP trace spans recorded for one simulation output — a simulation or a monitored conversation (both are simulation outputs). Offset-paginated. Complements `GET /traces/summary`, which returns only a privacy-safe structural summary. 
+
+        :param simulation_output_id: The simulation output whose trace spans to list. (required)
+        :type simulation_output_id: str
+        :param limit: Max spans to return (1-200, default 50).
+        :type limit: int
+        :param offset: Number of spans to skip for pagination (max 100000).
+        :type offset: int
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._list_simulation_traces_serialize(
+            simulation_output_id=simulation_output_id,
+            limit=limit,
+            offset=offset,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "TracesAPISimulationTracesResponse",
+            '400': "TracesAPIErrorResponse",
+            '401': "TracesAPIErrorResponse",
+            '403': "TracesAPIErrorResponse",
+            '500': "TracesAPIErrorResponse",
+            '502': "TracesAPIErrorResponse",
+            '503': "TracesAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def list_simulation_traces_with_http_info(
+        self,
+        simulation_output_id: Annotated[str, Field(min_length=1, strict=True, description="The simulation output whose trace spans to list.")],
+        limit: Annotated[Optional[Annotated[int, Field(le=200, strict=True, ge=1)]], Field(description="Max spans to return (1-200, default 50).")] = None,
+        offset: Annotated[Optional[Annotated[int, Field(le=100000, strict=True, ge=0)]], Field(description="Number of spans to skip for pagination (max 100000).")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[TracesAPISimulationTracesResponse]:
+        """List trace spans for a simulation output
+
+        Read back the raw OTLP trace spans recorded for one simulation output — a simulation or a monitored conversation (both are simulation outputs). Offset-paginated. Complements `GET /traces/summary`, which returns only a privacy-safe structural summary. 
+
+        :param simulation_output_id: The simulation output whose trace spans to list. (required)
+        :type simulation_output_id: str
+        :param limit: Max spans to return (1-200, default 50).
+        :type limit: int
+        :param offset: Number of spans to skip for pagination (max 100000).
+        :type offset: int
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._list_simulation_traces_serialize(
+            simulation_output_id=simulation_output_id,
+            limit=limit,
+            offset=offset,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "TracesAPISimulationTracesResponse",
+            '400': "TracesAPIErrorResponse",
+            '401': "TracesAPIErrorResponse",
+            '403': "TracesAPIErrorResponse",
+            '500': "TracesAPIErrorResponse",
+            '502': "TracesAPIErrorResponse",
+            '503': "TracesAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def list_simulation_traces_without_preload_content(
+        self,
+        simulation_output_id: Annotated[str, Field(min_length=1, strict=True, description="The simulation output whose trace spans to list.")],
+        limit: Annotated[Optional[Annotated[int, Field(le=200, strict=True, ge=1)]], Field(description="Max spans to return (1-200, default 50).")] = None,
+        offset: Annotated[Optional[Annotated[int, Field(le=100000, strict=True, ge=0)]], Field(description="Number of spans to skip for pagination (max 100000).")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """List trace spans for a simulation output
+
+        Read back the raw OTLP trace spans recorded for one simulation output — a simulation or a monitored conversation (both are simulation outputs). Offset-paginated. Complements `GET /traces/summary`, which returns only a privacy-safe structural summary. 
+
+        :param simulation_output_id: The simulation output whose trace spans to list. (required)
+        :type simulation_output_id: str
+        :param limit: Max spans to return (1-200, default 50).
+        :type limit: int
+        :param offset: Number of spans to skip for pagination (max 100000).
+        :type offset: int
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._list_simulation_traces_serialize(
+            simulation_output_id=simulation_output_id,
+            limit=limit,
+            offset=offset,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "TracesAPISimulationTracesResponse",
+            '400': "TracesAPIErrorResponse",
+            '401': "TracesAPIErrorResponse",
+            '403': "TracesAPIErrorResponse",
+            '500': "TracesAPIErrorResponse",
+            '502': "TracesAPIErrorResponse",
+            '503': "TracesAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _list_simulation_traces_serialize(
+        self,
+        simulation_output_id,
+        limit,
+        offset,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        # process the query parameters
+        if simulation_output_id is not None:
+            
+            _query_params.append(('simulation_output_id', simulation_output_id))
+            
+        if limit is not None:
+            
+            _query_params.append(('limit', limit))
+            
+        if offset is not None:
+            
+            _query_params.append(('offset', offset))
+            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'Traces_API_apiKey'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/traces/spans',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

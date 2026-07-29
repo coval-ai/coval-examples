@@ -39,6 +39,11 @@ import {
     CovalReviewsAPIGetProjectMetricAgreementResponseToJSON,
 } from '../models/CovalReviewsAPIGetProjectMetricAgreementResponse.js';
 import {
+    type CovalReviewsAPIGetReviewDisagreementStateRequest,
+    CovalReviewsAPIGetReviewDisagreementStateRequestFromJSON,
+    CovalReviewsAPIGetReviewDisagreementStateRequestToJSON,
+} from '../models/CovalReviewsAPIGetReviewDisagreementStateRequest.js';
+import {
     type CovalReviewsAPIGetReviewProjectResponse,
     CovalReviewsAPIGetReviewProjectResponseFromJSON,
     CovalReviewsAPIGetReviewProjectResponseToJSON,
@@ -48,6 +53,16 @@ import {
     CovalReviewsAPIListReviewProjectsResponseFromJSON,
     CovalReviewsAPIListReviewProjectsResponseToJSON,
 } from '../models/CovalReviewsAPIListReviewProjectsResponse.js';
+import {
+    type CovalReviewsAPIReviewDisagreementStateResponse,
+    CovalReviewsAPIReviewDisagreementStateResponseFromJSON,
+    CovalReviewsAPIReviewDisagreementStateResponseToJSON,
+} from '../models/CovalReviewsAPIReviewDisagreementStateResponse.js';
+import {
+    type CovalReviewsAPIReviewProjectProgress,
+    CovalReviewsAPIReviewProjectProgressFromJSON,
+    CovalReviewsAPIReviewProjectProgressToJSON,
+} from '../models/CovalReviewsAPIReviewProjectProgress.js';
 import {
     type CovalReviewsAPIUpdateReviewProjectRequest,
     CovalReviewsAPIUpdateReviewProjectRequestFromJSON,
@@ -67,6 +82,10 @@ export interface DeleteReviewProjectRequest {
     projectId: string;
 }
 
+export interface GetReviewDisagreementStateRequest {
+    covalReviewsAPIGetReviewDisagreementStateRequest: CovalReviewsAPIGetReviewDisagreementStateRequest;
+}
+
 export interface GetReviewProjectRequest {
     projectId: string;
 }
@@ -79,6 +98,10 @@ export interface GetReviewProjectInsightsRequest {
 }
 
 export interface GetReviewProjectMetricAgreementRequest {
+    projectId: string;
+}
+
+export interface GetReviewProjectProgressRequest {
     projectId: string;
 }
 
@@ -147,6 +170,30 @@ export interface ReviewProjectsApiInterface {
      * Delete review project
      */
     deleteReviewProject(requestParameters: DeleteReviewProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object>;
+
+    /**
+     * Creates request options for getReviewDisagreementState without sending the request
+     * @param {CovalReviewsAPIGetReviewDisagreementStateRequest} covalReviewsAPIGetReviewDisagreementStateRequest 
+     * @throws {RequiredError}
+     * @memberof ReviewProjectsApiInterface
+     */
+    getReviewDisagreementStateRequestOpts(requestParameters: GetReviewDisagreementStateRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Compact unresolved-disagreement state for review-note enforcement, for a set of review projects. Only projects with the `require_disagreement_notes` rule are reported. Issued via POST because the project id set is supplied in the body. Latency scales with the total scanned simulations x metrics across the requested projects.
+     * @summary Get review disagreement state
+     * @param {CovalReviewsAPIGetReviewDisagreementStateRequest} covalReviewsAPIGetReviewDisagreementStateRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ReviewProjectsApiInterface
+     */
+    getReviewDisagreementStateRaw(requestParameters: GetReviewDisagreementStateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReviewsAPIReviewDisagreementStateResponse>>;
+
+    /**
+     * Compact unresolved-disagreement state for review-note enforcement, for a set of review projects. Only projects with the `require_disagreement_notes` rule are reported. Issued via POST because the project id set is supplied in the body. Latency scales with the total scanned simulations x metrics across the requested projects.
+     * Get review disagreement state
+     */
+    getReviewDisagreementState(requestParameters: GetReviewDisagreementStateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPIReviewDisagreementStateResponse>;
 
     /**
      * Creates request options for getReviewProject without sending the request
@@ -225,6 +272,30 @@ export interface ReviewProjectsApiInterface {
      * Get project metric agreement
      */
     getReviewProjectMetricAgreement(requestParameters: GetReviewProjectMetricAgreementRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPIGetProjectMetricAgreementResponse>;
+
+    /**
+     * Creates request options for getReviewProjectProgress without sending the request
+     * @param {string} projectId The project ID (ULID)
+     * @throws {RequiredError}
+     * @memberof ReviewProjectsApiInterface
+     */
+    getReviewProjectProgressRequestOpts(requestParameters: GetReviewProjectProgressRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Project-level human-review completion (total vs completed tasks and percentage) for one review project, so a consumer can poll a project until the humans are done and then pull the labels. Per-reviewer progress is not exposed.
+     * @summary Get review project progress
+     * @param {string} projectId The project ID (ULID)
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ReviewProjectsApiInterface
+     */
+    getReviewProjectProgressRaw(requestParameters: GetReviewProjectProgressRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReviewsAPIReviewProjectProgress>>;
+
+    /**
+     * Project-level human-review completion (total vs completed tasks and percentage) for one review project, so a consumer can poll a project until the humans are done and then pull the labels. Per-reviewer progress is not exposed.
+     * Get review project progress
+     */
+    getReviewProjectProgress(requestParameters: GetReviewProjectProgressRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPIReviewProjectProgress>;
 
     /**
      * Creates request options for listReviewProjects without sending the request
@@ -388,6 +459,59 @@ export class ReviewProjectsApi extends runtime.BaseAPI implements ReviewProjects
      */
     async deleteReviewProject(requestParameters: DeleteReviewProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
         const response = await this.deleteReviewProjectRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for getReviewDisagreementState without sending the request
+     */
+    async getReviewDisagreementStateRequestOpts(requestParameters: GetReviewDisagreementStateRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['covalReviewsAPIGetReviewDisagreementStateRequest'] == null) {
+            throw new runtime.RequiredError(
+                'covalReviewsAPIGetReviewDisagreementStateRequest',
+                'Required parameter "covalReviewsAPIGetReviewDisagreementStateRequest" was null or undefined when calling getReviewDisagreementState().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Reviews_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/review-projects/disagreement-state`;
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CovalReviewsAPIGetReviewDisagreementStateRequestToJSON(requestParameters['covalReviewsAPIGetReviewDisagreementStateRequest']),
+        };
+    }
+
+    /**
+     * Compact unresolved-disagreement state for review-note enforcement, for a set of review projects. Only projects with the `require_disagreement_notes` rule are reported. Issued via POST because the project id set is supplied in the body. Latency scales with the total scanned simulations x metrics across the requested projects.
+     * Get review disagreement state
+     */
+    async getReviewDisagreementStateRaw(requestParameters: GetReviewDisagreementStateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReviewsAPIReviewDisagreementStateResponse>> {
+        const requestOptions = await this.getReviewDisagreementStateRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalReviewsAPIReviewDisagreementStateResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Compact unresolved-disagreement state for review-note enforcement, for a set of review projects. Only projects with the `require_disagreement_notes` rule are reported. Issued via POST because the project id set is supplied in the body. Latency scales with the total scanned simulations x metrics across the requested projects.
+     * Get review disagreement state
+     */
+    async getReviewDisagreementState(requestParameters: GetReviewDisagreementStateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPIReviewDisagreementStateResponse> {
+        const response = await this.getReviewDisagreementStateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -567,6 +691,57 @@ export class ReviewProjectsApi extends runtime.BaseAPI implements ReviewProjects
      */
     async getReviewProjectMetricAgreement(requestParameters: GetReviewProjectMetricAgreementRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPIGetProjectMetricAgreementResponse> {
         const response = await this.getReviewProjectMetricAgreementRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for getReviewProjectProgress without sending the request
+     */
+    async getReviewProjectProgressRequestOpts(requestParameters: GetReviewProjectProgressRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['projectId'] == null) {
+            throw new runtime.RequiredError(
+                'projectId',
+                'Required parameter "projectId" was null or undefined when calling getReviewProjectProgress().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Reviews_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/review-projects/{project_id}/progress`;
+        urlPath = urlPath.replace('{project_id}', encodeURIComponent(String(requestParameters['projectId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Project-level human-review completion (total vs completed tasks and percentage) for one review project, so a consumer can poll a project until the humans are done and then pull the labels. Per-reviewer progress is not exposed.
+     * Get review project progress
+     */
+    async getReviewProjectProgressRaw(requestParameters: GetReviewProjectProgressRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReviewsAPIReviewProjectProgress>> {
+        const requestOptions = await this.getReviewProjectProgressRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalReviewsAPIReviewProjectProgressFromJSON(jsonValue));
+    }
+
+    /**
+     * Project-level human-review completion (total vs completed tasks and percentage) for one review project, so a consumer can poll a project until the humans are done and then pull the labels. Per-reviewer progress is not exposed.
+     * Get review project progress
+     */
+    async getReviewProjectProgress(requestParameters: GetReviewProjectProgressRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPIReviewProjectProgress> {
+        const response = await this.getReviewProjectProgressRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

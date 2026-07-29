@@ -13,13 +13,13 @@
  */
 
 import { mapValues } from '../runtime.js';
-import type { CovalRunsAPIRun } from './CovalRunsAPIRun.js';
+import type { CovalRunsAPIRunResource } from './CovalRunsAPIRunResource.js';
 import {
-    CovalRunsAPIRunFromJSON,
-    CovalRunsAPIRunFromJSONTyped,
-    CovalRunsAPIRunToJSON,
-    CovalRunsAPIRunToJSONTyped,
-} from './CovalRunsAPIRun.js';
+    CovalRunsAPIRunResourceFromJSON,
+    CovalRunsAPIRunResourceFromJSONTyped,
+    CovalRunsAPIRunResourceToJSON,
+    CovalRunsAPIRunResourceToJSONTyped,
+} from './CovalRunsAPIRunResource.js';
 
 /**
  * 
@@ -29,10 +29,10 @@ import {
 export interface ListRuns200Response {
     /**
      * 
-     * @type {Array<CovalRunsAPIRun>}
+     * @type {Array<CovalRunsAPIRunResource>}
      * @memberof ListRuns200Response
      */
-    runs: Array<CovalRunsAPIRun>;
+    runs: Array<CovalRunsAPIRunResource>;
     /**
      * Token for fetching the next page of results
      * @type {string}
@@ -59,7 +59,7 @@ export function ListRuns200ResponseFromJSONTyped(json: any, ignoreDiscriminator:
     }
     return {
         
-        'runs': ((json['runs'] as Array<any>).map(CovalRunsAPIRunFromJSON)),
+        'runs': ((json['runs'] as Array<any>).map(CovalRunsAPIRunResourceFromJSON)),
         'next_page_token': json['next_page_token'] == null ? undefined : json['next_page_token'],
     };
 }
@@ -75,7 +75,7 @@ export function ListRuns200ResponseToJSONTyped(value?: ListRuns200Response | nul
 
     return {
         
-        'runs': ((value['runs'] as Array<any>).map(CovalRunsAPIRunToJSON)),
+        'runs': ((value['runs'] as Array<any>).map(CovalRunsAPIRunResourceToJSON)),
         'next_page_token': value['next_page_token'],
     };
 }

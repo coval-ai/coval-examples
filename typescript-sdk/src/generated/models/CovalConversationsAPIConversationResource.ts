@@ -48,6 +48,13 @@ import {
     CovalConversationsAPIConversationStatusToJSON,
     CovalConversationsAPIConversationStatusToJSONTyped,
 } from './CovalConversationsAPIConversationStatus.js';
+import type { CovalConversationsAPIConversationMetricValue } from './CovalConversationsAPIConversationMetricValue.js';
+import {
+    CovalConversationsAPIConversationMetricValueFromJSON,
+    CovalConversationsAPIConversationMetricValueFromJSONTyped,
+    CovalConversationsAPIConversationMetricValueToJSON,
+    CovalConversationsAPIConversationMetricValueToJSONTyped,
+} from './CovalConversationsAPIConversationMetricValue.js';
 
 /**
  * Conversation resource object.
@@ -161,6 +168,18 @@ export interface CovalConversationsAPIConversationResource {
      */
     metric_outputs?: Array<CovalConversationsAPIMetricOutputResource> | null;
     /**
+     * Every metric's value on this conversation, inline. Present when the list request
+     * sets include=metric_values or filters by metric value (filter=metric.<id> ...);
+     * omitted from the default summary view. On this metric-aware path each conversation is
+     * a summary projection: has_audio is reported false and persona_id / source / destination
+     * are null regardless of the underlying record — fetch GET /v1/conversations/{id} for
+     * authoritative audio, persona, and endpoint values.
+     * 
+     * @type {Array<CovalConversationsAPIConversationMetricValue>}
+     * @memberof CovalConversationsAPIConversationResource
+     */
+    metric_values?: Array<CovalConversationsAPIConversationMetricValue> | null;
+    /**
      * Error message (only present if status=FAILED)
      * @type {string}
      * @memberof CovalConversationsAPIConversationResource
@@ -203,6 +222,7 @@ export function CovalConversationsAPIConversationResourceFromJSONTyped(json: any
         'tags': json['tags'] == null ? undefined : json['tags'],
         'metric_ids': json['metric_ids'] == null ? undefined : json['metric_ids'],
         'metric_outputs': json['metric_outputs'] == null ? undefined : ((json['metric_outputs'] as Array<any>).map(CovalConversationsAPIMetricOutputResourceFromJSON)),
+        'metric_values': json['metric_values'] == null ? undefined : ((json['metric_values'] as Array<any>).map(CovalConversationsAPIConversationMetricValueFromJSON)),
         'error': json['error'] == null ? undefined : json['error'],
     };
 }
@@ -234,6 +254,7 @@ export function CovalConversationsAPIConversationResourceToJSONTyped(value?: Cov
         'tags': value['tags'],
         'metric_ids': value['metric_ids'],
         'metric_outputs': value['metric_outputs'] == null ? undefined : ((value['metric_outputs'] as Array<any>).map(CovalConversationsAPIMetricOutputResourceToJSON)),
+        'metric_values': value['metric_values'] == null ? undefined : ((value['metric_values'] as Array<any>).map(CovalConversationsAPIConversationMetricValueToJSON)),
         'error': value['error'],
     };
 }

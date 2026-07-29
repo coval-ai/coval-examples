@@ -127,6 +127,7 @@ AuthSettings = TypedDict(
         "Coval_Runs_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_Scheduled_Runs_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_Simulations_API_ApiKeyAuth": APIKeyAuthSetting,
+        "Coval_Slack_Integration_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_Tags_API_ApiKeyAuth": APIKeyAuthSetting,
         "Test_Cases_API_apiKey": APIKeyAuthSetting,
         "Test_Sets_API_apiKey": APIKeyAuthSetting,
@@ -689,6 +690,15 @@ conf = coval_sdk.Configuration(
                     'Coval_Simulations_API_ApiKeyAuth',
                 ),
             }
+        if 'Coval_Slack_Integration_API_ApiKeyAuth' in self.api_key:
+            auth['Coval_Slack_Integration_API_ApiKeyAuth'] = {
+                'type': 'api_key',
+                'in': 'header',
+                'key': 'X-API-Key',
+                'value': self.get_api_key_with_prefix(
+                    'Coval_Slack_Integration_API_ApiKeyAuth',
+                ),
+            }
         if 'Coval_Tags_API_ApiKeyAuth' in self.api_key:
             auth['Coval_Tags_API_ApiKeyAuth'] = {
                 'type': 'api_key',
@@ -745,7 +755,7 @@ conf = coval_sdk.Configuration(
                "OS: {env}\n"\
                "Python Version: {pyversion}\n"\
                "Version of the API: 1.0.0\n"\
-               "SDK Package Version: 0.3.1".\
+               "SDK Package Version: 0.4.0".\
                format(env=sys.platform, pyversion=sys.version)
 
     def get_host_settings(self) -> List[HostSetting]:
