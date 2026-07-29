@@ -86,9 +86,34 @@ def patch_response_model_lists() -> int:
   return patched
 
 
+def patch_missing_list_import() -> int:
+  # The generator derives the typing import from field types, but __properties always
+  # annotates ClassVar[List[str]] -- models with no list-typed field end up using List
+  # without importing it. Harmless at import time (annotations are deferred and pydantic
+  # skips ClassVar) but get_type_hints() raises NameError.
+  patched = 0
+  for path in sorted(MODELS.glob("*.py")):
+    contents = path.read_text()
+    if "ClassVar[List[" not in contents:
+      continue
+    if re.search(r"^from typing import .*\bList\b", contents, re.MULTILINE):
+      continue
+
+    match = re.search(r"^from typing import (.+)$", contents, re.MULTILINE)
+    if match is None:
+      raise RuntimeError(f"Generated model uses ClassVar[List] with no typing import: {path}")
+
+    names = sorted({name.strip() for name in match.group(1).split(",")} | {"List"})
+    contents = f"{contents[: match.start()]}from typing import {', '.join(names)}{contents[match.end() :]}"
+    path.write_text(contents)
+    patched += 1
+  return patched
+
+
 def main() -> None:
   patch_api_client()
   patched_lists = patch_response_model_lists()
+  patched_imports = patch_missing_list_import()
   contents = INIT.read_text()
   for name, import_line in EXPORTS:
     if f'    "{name}",' not in contents:
@@ -101,6 +126,7 @@ def main() -> None:
 
   INIT.write_text(contents)
   print(f"  Patched ApiClient and {patched_lists} collection-response list deserializers.")
+  print(f"  Added the missing List import to {patched_imports} generated models.")
   print("  Exported CovalClient, InvalidListItemWarning, and paginate from coval_sdk.")
 
 

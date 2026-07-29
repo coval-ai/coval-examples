@@ -13,13 +13,13 @@
  */
 
 import { mapValues } from '../runtime.js';
-import type { CovalRunsAPIRun } from './CovalRunsAPIRun.js';
+import type { CovalRunsAPIRunResource } from './CovalRunsAPIRunResource.js';
 import {
-    CovalRunsAPIRunFromJSON,
-    CovalRunsAPIRunFromJSONTyped,
-    CovalRunsAPIRunToJSON,
-    CovalRunsAPIRunToJSONTyped,
-} from './CovalRunsAPIRun.js';
+    CovalRunsAPIRunResourceFromJSON,
+    CovalRunsAPIRunResourceFromJSONTyped,
+    CovalRunsAPIRunResourceToJSON,
+    CovalRunsAPIRunResourceToJSONTyped,
+} from './CovalRunsAPIRunResource.js';
 
 /**
  * 
@@ -29,10 +29,10 @@ import {
 export interface CovalRunsAPILaunchRunResponse {
     /**
      * 
-     * @type {CovalRunsAPIRun}
+     * @type {CovalRunsAPIRunResource}
      * @memberof CovalRunsAPILaunchRunResponse
      */
-    run: CovalRunsAPIRun;
+    run: CovalRunsAPIRunResource;
 }
 
 /**
@@ -53,7 +53,7 @@ export function CovalRunsAPILaunchRunResponseFromJSONTyped(json: any, ignoreDisc
     }
     return {
         
-        'run': CovalRunsAPIRunFromJSON(json['run']),
+        'run': CovalRunsAPIRunResourceFromJSON(json['run']),
     };
 }
 
@@ -68,7 +68,7 @@ export function CovalRunsAPILaunchRunResponseToJSONTyped(value?: CovalRunsAPILau
 
     return {
         
-        'run': CovalRunsAPIRunToJSON(value['run']),
+        'run': CovalRunsAPIRunResourceToJSON(value['run']),
     };
 }
 

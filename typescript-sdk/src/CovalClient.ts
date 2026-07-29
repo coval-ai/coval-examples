@@ -21,6 +21,7 @@ import {
   ConversationsApi,
   DashboardsApi,
   type FetchAPI,
+  IntegrationsApi,
   type Middleware,
   MetricOutputsApi,
   MetricsApi,
@@ -65,6 +66,7 @@ export class CovalClient {
   readonly audio: AudioApi;
   readonly conversations: ConversationsApi;
   readonly dashboards: DashboardsApi;
+  readonly integrations: IntegrationsApi;
   readonly metrics: MetricsApi;
   readonly metricOutputs: MetricOutputsApi;
   readonly monitors: MonitorsApi;
@@ -116,6 +118,7 @@ export class CovalClient {
     this.audio = new AudioApi(this.configuration);
     this.conversations = new ConversationsApi(this.configuration);
     this.dashboards = new DashboardsApi(this.configuration);
+    this.integrations = new IntegrationsApi(this.configuration);
     this.metrics = new MetricsApi(this.configuration);
     this.metricOutputs = new MetricOutputsApi(this.configuration);
     this.monitors = new MonitorsApi(this.configuration);

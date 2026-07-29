@@ -54,6 +54,11 @@ import {
     CovalPersonasAPIListBackgroundSoundsResponseToJSON,
 } from '../models/CovalPersonasAPIListBackgroundSoundsResponse.js';
 import {
+    type CovalPersonasAPIListPersonaTagsResponse,
+    CovalPersonasAPIListPersonaTagsResponseFromJSON,
+    CovalPersonasAPIListPersonaTagsResponseToJSON,
+} from '../models/CovalPersonasAPIListPersonaTagsResponse.js';
+import {
     type CovalPersonasAPIListPersonaVersionsResponse,
     CovalPersonasAPIListPersonaVersionsResponseFromJSON,
     CovalPersonasAPIListPersonaVersionsResponseToJSON,
@@ -323,6 +328,28 @@ export interface PersonasApiInterface {
      * List background sounds
      */
     listBackgroundSounds(requestParameters: ListBackgroundSoundsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalPersonasAPIListBackgroundSoundsResponse>;
+
+    /**
+     * Creates request options for listPersonaTags without sending the request
+     * @throws {RequiredError}
+     * @memberof PersonasApiInterface
+     */
+    listPersonaTagsRequestOpts(): Promise<runtime.RequestOpts>;
+
+    /**
+     * Distinct, active tag values used on this organization\'s personas, so callers can discover the valid values for the `tag=` filter on `GET /v1/personas`. `color` is not exposed via the public API (always null). 
+     * @summary List persona tag values
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PersonasApiInterface
+     */
+    listPersonaTagsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalPersonasAPIListPersonaTagsResponse>>;
+
+    /**
+     * Distinct, active tag values used on this organization\'s personas, so callers can discover the valid values for the `tag=` filter on `GET /v1/personas`. `color` is not exposed via the public API (always null). 
+     * List persona tag values
+     */
+    listPersonaTags(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalPersonasAPIListPersonaTagsResponse>;
 
     /**
      * Creates request options for listPersonaVersions without sending the request
@@ -863,6 +890,49 @@ export class PersonasApi extends runtime.BaseAPI implements PersonasApiInterface
      */
     async listBackgroundSounds(requestParameters: ListBackgroundSoundsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalPersonasAPIListBackgroundSoundsResponse> {
         const response = await this.listBackgroundSoundsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for listPersonaTags without sending the request
+     */
+    async listPersonaTagsRequestOpts(): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Personas_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/personas/tags`;
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Distinct, active tag values used on this organization\'s personas, so callers can discover the valid values for the `tag=` filter on `GET /v1/personas`. `color` is not exposed via the public API (always null). 
+     * List persona tag values
+     */
+    async listPersonaTagsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalPersonasAPIListPersonaTagsResponse>> {
+        const requestOptions = await this.listPersonaTagsRequestOpts();
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalPersonasAPIListPersonaTagsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Distinct, active tag values used on this organization\'s personas, so callers can discover the valid values for the `tag=` filter on `GET /v1/personas`. `color` is not exposed via the public API (always null). 
+     * List persona tag values
+     */
+    async listPersonaTags(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalPersonasAPIListPersonaTagsResponse> {
+        const response = await this.listPersonaTagsRaw(initOverrides);
         return await response.value();
     }
 

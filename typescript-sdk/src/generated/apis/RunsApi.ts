@@ -24,6 +24,11 @@ import {
     CovalRunsAPILaunchRunResponseToJSON,
 } from '../models/CovalRunsAPILaunchRunResponse.js';
 import {
+    type CovalRunsAPIListRunTagsResponse,
+    CovalRunsAPIListRunTagsResponseFromJSON,
+    CovalRunsAPIListRunTagsResponseToJSON,
+} from '../models/CovalRunsAPIListRunTagsResponse.js';
+import {
     type CovalRunsAPIUpdateRunRequest,
     CovalRunsAPIUpdateRunRequestFromJSON,
     CovalRunsAPIUpdateRunRequestToJSON,
@@ -61,6 +66,7 @@ export interface ListRunsRequest {
     pageSize?: number;
     pageToken?: string;
     orderBy?: string;
+    include?: ListRunsIncludeEnum;
 }
 
 export interface UpdateRunRequest {
@@ -148,11 +154,34 @@ export interface RunsApiInterface {
     launchRun(requestParameters: LaunchRunRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalRunsAPILaunchRunResponse>;
 
     /**
+     * Creates request options for listRunTags without sending the request
+     * @throws {RequiredError}
+     * @memberof RunsApiInterface
+     */
+    listRunTagsRequestOpts(): Promise<runtime.RequestOpts>;
+
+    /**
+     * Distinct, active tag values used on this organization\'s runs, so callers can discover the valid values for the `tag=` filter on `GET /v1/runs`. `color` is not exposed via the public API (always null). 
+     * @summary List run tag values
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RunsApiInterface
+     */
+    listRunTagsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalRunsAPIListRunTagsResponse>>;
+
+    /**
+     * Distinct, active tag values used on this organization\'s runs, so callers can discover the valid values for the `tag=` filter on `GET /v1/runs`. `color` is not exposed via the public API (always null). 
+     * List run tag values
+     */
+    listRunTags(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalRunsAPIListRunTagsResponse>;
+
+    /**
      * Creates request options for listRuns without sending the request
-     * @param {string} [filter] Filter expression syntax.  Supported fields: &#x60;status&#x60;, &#x60;agent_id&#x60;, &#x60;persona_id&#x60;, &#x60;test_set_id&#x60;, &#x60;create_time&#x60;, &#x60;update_time&#x60;, &#x60;created_by&#x60;, &#x60;tag&#x60;  Operators: &#x60;&#x3D;&#x60;, &#x60;!&#x3D;&#x60;, &#x60;&gt;&#x60;, &#x60;&lt;&#x60;, &#x60;&gt;&#x3D;&#x60;, &#x60;&lt;&#x3D;&#x60;, &#x60;AND&#x60;, &#x60;OR&#x60;  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., &#x60;status&#x3D;\&quot;IN PROGRESS\&quot;&#x60;). 
+     * @param {string} [filter] Filter expression syntax.  Supported fields: &#x60;status&#x60;, &#x60;agent_id&#x60;, &#x60;persona_id&#x60;, &#x60;test_set_id&#x60;, &#x60;create_time&#x60;, &#x60;update_time&#x60;, &#x60;created_by&#x60;, &#x60;tag&#x60;, &#x60;metric.{metric_id}&#x60;  Operators: &#x60;&#x3D;&#x60;, &#x60;!&#x3D;&#x60;, &#x60;&gt;&#x60;, &#x60;&lt;&#x60;, &#x60;&gt;&#x3D;&#x60;, &#x60;&lt;&#x3D;&#x60;, &#x60;AND&#x60;, &#x60;OR&#x60;  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., &#x60;status&#x3D;\&quot;IN PROGRESS\&quot;&#x60;).  **Metric-value filtering:** a &#x60;metric.{metric_id}&#x60; predicate (e.g. &#x60;metric.29Blkepvvx&lt;\&quot;0.9\&quot;&#x60;; &#x60;&gt;&#x60;/&#x60;&lt;&#x60;/&#x60;&gt;&#x3D;&#x60;/&#x60;&lt;&#x3D;&#x60;/&#x60;&#x3D;&#x60;/&#x60;!&#x3D;&#x60; for number metrics, &#x60;&#x3D;&#x60;/&#x60;!&#x3D;&#x60; for string metrics; type inferred from the literal) returns only runs whose metric matches, with each run\&#39;s per-metric averages embedded inline (&#x60;metric_averages&#x60;). On this path the request is keyset-paginated, ordered newest-first by creation time, and supports only &#x60;AND&#x60; alongside &#x60;create_time&#x60; (inclusive bounds), &#x60;status&#x60;, &#x60;agent_id&#x60;, &#x60;test_set_id&#x60;, and &#x60;persona_id&#x60;; other fields and any non-default &#x60;order_by&#x60; are rejected with 400, and &#x60;page_size&#x60; is capped at 100. 
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response
      * @param {string} [orderBy] Sort order specification.  Format: &#x60;field&#x60; or &#x60;-field&#x60; (descending)  Supported fields: &#x60;create_time&#x60;, &#x60;update_time&#x60;, &#x60;status&#x60;, &#x60;agent_id&#x60;, &#x60;persona_id&#x60;, &#x60;test_set_id&#x60; 
+     * @param {'metric_averages'} [include] Set to &#x60;metric_averages&#x60; to embed each run\&#39;s average value per metric inline. Served by the keyset engine (newest-first, &#x60;page_size&#x60; capped at 100). 
      * @throws {RequiredError}
      * @memberof RunsApiInterface
      */
@@ -161,10 +190,11 @@ export interface RunsApiInterface {
     /**
      * Retrieve a paginated list of simulation runs with optional filtering and sorting. 
      * @summary List runs
-     * @param {string} [filter] Filter expression syntax.  Supported fields: &#x60;status&#x60;, &#x60;agent_id&#x60;, &#x60;persona_id&#x60;, &#x60;test_set_id&#x60;, &#x60;create_time&#x60;, &#x60;update_time&#x60;, &#x60;created_by&#x60;, &#x60;tag&#x60;  Operators: &#x60;&#x3D;&#x60;, &#x60;!&#x3D;&#x60;, &#x60;&gt;&#x60;, &#x60;&lt;&#x60;, &#x60;&gt;&#x3D;&#x60;, &#x60;&lt;&#x3D;&#x60;, &#x60;AND&#x60;, &#x60;OR&#x60;  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., &#x60;status&#x3D;\&quot;IN PROGRESS\&quot;&#x60;). 
+     * @param {string} [filter] Filter expression syntax.  Supported fields: &#x60;status&#x60;, &#x60;agent_id&#x60;, &#x60;persona_id&#x60;, &#x60;test_set_id&#x60;, &#x60;create_time&#x60;, &#x60;update_time&#x60;, &#x60;created_by&#x60;, &#x60;tag&#x60;, &#x60;metric.{metric_id}&#x60;  Operators: &#x60;&#x3D;&#x60;, &#x60;!&#x3D;&#x60;, &#x60;&gt;&#x60;, &#x60;&lt;&#x60;, &#x60;&gt;&#x3D;&#x60;, &#x60;&lt;&#x3D;&#x60;, &#x60;AND&#x60;, &#x60;OR&#x60;  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., &#x60;status&#x3D;\&quot;IN PROGRESS\&quot;&#x60;).  **Metric-value filtering:** a &#x60;metric.{metric_id}&#x60; predicate (e.g. &#x60;metric.29Blkepvvx&lt;\&quot;0.9\&quot;&#x60;; &#x60;&gt;&#x60;/&#x60;&lt;&#x60;/&#x60;&gt;&#x3D;&#x60;/&#x60;&lt;&#x3D;&#x60;/&#x60;&#x3D;&#x60;/&#x60;!&#x3D;&#x60; for number metrics, &#x60;&#x3D;&#x60;/&#x60;!&#x3D;&#x60; for string metrics; type inferred from the literal) returns only runs whose metric matches, with each run\&#39;s per-metric averages embedded inline (&#x60;metric_averages&#x60;). On this path the request is keyset-paginated, ordered newest-first by creation time, and supports only &#x60;AND&#x60; alongside &#x60;create_time&#x60; (inclusive bounds), &#x60;status&#x60;, &#x60;agent_id&#x60;, &#x60;test_set_id&#x60;, and &#x60;persona_id&#x60;; other fields and any non-default &#x60;order_by&#x60; are rejected with 400, and &#x60;page_size&#x60; is capped at 100. 
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response
      * @param {string} [orderBy] Sort order specification.  Format: &#x60;field&#x60; or &#x60;-field&#x60; (descending)  Supported fields: &#x60;create_time&#x60;, &#x60;update_time&#x60;, &#x60;status&#x60;, &#x60;agent_id&#x60;, &#x60;persona_id&#x60;, &#x60;test_set_id&#x60; 
+     * @param {'metric_averages'} [include] Set to &#x60;metric_averages&#x60; to embed each run\&#39;s average value per metric inline. Served by the keyset engine (newest-first, &#x60;page_size&#x60; capped at 100). 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RunsApiInterface
@@ -366,6 +396,49 @@ export class RunsApi extends runtime.BaseAPI implements RunsApiInterface {
     }
 
     /**
+     * Creates request options for listRunTags without sending the request
+     */
+    async listRunTagsRequestOpts(): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Runs_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/runs/tags`;
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Distinct, active tag values used on this organization\'s runs, so callers can discover the valid values for the `tag=` filter on `GET /v1/runs`. `color` is not exposed via the public API (always null). 
+     * List run tag values
+     */
+    async listRunTagsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalRunsAPIListRunTagsResponse>> {
+        const requestOptions = await this.listRunTagsRequestOpts();
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalRunsAPIListRunTagsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Distinct, active tag values used on this organization\'s runs, so callers can discover the valid values for the `tag=` filter on `GET /v1/runs`. `color` is not exposed via the public API (always null). 
+     * List run tag values
+     */
+    async listRunTags(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalRunsAPIListRunTagsResponse> {
+        const response = await this.listRunTagsRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for listRuns without sending the request
      */
     async listRunsRequestOpts(requestParameters: ListRunsRequest): Promise<runtime.RequestOpts> {
@@ -385,6 +458,10 @@ export class RunsApi extends runtime.BaseAPI implements RunsApiInterface {
 
         if (requestParameters['orderBy'] != null) {
             queryParameters['order_by'] = requestParameters['orderBy'];
+        }
+
+        if (requestParameters['include'] != null) {
+            queryParameters['include'] = requestParameters['include'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -486,3 +563,11 @@ export class RunsApi extends runtime.BaseAPI implements RunsApiInterface {
     }
 
 }
+
+/**
+ * @export
+ */
+export const ListRunsIncludeEnum = {
+    MetricAverages: 'metric_averages'
+} as const;
+export type ListRunsIncludeEnum = typeof ListRunsIncludeEnum[keyof typeof ListRunsIncludeEnum];

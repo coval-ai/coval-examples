@@ -38,7 +38,7 @@ describe('apiKeyAuthMiddleware', () => {
   it('exposes every generated API surface', () => {
     const coval = new CovalClient({ apiKey: 'test-key' });
     const properties = [
-      'agents', 'apiKeys', 'audio', 'conversations', 'dashboards', 'metricOutputs',
+      'agents', 'apiKeys', 'audio', 'conversations', 'dashboards', 'integrations', 'metricOutputs',
       'metrics', 'monitorEvents', 'monitors', 'mutations', 'organizationConversationsConfig',
       'personas', 'reports', 'reviewAnnotations', 'reviewProjects', 'runs', 'runTemplates',
       'scheduledRuns', 'simulations', 'tags', 'testCases', 'testSets',

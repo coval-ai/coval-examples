@@ -16,11 +16,12 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictStr
+from pydantic import Field, StrictStr, field_validator
 from typing import Any, Dict, Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_runs_api_launch_run_request import CovalRunsAPILaunchRunRequest
 from coval_sdk.models.coval_runs_api_launch_run_response import CovalRunsAPILaunchRunResponse
+from coval_sdk.models.coval_runs_api_list_run_tags_response import CovalRunsAPIListRunTagsResponse
 from coval_sdk.models.coval_runs_api_update_run_request import CovalRunsAPIUpdateRunRequest
 from coval_sdk.models.get_run200_response import GetRun200Response
 from coval_sdk.models.list_runs200_response import ListRuns200Response
@@ -876,12 +877,271 @@ class RunsApi:
 
 
     @validate_call
+    def list_run_tags(
+        self,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> CovalRunsAPIListRunTagsResponse:
+        """List run tag values
+
+        Distinct, active tag values used on this organization's runs, so callers can discover the valid values for the `tag=` filter on `GET /v1/runs`. `color` is not exposed via the public API (always null). 
+
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._list_run_tags_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalRunsAPIListRunTagsResponse",
+            '401': "ListRuns400Response",
+            '403': "ListRuns400Response",
+            '500': "ListRuns400Response",
+            '503': "ListRuns400Response",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def list_run_tags_with_http_info(
+        self,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[CovalRunsAPIListRunTagsResponse]:
+        """List run tag values
+
+        Distinct, active tag values used on this organization's runs, so callers can discover the valid values for the `tag=` filter on `GET /v1/runs`. `color` is not exposed via the public API (always null). 
+
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._list_run_tags_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalRunsAPIListRunTagsResponse",
+            '401': "ListRuns400Response",
+            '403': "ListRuns400Response",
+            '500': "ListRuns400Response",
+            '503': "ListRuns400Response",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def list_run_tags_without_preload_content(
+        self,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """List run tag values
+
+        Distinct, active tag values used on this organization's runs, so callers can discover the valid values for the `tag=` filter on `GET /v1/runs`. `color` is not exposed via the public API (always null). 
+
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._list_run_tags_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalRunsAPIListRunTagsResponse",
+            '401': "ListRuns400Response",
+            '403': "ListRuns400Response",
+            '500': "ListRuns400Response",
+            '503': "ListRuns400Response",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _list_run_tags_serialize(
+        self,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'Coval_Runs_API_ApiKeyAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/runs/tags',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
     def list_runs(
         self,
-        filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `create_time`, `update_time`, `created_by`, `tag`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`). ")] = None,
+        filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `create_time`, `update_time`, `created_by`, `tag`, `metric.{metric_id}`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`).  **Metric-value filtering:** a `metric.{metric_id}` predicate (e.g. `metric.29Blkepvvx<\"0.9\"`; `>`/`<`/`>=`/`<=`/`=`/`!=` for number metrics, `=`/`!=` for string metrics; type inferred from the literal) returns only runs whose metric matches, with each run's per-metric averages embedded inline (`metric_averages`). On this path the request is keyset-paginated, ordered newest-first by creation time, and supports only `AND` alongside `create_time` (inclusive bounds), `status`, `agent_id`, `test_set_id`, and `persona_id`; other fields and any non-default `order_by` are rejected with 400, and `page_size` is capped at 100. ")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `create_time`, `update_time`, `status`, `agent_id`, `persona_id`, `test_set_id` ")] = None,
+        include: Annotated[Optional[StrictStr], Field(description="Set to `metric_averages` to embed each run's average value per metric inline. Served by the keyset engine (newest-first, `page_size` capped at 100). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -899,7 +1159,7 @@ class RunsApi:
 
         Retrieve a paginated list of simulation runs with optional filtering and sorting. 
 
-        :param filter: Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `create_time`, `update_time`, `created_by`, `tag`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`). 
+        :param filter: Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `create_time`, `update_time`, `created_by`, `tag`, `metric.{metric_id}`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`).  **Metric-value filtering:** a `metric.{metric_id}` predicate (e.g. `metric.29Blkepvvx<\"0.9\"`; `>`/`<`/`>=`/`<=`/`=`/`!=` for number metrics, `=`/`!=` for string metrics; type inferred from the literal) returns only runs whose metric matches, with each run's per-metric averages embedded inline (`metric_averages`). On this path the request is keyset-paginated, ordered newest-first by creation time, and supports only `AND` alongside `create_time` (inclusive bounds), `status`, `agent_id`, `test_set_id`, and `persona_id`; other fields and any non-default `order_by` are rejected with 400, and `page_size` is capped at 100. 
         :type filter: str
         :param page_size: Maximum number of results per page
         :type page_size: int
@@ -907,6 +1167,8 @@ class RunsApi:
         :type page_token: str
         :param order_by: Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `create_time`, `update_time`, `status`, `agent_id`, `persona_id`, `test_set_id` 
         :type order_by: str
+        :param include: Set to `metric_averages` to embed each run's average value per metric inline. Served by the keyset engine (newest-first, `page_size` capped at 100). 
+        :type include: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -934,6 +1196,7 @@ class RunsApi:
             page_size=page_size,
             page_token=page_token,
             order_by=order_by,
+            include=include,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -960,10 +1223,11 @@ class RunsApi:
     @validate_call
     def list_runs_with_http_info(
         self,
-        filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `create_time`, `update_time`, `created_by`, `tag`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`). ")] = None,
+        filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `create_time`, `update_time`, `created_by`, `tag`, `metric.{metric_id}`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`).  **Metric-value filtering:** a `metric.{metric_id}` predicate (e.g. `metric.29Blkepvvx<\"0.9\"`; `>`/`<`/`>=`/`<=`/`=`/`!=` for number metrics, `=`/`!=` for string metrics; type inferred from the literal) returns only runs whose metric matches, with each run's per-metric averages embedded inline (`metric_averages`). On this path the request is keyset-paginated, ordered newest-first by creation time, and supports only `AND` alongside `create_time` (inclusive bounds), `status`, `agent_id`, `test_set_id`, and `persona_id`; other fields and any non-default `order_by` are rejected with 400, and `page_size` is capped at 100. ")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `create_time`, `update_time`, `status`, `agent_id`, `persona_id`, `test_set_id` ")] = None,
+        include: Annotated[Optional[StrictStr], Field(description="Set to `metric_averages` to embed each run's average value per metric inline. Served by the keyset engine (newest-first, `page_size` capped at 100). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -981,7 +1245,7 @@ class RunsApi:
 
         Retrieve a paginated list of simulation runs with optional filtering and sorting. 
 
-        :param filter: Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `create_time`, `update_time`, `created_by`, `tag`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`). 
+        :param filter: Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `create_time`, `update_time`, `created_by`, `tag`, `metric.{metric_id}`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`).  **Metric-value filtering:** a `metric.{metric_id}` predicate (e.g. `metric.29Blkepvvx<\"0.9\"`; `>`/`<`/`>=`/`<=`/`=`/`!=` for number metrics, `=`/`!=` for string metrics; type inferred from the literal) returns only runs whose metric matches, with each run's per-metric averages embedded inline (`metric_averages`). On this path the request is keyset-paginated, ordered newest-first by creation time, and supports only `AND` alongside `create_time` (inclusive bounds), `status`, `agent_id`, `test_set_id`, and `persona_id`; other fields and any non-default `order_by` are rejected with 400, and `page_size` is capped at 100. 
         :type filter: str
         :param page_size: Maximum number of results per page
         :type page_size: int
@@ -989,6 +1253,8 @@ class RunsApi:
         :type page_token: str
         :param order_by: Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `create_time`, `update_time`, `status`, `agent_id`, `persona_id`, `test_set_id` 
         :type order_by: str
+        :param include: Set to `metric_averages` to embed each run's average value per metric inline. Served by the keyset engine (newest-first, `page_size` capped at 100). 
+        :type include: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1016,6 +1282,7 @@ class RunsApi:
             page_size=page_size,
             page_token=page_token,
             order_by=order_by,
+            include=include,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1042,10 +1309,11 @@ class RunsApi:
     @validate_call
     def list_runs_without_preload_content(
         self,
-        filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `create_time`, `update_time`, `created_by`, `tag`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`). ")] = None,
+        filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `create_time`, `update_time`, `created_by`, `tag`, `metric.{metric_id}`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`).  **Metric-value filtering:** a `metric.{metric_id}` predicate (e.g. `metric.29Blkepvvx<\"0.9\"`; `>`/`<`/`>=`/`<=`/`=`/`!=` for number metrics, `=`/`!=` for string metrics; type inferred from the literal) returns only runs whose metric matches, with each run's per-metric averages embedded inline (`metric_averages`). On this path the request is keyset-paginated, ordered newest-first by creation time, and supports only `AND` alongside `create_time` (inclusive bounds), `status`, `agent_id`, `test_set_id`, and `persona_id`; other fields and any non-default `order_by` are rejected with 400, and `page_size` is capped at 100. ")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `create_time`, `update_time`, `status`, `agent_id`, `persona_id`, `test_set_id` ")] = None,
+        include: Annotated[Optional[StrictStr], Field(description="Set to `metric_averages` to embed each run's average value per metric inline. Served by the keyset engine (newest-first, `page_size` capped at 100). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1063,7 +1331,7 @@ class RunsApi:
 
         Retrieve a paginated list of simulation runs with optional filtering and sorting. 
 
-        :param filter: Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `create_time`, `update_time`, `created_by`, `tag`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`). 
+        :param filter: Filter expression syntax.  Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `create_time`, `update_time`, `created_by`, `tag`, `metric.{metric_id}`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`).  **Metric-value filtering:** a `metric.{metric_id}` predicate (e.g. `metric.29Blkepvvx<\"0.9\"`; `>`/`<`/`>=`/`<=`/`=`/`!=` for number metrics, `=`/`!=` for string metrics; type inferred from the literal) returns only runs whose metric matches, with each run's per-metric averages embedded inline (`metric_averages`). On this path the request is keyset-paginated, ordered newest-first by creation time, and supports only `AND` alongside `create_time` (inclusive bounds), `status`, `agent_id`, `test_set_id`, and `persona_id`; other fields and any non-default `order_by` are rejected with 400, and `page_size` is capped at 100. 
         :type filter: str
         :param page_size: Maximum number of results per page
         :type page_size: int
@@ -1071,6 +1339,8 @@ class RunsApi:
         :type page_token: str
         :param order_by: Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `create_time`, `update_time`, `status`, `agent_id`, `persona_id`, `test_set_id` 
         :type order_by: str
+        :param include: Set to `metric_averages` to embed each run's average value per metric inline. Served by the keyset engine (newest-first, `page_size` capped at 100). 
+        :type include: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1098,6 +1368,7 @@ class RunsApi:
             page_size=page_size,
             page_token=page_token,
             order_by=order_by,
+            include=include,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1123,6 +1394,7 @@ class RunsApi:
         page_size,
         page_token,
         order_by,
+        include,
         _request_auth,
         _content_type,
         _headers,
@@ -1160,6 +1432,10 @@ class RunsApi:
         if order_by is not None:
             
             _query_params.append(('order_by', order_by))
+            
+        if include is not None:
+            
+            _query_params.append(('include', include))
             
         # process the header parameters
         # process the form parameters

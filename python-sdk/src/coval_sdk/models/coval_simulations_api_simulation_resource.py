@@ -19,8 +19,8 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from coval_sdk.models.coval_simulations_api_simulation_resource_destination import CovalSimulationsAPISimulationResourceDestination
 from coval_sdk.models.coval_simulations_api_simulation_resource_source import CovalSimulationsAPISimulationResourceSource
 from typing import Optional, Set
@@ -48,8 +48,9 @@ class CovalSimulationsAPISimulationResource(BaseModel):
     mutation_name: Optional[StrictStr] = Field(default=None, description="Display name of the mutation variant, or null for base agent simulations.")
     notes: Optional[StrictStr] = Field(default=None, description="Free-text notes attached to the simulation. Settable via PATCH /simulations/{simulation_id}.")
     is_public: Optional[StrictBool] = Field(default=None, description="Whether the simulation is shared via a public link. Settable via PATCH /simulations/{simulation_id}.")
+    metric_values: Optional[Dict[str, Union[StrictFloat, StrictInt]]] = Field(default=None, description="Numeric value per metric on this simulation, keyed by metric id. Present when the list request sets include=metric_values or filters by metric value (filter=metric.<id> ...); omitted from the default summary view. Only numeric (float) metric values are included — string-metric values are not. On this metric-aware path the simulation is a summary projection: has_audio and is_public are reported false and test_case_id / mutation / endpoint fields are null regardless of the record — fetch GET /v1/simulations/{id} for authoritative values. ")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "simulation_id", "run_id", "status", "create_time", "agent_id", "persona_id", "test_set_id", "test_case_id", "has_audio", "source", "destination", "error_message", "mutation_id", "mutation_name", "notes", "is_public"]
+    __properties: ClassVar[List[str]] = ["name", "simulation_id", "run_id", "status", "create_time", "agent_id", "persona_id", "test_set_id", "test_case_id", "has_audio", "source", "destination", "error_message", "mutation_id", "mutation_name", "notes", "is_public", "metric_values"]
 
     @field_validator('status')
     def status_validate_enum(cls, value):
@@ -160,6 +161,11 @@ class CovalSimulationsAPISimulationResource(BaseModel):
         if self.notes is None and "notes" in self.model_fields_set:
             _dict['notes'] = None
 
+        # set to None if metric_values (nullable) is None
+        # and model_fields_set contains the field
+        if self.metric_values is None and "metric_values" in self.model_fields_set:
+            _dict['metric_values'] = None
+
         return _dict
 
     @classmethod
@@ -188,7 +194,8 @@ class CovalSimulationsAPISimulationResource(BaseModel):
             "mutation_id": obj.get("mutation_id"),
             "mutation_name": obj.get("mutation_name"),
             "notes": obj.get("notes"),
-            "is_public": obj.get("is_public")
+            "is_public": obj.get("is_public"),
+            "metric_values": obj.get("metric_values")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

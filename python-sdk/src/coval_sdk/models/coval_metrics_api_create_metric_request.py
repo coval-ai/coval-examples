@@ -45,12 +45,13 @@ class CovalMetricsAPICreateMetricRequest(BaseModel):
     regex_pattern: Optional[StrictStr] = Field(default=None, description="Regex pattern. Required for METRIC_TRANSCRIPT_REGEX.")
     role: Optional[StrictStr] = Field(default=None, description="Speaker role filter. Optional for METRIC_TRANSCRIPT_REGEX.")
     min_pause_duration_seconds: Optional[Union[Annotated[float, Field(strict=True, ge=0.5)], Annotated[int, Field(strict=True, ge=1)]]] = Field(default=None, description="Min pause duration in seconds. Required for METRIC_PAUSE_ANALYSIS.")
+    sql_query: Optional[Annotated[str, Field(strict=True, max_length=50000)]] = Field(default=None, description="SQL query run against the simulation's data. Required for METRIC_SQL_FLOAT. The query returns one row per timestamp with a numeric `value` and a `start_offset_milliseconds`; set `aggregation_method` (SUM, AVERAGE, MIN, MAX, or COUNT; default AVERAGE) to reduce those rows to a single value, and `unit` for the reported unit. ")
     include_traces: Optional[StrictBool] = Field(default=None, description="Inject OTel trace context into the LLM judge prompt during evaluation. Supported for LLM judge metric types only (`METRIC_LLM_BINARY`, `METRIC_CATEGORICAL`, `METRIC_NUMERICAL_LLM_JUDGE`, `METRIC_AUDIO_LLM_BINARY`, `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`). ")
     runtime_config: Optional[CovalMetricsAPIMetricRuntimeConfig] = Field(default=None, description="Override the LLM model used for metric evaluation. If omitted, the platform default model is used. Use `GET /v1/models/metric` to list available models. Not supported for audio metric types (`METRIC_AUDIO_LLM_BINARY`, `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`), which always use the platform-default audio model. ")
     target_condition: Optional[CovalMetricsAPITargetCondition] = Field(default=None, description="Target condition for metric evaluation")
     tags: Optional[List[StrictStr]] = Field(default=None, description="Tags to associate with this metric. Null or omitted creates the metric with no tags. Pass [] for an empty tag list.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["metric_name", "description", "metric_type", "prompt", "categories", "min_value", "max_value", "metadata_field_type", "metadata_field_key", "regex_pattern", "role", "min_pause_duration_seconds", "include_traces", "runtime_config", "target_condition", "tags"]
+    __properties: ClassVar[List[str]] = ["metric_name", "description", "metric_type", "prompt", "categories", "min_value", "max_value", "metadata_field_type", "metadata_field_key", "regex_pattern", "role", "min_pause_duration_seconds", "sql_query", "include_traces", "runtime_config", "target_condition", "tags"]
 
     @field_validator('role')
     def role_validate_enum(cls, value):
@@ -148,6 +149,7 @@ class CovalMetricsAPICreateMetricRequest(BaseModel):
             "regex_pattern": obj.get("regex_pattern"),
             "role": obj.get("role"),
             "min_pause_duration_seconds": obj.get("min_pause_duration_seconds"),
+            "sql_query": obj.get("sql_query"),
             "include_traces": obj.get("include_traces"),
             "runtime_config": CovalMetricsAPIMetricRuntimeConfig.from_dict(obj["runtime_config"]) if obj.get("runtime_config") is not None else None,
             "target_condition": CovalMetricsAPITargetCondition.from_dict(obj["target_condition"]) if obj.get("target_condition") is not None else None,

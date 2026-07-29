@@ -31,12 +31,6 @@ export interface CovalSimulationsAPIRerunMetricsRequest {
      * @memberof CovalSimulationsAPIRerunMetricsRequest
      */
     metric_ids: Array<string>;
-    /**
-     * Optional developer routing id; only applied when the endpoint runs in the dev environment (ignored in production).
-     * @type {string}
-     * @memberof CovalSimulationsAPIRerunMetricsRequest
-     */
-    dev_id?: string;
 }
 
 /**
@@ -60,7 +54,6 @@ export function CovalSimulationsAPIRerunMetricsRequestFromJSONTyped(json: any, i
         
         'simulation_ids': json['simulation_ids'],
         'metric_ids': json['metric_ids'],
-        'dev_id': json['dev_id'] == null ? undefined : json['dev_id'],
     };
 }
 
@@ -77,7 +70,6 @@ export function CovalSimulationsAPIRerunMetricsRequestToJSONTyped(value?: CovalS
         
         'simulation_ids': value['simulation_ids'],
         'metric_ids': value['metric_ids'],
-        'dev_id': value['dev_id'],
     };
 }
 

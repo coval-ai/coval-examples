@@ -22,6 +22,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
+from coval_sdk.models.coval_conversations_api_conversation_metric_value import CovalConversationsAPIConversationMetricValue
 from coval_sdk.models.coval_conversations_api_conversation_progress import CovalConversationsAPIConversationProgress
 from coval_sdk.models.coval_conversations_api_conversation_resource_destination import CovalConversationsAPIConversationResourceDestination
 from coval_sdk.models.coval_conversations_api_conversation_resource_source import CovalConversationsAPIConversationResourceSource
@@ -51,9 +52,10 @@ class CovalConversationsAPIConversationResource(BaseModel):
     tags: Optional[List[StrictStr]] = Field(default=None, description="Tags applied to this conversation")
     metric_ids: Optional[List[Annotated[str, Field(min_length=22, strict=True, max_length=26)]]] = Field(default=None, description="List of metric IDs configured for this conversation.  Use GET /v1/conversations/{id}/metrics to retrieve computed metric values. ")
     metric_outputs: Optional[List[CovalConversationsAPIMetricOutputResource]] = Field(default=None, description="Full outputs matching the requested metric_id. Present only when the list request sets include=metric_outputs; omitted from the default summary view. ")
+    metric_values: Optional[List[CovalConversationsAPIConversationMetricValue]] = Field(default=None, description="Every metric's value on this conversation, inline. Present when the list request sets include=metric_values or filters by metric value (filter=metric.<id> ...); omitted from the default summary view. On this metric-aware path each conversation is a summary projection: has_audio is reported false and persona_id / source / destination are null regardless of the underlying record — fetch GET /v1/conversations/{id} for authoritative audio, persona, and endpoint values. ")
     error: Optional[StrictStr] = Field(default=None, description="Error message (only present if status=FAILED)")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "conversation_id", "status", "create_time", "external_conversation_id", "occurred_at", "has_audio", "agent_id", "persona_id", "source", "destination", "progress", "metadata", "tags", "metric_ids", "metric_outputs", "error"]
+    __properties: ClassVar[List[str]] = ["name", "conversation_id", "status", "create_time", "external_conversation_id", "occurred_at", "has_audio", "agent_id", "persona_id", "source", "destination", "progress", "metadata", "tags", "metric_ids", "metric_outputs", "metric_values", "error"]
 
     @field_validator('agent_id')
     def agent_id_validate_regular_expression(cls, value):
@@ -125,6 +127,13 @@ class CovalConversationsAPIConversationResource(BaseModel):
                 if _item_metric_outputs:
                     _items.append(_item_metric_outputs.to_dict())
             _dict['metric_outputs'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in metric_values (list)
+        _items = []
+        if self.metric_values:
+            for _item_metric_values in self.metric_values:
+                if _item_metric_values:
+                    _items.append(_item_metric_values.to_dict())
+            _dict['metric_values'] = _items
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -154,6 +163,11 @@ class CovalConversationsAPIConversationResource(BaseModel):
         # and model_fields_set contains the field
         if self.metric_outputs is None and "metric_outputs" in self.model_fields_set:
             _dict['metric_outputs'] = None
+
+        # set to None if metric_values (nullable) is None
+        # and model_fields_set contains the field
+        if self.metric_values is None and "metric_values" in self.model_fields_set:
+            _dict['metric_values'] = None
 
         # set to None if error (nullable) is None
         # and model_fields_set contains the field
@@ -188,6 +202,7 @@ class CovalConversationsAPIConversationResource(BaseModel):
             "tags": obj.get("tags"),
             "metric_ids": obj.get("metric_ids"),
             "metric_outputs": [CovalConversationsAPIMetricOutputResource.from_dict(_item) for _item in obj["metric_outputs"]] if obj.get("metric_outputs") is not None else None,
+            "metric_values": [CovalConversationsAPIConversationMetricValue.from_dict(_item) for _item in obj["metric_values"]] if obj.get("metric_values") is not None else None,
             "error": obj.get("error")
         })
         # store additional fields in additional_properties

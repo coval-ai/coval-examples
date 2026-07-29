@@ -19,15 +19,30 @@ import {
     CovalMetricsAPIBaselineToJSON,
 } from '../models/CovalMetricsAPIBaseline.js';
 import {
+    type CovalMetricsAPIBaselineHistoryResponse,
+    CovalMetricsAPIBaselineHistoryResponseFromJSON,
+    CovalMetricsAPIBaselineHistoryResponseToJSON,
+} from '../models/CovalMetricsAPIBaselineHistoryResponse.js';
+import {
     type CovalMetricsAPIBaselineStatus,
     CovalMetricsAPIBaselineStatusFromJSON,
     CovalMetricsAPIBaselineStatusToJSON,
 } from '../models/CovalMetricsAPIBaselineStatus.js';
 import {
+    type CovalMetricsAPIBatchGetMetricOutputsRequest,
+    CovalMetricsAPIBatchGetMetricOutputsRequestFromJSON,
+    CovalMetricsAPIBatchGetMetricOutputsRequestToJSON,
+} from '../models/CovalMetricsAPIBatchGetMetricOutputsRequest.js';
+import {
     type CovalMetricsAPICreateMetricBaselineRequest,
     CovalMetricsAPICreateMetricBaselineRequestFromJSON,
     CovalMetricsAPICreateMetricBaselineRequestToJSON,
 } from '../models/CovalMetricsAPICreateMetricBaselineRequest.js';
+import {
+    type CovalMetricsAPICreateMetricFlowRequest,
+    CovalMetricsAPICreateMetricFlowRequestFromJSON,
+    CovalMetricsAPICreateMetricFlowRequestToJSON,
+} from '../models/CovalMetricsAPICreateMetricFlowRequest.js';
 import {
     type CovalMetricsAPICreateMetricRequest,
     CovalMetricsAPICreateMetricRequestFromJSON,
@@ -69,10 +84,20 @@ import {
     CovalMetricsAPIListMetricBaselinesResponseToJSON,
 } from '../models/CovalMetricsAPIListMetricBaselinesResponse.js';
 import {
+    type CovalMetricsAPIListMetricFlowsResponse,
+    CovalMetricsAPIListMetricFlowsResponseFromJSON,
+    CovalMetricsAPIListMetricFlowsResponseToJSON,
+} from '../models/CovalMetricsAPIListMetricFlowsResponse.js';
+import {
     type CovalMetricsAPIListMetricModelsResponse,
     CovalMetricsAPIListMetricModelsResponseFromJSON,
     CovalMetricsAPIListMetricModelsResponseToJSON,
 } from '../models/CovalMetricsAPIListMetricModelsResponse.js';
+import {
+    type CovalMetricsAPIListMetricTagsResponse,
+    CovalMetricsAPIListMetricTagsResponseFromJSON,
+    CovalMetricsAPIListMetricTagsResponseToJSON,
+} from '../models/CovalMetricsAPIListMetricTagsResponse.js';
 import {
     type CovalMetricsAPIListMetricVersionsResponse,
     CovalMetricsAPIListMetricVersionsResponseFromJSON,
@@ -94,6 +119,16 @@ import {
     CovalMetricsAPIListThresholdsResponseToJSON,
 } from '../models/CovalMetricsAPIListThresholdsResponse.js';
 import {
+    type CovalMetricsAPIMetricFlowResponse,
+    CovalMetricsAPIMetricFlowResponseFromJSON,
+    CovalMetricsAPIMetricFlowResponseToJSON,
+} from '../models/CovalMetricsAPIMetricFlowResponse.js';
+import {
+    type CovalMetricsAPIMetricOutputCollection,
+    CovalMetricsAPIMetricOutputCollectionFromJSON,
+    CovalMetricsAPIMetricOutputCollectionToJSON,
+} from '../models/CovalMetricsAPIMetricOutputCollection.js';
+import {
     type CovalMetricsAPIPatchThresholdRequest,
     CovalMetricsAPIPatchThresholdRequestFromJSON,
     CovalMetricsAPIPatchThresholdRequestToJSON,
@@ -103,6 +138,11 @@ import {
     CovalMetricsAPIPatchThresholdResponseFromJSON,
     CovalMetricsAPIPatchThresholdResponseToJSON,
 } from '../models/CovalMetricsAPIPatchThresholdResponse.js';
+import {
+    type CovalMetricsAPISimulationDataFramesSchemaResponse,
+    CovalMetricsAPISimulationDataFramesSchemaResponseFromJSON,
+    CovalMetricsAPISimulationDataFramesSchemaResponseToJSON,
+} from '../models/CovalMetricsAPISimulationDataFramesSchemaResponse.js';
 import {
     type CovalMetricsAPITestMetricRequest,
     CovalMetricsAPITestMetricRequestFromJSON,
@@ -114,15 +154,34 @@ import {
     CovalMetricsAPITestMetricResponseToJSON,
 } from '../models/CovalMetricsAPITestMetricResponse.js';
 import {
+    type CovalMetricsAPITestSqlMetricRequest,
+    CovalMetricsAPITestSqlMetricRequestFromJSON,
+    CovalMetricsAPITestSqlMetricRequestToJSON,
+} from '../models/CovalMetricsAPITestSqlMetricRequest.js';
+import {
+    type CovalMetricsAPITestSqlMetricResponse,
+    CovalMetricsAPITestSqlMetricResponseFromJSON,
+    CovalMetricsAPITestSqlMetricResponseToJSON,
+} from '../models/CovalMetricsAPITestSqlMetricResponse.js';
+import {
     type CovalMetricsAPIUpdateMetricBaselineRequest,
     CovalMetricsAPIUpdateMetricBaselineRequestFromJSON,
     CovalMetricsAPIUpdateMetricBaselineRequestToJSON,
 } from '../models/CovalMetricsAPIUpdateMetricBaselineRequest.js';
 import {
+    type CovalMetricsAPIUpdateMetricFlowRequest,
+    CovalMetricsAPIUpdateMetricFlowRequestFromJSON,
+    CovalMetricsAPIUpdateMetricFlowRequestToJSON,
+} from '../models/CovalMetricsAPIUpdateMetricFlowRequest.js';
+import {
     type CovalMetricsAPIUpdateMetricRequest,
     CovalMetricsAPIUpdateMetricRequestFromJSON,
     CovalMetricsAPIUpdateMetricRequestToJSON,
 } from '../models/CovalMetricsAPIUpdateMetricRequest.js';
+
+export interface BatchGetMetricOutputsRequest {
+    covalMetricsAPIBatchGetMetricOutputsRequest: CovalMetricsAPIBatchGetMetricOutputsRequest;
+}
 
 export interface CreateMetricRequest {
     covalMetricsAPICreateMetricRequest: CovalMetricsAPICreateMetricRequest;
@@ -131,6 +190,10 @@ export interface CreateMetricRequest {
 export interface CreateMetricBaselineRequest {
     metricId: string;
     covalMetricsAPICreateMetricBaselineRequest: CovalMetricsAPICreateMetricBaselineRequest;
+}
+
+export interface CreateMetricFlowRequest {
+    covalMetricsAPICreateMetricFlowRequest: CovalMetricsAPICreateMetricFlowRequest;
 }
 
 export interface CreateMetricThresholdRequest {
@@ -145,6 +208,10 @@ export interface DeleteMetricRequest {
 export interface DeleteMetricBaselineRequest {
     metricId: string;
     baselineId: string;
+}
+
+export interface DeleteMetricFlowRequest {
+    flowId: string;
 }
 
 export interface DeleteMetricThresholdRequest {
@@ -162,6 +229,15 @@ export interface GetMetricBaselineRequest {
     sigmaLevels?: Array<number>;
 }
 
+export interface GetMetricBaselineHistoryRequest {
+    metricId: string;
+    baselineId: string;
+    bucketInterval?: string;
+    timezone?: string;
+    startDate?: Date;
+    endDate?: Date;
+}
+
 export interface GetMetricThresholdRequest {
     metricId: string;
 }
@@ -175,6 +251,14 @@ export interface ListMetricBaselinesRequest {
     pageSize?: number;
     pageToken?: string;
     sigmaLevels?: Array<number>;
+}
+
+export interface ListMetricFlowsRequest {
+    pageSize?: number;
+    pageToken?: string;
+    orderBy?: string;
+    statusFilter?: ListMetricFlowsStatusFilterEnum;
+    searchQuery?: string;
 }
 
 export interface ListMetricThresholdsRequest {
@@ -210,6 +294,10 @@ export interface TestMetricRequest {
     covalMetricsAPITestMetricRequest: CovalMetricsAPITestMetricRequest;
 }
 
+export interface TestSqlMetricRequest {
+    covalMetricsAPITestSqlMetricRequest: CovalMetricsAPITestSqlMetricRequest;
+}
+
 export interface UpdateMetricRequest {
     metricId: string;
     covalMetricsAPIUpdateMetricRequest: CovalMetricsAPIUpdateMetricRequest;
@@ -219,6 +307,11 @@ export interface UpdateMetricBaselineRequest {
     metricId: string;
     baselineId: string;
     covalMetricsAPIUpdateMetricBaselineRequest: CovalMetricsAPIUpdateMetricBaselineRequest;
+}
+
+export interface UpdateMetricFlowRequest {
+    flowId: string;
+    covalMetricsAPIUpdateMetricFlowRequest: CovalMetricsAPIUpdateMetricFlowRequest;
 }
 
 export interface UpdateMetricThresholdRequest {
@@ -233,6 +326,30 @@ export interface UpdateMetricThresholdRequest {
  * @interface MetricsApiInterface
  */
 export interface MetricsApiInterface {
+    /**
+     * Creates request options for batchGetMetricOutputs without sending the request
+     * @param {CovalMetricsAPIBatchGetMetricOutputsRequest} covalMetricsAPIBatchGetMetricOutputsRequest 
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    batchGetMetricOutputsRequestOpts(requestParameters: BatchGetMetricOutputsRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Resolve up to 100 metric-output ULIDs to their full metric-output resources. Use this to read the results of `POST /v1/metrics/{metric_id}/test` — which returns a `metric_output_ulid` — without having to know the parent simulation. Org-scoped and best-effort: ULIDs that do not exist or belong to another organization are omitted from the response rather than erroring, so the returned list may be shorter than the request (and empty if none match). Returns the same `SimpleMetricOutput` shape as `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}`. 
+     * @summary Batch-get metric outputs by ULID
+     * @param {CovalMetricsAPIBatchGetMetricOutputsRequest} covalMetricsAPIBatchGetMetricOutputsRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    batchGetMetricOutputsRaw(requestParameters: BatchGetMetricOutputsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIMetricOutputCollection>>;
+
+    /**
+     * Resolve up to 100 metric-output ULIDs to their full metric-output resources. Use this to read the results of `POST /v1/metrics/{metric_id}/test` — which returns a `metric_output_ulid` — without having to know the parent simulation. Org-scoped and best-effort: ULIDs that do not exist or belong to another organization are omitted from the response rather than erroring, so the returned list may be shorter than the request (and empty if none match). Returns the same `SimpleMetricOutput` shape as `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}`. 
+     * Batch-get metric outputs by ULID
+     */
+    batchGetMetricOutputs(requestParameters: BatchGetMetricOutputsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIMetricOutputCollection>;
+
     /**
      * Creates request options for createMetric without sending the request
      * @param {CovalMetricsAPICreateMetricRequest} covalMetricsAPICreateMetricRequest 
@@ -282,6 +399,30 @@ export interface MetricsApiInterface {
      * Create metric baseline
      */
     createMetricBaseline(requestParameters: CreateMetricBaselineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIBaseline>;
+
+    /**
+     * Creates request options for createMetricFlow without sending the request
+     * @param {CovalMetricsAPICreateMetricFlowRequest} covalMetricsAPICreateMetricFlowRequest 
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    createMetricFlowRequestOpts(requestParameters: CreateMetricFlowRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Create a metric flow. Both referenced metrics must be visible to the organization workspace. Scoped to the `X-Coval-Workspace-Id` header when present. 
+     * @summary Create a metric flow
+     * @param {CovalMetricsAPICreateMetricFlowRequest} covalMetricsAPICreateMetricFlowRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    createMetricFlowRaw(requestParameters: CreateMetricFlowRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIMetricFlowResponse>>;
+
+    /**
+     * Create a metric flow. Both referenced metrics must be visible to the organization workspace. Scoped to the `X-Coval-Workspace-Id` header when present. 
+     * Create a metric flow
+     */
+    createMetricFlow(requestParameters: CreateMetricFlowRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIMetricFlowResponse>;
 
     /**
      * Creates request options for createMetricThreshold without sending the request
@@ -358,6 +499,30 @@ export interface MetricsApiInterface {
      * Delete metric baseline
      */
     deleteMetricBaseline(requestParameters: DeleteMetricBaselineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void>;
+
+    /**
+     * Creates request options for deleteMetricFlow without sending the request
+     * @param {string} flowId The metric flow ID.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    deleteMetricFlowRequestOpts(requestParameters: DeleteMetricFlowRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Soft-delete a metric flow. Scoped to the `X-Coval-Workspace-Id` header when present. 
+     * @summary Delete a metric flow
+     * @param {string} flowId The metric flow ID.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    deleteMetricFlowRaw(requestParameters: DeleteMetricFlowRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>>;
+
+    /**
+     * Soft-delete a metric flow. Scoped to the `X-Coval-Workspace-Id` header when present. 
+     * Delete a metric flow
+     */
+    deleteMetricFlow(requestParameters: DeleteMetricFlowRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object>;
 
     /**
      * Creates request options for deleteMetricThreshold without sending the request
@@ -438,6 +603,40 @@ export interface MetricsApiInterface {
     getMetricBaseline(requestParameters: GetMetricBaselineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIBaseline>;
 
     /**
+     * Creates request options for getMetricBaselineHistory without sending the request
+     * @param {string} metricId Metric ID.
+     * @param {string} baselineId Baseline ULID.
+     * @param {string} [bucketInterval] Bucket width (e.g. \&quot;4 hours\&quot;; default \&quot;4 hours\&quot;).
+     * @param {string} [timezone] IANA timezone for bucketing (default UTC).
+     * @param {Date} [startDate] 
+     * @param {Date} [endDate] 
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    getMetricBaselineHistoryRequestOpts(requestParameters: GetMetricBaselineHistoryRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Baseline mean/sigma history over time buckets.
+     * @summary Get baseline history
+     * @param {string} metricId Metric ID.
+     * @param {string} baselineId Baseline ULID.
+     * @param {string} [bucketInterval] Bucket width (e.g. \&quot;4 hours\&quot;; default \&quot;4 hours\&quot;).
+     * @param {string} [timezone] IANA timezone for bucketing (default UTC).
+     * @param {Date} [startDate] 
+     * @param {Date} [endDate] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    getMetricBaselineHistoryRaw(requestParameters: GetMetricBaselineHistoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIBaselineHistoryResponse>>;
+
+    /**
+     * Baseline mean/sigma history over time buckets.
+     * Get baseline history
+     */
+    getMetricBaselineHistory(requestParameters: GetMetricBaselineHistoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIBaselineHistoryResponse>;
+
+    /**
      * Creates request options for getMetricThreshold without sending the request
      * @param {string} metricId 22-character metric ID
      * @throws {RequiredError}
@@ -460,6 +659,28 @@ export interface MetricsApiInterface {
      * Get metric threshold
      */
     getMetricThreshold(requestParameters: GetMetricThresholdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetThresholdResponse>;
+
+    /**
+     * Creates request options for getSqlMetricSchema without sending the request
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    getSqlMetricSchemaRequestOpts(): Promise<runtime.RequestOpts>;
+
+    /**
+     * Return the materialized frame tables, their columns, and the sample rows a draft SQL metric query (`POST /v1/metrics/sql:test`) runs against. The schema is derived from the global frame materializers, so it is org-agnostic and identical for every caller. 
+     * @summary Get the SQL metric schema
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    getSqlMetricSchemaRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPISimulationDataFramesSchemaResponse>>;
+
+    /**
+     * Return the materialized frame tables, their columns, and the sample rows a draft SQL metric query (`POST /v1/metrics/sql:test`) runs against. The schema is derived from the global frame materializers, so it is org-agnostic and identical for every caller. 
+     * Get the SQL metric schema
+     */
+    getSqlMetricSchema(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPISimulationDataFramesSchemaResponse>;
 
     /**
      * Creates request options for listMetricBaselines without sending the request
@@ -500,6 +721,38 @@ export interface MetricsApiInterface {
     listMetricBaselines(requestParameters: ListMetricBaselinesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListMetricBaselinesResponse>;
 
     /**
+     * Creates request options for listMetricFlows without sending the request
+     * @param {number} [pageSize] Number of results per page (1-100, default 50).
+     * @param {string} [pageToken] Pagination token from a previous response\&#39;s &#x60;next_page_token&#x60;.
+     * @param {string} [orderBy] Sort field, optionally prefixed with &#x60;-&#x60; for descending. One of &#x60;created_at&#x60;, &#x60;status&#x60;, &#x60;trigger_metric_name&#x60;, &#x60;followup_metric_name&#x60;. Defaults to &#x60;-created_at&#x60;. 
+     * @param {'ACTIVE' | 'INACTIVE'} [statusFilter] Restrict to a single status.
+     * @param {string} [searchQuery] Case-insensitive match against trigger/followup metric names.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    listMetricFlowsRequestOpts(requestParameters: ListMetricFlowsRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * List metric flows — a follow-up metric triggered by a trigger metric\'s result. Scoped to the workspace named by the `X-Coval-Workspace-Id` header when present. 
+     * @summary List metric flows
+     * @param {number} [pageSize] Number of results per page (1-100, default 50).
+     * @param {string} [pageToken] Pagination token from a previous response\&#39;s &#x60;next_page_token&#x60;.
+     * @param {string} [orderBy] Sort field, optionally prefixed with &#x60;-&#x60; for descending. One of &#x60;created_at&#x60;, &#x60;status&#x60;, &#x60;trigger_metric_name&#x60;, &#x60;followup_metric_name&#x60;. Defaults to &#x60;-created_at&#x60;. 
+     * @param {'ACTIVE' | 'INACTIVE'} [statusFilter] Restrict to a single status.
+     * @param {string} [searchQuery] Case-insensitive match against trigger/followup metric names.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    listMetricFlowsRaw(requestParameters: ListMetricFlowsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIListMetricFlowsResponse>>;
+
+    /**
+     * List metric flows — a follow-up metric triggered by a trigger metric\'s result. Scoped to the workspace named by the `X-Coval-Workspace-Id` header when present. 
+     * List metric flows
+     */
+    listMetricFlows(requestParameters: ListMetricFlowsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListMetricFlowsResponse>;
+
+    /**
      * Creates request options for listMetricModels without sending the request
      * @throws {RequiredError}
      * @memberof MetricsApiInterface
@@ -520,6 +773,28 @@ export interface MetricsApiInterface {
      * List available metric models
      */
     listMetricModels(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListMetricModelsResponse>;
+
+    /**
+     * Creates request options for listMetricTags without sending the request
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    listMetricTagsRequestOpts(): Promise<runtime.RequestOpts>;
+
+    /**
+     * Distinct, active tag values used on this organization\'s metrics, so callers can discover the valid values for the `tag=` filter on `GET /v1/metrics`. `color` is not exposed via the public API (always null). 
+     * @summary List metric tag values
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    listMetricTagsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIListMetricTagsResponse>>;
+
+    /**
+     * Distinct, active tag values used on this organization\'s metrics, so callers can discover the valid values for the `tag=` filter on `GET /v1/metrics`. `color` is not exposed via the public API (always null). 
+     * List metric tag values
+     */
+    listMetricTags(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListMetricTagsResponse>;
 
     /**
      * Creates request options for listMetricTemplateVariables without sending the request
@@ -728,6 +1003,30 @@ export interface MetricsApiInterface {
     testMetric(requestParameters: TestMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPITestMetricResponse>;
 
     /**
+     * Creates request options for testSqlMetric without sending the request
+     * @param {CovalMetricsAPITestSqlMetricRequest} covalMetricsAPITestSqlMetricRequest 
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    testSqlMetricRequestOpts(requestParameters: TestSqlMetricRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Run a draft SQL Float metric query against a fixed sample `SimulationDataFrames` artifact and return the value it would produce. This is org-agnostic pure compute — it never touches your organization\'s data — so it needs no metric to exist yet and makes no changes.  Use `GET /v1/metrics/sql-schema` to discover the tables, columns, and sample rows your query runs against. The query must return the columns `start_offset_milliseconds` and `value`.  Routine authoring failures (invalid SQL, no matching rows) return `200` with a populated `error` field rather than an HTTP error; only a malformed request body is a `400`. 
+     * @summary Test a draft SQL metric query
+     * @param {CovalMetricsAPITestSqlMetricRequest} covalMetricsAPITestSqlMetricRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    testSqlMetricRaw(requestParameters: TestSqlMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPITestSqlMetricResponse>>;
+
+    /**
+     * Run a draft SQL Float metric query against a fixed sample `SimulationDataFrames` artifact and return the value it would produce. This is org-agnostic pure compute — it never touches your organization\'s data — so it needs no metric to exist yet and makes no changes.  Use `GET /v1/metrics/sql-schema` to discover the tables, columns, and sample rows your query runs against. The query must return the columns `start_offset_milliseconds` and `value`.  Routine authoring failures (invalid SQL, no matching rows) return `200` with a populated `error` field rather than an HTTP error; only a malformed request body is a `400`. 
+     * Test a draft SQL metric query
+     */
+    testSqlMetric(requestParameters: TestSqlMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPITestSqlMetricResponse>;
+
+    /**
      * Creates request options for updateMetric without sending the request
      * @param {string} metricId 22-character metric ID
      * @param {CovalMetricsAPIUpdateMetricRequest} covalMetricsAPIUpdateMetricRequest 
@@ -782,6 +1081,32 @@ export interface MetricsApiInterface {
     updateMetricBaseline(requestParameters: UpdateMetricBaselineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIBaseline>;
 
     /**
+     * Creates request options for updateMetricFlow without sending the request
+     * @param {string} flowId The metric flow ID.
+     * @param {CovalMetricsAPIUpdateMetricFlowRequest} covalMetricsAPIUpdateMetricFlowRequest 
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    updateMetricFlowRequestOpts(requestParameters: UpdateMetricFlowRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Replace a metric flow\'s trigger/followup metrics, status, and (when provided) trigger criteria. Scoped to the `X-Coval-Workspace-Id` header when present. 
+     * @summary Update a metric flow
+     * @param {string} flowId The metric flow ID.
+     * @param {CovalMetricsAPIUpdateMetricFlowRequest} covalMetricsAPIUpdateMetricFlowRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    updateMetricFlowRaw(requestParameters: UpdateMetricFlowRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIMetricFlowResponse>>;
+
+    /**
+     * Replace a metric flow\'s trigger/followup metrics, status, and (when provided) trigger criteria. Scoped to the `X-Coval-Workspace-Id` header when present. 
+     * Update a metric flow
+     */
+    updateMetricFlow(requestParameters: UpdateMetricFlowRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIMetricFlowResponse>;
+
+    /**
      * Creates request options for updateMetricThreshold without sending the request
      * @param {string} metricId 22-character metric ID
      * @param {CovalMetricsAPIPatchThresholdRequest} covalMetricsAPIPatchThresholdRequest 
@@ -813,6 +1138,59 @@ export interface MetricsApiInterface {
  * 
  */
 export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
+
+    /**
+     * Creates request options for batchGetMetricOutputs without sending the request
+     */
+    async batchGetMetricOutputsRequestOpts(requestParameters: BatchGetMetricOutputsRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['covalMetricsAPIBatchGetMetricOutputsRequest'] == null) {
+            throw new runtime.RequiredError(
+                'covalMetricsAPIBatchGetMetricOutputsRequest',
+                'Required parameter "covalMetricsAPIBatchGetMetricOutputsRequest" was null or undefined when calling batchGetMetricOutputs().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/metrics/outputs:batchGet`;
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CovalMetricsAPIBatchGetMetricOutputsRequestToJSON(requestParameters['covalMetricsAPIBatchGetMetricOutputsRequest']),
+        };
+    }
+
+    /**
+     * Resolve up to 100 metric-output ULIDs to their full metric-output resources. Use this to read the results of `POST /v1/metrics/{metric_id}/test` — which returns a `metric_output_ulid` — without having to know the parent simulation. Org-scoped and best-effort: ULIDs that do not exist or belong to another organization are omitted from the response rather than erroring, so the returned list may be shorter than the request (and empty if none match). Returns the same `SimpleMetricOutput` shape as `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}`. 
+     * Batch-get metric outputs by ULID
+     */
+    async batchGetMetricOutputsRaw(requestParameters: BatchGetMetricOutputsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIMetricOutputCollection>> {
+        const requestOptions = await this.batchGetMetricOutputsRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPIMetricOutputCollectionFromJSON(jsonValue));
+    }
+
+    /**
+     * Resolve up to 100 metric-output ULIDs to their full metric-output resources. Use this to read the results of `POST /v1/metrics/{metric_id}/test` — which returns a `metric_output_ulid` — without having to know the parent simulation. Org-scoped and best-effort: ULIDs that do not exist or belong to another organization are omitted from the response rather than erroring, so the returned list may be shorter than the request (and empty if none match). Returns the same `SimpleMetricOutput` shape as `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}`. 
+     * Batch-get metric outputs by ULID
+     */
+    async batchGetMetricOutputs(requestParameters: BatchGetMetricOutputsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIMetricOutputCollection> {
+        const response = await this.batchGetMetricOutputsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
 
     /**
      * Creates request options for createMetric without sending the request
@@ -925,6 +1303,59 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
      */
     async createMetricBaseline(requestParameters: CreateMetricBaselineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIBaseline> {
         const response = await this.createMetricBaselineRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for createMetricFlow without sending the request
+     */
+    async createMetricFlowRequestOpts(requestParameters: CreateMetricFlowRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['covalMetricsAPICreateMetricFlowRequest'] == null) {
+            throw new runtime.RequiredError(
+                'covalMetricsAPICreateMetricFlowRequest',
+                'Required parameter "covalMetricsAPICreateMetricFlowRequest" was null or undefined when calling createMetricFlow().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/metrics/flows`;
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CovalMetricsAPICreateMetricFlowRequestToJSON(requestParameters['covalMetricsAPICreateMetricFlowRequest']),
+        };
+    }
+
+    /**
+     * Create a metric flow. Both referenced metrics must be visible to the organization workspace. Scoped to the `X-Coval-Workspace-Id` header when present. 
+     * Create a metric flow
+     */
+    async createMetricFlowRaw(requestParameters: CreateMetricFlowRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIMetricFlowResponse>> {
+        const requestOptions = await this.createMetricFlowRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPIMetricFlowResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Create a metric flow. Both referenced metrics must be visible to the organization workspace. Scoped to the `X-Coval-Workspace-Id` header when present. 
+     * Create a metric flow
+     */
+    async createMetricFlow(requestParameters: CreateMetricFlowRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIMetricFlowResponse> {
+        const response = await this.createMetricFlowRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -1096,6 +1527,57 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
      */
     async deleteMetricBaseline(requestParameters: DeleteMetricBaselineRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.deleteMetricBaselineRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Creates request options for deleteMetricFlow without sending the request
+     */
+    async deleteMetricFlowRequestOpts(requestParameters: DeleteMetricFlowRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['flowId'] == null) {
+            throw new runtime.RequiredError(
+                'flowId',
+                'Required parameter "flowId" was null or undefined when calling deleteMetricFlow().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/metrics/flows/{flow_id}`;
+        urlPath = urlPath.replace('{flow_id}', encodeURIComponent(String(requestParameters['flowId'])));
+
+        return {
+            path: urlPath,
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Soft-delete a metric flow. Scoped to the `X-Coval-Workspace-Id` header when present. 
+     * Delete a metric flow
+     */
+    async deleteMetricFlowRaw(requestParameters: DeleteMetricFlowRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+        const requestOptions = await this.deleteMetricFlowRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * Soft-delete a metric flow. Scoped to the `X-Coval-Workspace-Id` header when present. 
+     * Delete a metric flow
+     */
+    async deleteMetricFlow(requestParameters: DeleteMetricFlowRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+        const response = await this.deleteMetricFlowRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**
@@ -1272,6 +1754,81 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
+     * Creates request options for getMetricBaselineHistory without sending the request
+     */
+    async getMetricBaselineHistoryRequestOpts(requestParameters: GetMetricBaselineHistoryRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['metricId'] == null) {
+            throw new runtime.RequiredError(
+                'metricId',
+                'Required parameter "metricId" was null or undefined when calling getMetricBaselineHistory().'
+            );
+        }
+
+        if (requestParameters['baselineId'] == null) {
+            throw new runtime.RequiredError(
+                'baselineId',
+                'Required parameter "baselineId" was null or undefined when calling getMetricBaselineHistory().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['bucketInterval'] != null) {
+            queryParameters['bucket_interval'] = requestParameters['bucketInterval'];
+        }
+
+        if (requestParameters['timezone'] != null) {
+            queryParameters['timezone'] = requestParameters['timezone'];
+        }
+
+        if (requestParameters['startDate'] != null) {
+            queryParameters['start_date'] = (requestParameters['startDate'] as any).toISOString();
+        }
+
+        if (requestParameters['endDate'] != null) {
+            queryParameters['end_date'] = (requestParameters['endDate'] as any).toISOString();
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/metrics/{metric_id}/baselines/{baseline_id}/history`;
+        urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
+        urlPath = urlPath.replace('{baseline_id}', encodeURIComponent(String(requestParameters['baselineId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Baseline mean/sigma history over time buckets.
+     * Get baseline history
+     */
+    async getMetricBaselineHistoryRaw(requestParameters: GetMetricBaselineHistoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIBaselineHistoryResponse>> {
+        const requestOptions = await this.getMetricBaselineHistoryRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPIBaselineHistoryResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Baseline mean/sigma history over time buckets.
+     * Get baseline history
+     */
+    async getMetricBaselineHistory(requestParameters: GetMetricBaselineHistoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIBaselineHistoryResponse> {
+        const response = await this.getMetricBaselineHistoryRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for getMetricThreshold without sending the request
      */
     async getMetricThresholdRequestOpts(requestParameters: GetMetricThresholdRequest): Promise<runtime.RequestOpts> {
@@ -1319,6 +1876,49 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
      */
     async getMetricThreshold(requestParameters: GetMetricThresholdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetThresholdResponse> {
         const response = await this.getMetricThresholdRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for getSqlMetricSchema without sending the request
+     */
+    async getSqlMetricSchemaRequestOpts(): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/metrics/sql-schema`;
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Return the materialized frame tables, their columns, and the sample rows a draft SQL metric query (`POST /v1/metrics/sql:test`) runs against. The schema is derived from the global frame materializers, so it is org-agnostic and identical for every caller. 
+     * Get the SQL metric schema
+     */
+    async getSqlMetricSchemaRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPISimulationDataFramesSchemaResponse>> {
+        const requestOptions = await this.getSqlMetricSchemaRequestOpts();
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPISimulationDataFramesSchemaResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Return the materialized frame tables, their columns, and the sample rows a draft SQL metric query (`POST /v1/metrics/sql:test`) runs against. The schema is derived from the global frame materializers, so it is org-agnostic and identical for every caller. 
+     * Get the SQL metric schema
+     */
+    async getSqlMetricSchema(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPISimulationDataFramesSchemaResponse> {
+        const response = await this.getSqlMetricSchemaRaw(initOverrides);
         return await response.value();
     }
 
@@ -1402,6 +2002,69 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
+     * Creates request options for listMetricFlows without sending the request
+     */
+    async listMetricFlowsRequestOpts(requestParameters: ListMetricFlowsRequest): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['pageToken'] != null) {
+            queryParameters['page_token'] = requestParameters['pageToken'];
+        }
+
+        if (requestParameters['orderBy'] != null) {
+            queryParameters['order_by'] = requestParameters['orderBy'];
+        }
+
+        if (requestParameters['statusFilter'] != null) {
+            queryParameters['status_filter'] = requestParameters['statusFilter'];
+        }
+
+        if (requestParameters['searchQuery'] != null) {
+            queryParameters['search_query'] = requestParameters['searchQuery'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/metrics/flows`;
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * List metric flows — a follow-up metric triggered by a trigger metric\'s result. Scoped to the workspace named by the `X-Coval-Workspace-Id` header when present. 
+     * List metric flows
+     */
+    async listMetricFlowsRaw(requestParameters: ListMetricFlowsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIListMetricFlowsResponse>> {
+        const requestOptions = await this.listMetricFlowsRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPIListMetricFlowsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * List metric flows — a follow-up metric triggered by a trigger metric\'s result. Scoped to the workspace named by the `X-Coval-Workspace-Id` header when present. 
+     * List metric flows
+     */
+    async listMetricFlows(requestParameters: ListMetricFlowsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListMetricFlowsResponse> {
+        const response = await this.listMetricFlowsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for listMetricModels without sending the request
      */
     async listMetricModelsRequestOpts(): Promise<runtime.RequestOpts> {
@@ -1441,6 +2104,49 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
      */
     async listMetricModels(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListMetricModelsResponse> {
         const response = await this.listMetricModelsRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for listMetricTags without sending the request
+     */
+    async listMetricTagsRequestOpts(): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/metrics/tags`;
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Distinct, active tag values used on this organization\'s metrics, so callers can discover the valid values for the `tag=` filter on `GET /v1/metrics`. `color` is not exposed via the public API (always null). 
+     * List metric tag values
+     */
+    async listMetricTagsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIListMetricTagsResponse>> {
+        const requestOptions = await this.listMetricTagsRequestOpts();
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPIListMetricTagsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Distinct, active tag values used on this organization\'s metrics, so callers can discover the valid values for the `tag=` filter on `GET /v1/metrics`. `color` is not exposed via the public API (always null). 
+     * List metric tag values
+     */
+    async listMetricTags(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListMetricTagsResponse> {
+        const response = await this.listMetricTagsRaw(initOverrides);
         return await response.value();
     }
 
@@ -1879,6 +2585,59 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
+     * Creates request options for testSqlMetric without sending the request
+     */
+    async testSqlMetricRequestOpts(requestParameters: TestSqlMetricRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['covalMetricsAPITestSqlMetricRequest'] == null) {
+            throw new runtime.RequiredError(
+                'covalMetricsAPITestSqlMetricRequest',
+                'Required parameter "covalMetricsAPITestSqlMetricRequest" was null or undefined when calling testSqlMetric().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/metrics/sql:test`;
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CovalMetricsAPITestSqlMetricRequestToJSON(requestParameters['covalMetricsAPITestSqlMetricRequest']),
+        };
+    }
+
+    /**
+     * Run a draft SQL Float metric query against a fixed sample `SimulationDataFrames` artifact and return the value it would produce. This is org-agnostic pure compute — it never touches your organization\'s data — so it needs no metric to exist yet and makes no changes.  Use `GET /v1/metrics/sql-schema` to discover the tables, columns, and sample rows your query runs against. The query must return the columns `start_offset_milliseconds` and `value`.  Routine authoring failures (invalid SQL, no matching rows) return `200` with a populated `error` field rather than an HTTP error; only a malformed request body is a `400`. 
+     * Test a draft SQL metric query
+     */
+    async testSqlMetricRaw(requestParameters: TestSqlMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPITestSqlMetricResponse>> {
+        const requestOptions = await this.testSqlMetricRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPITestSqlMetricResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Run a draft SQL Float metric query against a fixed sample `SimulationDataFrames` artifact and return the value it would produce. This is org-agnostic pure compute — it never touches your organization\'s data — so it needs no metric to exist yet and makes no changes.  Use `GET /v1/metrics/sql-schema` to discover the tables, columns, and sample rows your query runs against. The query must return the columns `start_offset_milliseconds` and `value`.  Routine authoring failures (invalid SQL, no matching rows) return `200` with a populated `error` field rather than an HTTP error; only a malformed request body is a `400`. 
+     * Test a draft SQL metric query
+     */
+    async testSqlMetric(requestParameters: TestSqlMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPITestSqlMetricResponse> {
+        const response = await this.testSqlMetricRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for updateMetric without sending the request
      */
     async updateMetricRequestOpts(requestParameters: UpdateMetricRequest): Promise<runtime.RequestOpts> {
@@ -2009,6 +2768,67 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
+     * Creates request options for updateMetricFlow without sending the request
+     */
+    async updateMetricFlowRequestOpts(requestParameters: UpdateMetricFlowRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['flowId'] == null) {
+            throw new runtime.RequiredError(
+                'flowId',
+                'Required parameter "flowId" was null or undefined when calling updateMetricFlow().'
+            );
+        }
+
+        if (requestParameters['covalMetricsAPIUpdateMetricFlowRequest'] == null) {
+            throw new runtime.RequiredError(
+                'covalMetricsAPIUpdateMetricFlowRequest',
+                'Required parameter "covalMetricsAPIUpdateMetricFlowRequest" was null or undefined when calling updateMetricFlow().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/metrics/flows/{flow_id}`;
+        urlPath = urlPath.replace('{flow_id}', encodeURIComponent(String(requestParameters['flowId'])));
+
+        return {
+            path: urlPath,
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CovalMetricsAPIUpdateMetricFlowRequestToJSON(requestParameters['covalMetricsAPIUpdateMetricFlowRequest']),
+        };
+    }
+
+    /**
+     * Replace a metric flow\'s trigger/followup metrics, status, and (when provided) trigger criteria. Scoped to the `X-Coval-Workspace-Id` header when present. 
+     * Update a metric flow
+     */
+    async updateMetricFlowRaw(requestParameters: UpdateMetricFlowRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIMetricFlowResponse>> {
+        const requestOptions = await this.updateMetricFlowRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPIMetricFlowResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Replace a metric flow\'s trigger/followup metrics, status, and (when provided) trigger criteria. Scoped to the `X-Coval-Workspace-Id` header when present. 
+     * Update a metric flow
+     */
+    async updateMetricFlow(requestParameters: UpdateMetricFlowRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIMetricFlowResponse> {
+        const response = await this.updateMetricFlowRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for updateMetricThreshold without sending the request
      */
     async updateMetricThresholdRequestOpts(requestParameters: UpdateMetricThresholdRequest): Promise<runtime.RequestOpts> {
@@ -2070,3 +2890,12 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
 }
+
+/**
+ * @export
+ */
+export const ListMetricFlowsStatusFilterEnum = {
+    Active: 'ACTIVE',
+    Inactive: 'INACTIVE'
+} as const;
+export type ListMetricFlowsStatusFilterEnum = typeof ListMetricFlowsStatusFilterEnum[keyof typeof ListMetricFlowsStatusFilterEnum];

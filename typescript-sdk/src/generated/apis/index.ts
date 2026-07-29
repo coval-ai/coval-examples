@@ -5,6 +5,7 @@ export * from './AgentsApi.js';
 export * from './AudioApi.js';
 export * from './ConversationsApi.js';
 export * from './DashboardsApi.js';
+export * from './IntegrationsApi.js';
 export * from './MetricOutputsApi.js';
 export * from './MetricsApi.js';
 export * from './MonitorEventsApi.js';

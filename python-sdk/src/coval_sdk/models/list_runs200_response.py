@@ -21,7 +21,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from coval_sdk.models.coval_runs_api_run import CovalRunsAPIRun
+from coval_sdk.models.coval_runs_api_run_resource import CovalRunsAPIRunResource
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -30,7 +30,7 @@ class ListRuns200Response(BaseModel):
     """
     ListRuns200Response
     """ # noqa: E501
-    runs: List[CovalRunsAPIRun]
+    runs: List[CovalRunsAPIRunResource]
     next_page_token: Optional[StrictStr] = Field(default=None, description="Token for fetching the next page of results")
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["runs", "next_page_token"]
@@ -100,7 +100,7 @@ class ListRuns200Response(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "runs": deserialize_model_list(obj["runs"], CovalRunsAPIRun, response_model="ListRuns200Response", field="runs") if obj.get("runs") is not None else None,
+            "runs": deserialize_model_list(obj["runs"], CovalRunsAPIRunResource, response_model="ListRuns200Response", field="runs") if obj.get("runs") is not None else None,
             "next_page_token": obj.get("next_page_token")
         })
         # store additional fields in additional_properties

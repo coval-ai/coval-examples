@@ -14,6 +14,11 @@
 
 import * as runtime from '../runtime.js';
 import {
+    type GetTraceQualitySummary200Response,
+    GetTraceQualitySummary200ResponseFromJSON,
+    GetTraceQualitySummary200ResponseToJSON,
+} from '../models/GetTraceQualitySummary200Response.js';
+import {
     type IngestTraces200Response,
     IngestTraces200ResponseFromJSON,
     IngestTraces200ResponseToJSON,
@@ -23,11 +28,27 @@ import {
     TracesAPIErrorResponseFromJSON,
     TracesAPIErrorResponseToJSON,
 } from '../models/TracesAPIErrorResponse.js';
+import {
+    type TracesAPISimulationTracesResponse,
+    TracesAPISimulationTracesResponseFromJSON,
+    TracesAPISimulationTracesResponseToJSON,
+} from '../models/TracesAPISimulationTracesResponse.js';
+
+export interface GetTraceQualitySummaryRequest {
+    simulationId?: string;
+    conversationId?: string;
+}
 
 export interface IngestTracesRequest {
     body: Blob;
     xSimulationId?: string;
     xConversationId?: string;
+}
+
+export interface ListSimulationTracesRequest {
+    simulationOutputId: string;
+    limit?: number;
+    offset?: number;
 }
 
 /**
@@ -37,6 +58,32 @@ export interface IngestTracesRequest {
  * @interface TracesApiInterface
  */
 export interface TracesApiInterface {
+    /**
+     * Creates request options for getTraceQualitySummary without sending the request
+     * @param {string} [simulationId] Exact simulation output ID. Mutually exclusive with &#x60;conversation_id&#x60;.
+     * @param {string} [conversationId] Exact monitoring conversation ID. Mutually exclusive with &#x60;simulation_id&#x60;.
+     * @throws {RequiredError}
+     * @memberof TracesApiInterface
+     */
+    getTraceQualitySummaryRequestOpts(requestParameters: GetTraceQualitySummaryRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Returns a bounded, organization-scoped summary of the trace data received for one simulation output or monitoring conversation. The response contains span names, counts, timing and status distributions, structural integrity checks, and attribute key/type coverage. It never returns attribute values, prompt text, tool arguments or results, status messages, events, or links.  Provide exactly one of `simulation_id` or `conversation_id`. A truncated response reports `is_truncated: true`; do not treat its counts as complete. 
+     * @summary Inspect trace quality and signal coverage
+     * @param {string} [simulationId] Exact simulation output ID. Mutually exclusive with &#x60;conversation_id&#x60;.
+     * @param {string} [conversationId] Exact monitoring conversation ID. Mutually exclusive with &#x60;simulation_id&#x60;.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TracesApiInterface
+     */
+    getTraceQualitySummaryRaw(requestParameters: GetTraceQualitySummaryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetTraceQualitySummary200Response>>;
+
+    /**
+     * Returns a bounded, organization-scoped summary of the trace data received for one simulation output or monitoring conversation. The response contains span names, counts, timing and status distributions, structural integrity checks, and attribute key/type coverage. It never returns attribute values, prompt text, tool arguments or results, status messages, events, or links.  Provide exactly one of `simulation_id` or `conversation_id`. A truncated response reports `is_truncated: true`; do not treat its counts as complete. 
+     * Inspect trace quality and signal coverage
+     */
+    getTraceQualitySummary(requestParameters: GetTraceQualitySummaryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetTraceQualitySummary200Response>;
+
     /**
      * Creates request options for ingestTraces without sending the request
      * @param {Blob} body OTLP &#x60;ExportTraceServiceRequest&#x60; payload — protobuf or JSON. 
@@ -65,12 +112,91 @@ export interface TracesApiInterface {
      */
     ingestTraces(requestParameters: IngestTracesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<IngestTraces200Response>;
 
+    /**
+     * Creates request options for listSimulationTraces without sending the request
+     * @param {string} simulationOutputId The simulation output whose trace spans to list.
+     * @param {number} [limit] Max spans to return (1-200, default 50).
+     * @param {number} [offset] Number of spans to skip for pagination (max 100000).
+     * @throws {RequiredError}
+     * @memberof TracesApiInterface
+     */
+    listSimulationTracesRequestOpts(requestParameters: ListSimulationTracesRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Read back the raw OTLP trace spans recorded for one simulation output — a simulation or a monitored conversation (both are simulation outputs). Offset-paginated. Complements `GET /traces/summary`, which returns only a privacy-safe structural summary. 
+     * @summary List trace spans for a simulation output
+     * @param {string} simulationOutputId The simulation output whose trace spans to list.
+     * @param {number} [limit] Max spans to return (1-200, default 50).
+     * @param {number} [offset] Number of spans to skip for pagination (max 100000).
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TracesApiInterface
+     */
+    listSimulationTracesRaw(requestParameters: ListSimulationTracesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TracesAPISimulationTracesResponse>>;
+
+    /**
+     * Read back the raw OTLP trace spans recorded for one simulation output — a simulation or a monitored conversation (both are simulation outputs). Offset-paginated. Complements `GET /traces/summary`, which returns only a privacy-safe structural summary. 
+     * List trace spans for a simulation output
+     */
+    listSimulationTraces(requestParameters: ListSimulationTracesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TracesAPISimulationTracesResponse>;
+
 }
 
 /**
  * 
  */
 export class TracesApi extends runtime.BaseAPI implements TracesApiInterface {
+
+    /**
+     * Creates request options for getTraceQualitySummary without sending the request
+     */
+    async getTraceQualitySummaryRequestOpts(requestParameters: GetTraceQualitySummaryRequest): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        if (requestParameters['simulationId'] != null) {
+            queryParameters['simulation_id'] = requestParameters['simulationId'];
+        }
+
+        if (requestParameters['conversationId'] != null) {
+            queryParameters['conversation_id'] = requestParameters['conversationId'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Traces_API_apiKey authentication
+        }
+
+
+        let urlPath = `/traces/summary`;
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Returns a bounded, organization-scoped summary of the trace data received for one simulation output or monitoring conversation. The response contains span names, counts, timing and status distributions, structural integrity checks, and attribute key/type coverage. It never returns attribute values, prompt text, tool arguments or results, status messages, events, or links.  Provide exactly one of `simulation_id` or `conversation_id`. A truncated response reports `is_truncated: true`; do not treat its counts as complete. 
+     * Inspect trace quality and signal coverage
+     */
+    async getTraceQualitySummaryRaw(requestParameters: GetTraceQualitySummaryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetTraceQualitySummary200Response>> {
+        const requestOptions = await this.getTraceQualitySummaryRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetTraceQualitySummary200ResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Returns a bounded, organization-scoped summary of the trace data received for one simulation output or monitoring conversation. The response contains span names, counts, timing and status distributions, structural integrity checks, and attribute key/type coverage. It never returns attribute values, prompt text, tool arguments or results, status messages, events, or links.  Provide exactly one of `simulation_id` or `conversation_id`. A truncated response reports `is_truncated: true`; do not treat its counts as complete. 
+     * Inspect trace quality and signal coverage
+     */
+    async getTraceQualitySummary(requestParameters: GetTraceQualitySummaryRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetTraceQualitySummary200Response> {
+        const response = await this.getTraceQualitySummaryRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
 
     /**
      * Creates request options for ingestTraces without sending the request
@@ -130,6 +256,68 @@ export class TracesApi extends runtime.BaseAPI implements TracesApiInterface {
      */
     async ingestTraces(requestParameters: IngestTracesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<IngestTraces200Response> {
         const response = await this.ingestTracesRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for listSimulationTraces without sending the request
+     */
+    async listSimulationTracesRequestOpts(requestParameters: ListSimulationTracesRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['simulationOutputId'] == null) {
+            throw new runtime.RequiredError(
+                'simulationOutputId',
+                'Required parameter "simulationOutputId" was null or undefined when calling listSimulationTraces().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['simulationOutputId'] != null) {
+            queryParameters['simulation_output_id'] = requestParameters['simulationOutputId'];
+        }
+
+        if (requestParameters['limit'] != null) {
+            queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        if (requestParameters['offset'] != null) {
+            queryParameters['offset'] = requestParameters['offset'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Traces_API_apiKey authentication
+        }
+
+
+        let urlPath = `/traces/spans`;
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Read back the raw OTLP trace spans recorded for one simulation output — a simulation or a monitored conversation (both are simulation outputs). Offset-paginated. Complements `GET /traces/summary`, which returns only a privacy-safe structural summary. 
+     * List trace spans for a simulation output
+     */
+    async listSimulationTracesRaw(requestParameters: ListSimulationTracesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TracesAPISimulationTracesResponse>> {
+        const requestOptions = await this.listSimulationTracesRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => TracesAPISimulationTracesResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Read back the raw OTLP trace spans recorded for one simulation output — a simulation or a monitored conversation (both are simulation outputs). Offset-paginated. Complements `GET /traces/summary`, which returns only a privacy-safe structural summary. 
+     * List trace spans for a simulation output
+     */
+    async listSimulationTraces(requestParameters: ListSimulationTracesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TracesAPISimulationTracesResponse> {
+        const response = await this.listSimulationTracesRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

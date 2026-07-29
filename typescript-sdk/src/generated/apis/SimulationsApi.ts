@@ -76,6 +76,7 @@ export interface ListSimulationsRequest {
     pageSize?: number;
     pageToken?: string;
     orderBy?: string;
+    include?: ListSimulationsIncludeEnum;
 }
 
 export interface RerunMetricsRequest {
@@ -173,10 +174,11 @@ export interface SimulationsApiInterface {
 
     /**
      * Creates request options for listSimulations without sending the request
-     * @param {string} [filter] Filter expression syntax.  Supported fields: &#x60;status&#x60;, &#x60;agent_id&#x60;, &#x60;persona_id&#x60;, &#x60;test_set_id&#x60;, &#x60;test_case_id&#x60;, &#x60;run_id&#x60;, &#x60;external_conversation_id&#x60;, &#x60;mutation_id&#x60;, &#x60;mutation_name&#x60;, &#x60;create_time&#x60;  Operators: &#x60;&#x3D;&#x60;, &#x60;!&#x3D;&#x60;, &#x60;&gt;&#x60;, &#x60;&lt;&#x60;, &#x60;&gt;&#x3D;&#x60;, &#x60;&lt;&#x3D;&#x60;, &#x60;AND&#x60;, &#x60;OR&#x60;  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., &#x60;status&#x3D;\&quot;IN PROGRESS\&quot;&#x60;).  The &#x60;external_conversation_id&#x60; field is your system\&#39;s conversation ID for cross-system lookup.  **Mutation Filtering:** Use &#x60;mutation_id&#x60; or &#x60;mutation_name&#x60; to filter simulations by agent mutation variant. Base agent simulations have both &#x60;mutation_id&#x60; and &#x60;mutation_name&#x60; &#x3D; null. To get only base agent results, filter for simulations where &#x60;mutation_id&#x60; is not set. 
+     * @param {string} [filter] Filter expression syntax.  Supported fields: &#x60;status&#x60;, &#x60;agent_id&#x60;, &#x60;persona_id&#x60;, &#x60;test_set_id&#x60;, &#x60;test_case_id&#x60;, &#x60;run_id&#x60;, &#x60;external_conversation_id&#x60;, &#x60;mutation_id&#x60;, &#x60;mutation_name&#x60;, &#x60;create_time&#x60;, &#x60;metric.{metric_id}&#x60;  Operators: &#x60;&#x3D;&#x60;, &#x60;!&#x3D;&#x60;, &#x60;&gt;&#x60;, &#x60;&lt;&#x60;, &#x60;&gt;&#x3D;&#x60;, &#x60;&lt;&#x3D;&#x60;, &#x60;AND&#x60;, &#x60;OR&#x60;  A &#x60;metric.{metric_id}&#x60; predicate (score filtering; number and string metrics, type inferred from the literal) returns only simulations whose metric matches, with each simulation\&#39;s value per metric embedded inline (&#x60;metric_values&#x60;). On this path the request is keyset-paginated, ordered newest-first by creation time, and supports only &#x60;AND&#x60; alongside &#x60;create_time&#x60;, &#x60;agent_id&#x60;, &#x60;status&#x60;, &#x60;test_set_id&#x60;, and &#x60;persona_id&#x60;; other fields and any non-default &#x60;order_by&#x60; are rejected with 400, and &#x60;page_size&#x60; is capped at 100.  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., &#x60;status&#x3D;\&quot;IN PROGRESS\&quot;&#x60;).  The &#x60;external_conversation_id&#x60; field is your system\&#39;s conversation ID for cross-system lookup.  **Mutation Filtering:** Use &#x60;mutation_id&#x60; or &#x60;mutation_name&#x60; to filter simulations by agent mutation variant. Base agent simulations have both &#x60;mutation_id&#x60; and &#x60;mutation_name&#x60; &#x3D; null. To get only base agent results, filter for simulations where &#x60;mutation_id&#x60; is not set. 
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response
      * @param {string} [orderBy] Sort order specification.  Format: &#x60;field&#x60; or &#x60;-field&#x60; (descending)  Supported fields: &#x60;create_time&#x60;, &#x60;status&#x60; 
+     * @param {'metric_values'} [include] Set to &#x60;metric_values&#x60; to embed each simulation\&#39;s value per metric inline. Served by the keyset engine (newest-first, &#x60;page_size&#x60; capped at 100). 
      * @throws {RequiredError}
      * @memberof SimulationsApiInterface
      */
@@ -185,10 +187,11 @@ export interface SimulationsApiInterface {
     /**
      * List simulations with optional filtering and sorting.
      * @summary List simulations
-     * @param {string} [filter] Filter expression syntax.  Supported fields: &#x60;status&#x60;, &#x60;agent_id&#x60;, &#x60;persona_id&#x60;, &#x60;test_set_id&#x60;, &#x60;test_case_id&#x60;, &#x60;run_id&#x60;, &#x60;external_conversation_id&#x60;, &#x60;mutation_id&#x60;, &#x60;mutation_name&#x60;, &#x60;create_time&#x60;  Operators: &#x60;&#x3D;&#x60;, &#x60;!&#x3D;&#x60;, &#x60;&gt;&#x60;, &#x60;&lt;&#x60;, &#x60;&gt;&#x3D;&#x60;, &#x60;&lt;&#x3D;&#x60;, &#x60;AND&#x60;, &#x60;OR&#x60;  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., &#x60;status&#x3D;\&quot;IN PROGRESS\&quot;&#x60;).  The &#x60;external_conversation_id&#x60; field is your system\&#39;s conversation ID for cross-system lookup.  **Mutation Filtering:** Use &#x60;mutation_id&#x60; or &#x60;mutation_name&#x60; to filter simulations by agent mutation variant. Base agent simulations have both &#x60;mutation_id&#x60; and &#x60;mutation_name&#x60; &#x3D; null. To get only base agent results, filter for simulations where &#x60;mutation_id&#x60; is not set. 
+     * @param {string} [filter] Filter expression syntax.  Supported fields: &#x60;status&#x60;, &#x60;agent_id&#x60;, &#x60;persona_id&#x60;, &#x60;test_set_id&#x60;, &#x60;test_case_id&#x60;, &#x60;run_id&#x60;, &#x60;external_conversation_id&#x60;, &#x60;mutation_id&#x60;, &#x60;mutation_name&#x60;, &#x60;create_time&#x60;, &#x60;metric.{metric_id}&#x60;  Operators: &#x60;&#x3D;&#x60;, &#x60;!&#x3D;&#x60;, &#x60;&gt;&#x60;, &#x60;&lt;&#x60;, &#x60;&gt;&#x3D;&#x60;, &#x60;&lt;&#x3D;&#x60;, &#x60;AND&#x60;, &#x60;OR&#x60;  A &#x60;metric.{metric_id}&#x60; predicate (score filtering; number and string metrics, type inferred from the literal) returns only simulations whose metric matches, with each simulation\&#39;s value per metric embedded inline (&#x60;metric_values&#x60;). On this path the request is keyset-paginated, ordered newest-first by creation time, and supports only &#x60;AND&#x60; alongside &#x60;create_time&#x60;, &#x60;agent_id&#x60;, &#x60;status&#x60;, &#x60;test_set_id&#x60;, and &#x60;persona_id&#x60;; other fields and any non-default &#x60;order_by&#x60; are rejected with 400, and &#x60;page_size&#x60; is capped at 100.  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., &#x60;status&#x3D;\&quot;IN PROGRESS\&quot;&#x60;).  The &#x60;external_conversation_id&#x60; field is your system\&#39;s conversation ID for cross-system lookup.  **Mutation Filtering:** Use &#x60;mutation_id&#x60; or &#x60;mutation_name&#x60; to filter simulations by agent mutation variant. Base agent simulations have both &#x60;mutation_id&#x60; and &#x60;mutation_name&#x60; &#x3D; null. To get only base agent results, filter for simulations where &#x60;mutation_id&#x60; is not set. 
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response
      * @param {string} [orderBy] Sort order specification.  Format: &#x60;field&#x60; or &#x60;-field&#x60; (descending)  Supported fields: &#x60;create_time&#x60;, &#x60;status&#x60; 
+     * @param {'metric_values'} [include] Set to &#x60;metric_values&#x60; to embed each simulation\&#39;s value per metric inline. Served by the keyset engine (newest-first, &#x60;page_size&#x60; capped at 100). 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof SimulationsApiInterface
@@ -459,6 +462,10 @@ export class SimulationsApi extends runtime.BaseAPI implements SimulationsApiInt
             queryParameters['order_by'] = requestParameters['orderBy'];
         }
 
+        if (requestParameters['include'] != null) {
+            queryParameters['include'] = requestParameters['include'];
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.apiKey) {
@@ -658,3 +665,11 @@ export class SimulationsApi extends runtime.BaseAPI implements SimulationsApiInt
     }
 
 }
+
+/**
+ * @export
+ */
+export const ListSimulationsIncludeEnum = {
+    MetricValues: 'metric_values'
+} as const;
+export type ListSimulationsIncludeEnum = typeof ListSimulationsIncludeEnum[keyof typeof ListSimulationsIncludeEnum];

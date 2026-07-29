@@ -121,6 +121,12 @@ export interface CovalRunTemplatesAPIRunTemplateResource {
      * @memberof CovalRunTemplatesAPIRunTemplateResource
      */
     update_time?: Date | null;
+    /**
+     * ULID of the user who created the template
+     * @type {string}
+     * @memberof CovalRunTemplatesAPIRunTemplateResource
+     */
+    created_by_user_id?: string | null;
 }
 
 /**
@@ -164,6 +170,7 @@ export function CovalRunTemplatesAPIRunTemplateResourceFromJSONTyped(json: any, 
         'tags': json['tags'] == null ? undefined : json['tags'],
         'create_time': (new Date(json['create_time'])),
         'update_time': json['update_time'] == null ? undefined : (new Date(json['update_time'])),
+        'created_by_user_id': json['created_by_user_id'] == null ? undefined : json['created_by_user_id'],
     };
 }
 
@@ -195,6 +202,7 @@ export function CovalRunTemplatesAPIRunTemplateResourceToJSONTyped(value?: Coval
         'tags': value['tags'],
         'create_time': value['create_time'].toISOString(),
         'update_time': value['update_time'] == null ? value['update_time'] : value['update_time'].toISOString(),
+        'created_by_user_id': value['created_by_user_id'],
     };
 }
 

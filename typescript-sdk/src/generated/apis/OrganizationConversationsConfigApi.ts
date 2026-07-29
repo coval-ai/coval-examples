@@ -14,23 +14,27 @@
 
 import * as runtime from '../runtime.js';
 import {
+    type CovalOrganizationAPIConversationMetricsConfig,
+    CovalOrganizationAPIConversationMetricsConfigFromJSON,
+    CovalOrganizationAPIConversationMetricsConfigToJSON,
+} from '../models/CovalOrganizationAPIConversationMetricsConfig.js';
+import {
     type CovalOrganizationAPIErrorResponse,
     CovalOrganizationAPIErrorResponseFromJSON,
     CovalOrganizationAPIErrorResponseToJSON,
 } from '../models/CovalOrganizationAPIErrorResponse.js';
 import {
-    type CovalOrganizationAPIMonitoringMetricsConfig,
-    CovalOrganizationAPIMonitoringMetricsConfigFromJSON,
-    CovalOrganizationAPIMonitoringMetricsConfigToJSON,
-} from '../models/CovalOrganizationAPIMonitoringMetricsConfig.js';
-import {
-    type CovalOrganizationAPIUpdateMonitoringMetricsRequest,
-    CovalOrganizationAPIUpdateMonitoringMetricsRequestFromJSON,
-    CovalOrganizationAPIUpdateMonitoringMetricsRequestToJSON,
-} from '../models/CovalOrganizationAPIUpdateMonitoringMetricsRequest.js';
+    type CovalOrganizationAPIUpdateConversationMetricsRequest,
+    CovalOrganizationAPIUpdateConversationMetricsRequestFromJSON,
+    CovalOrganizationAPIUpdateConversationMetricsRequestToJSON,
+} from '../models/CovalOrganizationAPIUpdateConversationMetricsRequest.js';
+
+export interface UpdateConversationMetricsRequest {
+    covalOrganizationAPIUpdateConversationMetricsRequest: CovalOrganizationAPIUpdateConversationMetricsRequest;
+}
 
 export interface UpdateMonitoringMetricsRequest {
-    covalOrganizationAPIUpdateMonitoringMetricsRequest: CovalOrganizationAPIUpdateMonitoringMetricsRequest;
+    covalOrganizationAPIUpdateConversationMetricsRequest: CovalOrganizationAPIUpdateConversationMetricsRequest;
 }
 
 /**
@@ -41,11 +45,11 @@ export interface UpdateMonitoringMetricsRequest {
  */
 export interface OrganizationConversationsConfigApiInterface {
     /**
-     * Creates request options for getMonitoringMetrics without sending the request
+     * Creates request options for getConversationMetrics without sending the request
      * @throws {RequiredError}
      * @memberof OrganizationConversationsConfigApiInterface
      */
-    getMonitoringMetricsRequestOpts(): Promise<runtime.RequestOpts>;
+    getConversationMetricsRequestOpts(): Promise<runtime.RequestOpts>;
 
     /**
      * Return the organization\'s conversation metrics configuration: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata.
@@ -54,37 +58,89 @@ export interface OrganizationConversationsConfigApiInterface {
      * @throws {RequiredError}
      * @memberof OrganizationConversationsConfigApiInterface
      */
-    getMonitoringMetricsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIMonitoringMetricsConfig>>;
+    getConversationMetricsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIConversationMetricsConfig>>;
 
     /**
      * Return the organization\'s conversation metrics configuration: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata.
      * Get conversation metrics config
      */
-    getMonitoringMetrics(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIMonitoringMetricsConfig>;
+    getConversationMetrics(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIConversationMetricsConfig>;
+
+    /**
+     * Creates request options for getMonitoringMetrics without sending the request
+     * @deprecated
+     * @throws {RequiredError}
+     * @memberof OrganizationConversationsConfigApiInterface
+     */
+    getMonitoringMetricsRequestOpts(): Promise<runtime.RequestOpts>;
+
+    /**
+     * Deprecated alias for `GET /organization/conversation-metrics`. Returns the organization\'s conversation metrics configuration.
+     * @summary Get conversation metrics config using the legacy path
+     * @param {*} [options] Override http request option.
+     * @deprecated
+     * @throws {RequiredError}
+     * @memberof OrganizationConversationsConfigApiInterface
+     */
+    getMonitoringMetricsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIConversationMetricsConfig>>;
+
+    /**
+     * Deprecated alias for `GET /organization/conversation-metrics`. Returns the organization\'s conversation metrics configuration.
+     * Get conversation metrics config using the legacy path
+     * @deprecated
+     */
+    getMonitoringMetrics(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIConversationMetricsConfig>;
+
+    /**
+     * Creates request options for updateConversationMetrics without sending the request
+     * @param {CovalOrganizationAPIUpdateConversationMetricsRequest} covalOrganizationAPIUpdateConversationMetricsRequest 
+     * @throws {RequiredError}
+     * @memberof OrganizationConversationsConfigApiInterface
+     */
+    updateConversationMetricsRequestOpts(requestParameters: UpdateConversationMetricsRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Partially update the organization\'s conversation metrics configuration. Provide at least one of `default_conversation_metrics` or `conditional_conversation_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
+     * @summary Update conversation metrics config
+     * @param {CovalOrganizationAPIUpdateConversationMetricsRequest} covalOrganizationAPIUpdateConversationMetricsRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OrganizationConversationsConfigApiInterface
+     */
+    updateConversationMetricsRaw(requestParameters: UpdateConversationMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIConversationMetricsConfig>>;
+
+    /**
+     * Partially update the organization\'s conversation metrics configuration. Provide at least one of `default_conversation_metrics` or `conditional_conversation_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
+     * Update conversation metrics config
+     */
+    updateConversationMetrics(requestParameters: UpdateConversationMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIConversationMetricsConfig>;
 
     /**
      * Creates request options for updateMonitoringMetrics without sending the request
-     * @param {CovalOrganizationAPIUpdateMonitoringMetricsRequest} covalOrganizationAPIUpdateMonitoringMetricsRequest 
+     * @param {CovalOrganizationAPIUpdateConversationMetricsRequest} covalOrganizationAPIUpdateConversationMetricsRequest 
+     * @deprecated
      * @throws {RequiredError}
      * @memberof OrganizationConversationsConfigApiInterface
      */
     updateMonitoringMetricsRequestOpts(requestParameters: UpdateMonitoringMetricsRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Partially update the organization\'s conversation metrics configuration. Provide at least one of `default_monitoring_metrics` or `conditional_monitoring_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
-     * @summary Update conversation metrics config
-     * @param {CovalOrganizationAPIUpdateMonitoringMetricsRequest} covalOrganizationAPIUpdateMonitoringMetricsRequest 
+     * Deprecated alias for `PATCH /organization/conversation-metrics`. Partially updates the organization\'s conversation metrics configuration.
+     * @summary Update conversation metrics config using the legacy path
+     * @param {CovalOrganizationAPIUpdateConversationMetricsRequest} covalOrganizationAPIUpdateConversationMetricsRequest 
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      * @memberof OrganizationConversationsConfigApiInterface
      */
-    updateMonitoringMetricsRaw(requestParameters: UpdateMonitoringMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIMonitoringMetricsConfig>>;
+    updateMonitoringMetricsRaw(requestParameters: UpdateMonitoringMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIConversationMetricsConfig>>;
 
     /**
-     * Partially update the organization\'s conversation metrics configuration. Provide at least one of `default_monitoring_metrics` or `conditional_monitoring_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
-     * Update conversation metrics config
+     * Deprecated alias for `PATCH /organization/conversation-metrics`. Partially updates the organization\'s conversation metrics configuration.
+     * Update conversation metrics config using the legacy path
+     * @deprecated
      */
-    updateMonitoringMetrics(requestParameters: UpdateMonitoringMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIMonitoringMetricsConfig>;
+    updateMonitoringMetrics(requestParameters: UpdateMonitoringMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIConversationMetricsConfig>;
 
 }
 
@@ -94,7 +150,51 @@ export interface OrganizationConversationsConfigApiInterface {
 export class OrganizationConversationsConfigApi extends runtime.BaseAPI implements OrganizationConversationsConfigApiInterface {
 
     /**
+     * Creates request options for getConversationMetrics without sending the request
+     */
+    async getConversationMetricsRequestOpts(): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Organization_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/organization/conversation-metrics`;
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Return the organization\'s conversation metrics configuration: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata.
+     * Get conversation metrics config
+     */
+    async getConversationMetricsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIConversationMetricsConfig>> {
+        const requestOptions = await this.getConversationMetricsRequestOpts();
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalOrganizationAPIConversationMetricsConfigFromJSON(jsonValue));
+    }
+
+    /**
+     * Return the organization\'s conversation metrics configuration: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata.
+     * Get conversation metrics config
+     */
+    async getConversationMetrics(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIConversationMetricsConfig> {
+        const response = await this.getConversationMetricsRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for getMonitoringMetrics without sending the request
+     * @deprecated
      */
     async getMonitoringMetricsRequestOpts(): Promise<runtime.RequestOpts> {
         const queryParameters: any = {};
@@ -117,33 +217,89 @@ export class OrganizationConversationsConfigApi extends runtime.BaseAPI implemen
     }
 
     /**
-     * Return the organization\'s conversation metrics configuration: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata.
-     * Get conversation metrics config
+     * Deprecated alias for `GET /organization/conversation-metrics`. Returns the organization\'s conversation metrics configuration.
+     * Get conversation metrics config using the legacy path
+     * @deprecated
      */
-    async getMonitoringMetricsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIMonitoringMetricsConfig>> {
+    async getMonitoringMetricsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIConversationMetricsConfig>> {
         const requestOptions = await this.getMonitoringMetricsRequestOpts();
         const response = await this.request(requestOptions, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CovalOrganizationAPIMonitoringMetricsConfigFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalOrganizationAPIConversationMetricsConfigFromJSON(jsonValue));
     }
 
     /**
-     * Return the organization\'s conversation metrics configuration: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata.
-     * Get conversation metrics config
+     * Deprecated alias for `GET /organization/conversation-metrics`. Returns the organization\'s conversation metrics configuration.
+     * Get conversation metrics config using the legacy path
+     * @deprecated
      */
-    async getMonitoringMetrics(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIMonitoringMetricsConfig> {
+    async getMonitoringMetrics(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIConversationMetricsConfig> {
         const response = await this.getMonitoringMetricsRaw(initOverrides);
         return await response.value();
     }
 
     /**
+     * Creates request options for updateConversationMetrics without sending the request
+     */
+    async updateConversationMetricsRequestOpts(requestParameters: UpdateConversationMetricsRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['covalOrganizationAPIUpdateConversationMetricsRequest'] == null) {
+            throw new runtime.RequiredError(
+                'covalOrganizationAPIUpdateConversationMetricsRequest',
+                'Required parameter "covalOrganizationAPIUpdateConversationMetricsRequest" was null or undefined when calling updateConversationMetrics().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Organization_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/organization/conversation-metrics`;
+
+        return {
+            path: urlPath,
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CovalOrganizationAPIUpdateConversationMetricsRequestToJSON(requestParameters['covalOrganizationAPIUpdateConversationMetricsRequest']),
+        };
+    }
+
+    /**
+     * Partially update the organization\'s conversation metrics configuration. Provide at least one of `default_conversation_metrics` or `conditional_conversation_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
+     * Update conversation metrics config
+     */
+    async updateConversationMetricsRaw(requestParameters: UpdateConversationMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIConversationMetricsConfig>> {
+        const requestOptions = await this.updateConversationMetricsRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalOrganizationAPIConversationMetricsConfigFromJSON(jsonValue));
+    }
+
+    /**
+     * Partially update the organization\'s conversation metrics configuration. Provide at least one of `default_conversation_metrics` or `conditional_conversation_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
+     * Update conversation metrics config
+     */
+    async updateConversationMetrics(requestParameters: UpdateConversationMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIConversationMetricsConfig> {
+        const response = await this.updateConversationMetricsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for updateMonitoringMetrics without sending the request
+     * @deprecated
      */
     async updateMonitoringMetricsRequestOpts(requestParameters: UpdateMonitoringMetricsRequest): Promise<runtime.RequestOpts> {
-        if (requestParameters['covalOrganizationAPIUpdateMonitoringMetricsRequest'] == null) {
+        if (requestParameters['covalOrganizationAPIUpdateConversationMetricsRequest'] == null) {
             throw new runtime.RequiredError(
-                'covalOrganizationAPIUpdateMonitoringMetricsRequest',
-                'Required parameter "covalOrganizationAPIUpdateMonitoringMetricsRequest" was null or undefined when calling updateMonitoringMetrics().'
+                'covalOrganizationAPIUpdateConversationMetricsRequest',
+                'Required parameter "covalOrganizationAPIUpdateConversationMetricsRequest" was null or undefined when calling updateMonitoringMetrics().'
             );
         }
 
@@ -165,26 +321,28 @@ export class OrganizationConversationsConfigApi extends runtime.BaseAPI implemen
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: CovalOrganizationAPIUpdateMonitoringMetricsRequestToJSON(requestParameters['covalOrganizationAPIUpdateMonitoringMetricsRequest']),
+            body: CovalOrganizationAPIUpdateConversationMetricsRequestToJSON(requestParameters['covalOrganizationAPIUpdateConversationMetricsRequest']),
         };
     }
 
     /**
-     * Partially update the organization\'s conversation metrics configuration. Provide at least one of `default_monitoring_metrics` or `conditional_monitoring_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
-     * Update conversation metrics config
+     * Deprecated alias for `PATCH /organization/conversation-metrics`. Partially updates the organization\'s conversation metrics configuration.
+     * Update conversation metrics config using the legacy path
+     * @deprecated
      */
-    async updateMonitoringMetricsRaw(requestParameters: UpdateMonitoringMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIMonitoringMetricsConfig>> {
+    async updateMonitoringMetricsRaw(requestParameters: UpdateMonitoringMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIConversationMetricsConfig>> {
         const requestOptions = await this.updateMonitoringMetricsRequestOpts(requestParameters);
         const response = await this.request(requestOptions, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CovalOrganizationAPIMonitoringMetricsConfigFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalOrganizationAPIConversationMetricsConfigFromJSON(jsonValue));
     }
 
     /**
-     * Partially update the organization\'s conversation metrics configuration. Provide at least one of `default_monitoring_metrics` or `conditional_monitoring_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
-     * Update conversation metrics config
+     * Deprecated alias for `PATCH /organization/conversation-metrics`. Partially updates the organization\'s conversation metrics configuration.
+     * Update conversation metrics config using the legacy path
+     * @deprecated
      */
-    async updateMonitoringMetrics(requestParameters: UpdateMonitoringMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIMonitoringMetricsConfig> {
+    async updateMonitoringMetrics(requestParameters: UpdateMonitoringMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIConversationMetricsConfig> {
         const response = await this.updateMonitoringMetricsRaw(requestParameters, initOverrides);
         return await response.value();
     }

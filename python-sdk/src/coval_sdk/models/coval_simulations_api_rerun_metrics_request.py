@@ -18,8 +18,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field
+from typing import Any, ClassVar, Dict, List
 from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
@@ -31,9 +31,8 @@ class CovalSimulationsAPIRerunMetricsRequest(BaseModel):
     """ # noqa: E501
     simulation_ids: Annotated[List[Annotated[str, Field(min_length=22, strict=True, max_length=22)]], Field(min_length=1, max_length=100)] = Field(description="Simulation IDs (22-character ShortUUIDs) to re-score. Up to 100 per call.")
     metric_ids: Annotated[List[Annotated[str, Field(min_length=22, strict=True, max_length=22)]], Field(min_length=1, max_length=500)] = Field(description="Metric IDs (22-character ShortUUIDs) to run against every simulation. Up to 500 per call.")
-    dev_id: Optional[StrictStr] = Field(default=None, description="Optional developer routing id; only applied when the endpoint runs in the dev environment (ignored in production).")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["simulation_ids", "metric_ids", "dev_id"]
+    __properties: ClassVar[List[str]] = ["simulation_ids", "metric_ids"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -94,8 +93,7 @@ class CovalSimulationsAPIRerunMetricsRequest(BaseModel):
 
         _obj = cls.model_validate({
             "simulation_ids": obj.get("simulation_ids"),
-            "metric_ids": obj.get("metric_ids"),
-            "dev_id": obj.get("dev_id")
+            "metric_ids": obj.get("metric_ids")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

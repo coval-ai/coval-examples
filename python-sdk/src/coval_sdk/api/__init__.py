@@ -6,6 +6,7 @@ from coval_sdk.api.agents_api import AgentsApi
 from coval_sdk.api.audio_api import AudioApi
 from coval_sdk.api.conversations_api import ConversationsApi
 from coval_sdk.api.dashboards_api import DashboardsApi
+from coval_sdk.api.integrations_api import IntegrationsApi
 from coval_sdk.api.metric_outputs_api import MetricOutputsApi
 from coval_sdk.api.metrics_api import MetricsApi
 from coval_sdk.api.monitor_events_api import MonitorEventsApi

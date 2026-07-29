@@ -20,7 +20,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List
-from coval_sdk.models.coval_runs_api_run import CovalRunsAPIRun
+from coval_sdk.models.coval_runs_api_run_resource import CovalRunsAPIRunResource
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -29,7 +29,7 @@ class CovalRunsAPILaunchRunResponse(BaseModel):
     """
     CovalRunsAPILaunchRunResponse
     """ # noqa: E501
-    run: CovalRunsAPIRun
+    run: CovalRunsAPIRunResource
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["run"]
 
@@ -94,7 +94,7 @@ class CovalRunsAPILaunchRunResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "run": CovalRunsAPIRun.from_dict(obj["run"]) if obj.get("run") is not None else None
+            "run": CovalRunsAPIRunResource.from_dict(obj["run"]) if obj.get("run") is not None else None
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

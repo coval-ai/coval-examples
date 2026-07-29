@@ -136,6 +136,19 @@ export interface CovalSimulationsAPISimulationResource {
      * @memberof CovalSimulationsAPISimulationResource
      */
     is_public?: boolean;
+    /**
+     * Numeric value per metric on this simulation, keyed by metric id. Present when the list
+     * request sets include=metric_values or filters by metric value (filter=metric.<id> ...);
+     * omitted from the default summary view. Only numeric (float) metric values are included —
+     * string-metric values are not. On this metric-aware path the simulation is a summary
+     * projection: has_audio and is_public are reported false and test_case_id / mutation /
+     * endpoint fields are null regardless of the record — fetch GET /v1/simulations/{id} for
+     * authoritative values.
+     * 
+     * @type {{ [key: string]: number; }}
+     * @memberof CovalSimulationsAPISimulationResource
+     */
+    metric_values?: { [key: string]: number; } | null;
 }
 
 
@@ -194,6 +207,7 @@ export function CovalSimulationsAPISimulationResourceFromJSONTyped(json: any, ig
         'mutation_name': json['mutation_name'] == null ? undefined : json['mutation_name'],
         'notes': json['notes'] == null ? undefined : json['notes'],
         'is_public': json['is_public'] == null ? undefined : json['is_public'],
+        'metric_values': json['metric_values'] == null ? undefined : json['metric_values'],
     };
 }
 
@@ -225,6 +239,7 @@ export function CovalSimulationsAPISimulationResourceToJSONTyped(value?: CovalSi
         'mutation_name': value['mutation_name'],
         'notes': value['notes'],
         'is_public': value['is_public'],
+        'metric_values': value['metric_values'],
     };
 }
 
