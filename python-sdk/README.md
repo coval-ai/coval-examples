@@ -74,9 +74,23 @@ coval.connection_stats.as_dict()
 # {'opened': 1, 'reused': 12, 'expired': 3}
 ```
 
-`opened` is connections created, `reused` is pooled connections still within the
-idle bound, and `expired` is connections discarded for being too old. Include
-these when reporting intermittent timeouts. For per-connection detail:
+Each counter records the outcome of one attempt to take a connection from the
+pool: `opened` when none was available, `reused` when a pooled one was still
+within the idle bound, and `expired` when one was discarded for being too old.
+Exactly one is incremented per attempt.
+
+A high `expired` relative to `reused` means connections are usually going stale
+between requests, which is expected if you call the API infrequently.
+
+`opened` is deliberately not the number of TCP connections established — an
+expired connection is closed and then transparently reconnects, so it costs a
+handshake as well:
+
+```python
+coval.connection_stats.connections_established  # opened + expired
+```
+
+Include these when reporting intermittent timeouts. For per-connection detail:
 
 ```python
 import logging

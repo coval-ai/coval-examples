@@ -63,6 +63,14 @@ class ConnectionStats:
   server-side because the request never arrives, so these counters are often the
   only evidence available when diagnosing a report of intermittent timeouts.
   Read via ``client.connection_stats``.
+
+  Each counter records the outcome of one attempt to take a connection from the
+  pool, so exactly one of the three is incremented per attempt and together they
+  total the number of attempts.
+
+  Note that ``opened`` is not the number of TCP connections established: an
+  expired connection is closed and then transparently reconnects, which costs a
+  fresh handshake too. Use ``connections_established`` for that.
   """
 
   __slots__ = ("_lock", "opened", "reused", "expired")
@@ -76,6 +84,12 @@ class ConnectionStats:
   def _record(self, outcome: str) -> None:
     with self._lock:
       setattr(self, outcome, getattr(self, outcome) + 1)
+
+  @property
+  def connections_established(self) -> int:
+    """TCP connections actually opened: fresh ones plus expiry replacements."""
+    with self._lock:
+      return self.opened + self.expired
 
   def as_dict(self) -> Dict[str, int]:
     with self._lock:
