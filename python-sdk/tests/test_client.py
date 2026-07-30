@@ -1,3 +1,4 @@
+import logging
 import socket
 import threading
 import time
@@ -122,7 +123,7 @@ def test_client_can_restore_strict_response_validation() -> None:
 
 def test_top_level_exports_and_version_match() -> None:
   assert coval_sdk.CovalClient is CovalClient
-  assert coval_sdk.__version__ == "0.5.0"
+  assert coval_sdk.__version__ == "0.6.0"
 
 
 def _pool_for(client: CovalClient, url: str):
@@ -196,6 +197,120 @@ def test_pool_keeps_a_connection_still_within_the_bound(monkeypatch) -> None:
     now += 1.0  # still fresh
     assert pool._get_conn() is conn
     assert closed == []
+    for sock in socks:
+      sock.close()
+  finally:
+    client.close()
+
+
+def test_connection_stats_start_at_zero_and_are_exposed() -> None:
+  client = CovalClient("test-key")
+  try:
+    assert client.connection_stats.as_dict() == {"opened": 0, "reused": 0, "expired": 0}
+    assert "opened=0" in repr(client.connection_stats)
+  finally:
+    client.close()
+
+
+def test_connection_stats_are_absent_when_expiry_is_disabled() -> None:
+  client = CovalClient("test-key", max_idle_seconds=None)
+  try:
+    assert client.connection_stats is None
+  finally:
+    client.close()
+
+
+def test_connection_stats_count_each_outcome(monkeypatch) -> None:
+  client = CovalClient("test-key", max_idle_seconds=5.0)
+  try:
+    pool = _pool_for(client, "https://api.coval.dev/v1")
+    now = 1000.0
+    monkeypatch.setattr("coval_sdk.client.time.monotonic", lambda: now)
+
+    conn, _, socks = _pooled_conn(pool, monkeypatch)
+    assert client.connection_stats.as_dict()["opened"] == 1
+
+    pool._put_conn(conn)
+    now += 1.0  # fresh
+    pool._get_conn()
+    assert client.connection_stats.as_dict()["reused"] == 1
+
+    pool._put_conn(conn)
+    now += 5.5  # stale
+    pool._get_conn()
+    assert client.connection_stats.as_dict() == {"opened": 1, "reused": 1, "expired": 1}
+    for sock in socks:
+      sock.close()
+  finally:
+    client.close()
+
+
+def test_connections_established_counts_expiry_replacements() -> None:
+  """An expired connection reconnects, so it costs a handshake like a fresh one.
+  Asserted against the sockets a real server accepts, not just the counters."""
+  response = b"HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: keep-alive\r\n\r\n{}"
+  accepted = []
+
+  def handle(conn: socket.socket) -> None:
+    while True:
+      try:
+        if not conn.recv(65535):
+          return
+      except OSError:
+        return
+      conn.sendall(response)
+
+  def serve(sock: socket.socket) -> None:
+    while True:
+      try:
+        conn, addr = sock.accept()
+      except OSError:
+        return
+      accepted.append(addr)
+      threading.Thread(target=handle, args=(conn,), daemon=True).start()
+
+  server = socket.socket()
+  server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+  server.bind(("127.0.0.1", 0))
+  server.listen(8)
+  port = server.getsockname()[1]
+  threading.Thread(target=serve, args=(server,), daemon=True).start()
+
+  client = CovalClient(
+    "test-key", base_url=f"http://127.0.0.1:{port}/v1", retries=False, max_idle_seconds=0.25
+  )
+  try:
+    url = f"http://127.0.0.1:{port}/v1/ping"
+    rest = client.api_client.rest_client
+    rest.request("GET", url, _request_timeout=5.0).read()
+    time.sleep(0.5)  # let the pooled connection go stale
+    rest.request("GET", url, _request_timeout=5.0).read()
+
+    stats = client.connection_stats
+    assert stats.as_dict() == {"opened": 1, "reused": 0, "expired": 1}
+    # opened alone would under-report; the server saw two sockets.
+    assert stats.connections_established == len(accepted) == 2
+  finally:
+    client.close()
+    server.close()
+
+
+def test_expiry_emits_a_debug_log(monkeypatch, caplog) -> None:
+  client = CovalClient("test-key", max_idle_seconds=5.0)
+  try:
+    pool = _pool_for(client, "https://api.coval.dev/v1")
+    now = 1000.0
+    monkeypatch.setattr("coval_sdk.client.time.monotonic", lambda: now)
+    conn, _, socks = _pooled_conn(pool, monkeypatch)
+    pool._put_conn(conn)
+    now += 9.0
+
+    with caplog.at_level(logging.DEBUG, logger="coval_sdk.client"):
+      pool._get_conn()
+
+    messages = [r.getMessage() for r in caplog.records]
+    assert any("discarding pooled connection" in m for m in messages)
+    assert any("9.00s idle" in m for m in messages)
     for sock in socks:
       sock.close()
   finally:

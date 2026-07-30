@@ -48,6 +48,58 @@ coval = CovalClient(api_key, retries=False)
 staging = CovalClient(api_key, base_url="https://staging.api.coval.dev/v1")
 ```
 
+## Connection reuse
+
+Pooled connections idle for longer than `max_idle_seconds` (default `5.0`) are
+closed rather than reused. Some network paths silently drop an idle connection
+without closing it; reusing one of those stalls the request until your timeout
+expires, because the request never reaches the server at all.
+
+```python
+# Tune the idle bound, or pass None to reuse connections indefinitely.
+coval = CovalClient(api_key, max_idle_seconds=2.0)
+```
+
+If you submit infrequently, connection pooling saves you little — the handshake
+is amortised over requests you are not making — so a lower bound costs almost
+nothing.
+
+## Diagnosing timeouts
+
+A request that dies in transit leaves no server-side trace, so the client keeps
+counters describing how the pool has behaved:
+
+```python
+coval.connection_stats.as_dict()
+# {'opened': 1, 'reused': 12, 'expired': 3}
+```
+
+Each counter records the outcome of one attempt to take a connection from the
+pool: `opened` when none was available, `reused` when a pooled one was still
+within the idle bound, and `expired` when one was discarded for being too old.
+Exactly one is incremented per attempt.
+
+A high `expired` relative to `reused` means connections are usually going stale
+between requests, which is expected if you call the API infrequently.
+
+`opened` is deliberately not the number of TCP connections established — an
+expired connection is closed and then transparently reconnects, so it costs a
+handshake as well:
+
+```python
+coval.connection_stats.connections_established  # opened + expired
+```
+
+Include these when reporting intermittent timeouts. For per-connection detail:
+
+```python
+import logging
+logging.getLogger("coval_sdk.client").setLevel(logging.DEBUG)
+```
+
+Counters are unavailable when `max_idle_seconds=None`, since the pool is then
+left entirely to urllib3.
+
 ## Generated client
 
 All generated API classes, models, `ApiClient`, `Configuration`, and typed
