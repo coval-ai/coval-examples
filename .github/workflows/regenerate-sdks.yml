@@ -39,6 +39,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  issues: write
 
 jobs:
   regenerate:
@@ -109,6 +110,39 @@ jobs:
           diff /tmp/spec-pass-1.yaml dist/coval-openapi.yaml
           echo "✓ Codegen output is deterministic across two consecutive runs."
 
+      - name: Bump versions if the generated output changed
+        run: |
+          set -euo pipefail
+          # git status, not git diff — a new spec model arrives as an untracked
+          # file and would not show up in a diff against HEAD.
+          changed() { [ -n "$(git status --porcelain -- "$1")" ]; }
+
+          # An array, and `if` rather than `cmd && assign`: under `set -e` a
+          # failing `&&` list is itself a failing statement and would abort the
+          # step the moment one of the two SDKs had no changes.
+          args=()
+          python_changed=false
+          if changed python-sdk/src/coval_sdk; then
+            args+=(--python)
+            python_changed=true
+          fi
+          if changed typescript-sdk/src/generated; then
+            args+=(--typescript)
+          fi
+
+          if [ ${#args[@]} -eq 0 ]; then
+            echo "No generated changes; leaving versions alone."
+            exit 0
+          fi
+
+          python3 scripts/bump-sdk-version.py "${args[@]}"
+
+          # The Python package version is baked into the generated tree by
+          # generate-sdks.sh, so codegen has to run again to pick up the bump.
+          if [ "${python_changed}" = true ]; then
+            bash scripts/generate-sdks.sh
+          fi
+
       - name: Install TS SDK deps + build + test
         working-directory: typescript-sdk
         run: |
@@ -152,3 +186,53 @@ jobs:
             typescript-sdk/src/generated/
             python-sdk/src/coval_sdk/
             python-sdk/GENERATED_README.md
+            python-sdk/pyproject.toml
+            python-sdk/tests/test_client.py
+            typescript-sdk/package.json
+            typescript-sdk/package-lock.json
+
+      # This job failed silently every week from 2026-07-13 to 2026-07-29. A
+      # scheduled workflow has no reviewer and nobody watches the Actions tab,
+      # so the SDKs drifted from the API for sixteen days with no signal. File
+      # an issue on failure, and reuse a single one so repeated weekly failures
+      # accumulate in one thread instead of spamming.
+      - name: File an issue if the regen failed
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = 'Weekly SDK regeneration is failing';
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = [
+              `The scheduled \`Regenerate SDKs\` job failed.`,
+              ``,
+              `Run: ${runUrl}`,
+              ``,
+              `While this is failing no regen PR is opened, so the published SDKs`,
+              `silently drift from the OpenAPI specs. Worth fixing promptly rather`,
+              `than letting it accumulate.`,
+            ].join('\n');
+
+            const existing = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'sdk-regen-failure',
+            });
+
+            if (existing.data.length > 0) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existing.data[0].number,
+                body,
+              });
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title,
+                body,
+                labels: ['sdk-regen-failure'],
+              });
+            }

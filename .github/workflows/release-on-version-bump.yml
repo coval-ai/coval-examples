@@ -1,0 +1,75 @@
+name: Release on version bump
+
+# Closes the gap between "a version bump landed on main" and "that version is
+# on PyPI/npm". Before this, publishing was always a hand-pushed tag, so the
+# weekly regen could regenerate the SDKs but never actually release them.
+#
+# Tags any version on main that has no matching tag yet. The existing
+# publish-coval-sdk.yml / publish-coval-npm.yml workflows trigger on that tag
+# push and do the actual publishing, so the tag stays the record of a release.
+#
+# Requires REGEN_PR_TOKEN (already configured for the regen job). A tag pushed
+# with the default GITHUB_TOKEN does NOT trigger other workflows -- GitHub
+# suppresses that to prevent recursion -- so the publish jobs would never fire.
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - python-sdk/pyproject.toml
+      - typescript-sdk/package.json
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-on-version-bump
+  cancel-in-progress: false
+
+jobs:
+  tag:
+    name: Tag unreleased versions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.REGEN_PR_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Tag any version that has not been released
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          python_version="$(python - <<'PY'
+          import pathlib
+          import tomllib
+          print(tomllib.loads(pathlib.Path("python-sdk/pyproject.toml").read_text())["project"]["version"])
+          PY
+          )"
+          typescript_version="$(node -p "require('./typescript-sdk/package.json').version")"
+
+          released=0
+          for tag in "python-sdk-v${python_version}" "typescript-sdk-v${typescript_version}"; do
+            if git rev-parse -q --verify "refs/tags/${tag}" >/dev/null; then
+              echo "${tag} is already tagged; nothing to release."
+              continue
+            fi
+            echo "Tagging ${tag}"
+            git tag -a "${tag}" -m "${tag}"
+            git push origin "${tag}"
+            released=$((released + 1))
+          done
+
+          if [ "${released}" -eq 0 ]; then
+            echo "No new versions to release."
+          fi
