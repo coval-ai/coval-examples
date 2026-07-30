@@ -13,6 +13,7 @@
 import { apiKeyAuthMiddleware } from './auth.js';
 import { CovalApiError, parseErrorResponse } from './errors.js';
 import { createRetryingFetch, type RetryOptions } from './retry.js';
+import { createTransportStats, type CovalTransportStats } from './stats.js';
 import {
   AgentsApi,
   APIKeysApi,
@@ -56,6 +57,11 @@ export interface CovalClientOptions {
   middleware?: Middleware[];
   /** Override the global fetch (e.g., for tests, undici-with-keepalive, etc). */
   fetch?: FetchAPI;
+  /**
+   * Called with a diagnostic line on each retry and each in-transit failure.
+   * Pass `console.debug` when investigating intermittent timeouts.
+   */
+  onDebug?: (message: string) => void;
 }
 
 const DEFAULT_BASE_URL = 'https://api.coval.dev/v1';
@@ -90,16 +96,29 @@ export class CovalClient {
 
   readonly configuration: Configuration;
 
+  /**
+   * Live transport counters. A request that dies in transit leaves no
+   * server-side trace, so these are often the only evidence when diagnosing
+   * intermittent failures. Include them when reporting one.
+   */
+  readonly stats: CovalTransportStats;
+
   constructor(options: CovalClientOptions) {
     if (!options.apiKey) {
       throw new Error('CovalClient: apiKey is required');
     }
 
+    this.stats = createTransportStats();
+
     const innerFetch: FetchAPI = options.fetch ?? (globalThis.fetch as FetchAPI);
     const fetchApi: FetchAPI =
       options.retry === false
         ? innerFetch
-        : createRetryingFetch(options.retry ?? {}, { fetch: innerFetch });
+        : createRetryingFetch(options.retry ?? {}, {
+            fetch: innerFetch,
+            stats: this.stats,
+            onDebug: options.onDebug,
+          });
 
     const middleware: Middleware[] = [
       apiKeyAuthMiddleware({ apiKey: options.apiKey }),

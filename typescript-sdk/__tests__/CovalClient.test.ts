@@ -4,6 +4,8 @@ import {
   CovalClient,
   CovalNetworkError,
   createRetryingFetch,
+  createTransportStats,
+  formatTransportStats,
   paginate,
 } from '../src/index.js';
 import * as generatedApis from '../src/generated/apis/index.js';
@@ -177,6 +179,75 @@ describe('createRetryingFetch', () => {
     const response = await retrying('https://api.coval.dev/v1/agents', { method: 'POST' });
     expect(response.status).toBe(503);
     expect(attempts).toBe(1);
+  });
+});
+
+describe('transport stats', () => {
+  it('starts at zero on a new client', () => {
+    const coval = new CovalClient({ apiKey: 'test-key' });
+    expect(coval.stats).toEqual({ calls: 0, requests: 0, retries: 0, networkErrors: 0 });
+  });
+
+  it('counts a retried GET as one call and several requests', async () => {
+    const stats = createTransportStats();
+    let attempts = 0;
+    const fakeFetch = vi.fn(async () => {
+      attempts += 1;
+      return attempts < 3
+        ? new Response('upstream', { status: 503 })
+        : new Response('{}', { status: 200, headers: { 'content-type': 'application/json' } });
+    }) as unknown as typeof fetch;
+
+    const retrying = createRetryingFetch(
+      { maxAttempts: 3, baseDelayMs: 1, jitter: () => 0 },
+      { fetch: fakeFetch, sleep: async () => {}, stats },
+    );
+    await retrying('https://api.coval.dev/v1/agents', { method: 'GET' });
+
+    expect(stats).toEqual({ calls: 1, requests: 3, retries: 2, networkErrors: 0 });
+  });
+
+  it('counts an in-transit failure on a POST without retrying it', async () => {
+    const stats = createTransportStats();
+    const fakeFetch = vi.fn(async () => {
+      throw new TypeError('fetch failed');
+    }) as unknown as typeof fetch;
+
+    const retrying = createRetryingFetch(
+      { maxAttempts: 3, baseDelayMs: 1, jitter: () => 0 },
+      { fetch: fakeFetch, sleep: async () => {}, stats },
+    );
+
+    await expect(
+      retrying('https://api.coval.dev/v1/conversations:submit', { method: 'POST' }),
+    ).rejects.toBeInstanceOf(CovalNetworkError);
+
+    // POST is never retried, so exactly one request went out.
+    expect(stats).toEqual({ calls: 1, requests: 1, retries: 0, networkErrors: 1 });
+  });
+
+  it('reports in-transit POST failures through onDebug', async () => {
+    const messages: string[] = [];
+    const fakeFetch = vi.fn(async () => {
+      throw new TypeError('fetch failed');
+    }) as unknown as typeof fetch;
+
+    const retrying = createRetryingFetch(
+      { maxAttempts: 3, baseDelayMs: 1, jitter: () => 0 },
+      { fetch: fakeFetch, sleep: async () => {}, onDebug: (m) => messages.push(m) },
+    );
+
+    await expect(
+      retrying('https://api.coval.dev/v1/conversations:submit', { method: 'POST' }),
+    ).rejects.toBeInstanceOf(CovalNetworkError);
+
+    expect(messages.some((m) => m.includes('failed in transit (not retried)'))).toBe(true);
+  });
+
+  it('formats for pasting into a report', () => {
+    expect(formatTransportStats({ calls: 2, requests: 3, retries: 1, networkErrors: 1 })).toBe(
+      'CovalTransportStats(calls=2, requests=3, retries=1, networkErrors=1)',
+    );
   });
 });
 

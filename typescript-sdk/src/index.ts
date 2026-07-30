@@ -9,6 +9,8 @@ export type { PaginateOptions } from './pagination.js';
 export { apiKeyAuthMiddleware } from './auth.js';
 export { createRetryingFetch } from './retry.js';
 export type { RetryOptions } from './retry.js';
+export { createTransportStats, formatTransportStats } from './stats.js';
+export type { CovalTransportStats } from './stats.js';
 
 // Re-export the entire generated surface so callers can reach for request
 // types, model types, and individual API classes if they want to bypass the

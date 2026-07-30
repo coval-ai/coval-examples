@@ -8,6 +8,7 @@
 
 import { CovalNetworkError } from './errors.js';
 import type { FetchAPI } from './generated/runtime.js';
+import type { CovalTransportStats } from './stats.js';
 
 const RETRYABLE_STATUSES = new Set([408, 429, 500, 502, 503, 504]);
 const RETRYABLE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
@@ -30,6 +31,10 @@ export interface RetryOptions {
 export interface RetryDeps {
   fetch?: FetchAPI;
   sleep?: (ms: number) => Promise<void>;
+  /** Counters mutated in place so the client can expose a live view. */
+  stats?: CovalTransportStats;
+  /** Called with a human-readable line on each retry or network error. */
+  onDebug?: (message: string) => void;
 }
 
 export function createRetryingFetch(options: RetryOptions = {}, deps: RetryDeps = {}): FetchAPI {
@@ -41,16 +46,22 @@ export function createRetryingFetch(options: RetryOptions = {}, deps: RetryDeps 
   const retryableMethods = options.retryableMethods ?? RETRYABLE_METHODS;
   const innerFetch: FetchAPI = deps.fetch ?? (globalThis.fetch as FetchAPI);
   const sleep = deps.sleep ?? ((ms: number) => new Promise((resolve) => setTimeout(resolve, ms)));
+  const stats = deps.stats;
+  const debug = deps.onDebug;
 
   return async function retryingFetch(input, init) {
     let lastError: unknown;
     const method = (init?.method ?? 'GET').toUpperCase();
     const url = typeof input === 'string' ? input : input instanceof URL ? input.toString() : input.url;
+    if (stats) stats.calls += 1;
 
     if (!retryableMethods.has(method)) {
       try {
+        if (stats) stats.requests += 1;
         return await innerFetch(input, init);
       } catch (err) {
+        if (stats) stats.networkErrors += 1;
+        debug?.(`coval-sdk: ${method} ${url} failed in transit (not retried): ${stringifyError(err)}`);
         throw new CovalNetworkError({
           message: `Coval API request failed: ${stringifyError(err)}`,
           url,
@@ -63,15 +74,24 @@ export function createRetryingFetch(options: RetryOptions = {}, deps: RetryDeps 
 
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       try {
+        if (stats) stats.requests += 1;
         const response = await innerFetch(input, init);
         if (!retryable.has(response.status) || attempt === maxAttempts) {
           return response;
         }
         const wait = computeDelay({ attempt, baseDelay, maxDelay, jitter, response });
+        if (stats) stats.retries += 1;
+        debug?.(
+          `coval-sdk: ${method} ${url} returned ${response.status}, retrying in ${wait}ms (attempt ${attempt}/${maxAttempts})`,
+        );
         await sleep(wait);
       } catch (err) {
         lastError = err;
+        if (stats) stats.networkErrors += 1;
         if (attempt === maxAttempts) {
+          debug?.(
+            `coval-sdk: ${method} ${url} failed in transit after ${attempt} attempts: ${stringifyError(err)}`,
+          );
           throw new CovalNetworkError({
             message: `Coval API request failed after ${attempt} attempt${attempt > 1 ? 's' : ''}: ${stringifyError(err)}`,
             url,
@@ -81,6 +101,10 @@ export function createRetryingFetch(options: RetryOptions = {}, deps: RetryDeps 
           });
         }
         const wait = computeDelay({ attempt, baseDelay, maxDelay, jitter });
+        if (stats) stats.retries += 1;
+        debug?.(
+          `coval-sdk: ${method} ${url} failed in transit (${stringifyError(err)}), retrying in ${wait}ms (attempt ${attempt}/${maxAttempts})`,
+        );
         await sleep(wait);
       }
     }
