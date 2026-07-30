@@ -108,6 +108,48 @@ const all = await collectAll({
 });
 ```
 
+### Diagnosing intermittent failures
+
+A request that dies in transit never reaches the API, so there is no
+server-side trace of it. The client keeps live counters:
+
+```ts
+coval.stats;
+// { calls: 12, requests: 14, retries: 2, networkErrors: 1 }
+```
+
+`calls` is logical API calls, `requests` counts every `fetch` including
+retries, and `networkErrors` counts failures where no response came back at
+all. Include these when reporting sporadic timeouts. For a line per retry and
+per in-transit failure:
+
+```ts
+const coval = new CovalClient({ apiKey, onDebug: console.debug });
+```
+
+### Connection reuse
+
+On Node the client uses the global `fetch` (undici), which expires idle
+keep-alive connections after roughly 4 seconds. That bound matters: some
+network paths silently drop an idle connection without closing it, and reusing
+one stalls the request until your timeout, because it never reaches the server.
+
+Requests made within that window can still reuse a pooled connection. If you
+submit infrequently, or you have seen unexplained timeouts, pass an explicit
+dispatcher:
+
+```ts
+import { Agent, fetch as undiciFetch } from 'undici';
+
+const coval = new CovalClient({
+  apiKey,
+  fetch: ((input, init) =>
+    undiciFetch(input as never, { ...init, dispatcher: new Agent({ keepAliveTimeout: 1_000 }) })) as typeof fetch,
+});
+```
+
+The Python SDK exposes the same bound directly as `max_idle_seconds`.
+
 ## Customization
 
 ### Override base URL (staging, self-host)
