@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import logging
+import threading
 import time
-from typing import Any, Optional, Union
+from typing import Any, Dict, Optional, Union
 
 from urllib3 import HTTPConnectionPool, HTTPSConnectionPool
 from urllib3.util import Retry
@@ -51,11 +53,44 @@ RetryConfig = Union[Retry, int, bool]
 DEFAULT_MAX_IDLE_SECONDS = 5.0
 _RETURNED_AT = "_coval_returned_at"
 
+logger = logging.getLogger(__name__)
+
+
+class ConnectionStats:
+  """Counts of how the connection pool has been used.
+
+  Transport problems (a stranded socket, a reaped keep-alive) are invisible
+  server-side because the request never arrives, so these counters are often the
+  only evidence available when diagnosing a report of intermittent timeouts.
+  Read via ``client.connection_stats``.
+  """
+
+  __slots__ = ("_lock", "opened", "reused", "expired")
+
+  def __init__(self) -> None:
+    self._lock = threading.Lock()
+    self.opened = 0  # no pooled connection was available, so a new one was made
+    self.reused = 0  # a pooled connection was still within max_idle_seconds
+    self.expired = 0  # a pooled connection was too old and was discarded
+
+  def _record(self, outcome: str) -> None:
+    with self._lock:
+      setattr(self, outcome, getattr(self, outcome) + 1)
+
+  def as_dict(self) -> Dict[str, int]:
+    with self._lock:
+      return {"opened": self.opened, "reused": self.reused, "expired": self.expired}
+
+  def __repr__(self) -> str:
+    counts = self.as_dict()
+    return "ConnectionStats({})".format(", ".join(f"{k}={v}" for k, v in counts.items()))
+
 
 class _IdleExpiryPoolMixin:
   """Close pooled connections that have been idle longer than max_idle_seconds."""
 
   max_idle_seconds: float = DEFAULT_MAX_IDLE_SECONDS
+  connection_stats: Optional[ConnectionStats] = None
 
   def _put_conn(self, conn: Any) -> None:
     if conn is not None:
@@ -65,15 +100,34 @@ class _IdleExpiryPoolMixin:
   def _get_conn(self, timeout: Optional[float] = None) -> Any:
     conn = super()._get_conn(timeout=timeout)
     returned_at = getattr(conn, _RETURNED_AT, None)
-    if returned_at is not None and time.monotonic() - returned_at > self.max_idle_seconds:
+
+    if returned_at is None:
+      self._record("opened")
+      return conn
+
+    idle_seconds = time.monotonic() - returned_at
+    if idle_seconds > self.max_idle_seconds:
+      self._record("expired")
+      logger.debug(
+        "coval-sdk: discarding pooled connection to %s after %.2fs idle (max_idle_seconds=%.2f)",
+        self.host,
+        idle_seconds,
+        self.max_idle_seconds,
+      )
       # Same idiom urllib3 uses for a dropped connection: close it and hand it
       # back. http.client reconnects on the next request when sock is None.
       conn.close()
+    else:
+      self._record("reused")
     return conn
 
+  def _record(self, outcome: str) -> None:
+    if self.connection_stats is not None:
+      self.connection_stats._record(outcome)
 
-def _expiring_pool_classes(max_idle_seconds: float) -> dict:
-  attrs = {"max_idle_seconds": max_idle_seconds}
+
+def _expiring_pool_classes(max_idle_seconds: float, stats: Optional[ConnectionStats] = None) -> dict:
+  attrs = {"max_idle_seconds": max_idle_seconds, "connection_stats": stats}
   return {
     "http": type("CovalHTTPConnectionPool", (_IdleExpiryPoolMixin, HTTPConnectionPool), attrs),
     "https": type("CovalHTTPSConnectionPool", (_IdleExpiryPoolMixin, HTTPSConnectionPool), attrs),
@@ -132,9 +186,11 @@ class CovalClient:
 
     # Must happen before the first request: PoolManager creates pools lazily and
     # caches them, so a pool built under the default classes would never expire.
+    self.connection_stats: Optional[ConnectionStats] = None
     if max_idle_seconds is not None:
+      self.connection_stats = ConnectionStats()
       self.api_client.rest_client.pool_manager.pool_classes_by_scheme = _expiring_pool_classes(
-        max_idle_seconds
+        max_idle_seconds, self.connection_stats
       )
 
     self.api_keys = APIKeysApi(self.api_client)
