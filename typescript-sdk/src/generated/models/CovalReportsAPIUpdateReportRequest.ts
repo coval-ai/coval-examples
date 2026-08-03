@@ -20,6 +20,13 @@ import {
     CovalReportsAPICompareByToJSON,
     CovalReportsAPICompareByToJSONTyped,
 } from './CovalReportsAPICompareBy.js';
+import type { CovalReportsAPIReportViewConfigurationPatch } from './CovalReportsAPIReportViewConfigurationPatch.js';
+import {
+    CovalReportsAPIReportViewConfigurationPatchFromJSON,
+    CovalReportsAPIReportViewConfigurationPatchFromJSONTyped,
+    CovalReportsAPIReportViewConfigurationPatchToJSON,
+    CovalReportsAPIReportViewConfigurationPatchToJSONTyped,
+} from './CovalReportsAPIReportViewConfigurationPatch.js';
 import type { CovalReportsAPIReportPermission } from './CovalReportsAPIReportPermission.js';
 import {
     CovalReportsAPIReportPermissionFromJSON,
@@ -81,6 +88,15 @@ export interface CovalReportsAPIUpdateReportRequest {
      * @memberof CovalReportsAPIUpdateReportRequest
      */
     permissions?: CovalReportsAPIReportPermission;
+    /**
+     * Merge-only patch for supported report view fields. Requires
+     * `If-Match`; cannot be combined with the legacy top-level
+     * `compare_by` or `metadata_key` fields.
+     * 
+     * @type {CovalReportsAPIReportViewConfigurationPatch}
+     * @memberof CovalReportsAPIUpdateReportRequest
+     */
+    view_config?: CovalReportsAPIReportViewConfigurationPatch;
 }
 
 
@@ -109,6 +125,7 @@ export function CovalReportsAPIUpdateReportRequestFromJSONTyped(json: any, ignor
         'compare_by': json['compare_by'] == null ? undefined : CovalReportsAPICompareByFromJSON(json['compare_by']),
         'metadata_key': json['metadata_key'] == null ? undefined : json['metadata_key'],
         'permissions': json['permissions'] == null ? undefined : CovalReportsAPIReportPermissionFromJSON(json['permissions']),
+        'view_config': json['view_config'] == null ? undefined : CovalReportsAPIReportViewConfigurationPatchFromJSON(json['view_config']),
     };
 }
 
@@ -130,6 +147,7 @@ export function CovalReportsAPIUpdateReportRequestToJSONTyped(value?: CovalRepor
         'compare_by': CovalReportsAPICompareByToJSON(value['compare_by']),
         'metadata_key': value['metadata_key'],
         'permissions': CovalReportsAPIReportPermissionToJSON(value['permissions']),
+        'view_config': CovalReportsAPIReportViewConfigurationPatchToJSON(value['view_config']),
     };
 }
 

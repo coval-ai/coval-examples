@@ -36,7 +36,7 @@ class CovalOrganizationAPIConversationMetricRule(BaseModel):
     metrics: Optional[Annotated[List[StrictStr], Field(min_length=1, max_length=500)]] = Field(default=None, description="Metric IDs to add when the rule matches. Provide exactly one of metric or metrics.")
     metadata_key: Annotated[str, Field(min_length=1, strict=True, max_length=4096)] = Field(description="Run-metadata key to match against.")
     metadata_type: StrictStr = Field(description="Type of the metadata value.")
-    match_type: StrictStr = Field(description="How the metadata value is compared.")
+    match_type: StrictStr = Field(description="How the metadata value is compared. LENGTH_AT_LEAST compares the number of entries in a STRING_ARRAY value against a whole-number threshold, so it works on arrays of objects as well as arrays of strings.")
     metadata_value: CovalOrganizationAPIConversationMetricRuleMetadataValue
     __properties: ClassVar[List[str]] = ["id", "type", "metric", "metrics", "metadata_key", "metadata_type", "match_type", "metadata_value"]
 
@@ -57,8 +57,8 @@ class CovalOrganizationAPIConversationMetricRule(BaseModel):
     @field_validator('match_type')
     def match_type_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['EQUALS', 'CONTAINS', 'STARTS_WITH', 'ENDS_WITH', 'IS_TRUE', 'IS_FALSE', 'CONTAINS_ANY', 'CONTAINS_ALL']):
-            raise ValueError("must be one of enum values ('EQUALS', 'CONTAINS', 'STARTS_WITH', 'ENDS_WITH', 'IS_TRUE', 'IS_FALSE', 'CONTAINS_ANY', 'CONTAINS_ALL')")
+        if value not in set(['EQUALS', 'CONTAINS', 'STARTS_WITH', 'ENDS_WITH', 'IS_TRUE', 'IS_FALSE', 'CONTAINS_ANY', 'CONTAINS_ALL', 'LENGTH_AT_LEAST']):
+            raise ValueError("must be one of enum values ('EQUALS', 'CONTAINS', 'STARTS_WITH', 'ENDS_WITH', 'IS_TRUE', 'IS_FALSE', 'CONTAINS_ANY', 'CONTAINS_ALL', 'LENGTH_AT_LEAST')")
         return value
 
     model_config = ConfigDict(

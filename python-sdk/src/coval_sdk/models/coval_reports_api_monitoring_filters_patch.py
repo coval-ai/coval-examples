@@ -18,20 +18,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
-from typing import Any, ClassVar, Dict, List
-from coval_sdk.models.coval_reports_api_report_detail import CovalReportsAPIReportDetail
+from datetime import datetime
+from pydantic import BaseModel, ConfigDict, Field, StrictBool
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
 
-class CovalReportsAPIUpdateReportResponse(BaseModel):
+class CovalReportsAPIMonitoringFiltersPatch(BaseModel):
     """
-    CovalReportsAPIUpdateReportResponse
+    CovalReportsAPIMonitoringFiltersPatch
     """ # noqa: E501
-    report: CovalReportsAPIReportDetail
-    additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["report"]
+    start_date: Optional[datetime] = Field(default=None, description="Inclusive cohort start. Send null to clear the saved bound.")
+    end_date: Optional[datetime] = Field(default=None, description="Inclusive cohort end. Send null to clear the saved bound.")
+    monitoring_filter: Optional[StrictBool] = Field(default=None, description="Select monitoring (`true`) or simulation (`false`) summaries.")
+    __properties: ClassVar[List[str]] = ["start_date", "end_date", "monitoring_filter"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -51,7 +52,7 @@ class CovalReportsAPIUpdateReportResponse(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CovalReportsAPIUpdateReportResponse from a JSON string"""
+        """Create an instance of CovalReportsAPIMonitoringFiltersPatch from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -63,10 +64,8 @@ class CovalReportsAPIUpdateReportResponse(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
-        * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
-            "additional_properties",
         ])
 
         _dict = self.model_dump(
@@ -74,19 +73,21 @@ class CovalReportsAPIUpdateReportResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of report
-        if self.report:
-            _dict['report'] = self.report.to_dict()
-        # puts key-value pairs in additional_properties in the top level
-        if self.additional_properties is not None:
-            for _key, _value in self.additional_properties.items():
-                _dict[_key] = _value
+        # set to None if start_date (nullable) is None
+        # and model_fields_set contains the field
+        if self.start_date is None and "start_date" in self.model_fields_set:
+            _dict['start_date'] = None
+
+        # set to None if end_date (nullable) is None
+        # and model_fields_set contains the field
+        if self.end_date is None and "end_date" in self.model_fields_set:
+            _dict['end_date'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CovalReportsAPIUpdateReportResponse from a dict"""
+        """Create an instance of CovalReportsAPIMonitoringFiltersPatch from a dict"""
         if obj is None:
             return None
 
@@ -94,13 +95,10 @@ class CovalReportsAPIUpdateReportResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "report": CovalReportsAPIReportDetail.from_dict(obj["report"]) if obj.get("report") is not None else None
+            "start_date": obj.get("start_date"),
+            "end_date": obj.get("end_date"),
+            "monitoring_filter": obj.get("monitoring_filter")
         })
-        # store additional fields in additional_properties
-        for _key in obj.keys():
-            if _key not in cls.__properties:
-                _obj.additional_properties[_key] = obj.get(_key)
-
         return _obj
 
 

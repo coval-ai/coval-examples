@@ -20,22 +20,23 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from coval_sdk.models.coval_reports_api_report_metric_output_value import CovalReportsAPIReportMetricOutputValue
+from typing_extensions import Annotated
+from coval_sdk.models.traces_api_trace_search_aggregate_stats import TracesAPITraceSearchAggregateStats
+from coval_sdk.models.traces_api_trace_search_call_result import TracesAPITraceSearchCallResult
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
 
-class CovalReportsAPIReportMetricOutput(BaseModel):
+class TracesAPITraceSearchResponse(BaseModel):
     """
-    CovalReportsAPIReportMetricOutput
+    TracesAPITraceSearchResponse
     """ # noqa: E501
-    metric_id: Optional[StrictStr] = None
-    metric_output_id: Optional[StrictStr] = Field(default=None, description="Metric output id (26-char ULID).")
-    output_type: Optional[StrictStr] = None
-    value: Optional[CovalReportsAPIReportMetricOutputValue] = None
-    status: Optional[StrictStr] = None
+    items: List[TracesAPITraceSearchCallResult]
+    total_count: Annotated[int, Field(strict=True, ge=0)]
+    next_cursor: Optional[StrictStr] = None
+    aggregate_stats: TracesAPITraceSearchAggregateStats
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["metric_id", "metric_output_id", "output_type", "value", "status"]
+    __properties: ClassVar[List[str]] = ["items", "total_count", "next_cursor", "aggregate_stats"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -55,7 +56,7 @@ class CovalReportsAPIReportMetricOutput(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CovalReportsAPIReportMetricOutput from a JSON string"""
+        """Create an instance of TracesAPITraceSearchResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,39 +79,31 @@ class CovalReportsAPIReportMetricOutput(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of value
-        if self.value:
-            _dict['value'] = self.value.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in items (list)
+        _items = []
+        if self.items:
+            for _item_items in self.items:
+                if _item_items:
+                    _items.append(_item_items.to_dict())
+            _dict['items'] = _items
+        # override the default output from pydantic by calling `to_dict()` of aggregate_stats
+        if self.aggregate_stats:
+            _dict['aggregate_stats'] = self.aggregate_stats.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if metric_id (nullable) is None
+        # set to None if next_cursor (nullable) is None
         # and model_fields_set contains the field
-        if self.metric_id is None and "metric_id" in self.model_fields_set:
-            _dict['metric_id'] = None
-
-        # set to None if metric_output_id (nullable) is None
-        # and model_fields_set contains the field
-        if self.metric_output_id is None and "metric_output_id" in self.model_fields_set:
-            _dict['metric_output_id'] = None
-
-        # set to None if output_type (nullable) is None
-        # and model_fields_set contains the field
-        if self.output_type is None and "output_type" in self.model_fields_set:
-            _dict['output_type'] = None
-
-        # set to None if status (nullable) is None
-        # and model_fields_set contains the field
-        if self.status is None and "status" in self.model_fields_set:
-            _dict['status'] = None
+        if self.next_cursor is None and "next_cursor" in self.model_fields_set:
+            _dict['next_cursor'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CovalReportsAPIReportMetricOutput from a dict"""
+        """Create an instance of TracesAPITraceSearchResponse from a dict"""
         if obj is None:
             return None
 
@@ -118,11 +111,10 @@ class CovalReportsAPIReportMetricOutput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "metric_id": obj.get("metric_id"),
-            "metric_output_id": obj.get("metric_output_id"),
-            "output_type": obj.get("output_type"),
-            "value": CovalReportsAPIReportMetricOutputValue.from_dict(obj["value"]) if obj.get("value") is not None else None,
-            "status": obj.get("status")
+            "items": [TracesAPITraceSearchCallResult.from_dict(_item) for _item in obj["items"]] if obj.get("items") is not None else None,
+            "total_count": obj.get("total_count"),
+            "next_cursor": obj.get("next_cursor"),
+            "aggregate_stats": TracesAPITraceSearchAggregateStats.from_dict(obj["aggregate_stats"]) if obj.get("aggregate_stats") is not None else None
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

@@ -23,6 +23,8 @@
  * - **MODEL_TYPE_CHAT_WEBSOCKET**: Text chat over WebSocket (requires metadata.endpoint in direct mode)
  * - **MODEL_TYPE_SMS**: SMS messaging agents (requires phone_number in E.164 format)
  * - **MODEL_TYPE_WEBSOCKET**: WebSocket voice agents (requires metadata.endpoint wss:// URL in direct mode; metadata.initialization_json is optional)
+ * - **MODEL_TYPE_LIVEKIT**: LiveKit agents (requires metadata.generate_token_endpoint and metadata.livekit_url)
+ * - **MODEL_TYPE_DAILY**: Pipecat Cloud agents (requires metadata.pipecat_api_key and metadata.agent_name)
  * - **MODEL_TYPE_OPENAI_REALTIME**: OpenAI Realtime voice-to-voice agents
  * - **MODEL_TYPE_GEMINI_REALTIME**: Gemini Live voice-to-voice agents
  * - **MODEL_TYPE_GROK_REALTIME**: Grok (xAI) Voice Agent voice-to-voice agents
@@ -37,6 +39,8 @@ export const CovalAgentsAPISimulatorType = {
     ModelTypeChatWebsocket: 'MODEL_TYPE_CHAT_WEBSOCKET',
     ModelTypeSms: 'MODEL_TYPE_SMS',
     ModelTypeWebsocket: 'MODEL_TYPE_WEBSOCKET',
+    ModelTypeLivekit: 'MODEL_TYPE_LIVEKIT',
+    ModelTypeDaily: 'MODEL_TYPE_DAILY',
     ModelTypeOpenaiRealtime: 'MODEL_TYPE_OPENAI_REALTIME',
     ModelTypeGeminiRealtime: 'MODEL_TYPE_GEMINI_REALTIME',
     ModelTypeGrokRealtime: 'MODEL_TYPE_GROK_REALTIME'

@@ -87,6 +87,7 @@ export interface ListReportsRequest {
 export interface UpdateReportRequest {
     reportId: string;
     covalReportsAPIUpdateReportRequest: CovalReportsAPIUpdateReportRequest;
+    ifMatch?: string;
 }
 
 /**
@@ -153,7 +154,7 @@ export interface ReportsApiInterface {
     getReportRequestOpts(requestParameters: GetReportRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Retrieve a saved report by ID.
+     * Retrieve a saved report by ID, including its complete supported view and metric configuration. The response includes a strong `ETag`; send that value in `If-Match` when patching `view_config`. 
      * @summary Get report
      * @param {string} reportId Saved report ULID.
      * @param {*} [options] Override http request option.
@@ -163,7 +164,7 @@ export interface ReportsApiInterface {
     getReportRaw(requestParameters: GetReportRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReportsAPIGetReportResponse>>;
 
     /**
-     * Retrieve a saved report by ID.
+     * Retrieve a saved report by ID, including its complete supported view and metric configuration. The response includes a strong `ETag`; send that value in `If-Match` when patching `view_config`. 
      * Get report
      */
     getReport(requestParameters: GetReportRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReportsAPIGetReportResponse>;
@@ -171,7 +172,7 @@ export interface ReportsApiInterface {
     /**
      * Creates request options for listReportRows without sending the request
      * @param {string} reportId Saved report ULID.
-     * @param {string} [cursor] Pagination cursor from a prior response\&#39;s next_page_token.
+     * @param {string} [cursor] Opaque value from a prior response\&#39;s &#x60;next_page_token&#x60;. It is numeric for run-backed reports and a simulation-ID keyset cursor for dynamic monitoring reports. 
      * @param {number} [limit] Max rows per page (1-2000).
      * @param {string} [metricIds] Comma-separated metric ids to include.
      * @param {string} [simulationOutputIds] Comma-separated simulation output ids to restrict to.
@@ -181,10 +182,10 @@ export interface ReportsApiInterface {
     listReportRowsRequestOpts(requestParameters: ListReportRowsRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * List a report\'s per-simulation rows, each with its metric outputs inline. Cursor-paginated. Optionally narrow with `metric_ids` and `simulation_output_ids` (comma-separated). 
+     * List a report\'s per-simulation rows, each with metric outputs inline. Run-backed reports retain offset-cursor behavior. Dynamic monitoring reports resolve their cohort from the report\'s saved monitoring filters, including saved date bounds, and use an opaque simulation-ID keyset cursor.  For metadata-grouped reports, read the grouping key from `report.view_config.metadata_key`; each row exposes the corresponding value in `metadata`. Optionally narrow returned metrics or simulations with the comma-separated query parameters. 
      * @summary List report rows
      * @param {string} reportId Saved report ULID.
-     * @param {string} [cursor] Pagination cursor from a prior response\&#39;s next_page_token.
+     * @param {string} [cursor] Opaque value from a prior response\&#39;s &#x60;next_page_token&#x60;. It is numeric for run-backed reports and a simulation-ID keyset cursor for dynamic monitoring reports. 
      * @param {number} [limit] Max rows per page (1-2000).
      * @param {string} [metricIds] Comma-separated metric ids to include.
      * @param {string} [simulationOutputIds] Comma-separated simulation output ids to restrict to.
@@ -195,7 +196,7 @@ export interface ReportsApiInterface {
     listReportRowsRaw(requestParameters: ListReportRowsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReportsAPIListReportRowsResponse>>;
 
     /**
-     * List a report\'s per-simulation rows, each with its metric outputs inline. Cursor-paginated. Optionally narrow with `metric_ids` and `simulation_output_ids` (comma-separated). 
+     * List a report\'s per-simulation rows, each with metric outputs inline. Run-backed reports retain offset-cursor behavior. Dynamic monitoring reports resolve their cohort from the report\'s saved monitoring filters, including saved date bounds, and use an opaque simulation-ID keyset cursor.  For metadata-grouped reports, read the grouping key from `report.view_config.metadata_key`; each row exposes the corresponding value in `metadata`. Optionally narrow returned metrics or simulations with the comma-separated query parameters. 
      * List report rows
      */
     listReportRows(requestParameters: ListReportRowsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReportsAPIListReportRowsResponse>;
@@ -230,16 +231,18 @@ export interface ReportsApiInterface {
      * Creates request options for updateReport without sending the request
      * @param {string} reportId Saved report ULID.
      * @param {CovalReportsAPIUpdateReportRequest} covalReportsAPIUpdateReportRequest 
+     * @param {string} [ifMatch] Strong &#x60;ETag&#x60; from &#x60;GET /reports/{report_id}&#x60;. Required when the PATCH body contains &#x60;view_config&#x60;; omit for legacy non-configuration updates. 
      * @throws {RequiredError}
      * @memberof ReportsApiInterface
      */
     updateReportRequestOpts(requestParameters: UpdateReportRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Partially update a saved report. To group by metadata, provide both `compare_by: metadata` and `metadata_key`. 
+     * Partially update a saved report. `view_config` is a typed, merge-only patch: omitted supported fields, unknown compatible stored view fields, `metric_config`, ownership, IDs, and permissions remain unchanged.  Send the `ETag` returned by `GET /reports/{report_id}` in `If-Match` whenever `view_config` is present. A stale value is rejected with 412. The legacy top-level `compare_by` and `metadata_key` fields remain available for backward compatibility. 
      * @summary Update report
      * @param {string} reportId Saved report ULID.
      * @param {CovalReportsAPIUpdateReportRequest} covalReportsAPIUpdateReportRequest 
+     * @param {string} [ifMatch] Strong &#x60;ETag&#x60; from &#x60;GET /reports/{report_id}&#x60;. Required when the PATCH body contains &#x60;view_config&#x60;; omit for legacy non-configuration updates. 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ReportsApiInterface
@@ -247,7 +250,7 @@ export interface ReportsApiInterface {
     updateReportRaw(requestParameters: UpdateReportRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReportsAPIUpdateReportResponse>>;
 
     /**
-     * Partially update a saved report. To group by metadata, provide both `compare_by: metadata` and `metadata_key`. 
+     * Partially update a saved report. `view_config` is a typed, merge-only patch: omitted supported fields, unknown compatible stored view fields, `metric_config`, ownership, IDs, and permissions remain unchanged.  Send the `ETag` returned by `GET /reports/{report_id}` in `If-Match` whenever `view_config` is present. A stale value is rejected with 412. The legacy top-level `compare_by` and `metadata_key` fields remain available for backward compatibility. 
      * Update report
      */
     updateReport(requestParameters: UpdateReportRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReportsAPIUpdateReportResponse>;
@@ -395,7 +398,7 @@ export class ReportsApi extends runtime.BaseAPI implements ReportsApiInterface {
     }
 
     /**
-     * Retrieve a saved report by ID.
+     * Retrieve a saved report by ID, including its complete supported view and metric configuration. The response includes a strong `ETag`; send that value in `If-Match` when patching `view_config`. 
      * Get report
      */
     async getReportRaw(requestParameters: GetReportRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReportsAPIGetReportResponse>> {
@@ -406,7 +409,7 @@ export class ReportsApi extends runtime.BaseAPI implements ReportsApiInterface {
     }
 
     /**
-     * Retrieve a saved report by ID.
+     * Retrieve a saved report by ID, including its complete supported view and metric configuration. The response includes a strong `ETag`; send that value in `If-Match` when patching `view_config`. 
      * Get report
      */
     async getReport(requestParameters: GetReportRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReportsAPIGetReportResponse> {
@@ -462,7 +465,7 @@ export class ReportsApi extends runtime.BaseAPI implements ReportsApiInterface {
     }
 
     /**
-     * List a report\'s per-simulation rows, each with its metric outputs inline. Cursor-paginated. Optionally narrow with `metric_ids` and `simulation_output_ids` (comma-separated). 
+     * List a report\'s per-simulation rows, each with metric outputs inline. Run-backed reports retain offset-cursor behavior. Dynamic monitoring reports resolve their cohort from the report\'s saved monitoring filters, including saved date bounds, and use an opaque simulation-ID keyset cursor.  For metadata-grouped reports, read the grouping key from `report.view_config.metadata_key`; each row exposes the corresponding value in `metadata`. Optionally narrow returned metrics or simulations with the comma-separated query parameters. 
      * List report rows
      */
     async listReportRowsRaw(requestParameters: ListReportRowsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReportsAPIListReportRowsResponse>> {
@@ -473,7 +476,7 @@ export class ReportsApi extends runtime.BaseAPI implements ReportsApiInterface {
     }
 
     /**
-     * List a report\'s per-simulation rows, each with its metric outputs inline. Cursor-paginated. Optionally narrow with `metric_ids` and `simulation_output_ids` (comma-separated). 
+     * List a report\'s per-simulation rows, each with metric outputs inline. Run-backed reports retain offset-cursor behavior. Dynamic monitoring reports resolve their cohort from the report\'s saved monitoring filters, including saved date bounds, and use an opaque simulation-ID keyset cursor.  For metadata-grouped reports, read the grouping key from `report.view_config.metadata_key`; each row exposes the corresponding value in `metadata`. Optionally narrow returned metrics or simulations with the comma-separated query parameters. 
      * List report rows
      */
     async listReportRows(requestParameters: ListReportRowsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReportsAPIListReportRowsResponse> {
@@ -556,6 +559,10 @@ export class ReportsApi extends runtime.BaseAPI implements ReportsApiInterface {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (requestParameters['ifMatch'] != null) {
+            headerParameters['If-Match'] = String(requestParameters['ifMatch']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Reports_API_ApiKeyAuth authentication
         }
@@ -574,7 +581,7 @@ export class ReportsApi extends runtime.BaseAPI implements ReportsApiInterface {
     }
 
     /**
-     * Partially update a saved report. To group by metadata, provide both `compare_by: metadata` and `metadata_key`. 
+     * Partially update a saved report. `view_config` is a typed, merge-only patch: omitted supported fields, unknown compatible stored view fields, `metric_config`, ownership, IDs, and permissions remain unchanged.  Send the `ETag` returned by `GET /reports/{report_id}` in `If-Match` whenever `view_config` is present. A stale value is rejected with 412. The legacy top-level `compare_by` and `metadata_key` fields remain available for backward compatibility. 
      * Update report
      */
     async updateReportRaw(requestParameters: UpdateReportRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReportsAPIUpdateReportResponse>> {
@@ -585,7 +592,7 @@ export class ReportsApi extends runtime.BaseAPI implements ReportsApiInterface {
     }
 
     /**
-     * Partially update a saved report. To group by metadata, provide both `compare_by: metadata` and `metadata_key`. 
+     * Partially update a saved report. `view_config` is a typed, merge-only patch: omitted supported fields, unknown compatible stored view fields, `metric_config`, ownership, IDs, and permissions remain unchanged.  Send the `ETag` returned by `GET /reports/{report_id}` in `If-Match` whenever `view_config` is present. A stale value is rejected with 412. The legacy top-level `compare_by` and `metadata_key` fields remain available for backward compatibility. 
      * Update report
      */
     async updateReport(requestParameters: UpdateReportRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReportsAPIUpdateReportResponse> {

@@ -18,24 +18,32 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from coval_sdk.models.coval_reports_api_report_metric_output_value import CovalReportsAPIReportMetricOutputValue
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
 
-class CovalReportsAPIReportMetricOutput(BaseModel):
+class TracesAPITraceSearchAttributeFilter(BaseModel):
     """
-    CovalReportsAPIReportMetricOutput
+    TracesAPITraceSearchAttributeFilter
     """ # noqa: E501
-    metric_id: Optional[StrictStr] = None
-    metric_output_id: Optional[StrictStr] = Field(default=None, description="Metric output id (26-char ULID).")
-    output_type: Optional[StrictStr] = None
-    value: Optional[CovalReportsAPIReportMetricOutputValue] = None
-    status: Optional[StrictStr] = None
+    key: Annotated[str, Field(min_length=1, strict=True, max_length=500)]
+    operator: Optional[StrictStr] = 'contains'
+    value: Optional[Annotated[str, Field(strict=True, max_length=500)]] = Field(default=None, description="Optional for `exists`; required for value comparisons.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["metric_id", "metric_output_id", "output_type", "value", "status"]
+    __properties: ClassVar[List[str]] = ["key", "operator", "value"]
+
+    @field_validator('operator')
+    def operator_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['contains', 'eq', 'exists', 'gt', 'gte', 'lt', 'lte']):
+            raise ValueError("must be one of enum values ('contains', 'eq', 'exists', 'gt', 'gte', 'lt', 'lte')")
+        return value
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -55,7 +63,7 @@ class CovalReportsAPIReportMetricOutput(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CovalReportsAPIReportMetricOutput from a JSON string"""
+        """Create an instance of TracesAPITraceSearchAttributeFilter from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,39 +86,21 @@ class CovalReportsAPIReportMetricOutput(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of value
-        if self.value:
-            _dict['value'] = self.value.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if metric_id (nullable) is None
+        # set to None if value (nullable) is None
         # and model_fields_set contains the field
-        if self.metric_id is None and "metric_id" in self.model_fields_set:
-            _dict['metric_id'] = None
-
-        # set to None if metric_output_id (nullable) is None
-        # and model_fields_set contains the field
-        if self.metric_output_id is None and "metric_output_id" in self.model_fields_set:
-            _dict['metric_output_id'] = None
-
-        # set to None if output_type (nullable) is None
-        # and model_fields_set contains the field
-        if self.output_type is None and "output_type" in self.model_fields_set:
-            _dict['output_type'] = None
-
-        # set to None if status (nullable) is None
-        # and model_fields_set contains the field
-        if self.status is None and "status" in self.model_fields_set:
-            _dict['status'] = None
+        if self.value is None and "value" in self.model_fields_set:
+            _dict['value'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CovalReportsAPIReportMetricOutput from a dict"""
+        """Create an instance of TracesAPITraceSearchAttributeFilter from a dict"""
         if obj is None:
             return None
 
@@ -118,11 +108,9 @@ class CovalReportsAPIReportMetricOutput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "metric_id": obj.get("metric_id"),
-            "metric_output_id": obj.get("metric_output_id"),
-            "output_type": obj.get("output_type"),
-            "value": CovalReportsAPIReportMetricOutputValue.from_dict(obj["value"]) if obj.get("value") is not None else None,
-            "status": obj.get("status")
+            "key": obj.get("key"),
+            "operator": obj.get("operator") if obj.get("operator") is not None else 'contains',
+            "value": obj.get("value")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

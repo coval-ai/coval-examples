@@ -13,13 +13,13 @@
  */
 
 import { mapValues } from '../runtime.js';
-import type { CovalReportsAPIReport } from './CovalReportsAPIReport.js';
+import type { CovalReportsAPIReportDetail } from './CovalReportsAPIReportDetail.js';
 import {
-    CovalReportsAPIReportFromJSON,
-    CovalReportsAPIReportFromJSONTyped,
-    CovalReportsAPIReportToJSON,
-    CovalReportsAPIReportToJSONTyped,
-} from './CovalReportsAPIReport.js';
+    CovalReportsAPIReportDetailFromJSON,
+    CovalReportsAPIReportDetailFromJSONTyped,
+    CovalReportsAPIReportDetailToJSON,
+    CovalReportsAPIReportDetailToJSONTyped,
+} from './CovalReportsAPIReportDetail.js';
 
 /**
  * 
@@ -29,10 +29,10 @@ import {
 export interface CovalReportsAPIGetReportResponse {
     /**
      * 
-     * @type {CovalReportsAPIReport}
+     * @type {CovalReportsAPIReportDetail}
      * @memberof CovalReportsAPIGetReportResponse
      */
-    report: CovalReportsAPIReport;
+    report: CovalReportsAPIReportDetail;
 }
 
 /**
@@ -53,7 +53,7 @@ export function CovalReportsAPIGetReportResponseFromJSONTyped(json: any, ignoreD
     }
     return {
         
-        'report': CovalReportsAPIReportFromJSON(json['report']),
+        'report': CovalReportsAPIReportDetailFromJSON(json['report']),
     };
 }
 
@@ -68,7 +68,7 @@ export function CovalReportsAPIGetReportResponseToJSONTyped(value?: CovalReports
 
     return {
         
-        'report': CovalReportsAPIReportToJSON(value['report']),
+        'report': CovalReportsAPIReportDetailToJSON(value['report']),
     };
 }
 

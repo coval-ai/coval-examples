@@ -15,7 +15,7 @@
 """  # noqa: E501
 
 
-__version__ = "0.6.0"
+__version__ = "0.6.1"
 
 # Define package exports
 __all__ = [
@@ -285,11 +285,17 @@ __all__ = [
     "CovalReportsAPIGetReportResponse",
     "CovalReportsAPIListReportRowsResponse",
     "CovalReportsAPIListReportsResponse",
+    "CovalReportsAPIMonitoringFiltersConfiguration",
+    "CovalReportsAPIMonitoringFiltersPatch",
     "CovalReportsAPIReport",
+    "CovalReportsAPIReportDetail",
+    "CovalReportsAPIReportMetricConfigurationEntry",
     "CovalReportsAPIReportMetricOutput",
     "CovalReportsAPIReportMetricOutputValue",
     "CovalReportsAPIReportPermission",
     "CovalReportsAPIReportRowResource",
+    "CovalReportsAPIReportViewConfiguration",
+    "CovalReportsAPIReportViewConfigurationPatch",
     "CovalReportsAPIUpdateReportRequest",
     "CovalReportsAPIUpdateReportResponse",
     "CovalReviewsAPIAnnotationPriority",
@@ -456,6 +462,12 @@ __all__ = [
     "TracesAPISimulationTracesResponse",
     "TracesAPITraceQualitySummary",
     "TracesAPITraceQualitySummaryExportLag",
+    "TracesAPITraceSearchAggregateStats",
+    "TracesAPITraceSearchAttributeFilter",
+    "TracesAPITraceSearchCallResult",
+    "TracesAPITraceSearchFilters",
+    "TracesAPITraceSearchRequest",
+    "TracesAPITraceSearchResponse",
 ]
 
 # import apis into sdk package
@@ -726,11 +738,17 @@ from coval_sdk.models.coval_reports_api_error_response import CovalReportsAPIErr
 from coval_sdk.models.coval_reports_api_get_report_response import CovalReportsAPIGetReportResponse as CovalReportsAPIGetReportResponse
 from coval_sdk.models.coval_reports_api_list_report_rows_response import CovalReportsAPIListReportRowsResponse as CovalReportsAPIListReportRowsResponse
 from coval_sdk.models.coval_reports_api_list_reports_response import CovalReportsAPIListReportsResponse as CovalReportsAPIListReportsResponse
+from coval_sdk.models.coval_reports_api_monitoring_filters_configuration import CovalReportsAPIMonitoringFiltersConfiguration as CovalReportsAPIMonitoringFiltersConfiguration
+from coval_sdk.models.coval_reports_api_monitoring_filters_patch import CovalReportsAPIMonitoringFiltersPatch as CovalReportsAPIMonitoringFiltersPatch
 from coval_sdk.models.coval_reports_api_report import CovalReportsAPIReport as CovalReportsAPIReport
+from coval_sdk.models.coval_reports_api_report_detail import CovalReportsAPIReportDetail as CovalReportsAPIReportDetail
+from coval_sdk.models.coval_reports_api_report_metric_configuration_entry import CovalReportsAPIReportMetricConfigurationEntry as CovalReportsAPIReportMetricConfigurationEntry
 from coval_sdk.models.coval_reports_api_report_metric_output import CovalReportsAPIReportMetricOutput as CovalReportsAPIReportMetricOutput
 from coval_sdk.models.coval_reports_api_report_metric_output_value import CovalReportsAPIReportMetricOutputValue as CovalReportsAPIReportMetricOutputValue
 from coval_sdk.models.coval_reports_api_report_permission import CovalReportsAPIReportPermission as CovalReportsAPIReportPermission
 from coval_sdk.models.coval_reports_api_report_row_resource import CovalReportsAPIReportRowResource as CovalReportsAPIReportRowResource
+from coval_sdk.models.coval_reports_api_report_view_configuration import CovalReportsAPIReportViewConfiguration as CovalReportsAPIReportViewConfiguration
+from coval_sdk.models.coval_reports_api_report_view_configuration_patch import CovalReportsAPIReportViewConfigurationPatch as CovalReportsAPIReportViewConfigurationPatch
 from coval_sdk.models.coval_reports_api_update_report_request import CovalReportsAPIUpdateReportRequest as CovalReportsAPIUpdateReportRequest
 from coval_sdk.models.coval_reports_api_update_report_response import CovalReportsAPIUpdateReportResponse as CovalReportsAPIUpdateReportResponse
 from coval_sdk.models.coval_reviews_api_annotation_priority import CovalReviewsAPIAnnotationPriority as CovalReviewsAPIAnnotationPriority
@@ -897,6 +915,12 @@ from coval_sdk.models.traces_api_error_response_error_details_inner import Trace
 from coval_sdk.models.traces_api_simulation_traces_response import TracesAPISimulationTracesResponse as TracesAPISimulationTracesResponse
 from coval_sdk.models.traces_api_trace_quality_summary import TracesAPITraceQualitySummary as TracesAPITraceQualitySummary
 from coval_sdk.models.traces_api_trace_quality_summary_export_lag import TracesAPITraceQualitySummaryExportLag as TracesAPITraceQualitySummaryExportLag
+from coval_sdk.models.traces_api_trace_search_aggregate_stats import TracesAPITraceSearchAggregateStats as TracesAPITraceSearchAggregateStats
+from coval_sdk.models.traces_api_trace_search_attribute_filter import TracesAPITraceSearchAttributeFilter as TracesAPITraceSearchAttributeFilter
+from coval_sdk.models.traces_api_trace_search_call_result import TracesAPITraceSearchCallResult as TracesAPITraceSearchCallResult
+from coval_sdk.models.traces_api_trace_search_filters import TracesAPITraceSearchFilters as TracesAPITraceSearchFilters
+from coval_sdk.models.traces_api_trace_search_request import TracesAPITraceSearchRequest as TracesAPITraceSearchRequest
+from coval_sdk.models.traces_api_trace_search_response import TracesAPITraceSearchResponse as TracesAPITraceSearchResponse
 
 from coval_sdk.client import CovalClient
 

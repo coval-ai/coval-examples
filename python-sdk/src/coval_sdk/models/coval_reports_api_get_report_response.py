@@ -20,7 +20,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List
-from coval_sdk.models.coval_reports_api_report import CovalReportsAPIReport
+from coval_sdk.models.coval_reports_api_report_detail import CovalReportsAPIReportDetail
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -29,7 +29,7 @@ class CovalReportsAPIGetReportResponse(BaseModel):
     """
     CovalReportsAPIGetReportResponse
     """ # noqa: E501
-    report: CovalReportsAPIReport
+    report: CovalReportsAPIReportDetail
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["report"]
 
@@ -94,7 +94,7 @@ class CovalReportsAPIGetReportResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "report": CovalReportsAPIReport.from_dict(obj["report"]) if obj.get("report") is not None else None
+            "report": CovalReportsAPIReportDetail.from_dict(obj["report"]) if obj.get("report") is not None else None
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

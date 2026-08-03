@@ -12,35 +12,54 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from '../runtime.js';
 /**
+ * @type CovalReportsAPIReportMetricOutputValue
  * Metric value (float, string, or list of strings).
  * @export
- * @interface CovalReportsAPIReportMetricOutputValue
  */
-export interface CovalReportsAPIReportMetricOutputValue {
-}
-
-/**
- * Check if a given object implements the CovalReportsAPIReportMetricOutputValue interface.
- */
-export function instanceOfCovalReportsAPIReportMetricOutputValue(value: object): value is CovalReportsAPIReportMetricOutputValue {
-    return true;
-}
+export type CovalReportsAPIReportMetricOutputValue = Array<string> | number | string;
 
 export function CovalReportsAPIReportMetricOutputValueFromJSON(json: any): CovalReportsAPIReportMetricOutputValue {
     return CovalReportsAPIReportMetricOutputValueFromJSONTyped(json, false);
 }
 
 export function CovalReportsAPIReportMetricOutputValueFromJSONTyped(json: any, ignoreDiscriminator: boolean): CovalReportsAPIReportMetricOutputValue {
-    return json;
+    if (json == null) {
+        return json;
+    }
+    if (Array.isArray(json)) {
+        if (json.every(item => typeof item === 'string')) {
+            return json;
+        }
+    }
+    if (typeof json === 'number') {
+        return json;
+    }
+    if (typeof json === 'string') {
+        return json;
+    }
+    return {} as any;
 }
 
-export function CovalReportsAPIReportMetricOutputValueToJSON(json: any): CovalReportsAPIReportMetricOutputValue {
+export function CovalReportsAPIReportMetricOutputValueToJSON(json: any): any {
     return CovalReportsAPIReportMetricOutputValueToJSONTyped(json, false);
 }
 
 export function CovalReportsAPIReportMetricOutputValueToJSONTyped(value?: CovalReportsAPIReportMetricOutputValue | null, ignoreDiscriminator: boolean = false): any {
-    return value;
+    if (value == null) {
+        return value;
+    }
+    if (Array.isArray(value)) {
+        if (value.every(item => typeof item === 'string')) {
+            return value;
+        }
+    }
+    if (typeof value === 'number') {
+        return value;
+    }
+    if (typeof value === 'string') {
+        return value;
+    }
+    return {};
 }
 

@@ -18,30 +18,32 @@ from inspect import getfullargspec
 import json
 import pprint
 import re  # noqa: F401
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, ValidationError, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, ValidationError, field_validator
 from typing import List, Optional
 from typing import Union, Any, List, Set, TYPE_CHECKING, Optional, Dict
 from typing_extensions import Literal, Self
 from pydantic import Field
 
-COVALORGANIZATIONAPICONVERSATIONMETRICRULEMETADATAVALUE_ANY_OF_SCHEMAS = ["List[str]", "bool", "str"]
+COVALORGANIZATIONAPICONVERSATIONMETRICRULEMETADATAVALUE_ANY_OF_SCHEMAS = ["List[str]", "bool", "int", "str"]
 
 class CovalOrganizationAPIConversationMetricRuleMetadataValue(BaseModel):
     """
-    Value to compare the run metadata against.
+    Value to compare the run metadata against. For LENGTH_AT_LEAST this is the minimum number of array entries required, as a whole number.
     """
 
     # data type: str
     anyof_schema_1_validator: Optional[StrictStr] = None
     # data type: bool
     anyof_schema_2_validator: Optional[StrictBool] = None
+    # data type: int
+    anyof_schema_3_validator: Optional[StrictInt] = None
     # data type: List[str]
-    anyof_schema_3_validator: Optional[List[StrictStr]] = None
+    anyof_schema_4_validator: Optional[List[StrictStr]] = None
     if TYPE_CHECKING:
-        actual_instance: Optional[Union[List[str], bool, str]] = None
+        actual_instance: Optional[Union[List[str], bool, int, str]] = None
     else:
         actual_instance: Any = None
-    any_of_schemas: Set[str] = { "List[str]", "bool", "str" }
+    any_of_schemas: Set[str] = { "List[str]", "bool", "int", "str" }
 
     model_config = {
         "validate_assignment": True,
@@ -74,15 +76,21 @@ class CovalOrganizationAPIConversationMetricRuleMetadataValue(BaseModel):
             return v
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # validate data type: List[str]
+        # validate data type: int
         try:
             instance.anyof_schema_3_validator = v
             return v
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # validate data type: List[str]
+        try:
+            instance.anyof_schema_4_validator = v
+            return v
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         if error_messages:
             # no match
-            raise ValueError("No match found when setting the actual_instance in CovalOrganizationAPIConversationMetricRuleMetadataValue with anyOf schemas: List[str], bool, str. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting the actual_instance in CovalOrganizationAPIConversationMetricRuleMetadataValue with anyOf schemas: List[str], bool, int, str. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -113,7 +121,7 @@ class CovalOrganizationAPIConversationMetricRuleMetadataValue(BaseModel):
             return instance
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into List[str]
+        # deserialize data into int
         try:
             # validation
             instance.anyof_schema_3_validator = json.loads(json_str)
@@ -122,10 +130,19 @@ class CovalOrganizationAPIConversationMetricRuleMetadataValue(BaseModel):
             return instance
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into List[str]
+        try:
+            # validation
+            instance.anyof_schema_4_validator = json.loads(json_str)
+            # assign value to actual_instance
+            instance.actual_instance = instance.anyof_schema_4_validator
+            return instance
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
 
         if error_messages:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into CovalOrganizationAPIConversationMetricRuleMetadataValue with anyOf schemas: List[str], bool, str. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into CovalOrganizationAPIConversationMetricRuleMetadataValue with anyOf schemas: List[str], bool, int, str. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -139,7 +156,7 @@ class CovalOrganizationAPIConversationMetricRuleMetadataValue(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], List[str], bool, str]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], List[str], bool, int, str]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None
