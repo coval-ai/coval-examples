@@ -64,7 +64,7 @@ export interface CovalOrganizationAPIConversationMetricRule {
      */
     metadata_type: CovalOrganizationAPIConversationMetricRuleMetadataTypeEnum;
     /**
-     * How the metadata value is compared.
+     * How the metadata value is compared. LENGTH_AT_LEAST compares the number of entries in a STRING_ARRAY value against a whole-number threshold, so it works on arrays of objects as well as arrays of strings.
      * @type {CovalOrganizationAPIConversationMetricRuleMatchTypeEnum}
      * @memberof CovalOrganizationAPIConversationMetricRule
      */
@@ -107,7 +107,8 @@ export const CovalOrganizationAPIConversationMetricRuleMatchTypeEnum = {
     IsTrue: 'IS_TRUE',
     IsFalse: 'IS_FALSE',
     ContainsAny: 'CONTAINS_ANY',
-    ContainsAll: 'CONTAINS_ALL'
+    ContainsAll: 'CONTAINS_ALL',
+    LengthAtLeast: 'LENGTH_AT_LEAST'
 } as const;
 export type CovalOrganizationAPIConversationMetricRuleMatchTypeEnum = typeof CovalOrganizationAPIConversationMetricRuleMatchTypeEnum[keyof typeof CovalOrganizationAPIConversationMetricRuleMatchTypeEnum];
 

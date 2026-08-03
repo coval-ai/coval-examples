@@ -33,6 +33,16 @@ import {
     TracesAPISimulationTracesResponseFromJSON,
     TracesAPISimulationTracesResponseToJSON,
 } from '../models/TracesAPISimulationTracesResponse.js';
+import {
+    type TracesAPITraceSearchRequest,
+    TracesAPITraceSearchRequestFromJSON,
+    TracesAPITraceSearchRequestToJSON,
+} from '../models/TracesAPITraceSearchRequest.js';
+import {
+    type TracesAPITraceSearchResponse,
+    TracesAPITraceSearchResponseFromJSON,
+    TracesAPITraceSearchResponseToJSON,
+} from '../models/TracesAPITraceSearchResponse.js';
 
 export interface GetTraceQualitySummaryRequest {
     simulationId?: string;
@@ -49,6 +59,10 @@ export interface ListSimulationTracesRequest {
     simulationOutputId: string;
     limit?: number;
     offset?: number;
+}
+
+export interface SearchTraceCallsRequest {
+    tracesAPITraceSearchRequest?: TracesAPITraceSearchRequest;
 }
 
 /**
@@ -139,6 +153,30 @@ export interface TracesApiInterface {
      * List trace spans for a simulation output
      */
     listSimulationTraces(requestParameters: ListSimulationTracesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TracesAPISimulationTracesResponse>;
+
+    /**
+     * Creates request options for searchTraceCalls without sending the request
+     * @param {TracesAPITraceSearchRequest} [tracesAPITraceSearchRequest] Search filters and cursor. An omitted or empty body searches all trace-bearing calls.
+     * @throws {RequiredError}
+     * @memberof TracesApiInterface
+     */
+    searchTraceCallsRequestOpts(requestParameters: SearchTraceCallsRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Searches calls with ingested traces across the authenticated organization. Filters match spans, while each result represents one simulation output or monitoring conversation. Results include matched span facets and aggregate status counts, but not raw attribute values.  Pagination is cursor-based. Pass `next_cursor` from one response as `cursor` in the next request while keeping the filters and sort order unchanged. 
+     * @summary Search trace-bearing calls
+     * @param {TracesAPITraceSearchRequest} [tracesAPITraceSearchRequest] Search filters and cursor. An omitted or empty body searches all trace-bearing calls.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TracesApiInterface
+     */
+    searchTraceCallsRaw(requestParameters: SearchTraceCallsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TracesAPITraceSearchResponse>>;
+
+    /**
+     * Searches calls with ingested traces across the authenticated organization. Filters match spans, while each result represents one simulation output or monitoring conversation. Results include matched span facets and aggregate status counts, but not raw attribute values.  Pagination is cursor-based. Pass `next_cursor` from one response as `cursor` in the next request while keeping the filters and sort order unchanged. 
+     * Search trace-bearing calls
+     */
+    searchTraceCalls(requestParameters: SearchTraceCallsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TracesAPITraceSearchResponse>;
 
 }
 
@@ -318,6 +356,52 @@ export class TracesApi extends runtime.BaseAPI implements TracesApiInterface {
      */
     async listSimulationTraces(requestParameters: ListSimulationTracesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TracesAPISimulationTracesResponse> {
         const response = await this.listSimulationTracesRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for searchTraceCalls without sending the request
+     */
+    async searchTraceCallsRequestOpts(requestParameters: SearchTraceCallsRequest): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Traces_API_apiKey authentication
+        }
+
+
+        let urlPath = `/traces/search`;
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: TracesAPITraceSearchRequestToJSON(requestParameters['tracesAPITraceSearchRequest']),
+        };
+    }
+
+    /**
+     * Searches calls with ingested traces across the authenticated organization. Filters match spans, while each result represents one simulation output or monitoring conversation. Results include matched span facets and aggregate status counts, but not raw attribute values.  Pagination is cursor-based. Pass `next_cursor` from one response as `cursor` in the next request while keeping the filters and sort order unchanged. 
+     * Search trace-bearing calls
+     */
+    async searchTraceCallsRaw(requestParameters: SearchTraceCallsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TracesAPITraceSearchResponse>> {
+        const requestOptions = await this.searchTraceCallsRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => TracesAPITraceSearchResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Searches calls with ingested traces across the authenticated organization. Filters match spans, while each result represents one simulation output or monitoring conversation. Results include matched span facets and aggregate status counts, but not raw attribute values.  Pagination is cursor-based. Pass `next_cursor` from one response as `cursor` in the next request while keeping the filters and sort order unchanged. 
+     * Search trace-bearing calls
+     */
+    async searchTraceCalls(requestParameters: SearchTraceCallsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TracesAPITraceSearchResponse> {
+        const response = await this.searchTraceCallsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

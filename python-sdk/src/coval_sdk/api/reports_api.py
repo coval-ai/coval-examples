@@ -630,7 +630,7 @@ class ReportsApi:
     ) -> CovalReportsAPIGetReportResponse:
         """Get report
 
-        Retrieve a saved report by ID.
+        Retrieve a saved report by ID, including its complete supported view and metric configuration. The response includes a strong `ETag`; send that value in `If-Match` when patching `view_config`. 
 
         :param report_id: Saved report ULID. (required)
         :type report_id: str
@@ -702,7 +702,7 @@ class ReportsApi:
     ) -> ApiResponse[CovalReportsAPIGetReportResponse]:
         """Get report
 
-        Retrieve a saved report by ID.
+        Retrieve a saved report by ID, including its complete supported view and metric configuration. The response includes a strong `ETag`; send that value in `If-Match` when patching `view_config`. 
 
         :param report_id: Saved report ULID. (required)
         :type report_id: str
@@ -774,7 +774,7 @@ class ReportsApi:
     ) -> RESTResponseType:
         """Get report
 
-        Retrieve a saved report by ID.
+        Retrieve a saved report by ID, including its complete supported view and metric configuration. The response includes a strong `ETag`; send that value in `If-Match` when patching `view_config`. 
 
         :param report_id: Saved report ULID. (required)
         :type report_id: str
@@ -891,7 +891,7 @@ class ReportsApi:
     def list_report_rows(
         self,
         report_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="Saved report ULID.")],
-        cursor: Annotated[Optional[StrictStr], Field(description="Pagination cursor from a prior response's next_page_token.")] = None,
+        cursor: Annotated[Optional[StrictStr], Field(description="Opaque value from a prior response's `next_page_token`. It is numeric for run-backed reports and a simulation-ID keyset cursor for dynamic monitoring reports. ")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=2000, strict=True, ge=1)]], Field(description="Max rows per page (1-2000).")] = None,
         metric_ids: Annotated[Optional[StrictStr], Field(description="Comma-separated metric ids to include.")] = None,
         simulation_output_ids: Annotated[Optional[StrictStr], Field(description="Comma-separated simulation output ids to restrict to.")] = None,
@@ -910,11 +910,11 @@ class ReportsApi:
     ) -> CovalReportsAPIListReportRowsResponse:
         """List report rows
 
-        List a report's per-simulation rows, each with its metric outputs inline. Cursor-paginated. Optionally narrow with `metric_ids` and `simulation_output_ids` (comma-separated). 
+        List a report's per-simulation rows, each with metric outputs inline. Run-backed reports retain offset-cursor behavior. Dynamic monitoring reports resolve their cohort from the report's saved monitoring filters, including saved date bounds, and use an opaque simulation-ID keyset cursor.  For metadata-grouped reports, read the grouping key from `report.view_config.metadata_key`; each row exposes the corresponding value in `metadata`. Optionally narrow returned metrics or simulations with the comma-separated query parameters. 
 
         :param report_id: Saved report ULID. (required)
         :type report_id: str
-        :param cursor: Pagination cursor from a prior response's next_page_token.
+        :param cursor: Opaque value from a prior response's `next_page_token`. It is numeric for run-backed reports and a simulation-ID keyset cursor for dynamic monitoring reports. 
         :type cursor: str
         :param limit: Max rows per page (1-2000).
         :type limit: int
@@ -961,6 +961,7 @@ class ReportsApi:
             '400': "CovalReportsAPIErrorResponse",
             '401': "CovalReportsAPIErrorResponse",
             '403': "CovalReportsAPIErrorResponse",
+            '404': "CovalReportsAPIErrorResponse",
             '500': "CovalReportsAPIErrorResponse",
             '503': "CovalReportsAPIErrorResponse",
         }
@@ -979,7 +980,7 @@ class ReportsApi:
     def list_report_rows_with_http_info(
         self,
         report_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="Saved report ULID.")],
-        cursor: Annotated[Optional[StrictStr], Field(description="Pagination cursor from a prior response's next_page_token.")] = None,
+        cursor: Annotated[Optional[StrictStr], Field(description="Opaque value from a prior response's `next_page_token`. It is numeric for run-backed reports and a simulation-ID keyset cursor for dynamic monitoring reports. ")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=2000, strict=True, ge=1)]], Field(description="Max rows per page (1-2000).")] = None,
         metric_ids: Annotated[Optional[StrictStr], Field(description="Comma-separated metric ids to include.")] = None,
         simulation_output_ids: Annotated[Optional[StrictStr], Field(description="Comma-separated simulation output ids to restrict to.")] = None,
@@ -998,11 +999,11 @@ class ReportsApi:
     ) -> ApiResponse[CovalReportsAPIListReportRowsResponse]:
         """List report rows
 
-        List a report's per-simulation rows, each with its metric outputs inline. Cursor-paginated. Optionally narrow with `metric_ids` and `simulation_output_ids` (comma-separated). 
+        List a report's per-simulation rows, each with metric outputs inline. Run-backed reports retain offset-cursor behavior. Dynamic monitoring reports resolve their cohort from the report's saved monitoring filters, including saved date bounds, and use an opaque simulation-ID keyset cursor.  For metadata-grouped reports, read the grouping key from `report.view_config.metadata_key`; each row exposes the corresponding value in `metadata`. Optionally narrow returned metrics or simulations with the comma-separated query parameters. 
 
         :param report_id: Saved report ULID. (required)
         :type report_id: str
-        :param cursor: Pagination cursor from a prior response's next_page_token.
+        :param cursor: Opaque value from a prior response's `next_page_token`. It is numeric for run-backed reports and a simulation-ID keyset cursor for dynamic monitoring reports. 
         :type cursor: str
         :param limit: Max rows per page (1-2000).
         :type limit: int
@@ -1049,6 +1050,7 @@ class ReportsApi:
             '400': "CovalReportsAPIErrorResponse",
             '401': "CovalReportsAPIErrorResponse",
             '403': "CovalReportsAPIErrorResponse",
+            '404': "CovalReportsAPIErrorResponse",
             '500': "CovalReportsAPIErrorResponse",
             '503': "CovalReportsAPIErrorResponse",
         }
@@ -1067,7 +1069,7 @@ class ReportsApi:
     def list_report_rows_without_preload_content(
         self,
         report_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="Saved report ULID.")],
-        cursor: Annotated[Optional[StrictStr], Field(description="Pagination cursor from a prior response's next_page_token.")] = None,
+        cursor: Annotated[Optional[StrictStr], Field(description="Opaque value from a prior response's `next_page_token`. It is numeric for run-backed reports and a simulation-ID keyset cursor for dynamic monitoring reports. ")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=2000, strict=True, ge=1)]], Field(description="Max rows per page (1-2000).")] = None,
         metric_ids: Annotated[Optional[StrictStr], Field(description="Comma-separated metric ids to include.")] = None,
         simulation_output_ids: Annotated[Optional[StrictStr], Field(description="Comma-separated simulation output ids to restrict to.")] = None,
@@ -1086,11 +1088,11 @@ class ReportsApi:
     ) -> RESTResponseType:
         """List report rows
 
-        List a report's per-simulation rows, each with its metric outputs inline. Cursor-paginated. Optionally narrow with `metric_ids` and `simulation_output_ids` (comma-separated). 
+        List a report's per-simulation rows, each with metric outputs inline. Run-backed reports retain offset-cursor behavior. Dynamic monitoring reports resolve their cohort from the report's saved monitoring filters, including saved date bounds, and use an opaque simulation-ID keyset cursor.  For metadata-grouped reports, read the grouping key from `report.view_config.metadata_key`; each row exposes the corresponding value in `metadata`. Optionally narrow returned metrics or simulations with the comma-separated query parameters. 
 
         :param report_id: Saved report ULID. (required)
         :type report_id: str
-        :param cursor: Pagination cursor from a prior response's next_page_token.
+        :param cursor: Opaque value from a prior response's `next_page_token`. It is numeric for run-backed reports and a simulation-ID keyset cursor for dynamic monitoring reports. 
         :type cursor: str
         :param limit: Max rows per page (1-2000).
         :type limit: int
@@ -1137,6 +1139,7 @@ class ReportsApi:
             '400': "CovalReportsAPIErrorResponse",
             '401': "CovalReportsAPIErrorResponse",
             '403': "CovalReportsAPIErrorResponse",
+            '404': "CovalReportsAPIErrorResponse",
             '500': "CovalReportsAPIErrorResponse",
             '503': "CovalReportsAPIErrorResponse",
         }
@@ -1531,6 +1534,7 @@ class ReportsApi:
         self,
         report_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="Saved report ULID.")],
         coval_reports_api_update_report_request: CovalReportsAPIUpdateReportRequest,
+        if_match: Annotated[Optional[StrictStr], Field(description="Strong `ETag` from `GET /reports/{report_id}`. Required when the PATCH body contains `view_config`; omit for legacy non-configuration updates. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1546,12 +1550,14 @@ class ReportsApi:
     ) -> CovalReportsAPIUpdateReportResponse:
         """Update report
 
-        Partially update a saved report. To group by metadata, provide both `compare_by: metadata` and `metadata_key`. 
+        Partially update a saved report. `view_config` is a typed, merge-only patch: omitted supported fields, unknown compatible stored view fields, `metric_config`, ownership, IDs, and permissions remain unchanged.  Send the `ETag` returned by `GET /reports/{report_id}` in `If-Match` whenever `view_config` is present. A stale value is rejected with 412. The legacy top-level `compare_by` and `metadata_key` fields remain available for backward compatibility. 
 
         :param report_id: Saved report ULID. (required)
         :type report_id: str
         :param coval_reports_api_update_report_request: (required)
         :type coval_reports_api_update_report_request: CovalReportsAPIUpdateReportRequest
+        :param if_match: Strong `ETag` from `GET /reports/{report_id}`. Required when the PATCH body contains `view_config`; omit for legacy non-configuration updates. 
+        :type if_match: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1577,6 +1583,7 @@ class ReportsApi:
         _param = self._update_report_serialize(
             report_id=report_id,
             coval_reports_api_update_report_request=coval_reports_api_update_report_request,
+            if_match=if_match,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1589,6 +1596,7 @@ class ReportsApi:
             '401': "CovalReportsAPIErrorResponse",
             '403': "CovalReportsAPIErrorResponse",
             '404': "CovalReportsAPIErrorResponse",
+            '412': "CovalReportsAPIErrorResponse",
             '500': "CovalReportsAPIErrorResponse",
             '503': "CovalReportsAPIErrorResponse",
         }
@@ -1608,6 +1616,7 @@ class ReportsApi:
         self,
         report_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="Saved report ULID.")],
         coval_reports_api_update_report_request: CovalReportsAPIUpdateReportRequest,
+        if_match: Annotated[Optional[StrictStr], Field(description="Strong `ETag` from `GET /reports/{report_id}`. Required when the PATCH body contains `view_config`; omit for legacy non-configuration updates. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1623,12 +1632,14 @@ class ReportsApi:
     ) -> ApiResponse[CovalReportsAPIUpdateReportResponse]:
         """Update report
 
-        Partially update a saved report. To group by metadata, provide both `compare_by: metadata` and `metadata_key`. 
+        Partially update a saved report. `view_config` is a typed, merge-only patch: omitted supported fields, unknown compatible stored view fields, `metric_config`, ownership, IDs, and permissions remain unchanged.  Send the `ETag` returned by `GET /reports/{report_id}` in `If-Match` whenever `view_config` is present. A stale value is rejected with 412. The legacy top-level `compare_by` and `metadata_key` fields remain available for backward compatibility. 
 
         :param report_id: Saved report ULID. (required)
         :type report_id: str
         :param coval_reports_api_update_report_request: (required)
         :type coval_reports_api_update_report_request: CovalReportsAPIUpdateReportRequest
+        :param if_match: Strong `ETag` from `GET /reports/{report_id}`. Required when the PATCH body contains `view_config`; omit for legacy non-configuration updates. 
+        :type if_match: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1654,6 +1665,7 @@ class ReportsApi:
         _param = self._update_report_serialize(
             report_id=report_id,
             coval_reports_api_update_report_request=coval_reports_api_update_report_request,
+            if_match=if_match,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1666,6 +1678,7 @@ class ReportsApi:
             '401': "CovalReportsAPIErrorResponse",
             '403': "CovalReportsAPIErrorResponse",
             '404': "CovalReportsAPIErrorResponse",
+            '412': "CovalReportsAPIErrorResponse",
             '500': "CovalReportsAPIErrorResponse",
             '503': "CovalReportsAPIErrorResponse",
         }
@@ -1685,6 +1698,7 @@ class ReportsApi:
         self,
         report_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="Saved report ULID.")],
         coval_reports_api_update_report_request: CovalReportsAPIUpdateReportRequest,
+        if_match: Annotated[Optional[StrictStr], Field(description="Strong `ETag` from `GET /reports/{report_id}`. Required when the PATCH body contains `view_config`; omit for legacy non-configuration updates. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1700,12 +1714,14 @@ class ReportsApi:
     ) -> RESTResponseType:
         """Update report
 
-        Partially update a saved report. To group by metadata, provide both `compare_by: metadata` and `metadata_key`. 
+        Partially update a saved report. `view_config` is a typed, merge-only patch: omitted supported fields, unknown compatible stored view fields, `metric_config`, ownership, IDs, and permissions remain unchanged.  Send the `ETag` returned by `GET /reports/{report_id}` in `If-Match` whenever `view_config` is present. A stale value is rejected with 412. The legacy top-level `compare_by` and `metadata_key` fields remain available for backward compatibility. 
 
         :param report_id: Saved report ULID. (required)
         :type report_id: str
         :param coval_reports_api_update_report_request: (required)
         :type coval_reports_api_update_report_request: CovalReportsAPIUpdateReportRequest
+        :param if_match: Strong `ETag` from `GET /reports/{report_id}`. Required when the PATCH body contains `view_config`; omit for legacy non-configuration updates. 
+        :type if_match: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1731,6 +1747,7 @@ class ReportsApi:
         _param = self._update_report_serialize(
             report_id=report_id,
             coval_reports_api_update_report_request=coval_reports_api_update_report_request,
+            if_match=if_match,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1743,6 +1760,7 @@ class ReportsApi:
             '401': "CovalReportsAPIErrorResponse",
             '403': "CovalReportsAPIErrorResponse",
             '404': "CovalReportsAPIErrorResponse",
+            '412': "CovalReportsAPIErrorResponse",
             '500': "CovalReportsAPIErrorResponse",
             '503': "CovalReportsAPIErrorResponse",
         }
@@ -1757,6 +1775,7 @@ class ReportsApi:
         self,
         report_id,
         coval_reports_api_update_report_request,
+        if_match,
         _request_auth,
         _content_type,
         _headers,
@@ -1782,6 +1801,8 @@ class ReportsApi:
             _path_params['report_id'] = report_id
         # process the query parameters
         # process the header parameters
+        if if_match is not None:
+            _header_params['If-Match'] = if_match
         # process the form parameters
         # process the body parameter
         if coval_reports_api_update_report_request is not None:

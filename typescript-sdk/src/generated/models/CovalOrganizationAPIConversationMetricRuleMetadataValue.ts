@@ -14,7 +14,7 @@
 
 import { mapValues } from '../runtime.js';
 /**
- * Value to compare the run metadata against.
+ * Value to compare the run metadata against. For LENGTH_AT_LEAST this is the minimum number of array entries required, as a whole number.
  * @export
  * @interface CovalOrganizationAPIConversationMetricRuleMetadataValue
  */

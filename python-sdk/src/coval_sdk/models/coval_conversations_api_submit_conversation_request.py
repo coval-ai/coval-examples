@@ -65,8 +65,8 @@ class CovalConversationsAPISubmitConversationRequest(BaseModel):
         if not isinstance(value, str):
             value = str(value)
 
-        if not re.match(r"^[23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{22}$", value):
-            raise ValueError(r"must validate the regular expression /^[23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{22}$/")
+        if not re.match(r"^[A-Za-z0-9-]{22}$", value):
+            raise ValueError(r"must validate the regular expression /^[A-Za-z0-9-]{22}$/")
         return value
 
     model_config = ConfigDict(

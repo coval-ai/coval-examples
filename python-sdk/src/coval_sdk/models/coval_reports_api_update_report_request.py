@@ -23,6 +23,7 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_reports_api_compare_by import CovalReportsAPICompareBy
 from coval_sdk.models.coval_reports_api_report_permission import CovalReportsAPIReportPermission
+from coval_sdk.models.coval_reports_api_report_view_configuration_patch import CovalReportsAPIReportViewConfigurationPatch
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -38,7 +39,8 @@ class CovalReportsAPIUpdateReportRequest(BaseModel):
     compare_by: Optional[CovalReportsAPICompareBy] = CovalReportsAPICompareBy.NONE
     metadata_key: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=200)]] = Field(default=None, description="Required when changing `compare_by` to `metadata`; otherwise omit it.")
     permissions: Optional[CovalReportsAPIReportPermission] = CovalReportsAPIReportPermission.PRIVATE
-    __properties: ClassVar[List[str]] = ["name", "run_ids", "simulation_output_ids", "source_human_review_project_id", "compare_by", "metadata_key", "permissions"]
+    view_config: Optional[CovalReportsAPIReportViewConfigurationPatch] = Field(default=None, description="Merge-only patch for supported report view fields. Requires `If-Match`; cannot be combined with the legacy top-level `compare_by` or `metadata_key` fields. ")
+    __properties: ClassVar[List[str]] = ["name", "run_ids", "simulation_output_ids", "source_human_review_project_id", "compare_by", "metadata_key", "permissions", "view_config"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -79,6 +81,9 @@ class CovalReportsAPIUpdateReportRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of view_config
+        if self.view_config:
+            _dict['view_config'] = self.view_config.to_dict()
         # set to None if metadata_key (nullable) is None
         # and model_fields_set contains the field
         if self.metadata_key is None and "metadata_key" in self.model_fields_set:
@@ -102,7 +107,8 @@ class CovalReportsAPIUpdateReportRequest(BaseModel):
             "source_human_review_project_id": obj.get("source_human_review_project_id"),
             "compare_by": obj.get("compare_by") if obj.get("compare_by") is not None else CovalReportsAPICompareBy.NONE,
             "metadata_key": obj.get("metadata_key"),
-            "permissions": obj.get("permissions") if obj.get("permissions") is not None else CovalReportsAPIReportPermission.PRIVATE
+            "permissions": obj.get("permissions") if obj.get("permissions") is not None else CovalReportsAPIReportPermission.PRIVATE,
+            "view_config": CovalReportsAPIReportViewConfigurationPatch.from_dict(obj["view_config"]) if obj.get("view_config") is not None else None
         })
         return _obj
 

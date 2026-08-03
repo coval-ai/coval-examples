@@ -50,7 +50,7 @@ export interface CovalReportsAPIReportMetricOutput {
      * @type {CovalReportsAPIReportMetricOutputValue}
      * @memberof CovalReportsAPIReportMetricOutput
      */
-    value?: CovalReportsAPIReportMetricOutputValue | null;
+    value?: CovalReportsAPIReportMetricOutputValue;
     /**
      * 
      * @type {string}

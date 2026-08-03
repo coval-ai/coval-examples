@@ -19,7 +19,7 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_conversations_api_conversation_metric_value import CovalConversationsAPIConversationMetricValue
@@ -43,7 +43,7 @@ class CovalConversationsAPIConversationResource(BaseModel):
     external_conversation_id: Optional[StrictStr] = Field(default=None, description="External conversation ID from customer system")
     occurred_at: Optional[datetime] = Field(default=None, description="When the conversation actually occurred (ISO 8601)")
     has_audio: Optional[StrictBool] = Field(default=None, description="Whether audio is available for this conversation.  Use GET /v1/conversations/{id}/audio to retrieve presigned URL. ")
-    agent_id: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Agent resource ID (22-character ShortUUID), if one was provided at submission")
+    agent_id: Optional[StrictStr] = Field(default=None, description="Agent resource ID (22-character ShortUUID), if one was provided at submission")
     persona_id: Optional[StrictStr] = Field(default=None, description="Reference to persona resource (typically null for monitoring)")
     source: Optional[CovalConversationsAPIConversationResourceSource] = None
     destination: Optional[CovalConversationsAPIConversationResourceDestination] = None
@@ -56,19 +56,6 @@ class CovalConversationsAPIConversationResource(BaseModel):
     error: Optional[StrictStr] = Field(default=None, description="Error message (only present if status=FAILED)")
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["name", "conversation_id", "status", "create_time", "external_conversation_id", "occurred_at", "has_audio", "agent_id", "persona_id", "source", "destination", "progress", "metadata", "tags", "metric_ids", "metric_outputs", "metric_values", "error"]
-
-    @field_validator('agent_id')
-    def agent_id_validate_regular_expression(cls, value):
-        """Validates the regular expression"""
-        if value is None:
-            return value
-
-        if not isinstance(value, str):
-            value = str(value)
-
-        if not re.match(r"^[23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{22}$", value):
-            raise ValueError(r"must validate the regular expression /^[23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{22}$/")
-        return value
 
     model_config = ConfigDict(
         validate_by_name=True,

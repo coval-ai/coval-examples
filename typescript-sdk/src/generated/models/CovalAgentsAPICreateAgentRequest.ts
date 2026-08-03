@@ -128,6 +128,29 @@ export interface CovalAgentsAPICreateAgentRequest {
      * - `trigger_call_payload` - JSON string with base payload
      * - `phone_number_key` - Field name for phone number (default: "phone_number")
      * 
+     * **For LIVEKIT agents:**
+     * 
+     * *Required:*
+     * - `generate_token_endpoint` - HTTP/HTTPS endpoint Coval calls to create a participant token
+     * - `livekit_url` - LiveKit server URL using ws, wss, http, or https
+     * 
+     * *Optional:*
+     * - `generate_token_headers` - Token-request headers as a JSON object or encoded object string
+     * - `token_request_payload` - Fields merged into the token request as a JSON object or encoded object string
+     * - `sandbox_id` - Convenience value for an `X-Sandbox-ID` token-request header
+     * - `content_type` - Convenience value for the token-request `Content-Type` header
+     * - `livekit_agent_name` - Agent dispatch name
+     * - `livekit_agent_metadata` - Agent dispatch metadata
+     * 
+     * **For DAILY (Pipecat Cloud) agents:**
+     * 
+     * *Required:*
+     * - `pipecat_api_key` - Pipecat Cloud API key
+     * - `agent_name` - Pipecat Cloud agent name
+     * 
+     * *Optional:*
+     * - `custom_data` - JSON-encoded object with string keys and string values (max 16KB)
+     * 
      * **For WEBSOCKET agents:**
      * 
      * *Required:*

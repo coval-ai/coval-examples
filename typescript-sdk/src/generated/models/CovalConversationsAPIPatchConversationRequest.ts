@@ -14,16 +14,20 @@
 
 import { mapValues } from '../runtime.js';
 /**
- * Request to attach audio to an already-submitted conversation.
+ * Request to attach audio to, or add metadata to, an already-submitted
+ * conversation.
  * 
- * **Exactly one** of `audio_url` or `audio` must be provided. Submitting
- * both, or neither, returns `400 INVALID_ARGUMENT`.
+ * **Exactly one** of `audio_url`, `audio` or `metadata` must be provided.
+ * Submitting more than one, or none, returns `400 INVALID_ARGUMENT`. Audio
+ * and metadata are patched in separate calls so a rejected metadata key can
+ * never leave audio half-attached.
  * 
  * **Idempotency:** Audio can be attached only once per conversation. A
  * second PATCH on a conversation that already has audio returns
  * `409 ALREADY_EXISTS`. Conversations that were submitted with audio via
  * `POST /v1/conversations:submit` already have audio attached and cannot
- * be PATCHed.
+ * be PATCHed. Metadata follows the same rule per key: adding a new key
+ * succeeds, overwriting an existing one returns `409 ALREADY_EXISTS`.
  * 
  * @export
  * @interface CovalConversationsAPIPatchConversationRequest
@@ -48,6 +52,23 @@ export interface CovalConversationsAPIPatchConversationRequest {
      * @memberof CovalConversationsAPIPatchConversationRequest
      */
     audio?: string;
+    /**
+     * Metadata keys to add to the conversation, merged into any metadata sent
+     * at submit. Values may be strings, numbers, booleans, arrays or objects.
+     * 
+     * Additive only. A key that already holds a value returns
+     * `409 ALREADY_EXISTS`, and keys that identify the conversation
+     * (`conversation_id`, `external_conversation_id`, `call_id`, `trace_id`,
+     * `langfuse_trace_id`, `observation_id`, `langfuse_observation_id`,
+     * `project_id`, `environment`, `occurred_at`) return
+     * `400 INVALID_ARGUMENT`.
+     * 
+     * At most 100 keys per request; key names are limited to 200 characters.
+     * 
+     * @type {{ [key: string]: any; }}
+     * @memberof CovalConversationsAPIPatchConversationRequest
+     */
+    metadata?: { [key: string]: any; };
 }
 
 /**
@@ -69,6 +90,7 @@ export function CovalConversationsAPIPatchConversationRequestFromJSONTyped(json:
         
         'audio_url': json['audio_url'] == null ? undefined : json['audio_url'],
         'audio': json['audio'] == null ? undefined : json['audio'],
+        'metadata': json['metadata'] == null ? undefined : json['metadata'],
     };
 }
 
@@ -85,6 +107,7 @@ export function CovalConversationsAPIPatchConversationRequestToJSONTyped(value?:
         
         'audio_url': value['audio_url'],
         'audio': value['audio'],
+        'metadata': value['metadata'],
     };
 }
 

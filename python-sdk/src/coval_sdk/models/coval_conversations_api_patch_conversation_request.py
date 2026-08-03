@@ -26,12 +26,13 @@ from pydantic_core import to_jsonable_python
 
 class CovalConversationsAPIPatchConversationRequest(BaseModel):
     """
-    Request to attach audio to an already-submitted conversation.  **Exactly one** of `audio_url` or `audio` must be provided. Submitting both, or neither, returns `400 INVALID_ARGUMENT`.  **Idempotency:** Audio can be attached only once per conversation. A second PATCH on a conversation that already has audio returns `409 ALREADY_EXISTS`. Conversations that were submitted with audio via `POST /v1/conversations:submit` already have audio attached and cannot be PATCHed. 
+    Request to attach audio to, or add metadata to, an already-submitted conversation.  **Exactly one** of `audio_url`, `audio` or `metadata` must be provided. Submitting more than one, or none, returns `400 INVALID_ARGUMENT`. Audio and metadata are patched in separate calls so a rejected metadata key can never leave audio half-attached.  **Idempotency:** Audio can be attached only once per conversation. A second PATCH on a conversation that already has audio returns `409 ALREADY_EXISTS`. Conversations that were submitted with audio via `POST /v1/conversations:submit` already have audio attached and cannot be PATCHed. Metadata follows the same rule per key: adding a new key succeeds, overwriting an existing one returns `409 ALREADY_EXISTS`. 
     """ # noqa: E501
     audio_url: Optional[StrictStr] = Field(default=None, description="Presigned URL to the audio recording. Same validation rules as `audio_url` on `POST /v1/conversations:submit` (WAV or MP3, 5 s to 60 min, 200 MB max). Supports AWS S3, GCP Cloud Storage, Azure Blob Storage, or any public/presigned HTTPS URL. The `s3://bucket/key` protocol form is also accepted. ")
     audio: Optional[StrictStr] = Field(default=None, description="Base64-encoded audio bytes. Same format and size limits as `audio_url`. Prefer `audio_url` for anything other than very small clips. ")
+    metadata: Optional[Dict[str, Any]] = Field(default=None, description="Metadata keys to add to the conversation, merged into any metadata sent at submit. Values may be strings, numbers, booleans, arrays or objects.  Additive only. A key that already holds a value returns `409 ALREADY_EXISTS`, and keys that identify the conversation (`conversation_id`, `external_conversation_id`, `call_id`, `trace_id`, `langfuse_trace_id`, `observation_id`, `langfuse_observation_id`, `project_id`, `environment`, `occurred_at`) return `400 INVALID_ARGUMENT`.  At most 100 keys per request; key names are limited to 200 characters. ")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["audio_url", "audio"]
+    __properties: ClassVar[List[str]] = ["audio_url", "audio", "metadata"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -92,7 +93,8 @@ class CovalConversationsAPIPatchConversationRequest(BaseModel):
 
         _obj = cls.model_validate({
             "audio_url": obj.get("audio_url"),
-            "audio": obj.get("audio")
+            "audio": obj.get("audio"),
+            "metadata": obj.get("metadata")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():
