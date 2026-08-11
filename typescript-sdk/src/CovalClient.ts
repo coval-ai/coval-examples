@@ -16,6 +16,8 @@ import { createRetryingFetch, type RetryOptions } from './retry.js';
 import { createTransportStats, type CovalTransportStats } from './stats.js';
 import {
   AgentsApi,
+  AlertEventsApi,
+  AlertsApi,
   APIKeysApi,
   AudioApi,
   Configuration,
@@ -68,6 +70,8 @@ const DEFAULT_BASE_URL = 'https://api.coval.dev/v1';
 
 export class CovalClient {
   readonly agents: AgentsApi;
+  readonly alertEvents: AlertEventsApi;
+  readonly alerts: AlertsApi;
   readonly apiKeys: APIKeysApi;
   readonly audio: AudioApi;
   readonly conversations: ConversationsApi;
@@ -133,6 +137,8 @@ export class CovalClient {
     });
 
     this.agents = new AgentsApi(this.configuration);
+    this.alertEvents = new AlertEventsApi(this.configuration);
+    this.alerts = new AlertsApi(this.configuration);
     this.apiKeys = new APIKeysApi(this.configuration);
     this.audio = new AudioApi(this.configuration);
     this.conversations = new ConversationsApi(this.configuration);

@@ -2,6 +2,8 @@
 /* eslint-disable */
 export * from './APIKeysApi.js';
 export * from './AgentsApi.js';
+export * from './AlertEventsApi.js';
+export * from './AlertsApi.js';
 export * from './AudioApi.js';
 export * from './ConversationsApi.js';
 export * from './DashboardsApi.js';
