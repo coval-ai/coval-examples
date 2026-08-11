@@ -26,7 +26,6 @@ from coval_sdk.models.coval_reports_api_report_permission import CovalReportsAPI
 from coval_sdk.models.coval_reports_api_report_view_configuration_patch import CovalReportsAPIReportViewConfigurationPatch
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class CovalReportsAPIUpdateReportRequest(BaseModel):
     """
@@ -43,8 +42,7 @@ class CovalReportsAPIUpdateReportRequest(BaseModel):
     __properties: ClassVar[List[str]] = ["name", "run_ids", "simulation_output_ids", "source_human_review_project_id", "compare_by", "metadata_key", "permissions", "view_config"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -56,7 +54,8 @@ class CovalReportsAPIUpdateReportRequest(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

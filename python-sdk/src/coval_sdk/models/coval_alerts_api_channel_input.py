@@ -18,33 +18,23 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List
-from coval_sdk.models.coval_metrics_api_error_response_error_details_inner import CovalMetricsAPIErrorResponseErrorDetailsInner
+from coval_sdk.models.coval_alerts_api_channel_type import CovalAlertsAPIChannelType
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
-class CovalMonitorsAPIErrorResponseError(BaseModel):
+class CovalAlertsAPIChannelInput(BaseModel):
     """
-    CovalMonitorsAPIErrorResponseError
+    CovalAlertsAPIChannelInput
     """ # noqa: E501
-    code: StrictStr
-    message: StrictStr = Field(description="Human-readable error message")
-    details: List[CovalMetricsAPIErrorResponseErrorDetailsInner]
+    channel_type: CovalAlertsAPIChannelType
+    config: Dict[str, Any] = Field(description="Channel-specific configuration")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["code", "message", "details"]
-
-    @field_validator('code')
-    def code_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['INVALID_ARGUMENT', 'UNAUTHENTICATED', 'PERMISSION_DENIED', 'NOT_FOUND', 'ALREADY_EXISTS', 'INTERNAL']):
-            raise ValueError("must be one of enum values ('INVALID_ARGUMENT', 'UNAUTHENTICATED', 'PERMISSION_DENIED', 'NOT_FOUND', 'ALREADY_EXISTS', 'INTERNAL')")
-        return value
+    __properties: ClassVar[List[str]] = ["channel_type", "config"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -56,11 +46,12 @@ class CovalMonitorsAPIErrorResponseError(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CovalMonitorsAPIErrorResponseError from a JSON string"""
+        """Create an instance of CovalAlertsAPIChannelInput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -83,13 +74,6 @@ class CovalMonitorsAPIErrorResponseError(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in details (list)
-        _items = []
-        if self.details:
-            for _item_details in self.details:
-                if _item_details:
-                    _items.append(_item_details.to_dict())
-            _dict['details'] = _items
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -99,7 +83,7 @@ class CovalMonitorsAPIErrorResponseError(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CovalMonitorsAPIErrorResponseError from a dict"""
+        """Create an instance of CovalAlertsAPIChannelInput from a dict"""
         if obj is None:
             return None
 
@@ -107,9 +91,8 @@ class CovalMonitorsAPIErrorResponseError(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "code": obj.get("code"),
-            "message": obj.get("message"),
-            "details": [CovalMetricsAPIErrorResponseErrorDetailsInner.from_dict(_item) for _item in obj["details"]] if obj.get("details") is not None else None
+            "channel_type": obj.get("channel_type"),
+            "config": obj.get("config")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

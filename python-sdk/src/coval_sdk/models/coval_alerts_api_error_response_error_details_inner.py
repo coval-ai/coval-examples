@@ -18,26 +18,22 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
-class CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner(BaseModel):
+class CovalAlertsAPIErrorResponseErrorDetailsInner(BaseModel):
     """
-    CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner
+    CovalAlertsAPIErrorResponseErrorDetailsInner
     """ # noqa: E501
-    channel_type: Optional[StrictStr] = None
-    channel_summary: Optional[StrictStr] = None
-    success: Optional[StrictBool] = None
-    error: Optional[StrictStr] = None
+    var_field: Optional[StrictStr] = Field(default=None, alias="field")
+    description: Optional[StrictStr] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["channel_type", "channel_summary", "success", "error"]
+    __properties: ClassVar[List[str]] = ["field", "description"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -49,11 +45,12 @@ class CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner from a JSON string"""
+        """Create an instance of CovalAlertsAPIErrorResponseErrorDetailsInner from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -81,16 +78,16 @@ class CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if error (nullable) is None
+        # set to None if var_field (nullable) is None
         # and model_fields_set contains the field
-        if self.error is None and "error" in self.model_fields_set:
-            _dict['error'] = None
+        if self.var_field is None and "var_field" in self.model_fields_set:
+            _dict['field'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner from a dict"""
+        """Create an instance of CovalAlertsAPIErrorResponseErrorDetailsInner from a dict"""
         if obj is None:
             return None
 
@@ -98,10 +95,8 @@ class CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "channel_type": obj.get("channel_type"),
-            "channel_summary": obj.get("channel_summary"),
-            "success": obj.get("success"),
-            "error": obj.get("error")
+            "field": obj.get("field"),
+            "description": obj.get("description")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

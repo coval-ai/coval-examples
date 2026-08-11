@@ -29,7 +29,6 @@ from coval_sdk.models.coval_monitors_api_monitor_match_mode import CovalMonitors
 from coval_sdk.models.coval_monitors_api_monitor_scope import CovalMonitorsAPIMonitorScope
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class CovalMonitorsAPIMonitorResource(BaseModel):
     """
@@ -59,9 +58,6 @@ class CovalMonitorsAPIMonitorResource(BaseModel):
     @field_validator('ulid')
     def ulid_validate_regular_expression(cls, value):
         """Validates the regular expression"""
-        if not isinstance(value, str):
-            value = str(value)
-
         if not re.match(r"^[0-9A-Z]{26}$", value):
             raise ValueError(r"must validate the regular expression /^[0-9A-Z]{26}$/")
         return value
@@ -74,8 +70,7 @@ class CovalMonitorsAPIMonitorResource(BaseModel):
         return value
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -87,7 +82,8 @@ class CovalMonitorsAPIMonitorResource(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

@@ -23,7 +23,6 @@ from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class CovalReviewsAPIReviewMetricOutputForAnnotationResource(BaseModel):
     """
@@ -44,8 +43,7 @@ class CovalReviewsAPIReviewMetricOutputForAnnotationResource(BaseModel):
     __properties: ClassVar[List[str]] = ["output_type", "float_value", "string_value", "set_value", "error_status", "created_at", "explanation", "result_json", "subvalues_by_timestamp", "metric_version_number", "metric_version_ulid"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -57,7 +55,8 @@ class CovalReviewsAPIReviewMetricOutputForAnnotationResource(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

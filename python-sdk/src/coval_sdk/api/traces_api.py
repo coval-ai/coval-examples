@@ -1,3 +1,5 @@
+# coding: utf-8
+
 """
     Coval Agents API
 
@@ -9,7 +11,6 @@
 
     Do not edit the class manually.
 """  # noqa: E501
-
 
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
@@ -365,7 +366,7 @@ class TracesApi:
         Ingest OpenTelemetry trace data and associate it with a simulation output or a monitoring conversation.  The request body must be a standard OTLP `ExportTraceServiceRequest`, in protobuf binary (`application/x-protobuf`, the default for stock OTLP HTTP exporters) or JSON (`application/json`) format. See the [OTLP/HTTP specification](https://opentelemetry.io/docs/specs/otlp/#otlphttp) and [opentelemetry-proto](https://github.com/open-telemetry/opentelemetry-proto) for the wire format.  Identify the target by providing exactly one of `X-Simulation-Id` or `X-Conversation-Id` (not both). 
 
         :param body: OTLP `ExportTraceServiceRequest` payload — protobuf or JSON.  (required)
-        :type body: bytes
+        :type body: bytearray
         :param x_simulation_id: Simulation output ID to associate the spans with. Use for simulation-based flows. Mutually exclusive with `X-Conversation-Id`. 
         :type x_simulation_id: str
         :param x_conversation_id: Conversation (Run) ID returned by `POST /v1/conversations:submit`. Use for monitoring flows. Mutually exclusive with `X-Simulation-Id`. 
@@ -446,7 +447,7 @@ class TracesApi:
         Ingest OpenTelemetry trace data and associate it with a simulation output or a monitoring conversation.  The request body must be a standard OTLP `ExportTraceServiceRequest`, in protobuf binary (`application/x-protobuf`, the default for stock OTLP HTTP exporters) or JSON (`application/json`) format. See the [OTLP/HTTP specification](https://opentelemetry.io/docs/specs/otlp/#otlphttp) and [opentelemetry-proto](https://github.com/open-telemetry/opentelemetry-proto) for the wire format.  Identify the target by providing exactly one of `X-Simulation-Id` or `X-Conversation-Id` (not both). 
 
         :param body: OTLP `ExportTraceServiceRequest` payload — protobuf or JSON.  (required)
-        :type body: bytes
+        :type body: bytearray
         :param x_simulation_id: Simulation output ID to associate the spans with. Use for simulation-based flows. Mutually exclusive with `X-Conversation-Id`. 
         :type x_simulation_id: str
         :param x_conversation_id: Conversation (Run) ID returned by `POST /v1/conversations:submit`. Use for monitoring flows. Mutually exclusive with `X-Simulation-Id`. 
@@ -527,7 +528,7 @@ class TracesApi:
         Ingest OpenTelemetry trace data and associate it with a simulation output or a monitoring conversation.  The request body must be a standard OTLP `ExportTraceServiceRequest`, in protobuf binary (`application/x-protobuf`, the default for stock OTLP HTTP exporters) or JSON (`application/json`) format. See the [OTLP/HTTP specification](https://opentelemetry.io/docs/specs/otlp/#otlphttp) and [opentelemetry-proto](https://github.com/open-telemetry/opentelemetry-proto) for the wire format.  Identify the target by providing exactly one of `X-Simulation-Id` or `X-Conversation-Id` (not both). 
 
         :param body: OTLP `ExportTraceServiceRequest` payload — protobuf or JSON.  (required)
-        :type body: bytes
+        :type body: bytearray
         :param x_simulation_id: Simulation output ID to associate the spans with. Use for simulation-based flows. Mutually exclusive with `X-Conversation-Id`. 
         :type x_simulation_id: str
         :param x_conversation_id: Conversation (Run) ID returned by `POST /v1/conversations:submit`. Use for monitoring flows. Mutually exclusive with `X-Simulation-Id`. 

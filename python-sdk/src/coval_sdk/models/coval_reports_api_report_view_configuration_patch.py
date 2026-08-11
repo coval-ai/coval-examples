@@ -22,9 +22,9 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_reports_api_monitoring_filters_patch import CovalReportsAPIMonitoringFiltersPatch
+from coval_sdk.models.coval_reports_api_report_custom_dimension import CovalReportsAPIReportCustomDimension
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class CovalReportsAPIReportViewConfigurationPatch(BaseModel):
     """
@@ -32,11 +32,14 @@ class CovalReportsAPIReportViewConfigurationPatch(BaseModel):
     """ # noqa: E501
     compare_by: Optional[StrictStr] = None
     metadata_key: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="Metadata grouping key. Required when `compare_by` is `metadata`; send null to clear it when changing away from metadata. ")
+    custom_dimension_id: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="Custom grouping dimension. Required when `compare_by` is `custom` and must match a dimension in the report's `custom_dimensions`; send null to clear it when changing away from custom. ")
     view_mode: Optional[StrictStr] = None
     secondary_compare_by: Optional[StrictStr] = None
     secondary_metadata_key: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="Secondary metadata grouping key. Required when `secondary_compare_by` is `metadata`; send null to clear it. ")
+    secondary_custom_dimension_id: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="Secondary custom grouping dimension. Required when `secondary_compare_by` is `custom`; send null to clear it. ")
+    custom_dimensions: Optional[Annotated[List[CovalReportsAPIReportCustomDimension], Field(max_length=10)]] = Field(default=None, description="Replaces the report's saved custom dimensions wholesale. Send it together with `compare_by: custom` and `custom_dimension_id` to group the report by one of them. ")
     monitoring_filters: Optional[CovalReportsAPIMonitoringFiltersPatch] = Field(default=None, description="Supported saved cohort fields. This object is valid only when the stored report has `is_monitoring: true`. ")
-    __properties: ClassVar[List[str]] = ["compare_by", "metadata_key", "view_mode", "secondary_compare_by", "secondary_metadata_key", "monitoring_filters"]
+    __properties: ClassVar[List[str]] = ["compare_by", "metadata_key", "custom_dimension_id", "view_mode", "secondary_compare_by", "secondary_metadata_key", "secondary_custom_dimension_id", "custom_dimensions", "monitoring_filters"]
 
     @field_validator('compare_by')
     def compare_by_validate_enum(cls, value):
@@ -44,8 +47,8 @@ class CovalReportsAPIReportViewConfigurationPatch(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['none', 'run', 'agent', 'mutation', 'persona', 'test_case', 'metadata']):
-            raise ValueError("must be one of enum values ('none', 'run', 'agent', 'mutation', 'persona', 'test_case', 'metadata')")
+        if value not in set(['none', 'run', 'agent', 'mutation', 'persona', 'test_case', 'metadata', 'custom']):
+            raise ValueError("must be one of enum values ('none', 'run', 'agent', 'mutation', 'persona', 'test_case', 'metadata', 'custom')")
         return value
 
     @field_validator('metadata_key')
@@ -53,9 +56,6 @@ class CovalReportsAPIReportViewConfigurationPatch(BaseModel):
         """Validates the regular expression"""
         if value is None:
             return value
-
-        if not isinstance(value, str):
-            value = str(value)
 
         if not re.match(r"^[A-Za-z0-9_][A-Za-z0-9_.-]{0,199}$", value):
             raise ValueError(r"must validate the regular expression /^[A-Za-z0-9_][A-Za-z0-9_.-]{0,199}$/")
@@ -77,8 +77,8 @@ class CovalReportsAPIReportViewConfigurationPatch(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['none', 'run', 'agent', 'mutation', 'persona', 'test_case', 'metadata']):
-            raise ValueError("must be one of enum values ('none', 'run', 'agent', 'mutation', 'persona', 'test_case', 'metadata')")
+        if value not in set(['none', 'run', 'agent', 'mutation', 'persona', 'test_case', 'metadata', 'custom']):
+            raise ValueError("must be one of enum values ('none', 'run', 'agent', 'mutation', 'persona', 'test_case', 'metadata', 'custom')")
         return value
 
     @field_validator('secondary_metadata_key')
@@ -87,16 +87,12 @@ class CovalReportsAPIReportViewConfigurationPatch(BaseModel):
         if value is None:
             return value
 
-        if not isinstance(value, str):
-            value = str(value)
-
         if not re.match(r"^[A-Za-z0-9_][A-Za-z0-9_.-]{0,199}$", value):
             raise ValueError(r"must validate the regular expression /^[A-Za-z0-9_][A-Za-z0-9_.-]{0,199}$/")
         return value
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -108,7 +104,8 @@ class CovalReportsAPIReportViewConfigurationPatch(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
@@ -133,6 +130,13 @@ class CovalReportsAPIReportViewConfigurationPatch(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in custom_dimensions (list)
+        _items = []
+        if self.custom_dimensions:
+            for _item_custom_dimensions in self.custom_dimensions:
+                if _item_custom_dimensions:
+                    _items.append(_item_custom_dimensions.to_dict())
+            _dict['custom_dimensions'] = _items
         # override the default output from pydantic by calling `to_dict()` of monitoring_filters
         if self.monitoring_filters:
             _dict['monitoring_filters'] = self.monitoring_filters.to_dict()
@@ -141,10 +145,20 @@ class CovalReportsAPIReportViewConfigurationPatch(BaseModel):
         if self.metadata_key is None and "metadata_key" in self.model_fields_set:
             _dict['metadata_key'] = None
 
+        # set to None if custom_dimension_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.custom_dimension_id is None and "custom_dimension_id" in self.model_fields_set:
+            _dict['custom_dimension_id'] = None
+
         # set to None if secondary_metadata_key (nullable) is None
         # and model_fields_set contains the field
         if self.secondary_metadata_key is None and "secondary_metadata_key" in self.model_fields_set:
             _dict['secondary_metadata_key'] = None
+
+        # set to None if secondary_custom_dimension_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.secondary_custom_dimension_id is None and "secondary_custom_dimension_id" in self.model_fields_set:
+            _dict['secondary_custom_dimension_id'] = None
 
         return _dict
 
@@ -160,9 +174,12 @@ class CovalReportsAPIReportViewConfigurationPatch(BaseModel):
         _obj = cls.model_validate({
             "compare_by": obj.get("compare_by"),
             "metadata_key": obj.get("metadata_key"),
+            "custom_dimension_id": obj.get("custom_dimension_id"),
             "view_mode": obj.get("view_mode"),
             "secondary_compare_by": obj.get("secondary_compare_by"),
             "secondary_metadata_key": obj.get("secondary_metadata_key"),
+            "secondary_custom_dimension_id": obj.get("secondary_custom_dimension_id"),
+            "custom_dimensions": [CovalReportsAPIReportCustomDimension.from_dict(_item) for _item in obj["custom_dimensions"]] if obj.get("custom_dimensions") is not None else None,
             "monitoring_filters": CovalReportsAPIMonitoringFiltersPatch.from_dict(obj["monitoring_filters"]) if obj.get("monitoring_filters") is not None else None
         })
         return _obj

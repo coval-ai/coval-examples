@@ -20,28 +20,26 @@ import json
 
 from pydantic import BaseModel, ConfigDict, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from coval_sdk.models.coval_monitors_api_monitor_event_resource_condition_results_inner_computed_value import CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue
+from coval_sdk.models.coval_alerts_api_alert_event_resource_condition_results_inner_computed_value import CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
-class CovalMonitorsAPIMonitorEventResourceConditionResultsInner(BaseModel):
+class CovalAlertsAPIAlertEventResourceConditionResultsInner(BaseModel):
     """
-    CovalMonitorsAPIMonitorEventResourceConditionResultsInner
+    CovalAlertsAPIAlertEventResourceConditionResultsInner
     """ # noqa: E501
     metric_id: Optional[StrictStr] = None
     metric_display_name: Optional[StrictStr] = None
     aggregation: Optional[StrictStr] = None
-    computed_value: Optional[CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue] = None
-    threshold: Optional[CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue] = None
+    computed_value: Optional[CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue] = None
+    threshold: Optional[CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue] = None
     operator: Optional[StrictStr] = None
     met: Optional[StrictBool] = None
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["metric_id", "metric_display_name", "aggregation", "computed_value", "threshold", "operator", "met"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -53,11 +51,12 @@ class CovalMonitorsAPIMonitorEventResourceConditionResultsInner(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CovalMonitorsAPIMonitorEventResourceConditionResultsInner from a JSON string"""
+        """Create an instance of CovalAlertsAPIAlertEventResourceConditionResultsInner from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -105,7 +104,7 @@ class CovalMonitorsAPIMonitorEventResourceConditionResultsInner(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CovalMonitorsAPIMonitorEventResourceConditionResultsInner from a dict"""
+        """Create an instance of CovalAlertsAPIAlertEventResourceConditionResultsInner from a dict"""
         if obj is None:
             return None
 
@@ -116,8 +115,8 @@ class CovalMonitorsAPIMonitorEventResourceConditionResultsInner(BaseModel):
             "metric_id": obj.get("metric_id"),
             "metric_display_name": obj.get("metric_display_name"),
             "aggregation": obj.get("aggregation"),
-            "computed_value": CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue.from_dict(obj["computed_value"]) if obj.get("computed_value") is not None else None,
-            "threshold": CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue.from_dict(obj["threshold"]) if obj.get("threshold") is not None else None,
+            "computed_value": CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue.from_dict(obj["computed_value"]) if obj.get("computed_value") is not None else None,
+            "threshold": CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue.from_dict(obj["threshold"]) if obj.get("threshold") is not None else None,
             "operator": obj.get("operator"),
             "met": obj.get("met")
         })

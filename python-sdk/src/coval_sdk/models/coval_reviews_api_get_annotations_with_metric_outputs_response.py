@@ -24,7 +24,6 @@ from coval_sdk.models.coval_reviews_api_review_annotation_resource import CovalR
 from coval_sdk.models.coval_reviews_api_review_metric_output_for_annotation_resource import CovalReviewsAPIReviewMetricOutputForAnnotationResource
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class CovalReviewsAPIGetAnnotationsWithMetricOutputsResponse(BaseModel):
     """
@@ -38,8 +37,7 @@ class CovalReviewsAPIGetAnnotationsWithMetricOutputsResponse(BaseModel):
     __properties: ClassVar[List[str]] = ["annotations", "metric_outputs", "audio_lengths_by_simulation_output_id", "next_page_token"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -51,7 +49,8 @@ class CovalReviewsAPIGetAnnotationsWithMetricOutputsResponse(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
@@ -87,15 +86,13 @@ class CovalReviewsAPIGetAnnotationsWithMetricOutputsResponse(BaseModel):
                         _item.to_dict() for _item in self.annotations[_key_annotations]
                     ]
             _dict['annotations'] = _field_dict_of_array
-        # override the default output from pydantic by calling `to_dict()` of each value in metric_outputs (dict of dict)
-        _field_dict_of_dict = {}
+        # override the default output from pydantic by calling `to_dict()` of each value in metric_outputs (dict)
+        _field_dict = {}
         if self.metric_outputs:
-            for _key_metric_outputs, _value_metric_outputs in self.metric_outputs.items():
-                if _value_metric_outputs is not None:
-                    _field_dict_of_dict[_key_metric_outputs] = {
-                        _key: _value.to_dict() for _key, _value in _value_metric_outputs.items()
-                    }
-            _dict['metric_outputs'] = _field_dict_of_dict
+            for _key_metric_outputs in self.metric_outputs:
+                if self.metric_outputs[_key_metric_outputs]:
+                    _field_dict[_key_metric_outputs] = self.metric_outputs[_key_metric_outputs].to_dict()
+            _dict['metric_outputs'] = _field_dict
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -118,12 +115,14 @@ class CovalReviewsAPIGetAnnotationsWithMetricOutputsResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "annotations": {
-                _k: [CovalReviewsAPIReviewAnnotationResource.from_dict(_item) for _item in _v] if _v is not None else None
-                for _k, _v in obj["annotations"].items()
-            }
-            if obj.get("annotations") is not None
-            else None,
+            "annotations": dict(
+                (_k,
+                        [CovalReviewsAPIReviewAnnotationResource.from_dict(_item) for _item in _v]
+                        if _v is not None
+                        else None
+                )
+                for _k, _v in obj.get("annotations", {}).items()
+            ),
             "metric_outputs": dict(
                 (_k, dict(
                     (_ik, CovalReviewsAPIReviewMetricOutputForAnnotationResource.from_dict(_iv))
@@ -132,7 +131,7 @@ class CovalReviewsAPIGetAnnotationsWithMetricOutputsResponse(BaseModel):
                     if _v is not None
                     else None
                 )
-                for _k, _v in obj["metric_outputs"].items()
+                for _k, _v in obj.get("metric_outputs").items()
             )
             if obj.get("metric_outputs") is not None
             else None,

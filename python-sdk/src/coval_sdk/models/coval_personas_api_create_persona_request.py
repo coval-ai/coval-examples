@@ -23,7 +23,6 @@ from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class CovalPersonasAPICreatePersonaRequest(BaseModel):
     """
@@ -52,9 +51,6 @@ class CovalPersonasAPICreatePersonaRequest(BaseModel):
         if value is None:
             return value
 
-        if not isinstance(value, str):
-            value = str(value)
-
         if not re.match(r"^(off|office|lounge|crowd|airport|bus|playground|doorbell|train-arrival|portable-air-conditioner|skatepark|small-dog-bark|cafe|ferry-and-announcement|heavy-rain|moderate-wind|newborn-baby-crying|office-with-alarm|street-with-sirens|construction-work|backchanneling|custom:[A-Za-z0-9_-]+)$", value):
             raise ValueError(r"must validate the regular expression /^(off|office|lounge|crowd|airport|bus|playground|doorbell|train-arrival|portable-air-conditioner|skatepark|small-dog-bark|cafe|ferry-and-announcement|heavy-rain|moderate-wind|newborn-baby-crying|office-with-alarm|street-with-sirens|construction-work|backchanneling|custom:[A-Za-z0-9_-]+)$/")
         return value
@@ -80,8 +76,7 @@ class CovalPersonasAPICreatePersonaRequest(BaseModel):
         return value
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -93,7 +88,8 @@ class CovalPersonasAPICreatePersonaRequest(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

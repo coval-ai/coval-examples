@@ -20,10 +20,9 @@ import json
 
 from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from coval_sdk.models.coval_metrics_api_error_response_error_details_inner import CovalMetricsAPIErrorResponseErrorDetailsInner
+from coval_sdk.models.coval_alerts_api_error_response_error_details_inner import CovalAlertsAPIErrorResponseErrorDetailsInner
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class CovalMetricsAPIErrorResponseError(BaseModel):
     """
@@ -31,7 +30,7 @@ class CovalMetricsAPIErrorResponseError(BaseModel):
     """ # noqa: E501
     code: StrictStr
     message: StrictStr
-    details: Optional[List[CovalMetricsAPIErrorResponseErrorDetailsInner]] = None
+    details: Optional[List[CovalAlertsAPIErrorResponseErrorDetailsInner]] = None
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["code", "message", "details"]
 
@@ -43,8 +42,7 @@ class CovalMetricsAPIErrorResponseError(BaseModel):
         return value
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -56,7 +54,8 @@ class CovalMetricsAPIErrorResponseError(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
@@ -109,7 +108,7 @@ class CovalMetricsAPIErrorResponseError(BaseModel):
         _obj = cls.model_validate({
             "code": obj.get("code"),
             "message": obj.get("message"),
-            "details": [CovalMetricsAPIErrorResponseErrorDetailsInner.from_dict(_item) for _item in obj["details"]] if obj.get("details") is not None else None
+            "details": [CovalAlertsAPIErrorResponseErrorDetailsInner.from_dict(_item) for _item in obj["details"]] if obj.get("details") is not None else None
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

@@ -26,7 +26,6 @@ from coval_sdk.models.coval_reviews_api_annotation_status import CovalReviewsAPI
 from coval_sdk.models.coval_reviews_api_completion_status import CovalReviewsAPICompletionStatus
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class CovalReviewsAPIReviewAnnotationResource(BaseModel):
     """
@@ -50,8 +49,7 @@ class CovalReviewsAPIReviewAnnotationResource(BaseModel):
     __properties: ClassVar[List[str]] = ["name", "id", "simulation_output_id", "metric_id", "assignee", "ground_truth_float_value", "ground_truth_string_value", "ground_truth_subvalues_by_timestamp", "reviewer_notes", "status", "completion_status", "priority", "create_time", "update_time"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -63,7 +61,8 @@ class CovalReviewsAPIReviewAnnotationResource(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

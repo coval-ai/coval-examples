@@ -25,7 +25,6 @@ from coval_sdk.models.coval_metrics_api_comparison_operator import CovalMetricsA
 from coval_sdk.models.coval_metrics_api_threshold_source import CovalMetricsAPIThresholdSource
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class CovalMetricsAPICreateThresholdRequest(BaseModel):
     """
@@ -40,8 +39,7 @@ class CovalMetricsAPICreateThresholdRequest(BaseModel):
     __properties: ClassVar[List[str]] = ["comparison_operator", "target_float_upper", "target_float_lower", "target_values", "source"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -53,7 +51,8 @@ class CovalMetricsAPICreateThresholdRequest(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

@@ -1,3 +1,5 @@
+# coding: utf-8
+
 """
     Coval Agents API
 
@@ -9,7 +11,6 @@
 
     Do not edit the class manually.
 """  # noqa: E501
-
 
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
@@ -99,9 +100,9 @@ class RunsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
-            '401': "ListRuns400Response",
-            '404': "ListRuns400Response",
-            '500': "ListRuns400Response",
+            '401': "InlineObject",
+            '404': "InlineObject",
+            '500': "InlineObject",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -169,9 +170,9 @@ class RunsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
-            '401': "ListRuns400Response",
-            '404': "ListRuns400Response",
-            '500': "ListRuns400Response",
+            '401': "InlineObject",
+            '404': "InlineObject",
+            '500': "InlineObject",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -239,9 +240,9 @@ class RunsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
-            '401': "ListRuns400Response",
-            '404': "ListRuns400Response",
-            '500': "ListRuns400Response",
+            '401': "InlineObject",
+            '404': "InlineObject",
+            '500': "InlineObject",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -369,9 +370,9 @@ class RunsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "GetRun200Response",
-            '401': "ListRuns400Response",
-            '404': "ListRuns400Response",
-            '500': "ListRuns400Response",
+            '401': "InlineObject",
+            '404': "InlineObject",
+            '500': "InlineObject",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -439,9 +440,9 @@ class RunsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "GetRun200Response",
-            '401': "ListRuns400Response",
-            '404': "ListRuns400Response",
-            '500': "ListRuns400Response",
+            '401': "InlineObject",
+            '404': "InlineObject",
+            '500': "InlineObject",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -509,9 +510,9 @@ class RunsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "GetRun200Response",
-            '401': "ListRuns400Response",
-            '404': "ListRuns400Response",
-            '500': "ListRuns400Response",
+            '401': "InlineObject",
+            '404': "InlineObject",
+            '500': "InlineObject",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -639,12 +640,12 @@ class RunsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CovalRunsAPILaunchRunResponse",
-            '400': "ListRuns400Response",
-            '401': "ListRuns400Response",
-            '403': "ListRuns400Response",
-            '404': "ListRuns400Response",
-            '500': "ListRuns400Response",
-            '503': "ListRuns400Response",
+            '400': "InlineObject",
+            '401': "InlineObject",
+            '403': "InlineObject",
+            '404': "InlineObject",
+            '500': "InlineObject",
+            '503': "InlineObject",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -712,12 +713,12 @@ class RunsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CovalRunsAPILaunchRunResponse",
-            '400': "ListRuns400Response",
-            '401': "ListRuns400Response",
-            '403': "ListRuns400Response",
-            '404': "ListRuns400Response",
-            '500': "ListRuns400Response",
-            '503': "ListRuns400Response",
+            '400': "InlineObject",
+            '401': "InlineObject",
+            '403': "InlineObject",
+            '404': "InlineObject",
+            '500': "InlineObject",
+            '503': "InlineObject",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -785,12 +786,12 @@ class RunsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CovalRunsAPILaunchRunResponse",
-            '400': "ListRuns400Response",
-            '401': "ListRuns400Response",
-            '403': "ListRuns400Response",
-            '404': "ListRuns400Response",
-            '500': "ListRuns400Response",
-            '503': "ListRuns400Response",
+            '400': "InlineObject",
+            '401': "InlineObject",
+            '403': "InlineObject",
+            '404': "InlineObject",
+            '500': "InlineObject",
+            '503': "InlineObject",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -927,10 +928,10 @@ class RunsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CovalRunsAPIListRunTagsResponse",
-            '401': "ListRuns400Response",
-            '403': "ListRuns400Response",
-            '500': "ListRuns400Response",
-            '503': "ListRuns400Response",
+            '401': "InlineObject",
+            '403': "InlineObject",
+            '500': "InlineObject",
+            '503': "InlineObject",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -994,10 +995,10 @@ class RunsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CovalRunsAPIListRunTagsResponse",
-            '401': "ListRuns400Response",
-            '403': "ListRuns400Response",
-            '500': "ListRuns400Response",
-            '503': "ListRuns400Response",
+            '401': "InlineObject",
+            '403': "InlineObject",
+            '500': "InlineObject",
+            '503': "InlineObject",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1061,10 +1062,10 @@ class RunsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CovalRunsAPIListRunTagsResponse",
-            '401': "ListRuns400Response",
-            '403': "ListRuns400Response",
-            '500': "ListRuns400Response",
-            '503': "ListRuns400Response",
+            '401': "InlineObject",
+            '403': "InlineObject",
+            '500': "InlineObject",
+            '503': "InlineObject",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1205,9 +1206,9 @@ class RunsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ListRuns200Response",
-            '400': "ListRuns400Response",
-            '401': "ListRuns400Response",
-            '500': "ListRuns400Response",
+            '400': "InlineObject",
+            '401': "InlineObject",
+            '500': "InlineObject",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1291,9 +1292,9 @@ class RunsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ListRuns200Response",
-            '400': "ListRuns400Response",
-            '401': "ListRuns400Response",
-            '500': "ListRuns400Response",
+            '400': "InlineObject",
+            '401': "InlineObject",
+            '500': "InlineObject",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1377,9 +1378,9 @@ class RunsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ListRuns200Response",
-            '400': "ListRuns400Response",
-            '401': "ListRuns400Response",
-            '500': "ListRuns400Response",
+            '400': "InlineObject",
+            '401': "InlineObject",
+            '500': "InlineObject",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1533,11 +1534,11 @@ class RunsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "GetRun200Response",
-            '400': "ListRuns400Response",
-            '401': "ListRuns400Response",
-            '403': "ListRuns400Response",
-            '404': "ListRuns400Response",
-            '500': "ListRuns400Response",
+            '400': "InlineObject",
+            '401': "InlineObject",
+            '403': "InlineObject",
+            '404': "InlineObject",
+            '500': "InlineObject",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1609,11 +1610,11 @@ class RunsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "GetRun200Response",
-            '400': "ListRuns400Response",
-            '401': "ListRuns400Response",
-            '403': "ListRuns400Response",
-            '404': "ListRuns400Response",
-            '500': "ListRuns400Response",
+            '400': "InlineObject",
+            '401': "InlineObject",
+            '403': "InlineObject",
+            '404': "InlineObject",
+            '500': "InlineObject",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1685,11 +1686,11 @@ class RunsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "GetRun200Response",
-            '400': "ListRuns400Response",
-            '401': "ListRuns400Response",
-            '403': "ListRuns400Response",
-            '404': "ListRuns400Response",
-            '500': "ListRuns400Response",
+            '400': "InlineObject",
+            '401': "InlineObject",
+            '403': "InlineObject",
+            '404': "InlineObject",
+            '500': "InlineObject",
         }
         response_data = self.api_client.call_api(
             *_param,

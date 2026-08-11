@@ -22,11 +22,11 @@ from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-COVALMONITORSAPIMONITOREVENTRESOURCECONDITIONRESULTSINNERCOMPUTEDVALUE_ONE_OF_SCHEMAS = ["float", "str"]
+COVALALERTSAPIALERTEVENTRESOURCECONDITIONRESULTSINNERCOMPUTEDVALUE_ONE_OF_SCHEMAS = ["float", "str"]
 
-class CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue(BaseModel):
+class CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue(BaseModel):
     """
-    CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue
+    CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue
     """
     # data type: float
     oneof_schema_1_validator: Optional[Union[StrictFloat, StrictInt]] = None
@@ -56,7 +56,7 @@ class CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue(Bas
         if v is None:
             return v
 
-        instance = CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue.model_construct()
+        instance = CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue.model_construct()
         error_messages = []
         match = 0
         # validate data type: float
@@ -73,10 +73,10 @@ class CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue(Bas
             error_messages.append(str(e))
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue with oneOf schemas: float, str. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue with oneOf schemas: float, str. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue with oneOf schemas: float, str. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue with oneOf schemas: float, str. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -115,10 +115,10 @@ class CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue(Bas
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue with oneOf schemas: float, str. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue with oneOf schemas: float, str. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue with oneOf schemas: float, str. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue with oneOf schemas: float, str. Details: " + ", ".join(error_messages))
         else:
             return instance
 

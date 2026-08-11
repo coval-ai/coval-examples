@@ -21,7 +21,7 @@ from typing_extensions import Self
 
 class CovalReportsAPICompareBy(str, Enum):
     """
-    Dimension to group and compare runs by in the report view.
+    Dimension to group and compare runs by in the report view. `custom` groups by a caller-defined dimension and requires `custom_dimensions`. 
     """
 
     """
@@ -34,6 +34,7 @@ class CovalReportsAPICompareBy(str, Enum):
     PERSONA = 'persona'
     TEST_CASE = 'test_case'
     METADATA = 'metadata'
+    CUSTOM = 'custom'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

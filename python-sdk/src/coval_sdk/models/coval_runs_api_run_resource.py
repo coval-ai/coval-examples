@@ -27,7 +27,6 @@ from coval_sdk.models.coval_runs_api_run_results import CovalRunsAPIRunResults
 from coval_sdk.models.coval_runs_api_simulation_status import CovalRunsAPISimulationStatus
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class CovalRunsAPIRunResource(BaseModel):
     """
@@ -54,8 +53,7 @@ class CovalRunsAPIRunResource(BaseModel):
     __properties: ClassVar[List[str]] = ["name", "run_id", "display_name", "is_public", "status", "create_time", "update_time", "agent_id", "persona_id", "test_set_id", "tags", "progress", "results", "metadata", "error", "error_status", "metric_averages"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -67,7 +65,8 @@ class CovalRunsAPIRunResource(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

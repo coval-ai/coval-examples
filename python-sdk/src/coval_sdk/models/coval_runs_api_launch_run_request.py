@@ -25,7 +25,6 @@ from coval_sdk.models.coval_runs_api_launch_metadata import CovalRunsAPILaunchMe
 from coval_sdk.models.coval_runs_api_launch_options import CovalRunsAPILaunchOptions
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class CovalRunsAPILaunchRunRequest(BaseModel):
     """
@@ -44,8 +43,7 @@ class CovalRunsAPILaunchRunRequest(BaseModel):
     __properties: ClassVar[List[str]] = ["agent_id", "persona_id", "test_set_id", "metric_ids", "mutation_id", "mutation_ids", "persona_metrics", "options", "metadata"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -57,7 +55,8 @@ class CovalRunsAPILaunchRunRequest(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

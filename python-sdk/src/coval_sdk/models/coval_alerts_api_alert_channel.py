@@ -18,24 +18,32 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+from typing import Any, ClassVar, Dict, List
+from typing_extensions import Annotated
+from coval_sdk.models.coval_alerts_api_channel_type import CovalAlertsAPIChannelType
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
-class CovalMetricsAPIErrorResponseErrorDetailsInner(BaseModel):
+class CovalAlertsAPIAlertChannel(BaseModel):
     """
-    CovalMetricsAPIErrorResponseErrorDetailsInner
+    CovalAlertsAPIAlertChannel
     """ # noqa: E501
-    var_field: Optional[StrictStr] = Field(default=None, alias="field")
-    description: Optional[StrictStr] = None
+    ulid: Annotated[str, Field(strict=True)] = Field(description="Channel ULID")
+    channel_type: CovalAlertsAPIChannelType
+    config: Dict[str, Any] = Field(description="Channel-specific configuration.  **SLACK**: `{\"channel_id\": \"C0123ABC\", \"channel_name\": \"#alerts\"}`  **EMAIL**: `{\"recipients\": [\"team@company.com\"]}`  **WEBHOOK**: `{\"url\": \"https://...\", \"method\": \"POST\", \"auth_token\": \"...\"}`  **HUMAN_REVIEW**: `{\"project_id\": \"...\", \"sample_rate\": 0.1}` ")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["field", "description"]
+    __properties: ClassVar[List[str]] = ["ulid", "channel_type", "config"]
+
+    @field_validator('ulid')
+    def ulid_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if not re.match(r"^[0-9A-Z]{26}$", value):
+            raise ValueError(r"must validate the regular expression /^[0-9A-Z]{26}$/")
+        return value
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -47,11 +55,12 @@ class CovalMetricsAPIErrorResponseErrorDetailsInner(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CovalMetricsAPIErrorResponseErrorDetailsInner from a JSON string"""
+        """Create an instance of CovalAlertsAPIAlertChannel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -79,16 +88,11 @@ class CovalMetricsAPIErrorResponseErrorDetailsInner(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if var_field (nullable) is None
-        # and model_fields_set contains the field
-        if self.var_field is None and "var_field" in self.model_fields_set:
-            _dict['field'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CovalMetricsAPIErrorResponseErrorDetailsInner from a dict"""
+        """Create an instance of CovalAlertsAPIAlertChannel from a dict"""
         if obj is None:
             return None
 
@@ -96,8 +100,9 @@ class CovalMetricsAPIErrorResponseErrorDetailsInner(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "field": obj.get("field"),
-            "description": obj.get("description")
+            "ulid": obj.get("ulid"),
+            "channel_type": obj.get("channel_type"),
+            "config": obj.get("config")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

@@ -25,7 +25,6 @@ from coval_sdk.models.coval_reports_api_compare_by import CovalReportsAPICompare
 from coval_sdk.models.coval_reports_api_report_permission import CovalReportsAPIReportPermission
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class CovalReportsAPIReport(BaseModel):
     """
@@ -38,13 +37,13 @@ class CovalReportsAPIReport(BaseModel):
     source_human_review_project_id: Optional[StrictStr] = Field(default=None, description="Human review project the pinned simulations were sourced from; null when not report-linked.")
     compare_by: CovalReportsAPICompareBy
     metadata_key: Optional[StrictStr] = Field(description="Metadata key used for grouping when `compare_by` is `metadata`; null otherwise.")
+    custom_dimension_id: Optional[StrictStr] = Field(default=None, description="Custom dimension used for grouping when `compare_by` is `custom`; null otherwise.")
     permissions: CovalReportsAPIReportPermission
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["id", "name", "run_ids", "simulation_output_ids", "source_human_review_project_id", "compare_by", "metadata_key", "permissions"]
+    __properties: ClassVar[List[str]] = ["id", "name", "run_ids", "simulation_output_ids", "source_human_review_project_id", "compare_by", "metadata_key", "custom_dimension_id", "permissions"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -56,7 +55,8 @@ class CovalReportsAPIReport(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
@@ -98,6 +98,11 @@ class CovalReportsAPIReport(BaseModel):
         if self.metadata_key is None and "metadata_key" in self.model_fields_set:
             _dict['metadata_key'] = None
 
+        # set to None if custom_dimension_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.custom_dimension_id is None and "custom_dimension_id" in self.model_fields_set:
+            _dict['custom_dimension_id'] = None
+
         return _dict
 
     @classmethod
@@ -117,6 +122,7 @@ class CovalReportsAPIReport(BaseModel):
             "source_human_review_project_id": obj.get("source_human_review_project_id"),
             "compare_by": obj.get("compare_by") if obj.get("compare_by") is not None else CovalReportsAPICompareBy.NONE,
             "metadata_key": obj.get("metadata_key"),
+            "custom_dimension_id": obj.get("custom_dimension_id"),
             "permissions": obj.get("permissions") if obj.get("permissions") is not None else CovalReportsAPIReportPermission.PRIVATE
         })
         # store additional fields in additional_properties

@@ -25,7 +25,6 @@ from coval_sdk.models.coval_monitors_api_condition_aggregation import CovalMonit
 from coval_sdk.models.coval_monitors_api_condition_operator import CovalMonitorsAPIConditionOperator
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class CovalMonitorsAPIConditionInput(BaseModel):
     """
@@ -54,8 +53,7 @@ class CovalMonitorsAPIConditionInput(BaseModel):
         return value
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -67,7 +65,8 @@ class CovalMonitorsAPIConditionInput(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
