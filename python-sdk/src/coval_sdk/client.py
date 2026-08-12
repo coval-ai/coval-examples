@@ -13,6 +13,8 @@ from urllib3.util import Retry
 from coval_sdk.api import (
   APIKeysApi,
   AgentsApi,
+  AlertEventsApi,
+  AlertsApi,
   AudioApi,
   ConversationsApi,
   DashboardsApi,
@@ -209,6 +211,8 @@ class CovalClient:
 
     self.api_keys = APIKeysApi(self.api_client)
     self.agents = AgentsApi(self.api_client)
+    self.alert_events = AlertEventsApi(self.api_client)
+    self.alerts = AlertsApi(self.api_client)
     self.audio = AudioApi(self.api_client)
     self.conversations = ConversationsApi(self.api_client)
     self.dashboards = DashboardsApi(self.api_client)
