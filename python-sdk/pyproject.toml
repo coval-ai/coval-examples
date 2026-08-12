@@ -48,3 +48,6 @@ include = ["coval_sdk*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/coval_sdk/api/*.py" = ["RUF036"]

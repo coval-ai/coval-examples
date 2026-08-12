@@ -41,6 +41,30 @@ jobs:
           npm test
           npm pack --dry-run
 
+      - name: Clean-install package smoke test
+        run: |
+          set -euo pipefail
+          smoke_dir="${RUNNER_TEMP}/coval-sdk-smoke"
+          mkdir -p "${smoke_dir}"
+          npm pack --pack-destination "${smoke_dir}"
+          cd "${smoke_dir}"
+          npm init --yes
+          npm install ./coval-sdk-*.tgz
+          node --input-type=module - <<'JS'
+          import {
+            CovalClient,
+            CovalMonitorsAPIErrorResponseErrorFromJSON,
+          } from '@coval/sdk';
+
+          const client = new CovalClient({ apiKey: 'package-smoke-test' });
+          if (!client.alerts || !client.alertEvents) {
+            throw new Error('Alerts API surfaces are missing from CovalClient');
+          }
+          if (typeof CovalMonitorsAPIErrorResponseErrorFromJSON !== 'function') {
+            throw new Error('Compatibility model serializer is missing');
+          }
+          JS
+
       - name: Verify tag matches package version
         run: |
           set -euo pipefail

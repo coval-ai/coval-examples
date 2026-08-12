@@ -433,3 +433,8 @@ export * from './TracesAPITraceSearchCallResult.js';
 export * from './TracesAPITraceSearchFilters.js';
 export * from './TracesAPITraceSearchRequest.js';
 export * from './TracesAPITraceSearchResponse.js';
+export * from './CovalMetricsAPIErrorResponseErrorDetailsInner.js';
+export * from './CovalMonitorsAPIErrorResponseError.js';
+export * from './CovalMonitorsAPIMonitorEventResourceConditionResultsInner.js';
+export * from './CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue.js';
+export * from './CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner.js';

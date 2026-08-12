@@ -15,17 +15,15 @@ import { CovalApiError, parseErrorResponse } from './errors.js';
 import { createRetryingFetch, type RetryOptions } from './retry.js';
 import { createTransportStats, type CovalTransportStats } from './stats.js';
 import {
+  // sdk-api-imports:start
+  APIKeysApi,
   AgentsApi,
   AlertEventsApi,
   AlertsApi,
-  APIKeysApi,
   AudioApi,
-  Configuration,
   ConversationsApi,
   DashboardsApi,
-  type FetchAPI,
   IntegrationsApi,
-  type Middleware,
   MetricOutputsApi,
   MetricsApi,
   MonitorEventsApi,
@@ -36,8 +34,8 @@ import {
   ReportsApi,
   ReviewAnnotationsApi,
   ReviewProjectsApi,
-  RunsApi,
   RunTemplatesApi,
+  RunsApi,
   ScheduledRunsApi,
   SimulationsApi,
   TagsApi,
@@ -46,6 +44,10 @@ import {
   TracesApi,
   WebhooksApi,
   WidgetsApi,
+  // sdk-api-imports:end
+  Configuration,
+  type FetchAPI,
+  type Middleware,
 } from './generated/index.js';
 
 export interface CovalClientOptions {
@@ -68,27 +70,61 @@ export interface CovalClientOptions {
 
 const DEFAULT_BASE_URL = 'https://api.coval.dev/v1';
 
+export const GENERATED_API_PROPERTY_NAMES = [
+  // sdk-api-property-names:start
+  'apiKeys',
+  'agents',
+  'alertEvents',
+  'alerts',
+  'audio',
+  'conversations',
+  'dashboards',
+  'integrations',
+  'metricOutputs',
+  'metrics',
+  'monitorEvents',
+  'monitors',
+  'mutations',
+  'organizationConversationsConfig',
+  'personas',
+  'reports',
+  'reviewAnnotations',
+  'reviewProjects',
+  'runTemplates',
+  'runs',
+  'scheduledRuns',
+  'simulations',
+  'tags',
+  'testCases',
+  'testSets',
+  'traces',
+  'webhooks',
+  'widgets',
+  // sdk-api-property-names:end
+] as const;
+
 export class CovalClient {
+  // sdk-api-properties:start
+  readonly apiKeys: APIKeysApi;
   readonly agents: AgentsApi;
   readonly alertEvents: AlertEventsApi;
   readonly alerts: AlertsApi;
-  readonly apiKeys: APIKeysApi;
   readonly audio: AudioApi;
   readonly conversations: ConversationsApi;
   readonly dashboards: DashboardsApi;
   readonly integrations: IntegrationsApi;
-  readonly metrics: MetricsApi;
   readonly metricOutputs: MetricOutputsApi;
-  readonly monitors: MonitorsApi;
+  readonly metrics: MetricsApi;
   readonly monitorEvents: MonitorEventsApi;
+  readonly monitors: MonitorsApi;
   readonly mutations: MutationsApi;
   readonly organizationConversationsConfig: OrganizationConversationsConfigApi;
   readonly personas: PersonasApi;
   readonly reports: ReportsApi;
   readonly reviewAnnotations: ReviewAnnotationsApi;
   readonly reviewProjects: ReviewProjectsApi;
-  readonly runs: RunsApi;
   readonly runTemplates: RunTemplatesApi;
+  readonly runs: RunsApi;
   readonly scheduledRuns: ScheduledRunsApi;
   readonly simulations: SimulationsApi;
   readonly tags: TagsApi;
@@ -97,6 +133,7 @@ export class CovalClient {
   readonly traces: TracesApi;
   readonly webhooks: WebhooksApi;
   readonly widgets: WidgetsApi;
+  // sdk-api-properties:end
 
   readonly configuration: Configuration;
 
@@ -136,26 +173,27 @@ export class CovalClient {
       middleware,
     });
 
+    // sdk-api-assignments:start
+    this.apiKeys = new APIKeysApi(this.configuration);
     this.agents = new AgentsApi(this.configuration);
     this.alertEvents = new AlertEventsApi(this.configuration);
     this.alerts = new AlertsApi(this.configuration);
-    this.apiKeys = new APIKeysApi(this.configuration);
     this.audio = new AudioApi(this.configuration);
     this.conversations = new ConversationsApi(this.configuration);
     this.dashboards = new DashboardsApi(this.configuration);
     this.integrations = new IntegrationsApi(this.configuration);
-    this.metrics = new MetricsApi(this.configuration);
     this.metricOutputs = new MetricOutputsApi(this.configuration);
-    this.monitors = new MonitorsApi(this.configuration);
+    this.metrics = new MetricsApi(this.configuration);
     this.monitorEvents = new MonitorEventsApi(this.configuration);
+    this.monitors = new MonitorsApi(this.configuration);
     this.mutations = new MutationsApi(this.configuration);
     this.organizationConversationsConfig = new OrganizationConversationsConfigApi(this.configuration);
     this.personas = new PersonasApi(this.configuration);
     this.reports = new ReportsApi(this.configuration);
     this.reviewAnnotations = new ReviewAnnotationsApi(this.configuration);
     this.reviewProjects = new ReviewProjectsApi(this.configuration);
-    this.runs = new RunsApi(this.configuration);
     this.runTemplates = new RunTemplatesApi(this.configuration);
+    this.runs = new RunsApi(this.configuration);
     this.scheduledRuns = new ScheduledRunsApi(this.configuration);
     this.simulations = new SimulationsApi(this.configuration);
     this.tags = new TagsApi(this.configuration);
@@ -164,6 +202,7 @@ export class CovalClient {
     this.traces = new TracesApi(this.configuration);
     this.webhooks = new WebhooksApi(this.configuration);
     this.widgets = new WidgetsApi(this.configuration);
+    // sdk-api-assignments:end
   }
 }
 

@@ -1,0 +1,13 @@
+/* tslint:disable */
+/* eslint-disable */
+/** Backward-compatible aliases for CovalAlertsAPIErrorResponseErrorDetailsInner. */
+export type {
+  CovalAlertsAPIErrorResponseErrorDetailsInner as CovalMetricsAPIErrorResponseErrorDetailsInner,
+} from './CovalAlertsAPIErrorResponseErrorDetailsInner.js';
+export {
+  instanceOfCovalAlertsAPIErrorResponseErrorDetailsInner as instanceOfCovalMetricsAPIErrorResponseErrorDetailsInner,
+  CovalAlertsAPIErrorResponseErrorDetailsInnerFromJSON as CovalMetricsAPIErrorResponseErrorDetailsInnerFromJSON,
+  CovalAlertsAPIErrorResponseErrorDetailsInnerFromJSONTyped as CovalMetricsAPIErrorResponseErrorDetailsInnerFromJSONTyped,
+  CovalAlertsAPIErrorResponseErrorDetailsInnerToJSON as CovalMetricsAPIErrorResponseErrorDetailsInnerToJSON,
+  CovalAlertsAPIErrorResponseErrorDetailsInnerToJSONTyped as CovalMetricsAPIErrorResponseErrorDetailsInnerToJSONTyped,
+} from './CovalAlertsAPIErrorResponseErrorDetailsInner.js';

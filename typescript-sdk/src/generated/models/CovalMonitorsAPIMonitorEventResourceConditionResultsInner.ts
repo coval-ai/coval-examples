@@ -1,0 +1,13 @@
+/* tslint:disable */
+/* eslint-disable */
+/** Backward-compatible aliases for CovalAlertsAPIAlertEventResourceConditionResultsInner. */
+export type {
+  CovalAlertsAPIAlertEventResourceConditionResultsInner as CovalMonitorsAPIMonitorEventResourceConditionResultsInner,
+} from './CovalAlertsAPIAlertEventResourceConditionResultsInner.js';
+export {
+  instanceOfCovalAlertsAPIAlertEventResourceConditionResultsInner as instanceOfCovalMonitorsAPIMonitorEventResourceConditionResultsInner,
+  CovalAlertsAPIAlertEventResourceConditionResultsInnerFromJSON as CovalMonitorsAPIMonitorEventResourceConditionResultsInnerFromJSON,
+  CovalAlertsAPIAlertEventResourceConditionResultsInnerFromJSONTyped as CovalMonitorsAPIMonitorEventResourceConditionResultsInnerFromJSONTyped,
+  CovalAlertsAPIAlertEventResourceConditionResultsInnerToJSON as CovalMonitorsAPIMonitorEventResourceConditionResultsInnerToJSON,
+  CovalAlertsAPIAlertEventResourceConditionResultsInnerToJSONTyped as CovalMonitorsAPIMonitorEventResourceConditionResultsInnerToJSONTyped,
+} from './CovalAlertsAPIAlertEventResourceConditionResultsInner.js';

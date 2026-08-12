@@ -4,7 +4,7 @@ name: Release on version bump
 # on PyPI/npm". Before this, publishing was always a hand-pushed tag, so the
 # weekly regen could regenerate the SDKs but never actually release them.
 #
-# Tags any version on main that has no matching tag yet. The existing
+# After SDK CI succeeds on main, tags any version that has no matching tag yet. The existing
 # publish-coval-sdk.yml / publish-coval-npm.yml workflows trigger on that tag
 # push and do the actual publishing, so the tag stays the record of a release.
 #
@@ -13,13 +13,10 @@ name: Release on version bump
 # suppresses that to prevent recursion -- so the publish jobs would never fire.
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - python-sdk/pyproject.toml
-      - typescript-sdk/package.json
   workflow_dispatch:
+  workflow_run:
+    workflows: ["SDK CI"]
+    types: [completed]
 
 permissions:
   contents: read
@@ -31,12 +28,18 @@ concurrency:
 jobs:
   tag:
     name: Tag unreleased versions
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
           token: ${{ secrets.REGEN_PR_TOKEN }}
 
       - name: Set up Python
@@ -50,6 +53,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+          git fetch origin main
+          if ! git merge-base --is-ancestor HEAD origin/main; then
+            echo "The tested commit is no longer on main; refusing to release it."
+            exit 0
+          fi
+
           python_version="$(python - <<'PY'
           import pathlib
           import tomllib
@@ -58,7 +67,7 @@ jobs:
           )"
           typescript_version="$(node -p "require('./typescript-sdk/package.json').version")"
 
-          released=0
+          tags_to_push=()
           for tag in "python-sdk-v${python_version}" "typescript-sdk-v${typescript_version}"; do
             if git rev-parse -q --verify "refs/tags/${tag}" >/dev/null; then
               echo "${tag} is already tagged; nothing to release."
@@ -66,10 +75,13 @@ jobs:
             fi
             echo "Tagging ${tag}"
             git tag -a "${tag}" -m "${tag}"
-            git push origin "${tag}"
-            released=$((released + 1))
+            tags_to_push+=("${tag}")
           done
 
-          if [ "${released}" -eq 0 ]; then
+          if [ "${#tags_to_push[@]}" -eq 0 ]; then
             echo "No new versions to release."
+            exit 0
           fi
+
+          # Publish neither SDK if the remote cannot accept both release tags.
+          git push --atomic origin "${tags_to_push[@]}"

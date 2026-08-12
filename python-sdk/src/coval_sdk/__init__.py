@@ -22,6 +22,11 @@ __all__ = [
     "paginate",
     "InvalidListItemWarning",
     "CovalClient",
+    "CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner",
+    "CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue",
+    "CovalMonitorsAPIMonitorEventResourceConditionResultsInner",
+    "CovalMonitorsAPIErrorResponseError",
+    "CovalMetricsAPIErrorResponseErrorDetailsInner",
     "APIKeysApi",
     "AgentsApi",
     "AlertEventsApi",
@@ -969,6 +974,16 @@ from coval_sdk.models.traces_api_trace_search_call_result import TracesAPITraceS
 from coval_sdk.models.traces_api_trace_search_filters import TracesAPITraceSearchFilters as TracesAPITraceSearchFilters
 from coval_sdk.models.traces_api_trace_search_request import TracesAPITraceSearchRequest as TracesAPITraceSearchRequest
 from coval_sdk.models.traces_api_trace_search_response import TracesAPITraceSearchResponse as TracesAPITraceSearchResponse
+
+from coval_sdk.models.coval_metrics_api_error_response_error_details_inner import CovalMetricsAPIErrorResponseErrorDetailsInner
+
+from coval_sdk.models.coval_monitors_api_error_response_error import CovalMonitorsAPIErrorResponseError
+
+from coval_sdk.models.coval_monitors_api_monitor_event_resource_condition_results_inner import CovalMonitorsAPIMonitorEventResourceConditionResultsInner
+
+from coval_sdk.models.coval_monitors_api_monitor_event_resource_condition_results_inner_computed_value import CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue
+
+from coval_sdk.models.coval_monitors_api_monitor_event_resource_dispatched_channels_inner import CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner
 
 from coval_sdk.client import CovalClient
 

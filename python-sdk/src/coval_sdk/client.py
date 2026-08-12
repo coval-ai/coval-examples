@@ -10,7 +10,10 @@ from typing import Any, Dict, Optional, Union
 from urllib3 import HTTPConnectionPool, HTTPSConnectionPool
 from urllib3.util import Retry
 
+# This block mirrors generated API exports, whose stable order is not isort's order.
+# isort: off
 from coval_sdk.api import (
+  # sdk-api-imports:start
   APIKeysApi,
   AgentsApi,
   AlertEventsApi,
@@ -29,8 +32,8 @@ from coval_sdk.api import (
   ReportsApi,
   ReviewAnnotationsApi,
   ReviewProjectsApi,
-  RunsApi,
   RunTemplatesApi,
+  RunsApi,
   ScheduledRunsApi,
   SimulationsApi,
   TagsApi,
@@ -39,13 +42,47 @@ from coval_sdk.api import (
   TracesApi,
   WebhooksApi,
   WidgetsApi,
+  # sdk-api-imports:end
 )
+# isort: on
 from coval_sdk.api_client import ApiClient
 from coval_sdk.configuration import Configuration
 
-
 DEFAULT_BASE_URL = "https://api.coval.dev/v1"
 RetryConfig = Union[Retry, int, bool]
+
+API_PROPERTY_NAMES = (
+  # sdk-api-property-names:start
+  "api_keys",
+  "agents",
+  "alert_events",
+  "alerts",
+  "audio",
+  "conversations",
+  "dashboards",
+  "integrations",
+  "metric_outputs",
+  "metrics",
+  "monitor_events",
+  "monitors",
+  "mutations",
+  "organization_conversations_config",
+  "personas",
+  "reports",
+  "review_annotations",
+  "review_projects",
+  "run_templates",
+  "runs",
+  "scheduled_runs",
+  "simulations",
+  "tags",
+  "test_cases",
+  "test_sets",
+  "traces",
+  "webhooks",
+  "widgets",
+  # sdk-api-property-names:end
+)
 
 # urllib3 only discards a pooled connection when the peer actively closed it --
 # _get_conn polls for readability, which sees a FIN/RST but not a connection an
@@ -209,6 +246,7 @@ class CovalClient:
         max_idle_seconds, self.connection_stats
       )
 
+    # sdk-api-properties:start
     self.api_keys = APIKeysApi(self.api_client)
     self.agents = AgentsApi(self.api_client)
     self.alert_events = AlertEventsApi(self.api_client)
@@ -237,6 +275,7 @@ class CovalClient:
     self.traces = TracesApi(self.api_client)
     self.webhooks = WebhooksApi(self.api_client)
     self.widgets = WidgetsApi(self.api_client)
+    # sdk-api-properties:end
 
   def close(self) -> None:
     """Release pooled HTTP connections."""

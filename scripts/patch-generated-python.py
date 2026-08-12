@@ -6,11 +6,13 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-
 REPO_ROOT = Path(__file__).resolve().parent.parent
 INIT = REPO_ROOT / "python-sdk" / "src" / "coval_sdk" / "__init__.py"
 API_CLIENT = REPO_ROOT / "python-sdk" / "src" / "coval_sdk" / "api_client.py"
+API_INIT = REPO_ROOT / "python-sdk" / "src" / "coval_sdk" / "api" / "__init__.py"
+CLIENT = REPO_ROOT / "python-sdk" / "src" / "coval_sdk" / "client.py"
 MODELS = REPO_ROOT / "python-sdk" / "src" / "coval_sdk" / "models"
+MODELS_INIT = MODELS / "__init__.py"
 
 EXPORTS = (
   ("CovalClient", "from coval_sdk.client import CovalClient"),
@@ -26,6 +28,140 @@ MODEL_LIST = re.compile(
   r'(?P<quote>["\'])(?P<field>[^"\']+)(?P=quote)\]\]'
 )
 
+API_IMPORT = re.compile(
+  r"^from coval_sdk\.api\.(?P<module>[a-z0-9_]+) import (?P<class_name>[A-Za-z0-9]+Api)$",
+  re.MULTILINE,
+)
+
+COMPATIBILITY_MODEL_ALIASES = (
+  (
+    "coval_metrics_api_error_response_error_details_inner",
+    "CovalMetricsAPIErrorResponseErrorDetailsInner",
+    "coval_alerts_api_error_response_error_details_inner",
+    "CovalAlertsAPIErrorResponseErrorDetailsInner",
+  ),
+  (
+    "coval_monitors_api_error_response_error",
+    "CovalMonitorsAPIErrorResponseError",
+    "coval_alerts_api_error_response_error",
+    "CovalAlertsAPIErrorResponseError",
+  ),
+  (
+    "coval_monitors_api_monitor_event_resource_condition_results_inner",
+    "CovalMonitorsAPIMonitorEventResourceConditionResultsInner",
+    "coval_alerts_api_alert_event_resource_condition_results_inner",
+    "CovalAlertsAPIAlertEventResourceConditionResultsInner",
+  ),
+  (
+    "coval_monitors_api_monitor_event_resource_condition_results_inner_computed_value",
+    "CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue",
+    "coval_alerts_api_alert_event_resource_condition_results_inner_computed_value",
+    "CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue",
+  ),
+  (
+    "coval_monitors_api_monitor_event_resource_dispatched_channels_inner",
+    "CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner",
+    "coval_alerts_api_alert_event_resource_dispatched_channels_inner",
+    "CovalAlertsAPIAlertEventResourceDispatchedChannelsInner",
+  ),
+)
+
+
+def replace_marked_block(contents: str, start_marker: str, end_marker: str, lines: list[str]) -> str:
+  if contents.count(start_marker) != 1 or contents.count(end_marker) != 1:
+    raise RuntimeError(f"Expected exactly one {start_marker!r}/{end_marker!r} block")
+
+  marker_start = contents.index(start_marker)
+  body_start = contents.index("\n", marker_start) + 1
+  body_end = contents.index(end_marker, body_start)
+  body = "\n".join(lines)
+  return f"{contents[:body_start]}{body}\n{contents[body_end:]}"
+
+
+def patch_client_api_surface() -> int:
+  apis = []
+  for match in API_IMPORT.finditer(API_INIT.read_text()):
+    module = match.group("module")
+    if not module.endswith("_api"):
+      raise RuntimeError(f"Generated API module does not end in _api: {module}")
+    apis.append((module.removesuffix("_api"), match.group("class_name")))
+
+  if not apis:
+    raise RuntimeError("No generated API imports found")
+  if len({property_name for property_name, _ in apis}) != len(apis):
+    raise RuntimeError("Generated API modules produced duplicate client property names")
+
+  contents = CLIENT.read_text()
+  contents = replace_marked_block(
+    contents,
+    "  # sdk-api-imports:start",
+    "  # sdk-api-imports:end",
+    [f"  {class_name}," for _, class_name in apis],
+  )
+  contents = replace_marked_block(
+    contents,
+    "  # sdk-api-property-names:start",
+    "  # sdk-api-property-names:end",
+    [f'  "{property_name}",' for property_name, _ in apis],
+  )
+  contents = replace_marked_block(
+    contents,
+    "    # sdk-api-properties:start",
+    "    # sdk-api-properties:end",
+    [
+      f"    self.{property_name} = {class_name}(self.api_client)"
+      for property_name, class_name in apis
+    ],
+  )
+  CLIENT.write_text(contents)
+  return len(apis)
+
+
+def add_top_level_export(contents: str, name: str, import_line: str) -> str:
+  if f'    "{name}",' not in contents:
+    marker = "__all__ = [\n"
+    if marker not in contents:
+      raise RuntimeError("Generated coval_sdk.__init__ no longer defines __all__")
+    contents = contents.replace(marker, f'{marker}    "{name}",\n', 1)
+  if import_line not in contents:
+    contents = f"{contents.rstrip()}\n\n{import_line}\n"
+  return contents
+
+
+def patch_compatibility_model_aliases() -> int:
+  models_init_contents = MODELS_INIT.read_text()
+  top_level_contents = INIT.read_text()
+  patched = 0
+
+  for old_module, old_name, new_module, new_name in COMPATIBILITY_MODEL_ALIASES:
+    old_path = MODELS / f"{old_module}.py"
+    new_path = MODELS / f"{new_module}.py"
+    alias_import = f"from coval_sdk.models.{new_module} import {new_name} as {old_name}"
+
+    if old_path.exists():
+      old_contents = old_path.read_text()
+      if alias_import not in old_contents and f"class {old_name}(" not in old_contents:
+        raise RuntimeError(f"Existing compatibility model has an unexpected shape: {old_path}")
+    else:
+      if not new_path.exists():
+        raise RuntimeError(f"Compatibility target does not exist: {new_path}")
+      old_path.write_text(
+        f'"""Backward-compatible alias for :class:`{new_name}`."""\n\n'
+        f"{alias_import}\n\n"
+        f'__all__ = ["{old_name}"]\n'
+      )
+      patched += 1
+
+    models_import = f"from coval_sdk.models.{old_module} import {old_name}"
+    if models_import not in models_init_contents:
+      models_init_contents = f"{models_init_contents.rstrip()}\n{models_import}\n"
+
+    top_level_contents = add_top_level_export(top_level_contents, old_name, models_import)
+
+  MODELS_INIT.write_text(models_init_contents)
+  INIT.write_text(top_level_contents)
+  return patched
+
 
 def patch_api_client() -> None:
   contents = API_CLIENT.read_text()
@@ -39,15 +175,20 @@ def patch_api_client() -> None:
     "            return klass.from_dict(data)\n"
   )
 
+  if replacement in contents:
+    if import_line not in contents:
+      raise RuntimeError("Patched ApiClient is missing invalid_list_item_policy import")
+    return
   if contents.count(import_marker) != 1 or contents.count(return_line) != 1:
     raise RuntimeError("Generated ApiClient deserialization anchors changed")
-  contents = contents.replace(import_marker, f"{import_marker}{import_line}", 1)
+  if import_line not in contents:
+    contents = contents.replace(import_marker, f"{import_marker}{import_line}", 1)
   contents = contents.replace(return_line, replacement, 1)
   API_CLIENT.write_text(contents)
 
 
 def patch_response_model_lists() -> int:
-  patched = 0
+  handled = 0
   for path in sorted(MODELS.glob("*.py")):
     contents = path.read_text()
     class_match = re.search(r"^class (?P<name>[A-Za-z0-9_]+)\(BaseModel\):", contents, re.MULTILINE)
@@ -58,9 +199,14 @@ def patch_response_model_lists() -> int:
     if "List" not in response_model and "History" not in response_model:
       continue
 
-    def replace(match: re.Match[str]) -> str:
-      nonlocal patched
-      patched += 1
+    existing_calls = contents.count("deserialize_model_list(")
+    if existing_calls:
+      handled += existing_calls
+      continue
+
+    def replace(match: re.Match[str], response_model: str = response_model) -> str:
+      nonlocal handled
+      handled += 1
       field = match.group("field")
       quote = match.group("quote")
       model = match.group("model")
@@ -81,9 +227,9 @@ def patch_response_model_lists() -> int:
       updated = updated.replace(marker, f"{marker}{import_line}", 1)
     path.write_text(updated)
 
-  if patched == 0:
+  if handled == 0:
     raise RuntimeError("No generated response-model list deserializers were patched")
-  return patched
+  return handled
 
 
 def patch_missing_list_import() -> int:
@@ -114,19 +260,17 @@ def main() -> None:
   patch_api_client()
   patched_lists = patch_response_model_lists()
   patched_imports = patch_missing_list_import()
+  api_count = patch_client_api_surface()
+  compatibility_aliases = patch_compatibility_model_aliases()
   contents = INIT.read_text()
   for name, import_line in EXPORTS:
-    if f'    "{name}",' not in contents:
-      marker = "__all__ = [\n"
-      if marker not in contents:
-        raise RuntimeError("Generated coval_sdk.__init__ no longer defines __all__")
-      contents = contents.replace(marker, f'{marker}    "{name}",\n', 1)
-    if import_line not in contents:
-      contents = f"{contents.rstrip()}\n\n{import_line}\n"
+    contents = add_top_level_export(contents, name, import_line)
 
   INIT.write_text(contents)
-  print(f"  Patched ApiClient and {patched_lists} collection-response list deserializers.")
+  print(f"  Ensured ApiClient and {patched_lists} collection-response list deserializers are patched.")
   print(f"  Added the missing List import to {patched_imports} generated models.")
+  print(f"  Synchronized {api_count} CovalClient API properties.")
+  print(f"  Added {compatibility_aliases} generated-model compatibility alias modules.")
   print("  Exported CovalClient, InvalidListItemWarning, and paginate from coval_sdk.")
 
 

@@ -1,0 +1,13 @@
+/* tslint:disable */
+/* eslint-disable */
+/** Backward-compatible aliases for CovalAlertsAPIAlertEventResourceDispatchedChannelsInner. */
+export type {
+  CovalAlertsAPIAlertEventResourceDispatchedChannelsInner as CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner,
+} from './CovalAlertsAPIAlertEventResourceDispatchedChannelsInner.js';
+export {
+  instanceOfCovalAlertsAPIAlertEventResourceDispatchedChannelsInner as instanceOfCovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner,
+  CovalAlertsAPIAlertEventResourceDispatchedChannelsInnerFromJSON as CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInnerFromJSON,
+  CovalAlertsAPIAlertEventResourceDispatchedChannelsInnerFromJSONTyped as CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInnerFromJSONTyped,
+  CovalAlertsAPIAlertEventResourceDispatchedChannelsInnerToJSON as CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInnerToJSON,
+  CovalAlertsAPIAlertEventResourceDispatchedChannelsInnerToJSONTyped as CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInnerToJSONTyped,
+} from './CovalAlertsAPIAlertEventResourceDispatchedChannelsInner.js';

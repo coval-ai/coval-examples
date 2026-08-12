@@ -1,0 +1,5 @@
+"""Backward-compatible alias for :class:`CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue`."""
+
+from coval_sdk.models.coval_alerts_api_alert_event_resource_condition_results_inner_computed_value import CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue as CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue
+
+__all__ = ["CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue"]
