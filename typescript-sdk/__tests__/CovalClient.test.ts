@@ -81,6 +81,17 @@ describe('apiKeyAuthMiddleware', () => {
       expect(modelExports.get(oldName)).toBe(modelExports.get(newName));
     }
   });
+
+  it('deserializes run CallSids by simulation output ID', () => {
+    const callSid = `CA${'a'.repeat(32)}`;
+    const results = generatedModels.CovalRunsAPIRunResultsFromJSON({
+      output_ids: ['sim-output-1'],
+      call_sids: { 'sim-output-1': callSid },
+      metrics: {},
+    });
+
+    expect(results.call_sids).toEqual({ 'sim-output-1': callSid });
+  });
 });
 
 describe('CovalApiError', () => {

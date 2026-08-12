@@ -34,6 +34,12 @@ export interface CovalRunsAPIRunResults {
      */
     output_ids?: Array<string>;
     /**
+     * Map of simulation output ID to the Twilio-compatible CallSid generated for that WebSocket execution; outputs without a generated CallSid are omitted
+     * @type {{ [key: string]: string; }}
+     * @memberof CovalRunsAPIRunResults
+     */
+    call_sids?: { [key: string]: string; };
+    /**
      * Metric results keyed by metric ID
      * @type {{ [key: string]: CovalRunsAPIMetricResult; }}
      * @memberof CovalRunsAPIRunResults
@@ -59,6 +65,7 @@ export function CovalRunsAPIRunResultsFromJSONTyped(json: any, ignoreDiscriminat
     return {
         
         'output_ids': json['output_ids'] == null ? undefined : json['output_ids'],
+        'call_sids': json['call_sids'] == null ? undefined : json['call_sids'],
         'metrics': json['metrics'] == null ? undefined : (mapValues(json['metrics'], CovalRunsAPIMetricResultFromJSON)),
     };
 }
@@ -75,6 +82,7 @@ export function CovalRunsAPIRunResultsToJSONTyped(value?: CovalRunsAPIRunResults
     return {
         
         'output_ids': value['output_ids'],
+        'call_sids': value['call_sids'],
         'metrics': value['metrics'] == null ? undefined : (mapValues(value['metrics'], CovalRunsAPIMetricResultToJSON)),
     };
 }

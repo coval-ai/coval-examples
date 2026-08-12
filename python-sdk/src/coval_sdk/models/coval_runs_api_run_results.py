@@ -30,9 +30,10 @@ class CovalRunsAPIRunResults(BaseModel):
     Results summary (only for COMPLETED runs)
     """ # noqa: E501
     output_ids: Optional[List[StrictStr]] = Field(default=None, description="IDs of simulation outputs (test case results)")
+    call_sids: Optional[Dict[str, StrictStr]] = Field(default=None, description="Map of simulation output ID to the Twilio-compatible CallSid generated for that WebSocket execution; outputs without a generated CallSid are omitted")
     metrics: Optional[Dict[str, CovalRunsAPIMetricResult]] = Field(default=None, description="Metric results keyed by metric ID")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["output_ids", "metrics"]
+    __properties: ClassVar[List[str]] = ["output_ids", "call_sids", "metrics"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -100,6 +101,7 @@ class CovalRunsAPIRunResults(BaseModel):
 
         _obj = cls.model_validate({
             "output_ids": obj.get("output_ids"),
+            "call_sids": obj.get("call_sids"),
             "metrics": dict(
                 (_k, CovalRunsAPIMetricResult.from_dict(_v))
                 for _k, _v in obj["metrics"].items()

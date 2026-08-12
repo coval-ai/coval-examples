@@ -50,9 +50,10 @@ class CovalSimulationsAPISimulationResourceFull(BaseModel):
     notes: Optional[StrictStr] = Field(default=None, description="Free-text notes attached to the simulation. Settable via PATCH /simulations/{simulation_id}.")
     is_public: Optional[StrictBool] = Field(default=None, description="Whether the simulation is shared via a public link. Settable via PATCH /simulations/{simulation_id}.")
     metric_values: Optional[Dict[str, Union[StrictFloat, StrictInt]]] = Field(default=None, description="Numeric value per metric on this simulation, keyed by metric id. Present when the list request sets include=metric_values or filters by metric value (filter=metric.<id> ...); omitted from the default summary view. Only numeric (float) metric values are included — string-metric values are not. On this metric-aware path the simulation is a summary projection: has_audio and is_public are reported false and test_case_id / mutation / endpoint fields are null regardless of the record — fetch GET /v1/simulations/{id} for authoritative values. ")
+    call_sid: Optional[StrictStr] = Field(default=None, description="Twilio-compatible call identifier generated for this WebSocket simulation execution; null for other transports and historical simulations")
     transcript: Optional[List[CovalSimulationsAPITranscriptMessage]] = Field(default=None, description="Full conversation transcript (only included in GET, not LIST)")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "simulation_id", "run_id", "status", "create_time", "agent_id", "persona_id", "test_set_id", "test_case_id", "has_audio", "source", "destination", "error_message", "mutation_id", "mutation_name", "notes", "is_public", "metric_values", "transcript"]
+    __properties: ClassVar[List[str]] = ["name", "simulation_id", "run_id", "status", "create_time", "agent_id", "persona_id", "test_set_id", "test_case_id", "has_audio", "source", "destination", "error_message", "mutation_id", "mutation_name", "notes", "is_public", "metric_values", "call_sid", "transcript"]
 
     @field_validator('status')
     def status_validate_enum(cls, value):
@@ -175,6 +176,11 @@ class CovalSimulationsAPISimulationResourceFull(BaseModel):
         if self.metric_values is None and "metric_values" in self.model_fields_set:
             _dict['metric_values'] = None
 
+        # set to None if call_sid (nullable) is None
+        # and model_fields_set contains the field
+        if self.call_sid is None and "call_sid" in self.model_fields_set:
+            _dict['call_sid'] = None
+
         # set to None if transcript (nullable) is None
         # and model_fields_set contains the field
         if self.transcript is None and "transcript" in self.model_fields_set:
@@ -210,6 +216,7 @@ class CovalSimulationsAPISimulationResourceFull(BaseModel):
             "notes": obj.get("notes"),
             "is_public": obj.get("is_public"),
             "metric_values": obj.get("metric_values"),
+            "call_sid": obj.get("call_sid"),
             "transcript": [CovalSimulationsAPITranscriptMessage.from_dict(_item) for _item in obj["transcript"]] if obj.get("transcript") is not None else None
         })
         # store additional fields in additional_properties
