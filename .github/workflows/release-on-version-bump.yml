@@ -53,9 +53,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git fetch origin main
-          if ! git merge-base --is-ancestor HEAD origin/main; then
-            echo "The tested commit is no longer on main; refusing to release it."
+          git fetch origin main:refs/remotes/origin/main
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+            echo "The tested commit is not the current main commit; refusing to release it."
             exit 0
           fi
 

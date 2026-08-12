@@ -109,6 +109,7 @@ jobs:
           cp -r typescript-sdk/src/generated /tmp/ts-pass-1
           cp typescript-sdk/src/CovalClient.ts /tmp/ts-client-pass-1.ts
           cp -r python-sdk/src/coval_sdk /tmp/py-pass-1
+          cp python-sdk/GENERATED_README.md /tmp/py-readme-pass-1.md
           cp dist/coval-openapi.yaml /tmp/spec-pass-1.yaml
           # Re-run bundle + codegen.
           node scripts/bundle-spec.mjs
@@ -120,6 +121,8 @@ jobs:
           diff /tmp/ts-client-pass-1.ts typescript-sdk/src/CovalClient.ts
           echo "=== Python generated diff ==="
           diff -r /tmp/py-pass-1 python-sdk/src/coval_sdk
+          echo "=== Python generated README diff ==="
+          diff /tmp/py-readme-pass-1.md python-sdk/GENERATED_README.md
           echo "=== bundled spec diff ==="
           diff /tmp/spec-pass-1.yaml dist/coval-openapi.yaml
           echo "✓ Codegen output is deterministic across two consecutive runs."
