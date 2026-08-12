@@ -15,6 +15,8 @@ from coval_sdk.client import DEFAULT_MAX_IDLE_SECONDS, _IdleExpiryPoolMixin
 
 
 API_PROPERTIES = (
+  "alert_events",
+  "alerts",
   "api_keys",
   "agents",
   "audio",

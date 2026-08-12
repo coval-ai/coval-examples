@@ -3,6 +3,8 @@
 # import apis into api package
 from coval_sdk.api.api_keys_api import APIKeysApi
 from coval_sdk.api.agents_api import AgentsApi
+from coval_sdk.api.alert_events_api import AlertEventsApi
+from coval_sdk.api.alerts_api import AlertsApi
 from coval_sdk.api.audio_api import AudioApi
 from coval_sdk.api.conversations_api import ConversationsApi
 from coval_sdk.api.dashboards_api import DashboardsApi
