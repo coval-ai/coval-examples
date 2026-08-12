@@ -11,36 +11,11 @@ import pytest
 import coval_sdk
 from coval_sdk import CovalClient
 from coval_sdk import api as generated_apis
-from coval_sdk.client import DEFAULT_MAX_IDLE_SECONDS, _IdleExpiryPoolMixin
+from coval_sdk.client import DEFAULT_MAX_IDLE_SECONDS, _IdleExpiryPoolMixin, _api_name
 
 
-API_PROPERTIES = (
-  "api_keys",
-  "agents",
-  "audio",
-  "conversations",
-  "dashboards",
-  "integrations",
-  "metric_outputs",
-  "metrics",
-  "monitor_events",
-  "monitors",
-  "mutations",
-  "organization_conversations_config",
-  "personas",
-  "reports",
-  "review_annotations",
-  "review_projects",
-  "run_templates",
-  "runs",
-  "scheduled_runs",
-  "simulations",
-  "tags",
-  "test_cases",
-  "test_sets",
-  "traces",
-  "webhooks",
-  "widgets",
+API_PROPERTIES = tuple(
+  _api_name(name) for name in dir(generated_apis) if name.endswith("Api")
 )
 
 

@@ -38,6 +38,7 @@ from coval_sdk.api import (
   WebhooksApi,
   WidgetsApi,
 )
+import coval_sdk.api as _generated_apis
 from coval_sdk.api_client import ApiClient
 from coval_sdk.configuration import Configuration
 
@@ -173,6 +174,36 @@ def _normalize_retries(retries: Optional[RetryConfig]) -> Union[Retry, bool]:
   return retries
 
 
+def _api_name(class_name: str) -> str:
+  """Convert a generated API class name to a CovalClient property name.
+
+  Handles special cases like ``APIKeysApi`` -> ``api_keys`` and converts
+  normal PascalCase names to snake_case (e.g. ``AlertEventsApi`` ->
+  ``alert_events``).
+  """
+  # Strip trailing "Api"
+  name = class_name.removesuffix("Api")
+  # Handle leading acronyms (e.g. "APIKeys" -> "api_keys")
+  result: list[str] = []
+  i = 0
+  while i < len(name):
+    if name[i].isupper():
+      # Look ahead: if next char is lowercase, this uppercase starts a new word
+      if i + 1 < len(name) and name[i + 1].islower():
+        if result and result[-1] != "_":
+          result.append("_")
+        result.append(name[i].lower())
+        i += 1
+      else:
+        # Part of an acronym; accumulate uppercase letters
+        result.append(name[i].lower())
+        i += 1
+    else:
+      result.append(name[i])
+      i += 1
+  return "".join(result)
+
+
 class CovalClient:
   """Authenticated client exposing every public Coval v1 API surface."""
 
@@ -233,6 +264,14 @@ class CovalClient:
     self.traces = TracesApi(self.api_client)
     self.webhooks = WebhooksApi(self.api_client)
     self.widgets = WidgetsApi(self.api_client)
+
+    # Dynamically wire any generated API classes added after this file was
+    # last updated (e.g. new alert APIs from a regenerated spec).
+    for _cls_name in dir(_generated_apis):
+      if _cls_name.endswith("Api"):
+        _prop = _api_name(_cls_name)
+        if not hasattr(self, _prop):
+          setattr(self, _prop, getattr(_generated_apis, _cls_name)(self.api_client))
 
   def close(self) -> None:
     """Release pooled HTTP connections."""
