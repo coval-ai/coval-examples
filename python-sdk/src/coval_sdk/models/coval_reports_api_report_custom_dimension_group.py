@@ -18,20 +18,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
-from typing import Any, ClassVar, Dict, List
-from coval_sdk.models.coval_alerts_api_error_response_error import CovalAlertsAPIErrorResponseError
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
 
-class CovalMonitorsAPIErrorResponse(BaseModel):
+class CovalReportsAPIReportCustomDimensionGroup(BaseModel):
     """
-    CovalMonitorsAPIErrorResponse
+    CovalReportsAPIReportCustomDimensionGroup
     """ # noqa: E501
-    error: CovalAlertsAPIErrorResponseError
-    additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["error"]
+    id: Annotated[str, Field(min_length=1, strict=True, max_length=200)] = Field(description="Caller-chosen group ID, unique within the dimension.")
+    name: Annotated[str, Field(min_length=1, strict=True, max_length=200)] = Field(description="Group label shown in the report.")
+    simulation_ids: Optional[Annotated[List[StrictStr], Field(max_length=10000)]] = Field(default=None, description="Simulation IDs assigned to this group.")
+    __properties: ClassVar[List[str]] = ["id", "name", "simulation_ids"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -51,7 +52,7 @@ class CovalMonitorsAPIErrorResponse(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CovalMonitorsAPIErrorResponse from a JSON string"""
+        """Create an instance of CovalReportsAPIReportCustomDimensionGroup from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -63,10 +64,8 @@ class CovalMonitorsAPIErrorResponse(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
-        * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
-            "additional_properties",
         ])
 
         _dict = self.model_dump(
@@ -74,19 +73,11 @@ class CovalMonitorsAPIErrorResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of error
-        if self.error:
-            _dict['error'] = self.error.to_dict()
-        # puts key-value pairs in additional_properties in the top level
-        if self.additional_properties is not None:
-            for _key, _value in self.additional_properties.items():
-                _dict[_key] = _value
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CovalMonitorsAPIErrorResponse from a dict"""
+        """Create an instance of CovalReportsAPIReportCustomDimensionGroup from a dict"""
         if obj is None:
             return None
 
@@ -94,13 +85,10 @@ class CovalMonitorsAPIErrorResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "error": CovalAlertsAPIErrorResponseError.from_dict(obj["error"]) if obj.get("error") is not None else None
+            "id": obj.get("id"),
+            "name": obj.get("name"),
+            "simulation_ids": obj.get("simulation_ids")
         })
-        # store additional fields in additional_properties
-        for _key in obj.keys():
-            if _key not in cls.__properties:
-                _obj.additional_properties[_key] = obj.get(_key)
-
         return _obj
 
 

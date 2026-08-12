@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime.js';
+import type { CovalReportsAPIReportCustomDimension } from './CovalReportsAPIReportCustomDimension.js';
+import {
+    CovalReportsAPIReportCustomDimensionFromJSON,
+    CovalReportsAPIReportCustomDimensionFromJSONTyped,
+    CovalReportsAPIReportCustomDimensionToJSON,
+    CovalReportsAPIReportCustomDimensionToJSONTyped,
+} from './CovalReportsAPIReportCustomDimension.js';
 import type { CovalReportsAPIMonitoringFiltersPatch } from './CovalReportsAPIMonitoringFiltersPatch.js';
 import {
     CovalReportsAPIMonitoringFiltersPatchFromJSON,
@@ -42,6 +49,15 @@ export interface CovalReportsAPIReportViewConfigurationPatch {
      */
     metadata_key?: string | null;
     /**
+     * Custom grouping dimension. Required when `compare_by` is `custom` and must
+     * match a dimension in the report's `custom_dimensions`; send null to clear it
+     * when changing away from custom.
+     * 
+     * @type {string}
+     * @memberof CovalReportsAPIReportViewConfigurationPatch
+     */
+    custom_dimension_id?: string | null;
+    /**
      * 
      * @type {CovalReportsAPIReportViewConfigurationPatchViewModeEnum}
      * @memberof CovalReportsAPIReportViewConfigurationPatch
@@ -61,6 +77,23 @@ export interface CovalReportsAPIReportViewConfigurationPatch {
      * @memberof CovalReportsAPIReportViewConfigurationPatch
      */
     secondary_metadata_key?: string | null;
+    /**
+     * Secondary custom grouping dimension. Required when
+     * `secondary_compare_by` is `custom`; send null to clear it.
+     * 
+     * @type {string}
+     * @memberof CovalReportsAPIReportViewConfigurationPatch
+     */
+    secondary_custom_dimension_id?: string | null;
+    /**
+     * Replaces the report's saved custom dimensions wholesale. Send it together
+     * with `compare_by: custom` and `custom_dimension_id` to group the report by
+     * one of them.
+     * 
+     * @type {Array<CovalReportsAPIReportCustomDimension>}
+     * @memberof CovalReportsAPIReportViewConfigurationPatch
+     */
+    custom_dimensions?: Array<CovalReportsAPIReportCustomDimension>;
     /**
      * Supported saved cohort fields. This object is valid only when the
      * stored report has `is_monitoring: true`.
@@ -82,7 +115,8 @@ export const CovalReportsAPIReportViewConfigurationPatchCompareByEnum = {
     Mutation: 'mutation',
     Persona: 'persona',
     TestCase: 'test_case',
-    Metadata: 'metadata'
+    Metadata: 'metadata',
+    Custom: 'custom'
 } as const;
 export type CovalReportsAPIReportViewConfigurationPatchCompareByEnum = typeof CovalReportsAPIReportViewConfigurationPatchCompareByEnum[keyof typeof CovalReportsAPIReportViewConfigurationPatchCompareByEnum];
 
@@ -105,7 +139,8 @@ export const CovalReportsAPIReportViewConfigurationPatchSecondaryCompareByEnum =
     Mutation: 'mutation',
     Persona: 'persona',
     TestCase: 'test_case',
-    Metadata: 'metadata'
+    Metadata: 'metadata',
+    Custom: 'custom'
 } as const;
 export type CovalReportsAPIReportViewConfigurationPatchSecondaryCompareByEnum = typeof CovalReportsAPIReportViewConfigurationPatchSecondaryCompareByEnum[keyof typeof CovalReportsAPIReportViewConfigurationPatchSecondaryCompareByEnum];
 
@@ -129,9 +164,12 @@ export function CovalReportsAPIReportViewConfigurationPatchFromJSONTyped(json: a
         
         'compare_by': json['compare_by'] == null ? undefined : json['compare_by'],
         'metadata_key': json['metadata_key'] == null ? undefined : json['metadata_key'],
+        'custom_dimension_id': json['custom_dimension_id'] == null ? undefined : json['custom_dimension_id'],
         'view_mode': json['view_mode'] == null ? undefined : json['view_mode'],
         'secondary_compare_by': json['secondary_compare_by'] == null ? undefined : json['secondary_compare_by'],
         'secondary_metadata_key': json['secondary_metadata_key'] == null ? undefined : json['secondary_metadata_key'],
+        'secondary_custom_dimension_id': json['secondary_custom_dimension_id'] == null ? undefined : json['secondary_custom_dimension_id'],
+        'custom_dimensions': json['custom_dimensions'] == null ? undefined : ((json['custom_dimensions'] as Array<any>).map(CovalReportsAPIReportCustomDimensionFromJSON)),
         'monitoring_filters': json['monitoring_filters'] == null ? undefined : CovalReportsAPIMonitoringFiltersPatchFromJSON(json['monitoring_filters']),
     };
 }
@@ -149,9 +187,12 @@ export function CovalReportsAPIReportViewConfigurationPatchToJSONTyped(value?: C
         
         'compare_by': value['compare_by'],
         'metadata_key': value['metadata_key'],
+        'custom_dimension_id': value['custom_dimension_id'],
         'view_mode': value['view_mode'],
         'secondary_compare_by': value['secondary_compare_by'],
         'secondary_metadata_key': value['secondary_metadata_key'],
+        'secondary_custom_dimension_id': value['secondary_custom_dimension_id'],
+        'custom_dimensions': value['custom_dimensions'] == null ? undefined : ((value['custom_dimensions'] as Array<any>).map(CovalReportsAPIReportCustomDimensionToJSON)),
         'monitoring_filters': CovalReportsAPIMonitoringFiltersPatchToJSON(value['monitoring_filters']),
     };
 }

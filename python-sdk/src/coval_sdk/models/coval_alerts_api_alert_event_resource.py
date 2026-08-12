@@ -22,27 +22,27 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
+from coval_sdk.models.coval_alerts_api_alert_event_outcome import CovalAlertsAPIAlertEventOutcome
 from coval_sdk.models.coval_alerts_api_alert_event_resource_condition_results_inner import CovalAlertsAPIAlertEventResourceConditionResultsInner
 from coval_sdk.models.coval_alerts_api_alert_event_resource_dispatched_channels_inner import CovalAlertsAPIAlertEventResourceDispatchedChannelsInner
-from coval_sdk.models.coval_monitors_api_monitor_event_outcome import CovalMonitorsAPIMonitorEventOutcome
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
 
-class CovalMonitorsAPIMonitorEventResource(BaseModel):
+class CovalAlertsAPIAlertEventResource(BaseModel):
     """
-    CovalMonitorsAPIMonitorEventResource
+    CovalAlertsAPIAlertEventResource
     """ # noqa: E501
     ulid: Annotated[str, Field(strict=True)] = Field(description="Event ULID")
-    monitor_ulid: StrictStr = Field(description="Monitor ULID that produced this event")
+    alert_ulid: StrictStr = Field(description="Alert ULID that produced this event")
     run_id: StrictStr = Field(description="Run that triggered evaluation")
-    outcome: CovalMonitorsAPIMonitorEventOutcome
+    outcome: CovalAlertsAPIAlertEventOutcome
     condition_results: Optional[List[CovalAlertsAPIAlertEventResourceConditionResultsInner]] = Field(default=None, description="Per-condition evaluation results")
     dispatched_channels: Optional[List[CovalAlertsAPIAlertEventResourceDispatchedChannelsInner]] = Field(default=None, description="Per-channel dispatch results")
     message_sent: Optional[StrictStr] = Field(default=None, description="Notification message that was dispatched")
     created_at: datetime = Field(description="Event creation timestamp")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["ulid", "monitor_ulid", "run_id", "outcome", "condition_results", "dispatched_channels", "message_sent", "created_at"]
+    __properties: ClassVar[List[str]] = ["ulid", "alert_ulid", "run_id", "outcome", "condition_results", "dispatched_channels", "message_sent", "created_at"]
 
     @field_validator('ulid')
     def ulid_validate_regular_expression(cls, value):
@@ -72,7 +72,7 @@ class CovalMonitorsAPIMonitorEventResource(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CovalMonitorsAPIMonitorEventResource from a JSON string"""
+        """Create an instance of CovalAlertsAPIAlertEventResource from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -123,7 +123,7 @@ class CovalMonitorsAPIMonitorEventResource(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CovalMonitorsAPIMonitorEventResource from a dict"""
+        """Create an instance of CovalAlertsAPIAlertEventResource from a dict"""
         if obj is None:
             return None
 
@@ -132,7 +132,7 @@ class CovalMonitorsAPIMonitorEventResource(BaseModel):
 
         _obj = cls.model_validate({
             "ulid": obj.get("ulid"),
-            "monitor_ulid": obj.get("monitor_ulid"),
+            "alert_ulid": obj.get("alert_ulid"),
             "run_id": obj.get("run_id"),
             "outcome": obj.get("outcome"),
             "condition_results": [CovalAlertsAPIAlertEventResourceConditionResultsInner.from_dict(_item) for _item in obj["condition_results"]] if obj.get("condition_results") is not None else None,

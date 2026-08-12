@@ -18,20 +18,26 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
-from typing import Any, ClassVar, Dict, List
-from coval_sdk.models.coval_alerts_api_error_response_error import CovalAlertsAPIErrorResponseError
+from pydantic import BaseModel, ConfigDict, StrictBool, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
+from coval_sdk.models.coval_alerts_api_alert_event_resource_condition_results_inner_computed_value import CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
 
-class CovalMonitorsAPIErrorResponse(BaseModel):
+class CovalAlertsAPIAlertEventResourceConditionResultsInner(BaseModel):
     """
-    CovalMonitorsAPIErrorResponse
+    CovalAlertsAPIAlertEventResourceConditionResultsInner
     """ # noqa: E501
-    error: CovalAlertsAPIErrorResponseError
+    metric_id: Optional[StrictStr] = None
+    metric_display_name: Optional[StrictStr] = None
+    aggregation: Optional[StrictStr] = None
+    computed_value: Optional[CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue] = None
+    threshold: Optional[CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue] = None
+    operator: Optional[StrictStr] = None
+    met: Optional[StrictBool] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["error"]
+    __properties: ClassVar[List[str]] = ["metric_id", "metric_display_name", "aggregation", "computed_value", "threshold", "operator", "met"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -51,7 +57,7 @@ class CovalMonitorsAPIErrorResponse(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CovalMonitorsAPIErrorResponse from a JSON string"""
+        """Create an instance of CovalAlertsAPIAlertEventResourceConditionResultsInner from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -74,19 +80,32 @@ class CovalMonitorsAPIErrorResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of error
-        if self.error:
-            _dict['error'] = self.error.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of computed_value
+        if self.computed_value:
+            _dict['computed_value'] = self.computed_value.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of threshold
+        if self.threshold:
+            _dict['threshold'] = self.threshold.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if computed_value (nullable) is None
+        # and model_fields_set contains the field
+        if self.computed_value is None and "computed_value" in self.model_fields_set:
+            _dict['computed_value'] = None
+
+        # set to None if threshold (nullable) is None
+        # and model_fields_set contains the field
+        if self.threshold is None and "threshold" in self.model_fields_set:
+            _dict['threshold'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CovalMonitorsAPIErrorResponse from a dict"""
+        """Create an instance of CovalAlertsAPIAlertEventResourceConditionResultsInner from a dict"""
         if obj is None:
             return None
 
@@ -94,7 +113,13 @@ class CovalMonitorsAPIErrorResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "error": CovalAlertsAPIErrorResponseError.from_dict(obj["error"]) if obj.get("error") is not None else None
+            "metric_id": obj.get("metric_id"),
+            "metric_display_name": obj.get("metric_display_name"),
+            "aggregation": obj.get("aggregation"),
+            "computed_value": CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue.from_dict(obj["computed_value"]) if obj.get("computed_value") is not None else None,
+            "threshold": CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue.from_dict(obj["threshold"]) if obj.get("threshold") is not None else None,
+            "operator": obj.get("operator"),
+            "met": obj.get("met")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

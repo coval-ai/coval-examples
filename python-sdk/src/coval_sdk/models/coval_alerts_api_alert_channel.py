@@ -18,22 +18,33 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictBool, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+from typing import Any, ClassVar, Dict, List
+from typing_extensions import Annotated
+from coval_sdk.models.coval_alerts_api_channel_type import CovalAlertsAPIChannelType
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
 
-class CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner(BaseModel):
+class CovalAlertsAPIAlertChannel(BaseModel):
     """
-    CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner
+    CovalAlertsAPIAlertChannel
     """ # noqa: E501
-    channel_type: Optional[StrictStr] = None
-    channel_summary: Optional[StrictStr] = None
-    success: Optional[StrictBool] = None
-    error: Optional[StrictStr] = None
+    ulid: Annotated[str, Field(strict=True)] = Field(description="Channel ULID")
+    channel_type: CovalAlertsAPIChannelType
+    config: Dict[str, Any] = Field(description="Channel-specific configuration.  **SLACK**: `{\"channel_id\": \"C0123ABC\", \"channel_name\": \"#alerts\"}`  **EMAIL**: `{\"recipients\": [\"team@company.com\"]}`  **WEBHOOK**: `{\"url\": \"https://...\", \"method\": \"POST\", \"auth_token\": \"...\"}`  **HUMAN_REVIEW**: `{\"project_id\": \"...\", \"sample_rate\": 0.1}` ")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["channel_type", "channel_summary", "success", "error"]
+    __properties: ClassVar[List[str]] = ["ulid", "channel_type", "config"]
+
+    @field_validator('ulid')
+    def ulid_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if not isinstance(value, str):
+            value = str(value)
+
+        if not re.match(r"^[0-9A-Z]{26}$", value):
+            raise ValueError(r"must validate the regular expression /^[0-9A-Z]{26}$/")
+        return value
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -53,7 +64,7 @@ class CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner from a JSON string"""
+        """Create an instance of CovalAlertsAPIAlertChannel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -81,16 +92,11 @@ class CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if error (nullable) is None
-        # and model_fields_set contains the field
-        if self.error is None and "error" in self.model_fields_set:
-            _dict['error'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner from a dict"""
+        """Create an instance of CovalAlertsAPIAlertChannel from a dict"""
         if obj is None:
             return None
 
@@ -98,10 +104,9 @@ class CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "ulid": obj.get("ulid"),
             "channel_type": obj.get("channel_type"),
-            "channel_summary": obj.get("channel_summary"),
-            "success": obj.get("success"),
-            "error": obj.get("error")
+            "config": obj.get("config")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

@@ -15,7 +15,7 @@
 """  # noqa: E501
 
 
-__version__ = "0.6.1"
+__version__ = "0.6.2"
 
 # Define package exports
 __all__ = [
@@ -24,6 +24,8 @@ __all__ = [
     "CovalClient",
     "APIKeysApi",
     "AgentsApi",
+    "AlertEventsApi",
+    "AlertsApi",
     "AudioApi",
     "ConversationsApi",
     "DashboardsApi",
@@ -93,6 +95,31 @@ __all__ = [
     "CovalAgentsAPISimulatorType",
     "CovalAgentsAPIUpdateAgentRequest",
     "CovalAgentsAPIUpdateAgentResponse",
+    "CovalAlertsAPIAlertChannel",
+    "CovalAlertsAPIAlertCondition",
+    "CovalAlertsAPIAlertEvaluationType",
+    "CovalAlertsAPIAlertEventOutcome",
+    "CovalAlertsAPIAlertEventResource",
+    "CovalAlertsAPIAlertEventResourceConditionResultsInner",
+    "CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue",
+    "CovalAlertsAPIAlertEventResourceDispatchedChannelsInner",
+    "CovalAlertsAPIAlertMatchMode",
+    "CovalAlertsAPIAlertResource",
+    "CovalAlertsAPIAlertScope",
+    "CovalAlertsAPIChannelInput",
+    "CovalAlertsAPIChannelType",
+    "CovalAlertsAPIConditionAggregation",
+    "CovalAlertsAPIConditionInput",
+    "CovalAlertsAPIConditionOperator",
+    "CovalAlertsAPICreateAlertRequest",
+    "CovalAlertsAPIErrorResponse",
+    "CovalAlertsAPIErrorResponseError",
+    "CovalAlertsAPIErrorResponseErrorDetailsInner",
+    "CovalAlertsAPIListAlertEventsResponse",
+    "CovalAlertsAPIListAlertsResponse",
+    "CovalAlertsAPITestEvaluateAlertRequest",
+    "CovalAlertsAPITestEvaluateAlertResponse",
+    "CovalAlertsAPIUpdateAlertRequest",
     "CovalConversationsAPIConversationMetricValue",
     "CovalConversationsAPIConversationMetricValueValue",
     "CovalConversationsAPIConversationProgress",
@@ -175,7 +202,6 @@ __all__ = [
     "CovalMetricsAPICurrentMetricVersion",
     "CovalMetricsAPIErrorResponse",
     "CovalMetricsAPIErrorResponseError",
-    "CovalMetricsAPIErrorResponseErrorDetailsInner",
     "CovalMetricsAPIGetMetricResponse",
     "CovalMetricsAPIGetMetricTemplateVariablesResponse",
     "CovalMetricsAPIGetThresholdResponse",
@@ -226,7 +252,6 @@ __all__ = [
     "CovalMonitorsAPIConditionOperator",
     "CovalMonitorsAPICreateMonitorRequest",
     "CovalMonitorsAPIErrorResponse",
-    "CovalMonitorsAPIErrorResponseError",
     "CovalMonitorsAPIListMonitorEventsResponse",
     "CovalMonitorsAPIListMonitorsResponse",
     "CovalMonitorsAPIMonitorChannel",
@@ -234,9 +259,6 @@ __all__ = [
     "CovalMonitorsAPIMonitorEvaluationType",
     "CovalMonitorsAPIMonitorEventOutcome",
     "CovalMonitorsAPIMonitorEventResource",
-    "CovalMonitorsAPIMonitorEventResourceConditionResultsInner",
-    "CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue",
-    "CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner",
     "CovalMonitorsAPIMonitorMatchMode",
     "CovalMonitorsAPIMonitorResource",
     "CovalMonitorsAPIMonitorScope",
@@ -288,6 +310,8 @@ __all__ = [
     "CovalReportsAPIMonitoringFiltersConfiguration",
     "CovalReportsAPIMonitoringFiltersPatch",
     "CovalReportsAPIReport",
+    "CovalReportsAPIReportCustomDimension",
+    "CovalReportsAPIReportCustomDimensionGroup",
     "CovalReportsAPIReportDetail",
     "CovalReportsAPIReportMetricConfigurationEntry",
     "CovalReportsAPIReportMetricOutput",
@@ -473,6 +497,8 @@ __all__ = [
 # import apis into sdk package
 from coval_sdk.api.api_keys_api import APIKeysApi as APIKeysApi
 from coval_sdk.api.agents_api import AgentsApi as AgentsApi
+from coval_sdk.api.alert_events_api import AlertEventsApi as AlertEventsApi
+from coval_sdk.api.alerts_api import AlertsApi as AlertsApi
 from coval_sdk.api.audio_api import AudioApi as AudioApi
 from coval_sdk.api.conversations_api import ConversationsApi as ConversationsApi
 from coval_sdk.api.dashboards_api import DashboardsApi as DashboardsApi
@@ -546,6 +572,31 @@ from coval_sdk.models.coval_agents_api_list_agents_response import CovalAgentsAP
 from coval_sdk.models.coval_agents_api_simulator_type import CovalAgentsAPISimulatorType as CovalAgentsAPISimulatorType
 from coval_sdk.models.coval_agents_api_update_agent_request import CovalAgentsAPIUpdateAgentRequest as CovalAgentsAPIUpdateAgentRequest
 from coval_sdk.models.coval_agents_api_update_agent_response import CovalAgentsAPIUpdateAgentResponse as CovalAgentsAPIUpdateAgentResponse
+from coval_sdk.models.coval_alerts_api_alert_channel import CovalAlertsAPIAlertChannel as CovalAlertsAPIAlertChannel
+from coval_sdk.models.coval_alerts_api_alert_condition import CovalAlertsAPIAlertCondition as CovalAlertsAPIAlertCondition
+from coval_sdk.models.coval_alerts_api_alert_evaluation_type import CovalAlertsAPIAlertEvaluationType as CovalAlertsAPIAlertEvaluationType
+from coval_sdk.models.coval_alerts_api_alert_event_outcome import CovalAlertsAPIAlertEventOutcome as CovalAlertsAPIAlertEventOutcome
+from coval_sdk.models.coval_alerts_api_alert_event_resource import CovalAlertsAPIAlertEventResource as CovalAlertsAPIAlertEventResource
+from coval_sdk.models.coval_alerts_api_alert_event_resource_condition_results_inner import CovalAlertsAPIAlertEventResourceConditionResultsInner as CovalAlertsAPIAlertEventResourceConditionResultsInner
+from coval_sdk.models.coval_alerts_api_alert_event_resource_condition_results_inner_computed_value import CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue as CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue
+from coval_sdk.models.coval_alerts_api_alert_event_resource_dispatched_channels_inner import CovalAlertsAPIAlertEventResourceDispatchedChannelsInner as CovalAlertsAPIAlertEventResourceDispatchedChannelsInner
+from coval_sdk.models.coval_alerts_api_alert_match_mode import CovalAlertsAPIAlertMatchMode as CovalAlertsAPIAlertMatchMode
+from coval_sdk.models.coval_alerts_api_alert_resource import CovalAlertsAPIAlertResource as CovalAlertsAPIAlertResource
+from coval_sdk.models.coval_alerts_api_alert_scope import CovalAlertsAPIAlertScope as CovalAlertsAPIAlertScope
+from coval_sdk.models.coval_alerts_api_channel_input import CovalAlertsAPIChannelInput as CovalAlertsAPIChannelInput
+from coval_sdk.models.coval_alerts_api_channel_type import CovalAlertsAPIChannelType as CovalAlertsAPIChannelType
+from coval_sdk.models.coval_alerts_api_condition_aggregation import CovalAlertsAPIConditionAggregation as CovalAlertsAPIConditionAggregation
+from coval_sdk.models.coval_alerts_api_condition_input import CovalAlertsAPIConditionInput as CovalAlertsAPIConditionInput
+from coval_sdk.models.coval_alerts_api_condition_operator import CovalAlertsAPIConditionOperator as CovalAlertsAPIConditionOperator
+from coval_sdk.models.coval_alerts_api_create_alert_request import CovalAlertsAPICreateAlertRequest as CovalAlertsAPICreateAlertRequest
+from coval_sdk.models.coval_alerts_api_error_response import CovalAlertsAPIErrorResponse as CovalAlertsAPIErrorResponse
+from coval_sdk.models.coval_alerts_api_error_response_error import CovalAlertsAPIErrorResponseError as CovalAlertsAPIErrorResponseError
+from coval_sdk.models.coval_alerts_api_error_response_error_details_inner import CovalAlertsAPIErrorResponseErrorDetailsInner as CovalAlertsAPIErrorResponseErrorDetailsInner
+from coval_sdk.models.coval_alerts_api_list_alert_events_response import CovalAlertsAPIListAlertEventsResponse as CovalAlertsAPIListAlertEventsResponse
+from coval_sdk.models.coval_alerts_api_list_alerts_response import CovalAlertsAPIListAlertsResponse as CovalAlertsAPIListAlertsResponse
+from coval_sdk.models.coval_alerts_api_test_evaluate_alert_request import CovalAlertsAPITestEvaluateAlertRequest as CovalAlertsAPITestEvaluateAlertRequest
+from coval_sdk.models.coval_alerts_api_test_evaluate_alert_response import CovalAlertsAPITestEvaluateAlertResponse as CovalAlertsAPITestEvaluateAlertResponse
+from coval_sdk.models.coval_alerts_api_update_alert_request import CovalAlertsAPIUpdateAlertRequest as CovalAlertsAPIUpdateAlertRequest
 from coval_sdk.models.coval_conversations_api_conversation_metric_value import CovalConversationsAPIConversationMetricValue as CovalConversationsAPIConversationMetricValue
 from coval_sdk.models.coval_conversations_api_conversation_metric_value_value import CovalConversationsAPIConversationMetricValueValue as CovalConversationsAPIConversationMetricValueValue
 from coval_sdk.models.coval_conversations_api_conversation_progress import CovalConversationsAPIConversationProgress as CovalConversationsAPIConversationProgress
@@ -628,7 +679,6 @@ from coval_sdk.models.coval_metrics_api_create_threshold_response import CovalMe
 from coval_sdk.models.coval_metrics_api_current_metric_version import CovalMetricsAPICurrentMetricVersion as CovalMetricsAPICurrentMetricVersion
 from coval_sdk.models.coval_metrics_api_error_response import CovalMetricsAPIErrorResponse as CovalMetricsAPIErrorResponse
 from coval_sdk.models.coval_metrics_api_error_response_error import CovalMetricsAPIErrorResponseError as CovalMetricsAPIErrorResponseError
-from coval_sdk.models.coval_metrics_api_error_response_error_details_inner import CovalMetricsAPIErrorResponseErrorDetailsInner as CovalMetricsAPIErrorResponseErrorDetailsInner
 from coval_sdk.models.coval_metrics_api_get_metric_response import CovalMetricsAPIGetMetricResponse as CovalMetricsAPIGetMetricResponse
 from coval_sdk.models.coval_metrics_api_get_metric_template_variables_response import CovalMetricsAPIGetMetricTemplateVariablesResponse as CovalMetricsAPIGetMetricTemplateVariablesResponse
 from coval_sdk.models.coval_metrics_api_get_threshold_response import CovalMetricsAPIGetThresholdResponse as CovalMetricsAPIGetThresholdResponse
@@ -679,7 +729,6 @@ from coval_sdk.models.coval_monitors_api_condition_input import CovalMonitorsAPI
 from coval_sdk.models.coval_monitors_api_condition_operator import CovalMonitorsAPIConditionOperator as CovalMonitorsAPIConditionOperator
 from coval_sdk.models.coval_monitors_api_create_monitor_request import CovalMonitorsAPICreateMonitorRequest as CovalMonitorsAPICreateMonitorRequest
 from coval_sdk.models.coval_monitors_api_error_response import CovalMonitorsAPIErrorResponse as CovalMonitorsAPIErrorResponse
-from coval_sdk.models.coval_monitors_api_error_response_error import CovalMonitorsAPIErrorResponseError as CovalMonitorsAPIErrorResponseError
 from coval_sdk.models.coval_monitors_api_list_monitor_events_response import CovalMonitorsAPIListMonitorEventsResponse as CovalMonitorsAPIListMonitorEventsResponse
 from coval_sdk.models.coval_monitors_api_list_monitors_response import CovalMonitorsAPIListMonitorsResponse as CovalMonitorsAPIListMonitorsResponse
 from coval_sdk.models.coval_monitors_api_monitor_channel import CovalMonitorsAPIMonitorChannel as CovalMonitorsAPIMonitorChannel
@@ -687,9 +736,6 @@ from coval_sdk.models.coval_monitors_api_monitor_condition import CovalMonitorsA
 from coval_sdk.models.coval_monitors_api_monitor_evaluation_type import CovalMonitorsAPIMonitorEvaluationType as CovalMonitorsAPIMonitorEvaluationType
 from coval_sdk.models.coval_monitors_api_monitor_event_outcome import CovalMonitorsAPIMonitorEventOutcome as CovalMonitorsAPIMonitorEventOutcome
 from coval_sdk.models.coval_monitors_api_monitor_event_resource import CovalMonitorsAPIMonitorEventResource as CovalMonitorsAPIMonitorEventResource
-from coval_sdk.models.coval_monitors_api_monitor_event_resource_condition_results_inner import CovalMonitorsAPIMonitorEventResourceConditionResultsInner as CovalMonitorsAPIMonitorEventResourceConditionResultsInner
-from coval_sdk.models.coval_monitors_api_monitor_event_resource_condition_results_inner_computed_value import CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue as CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue
-from coval_sdk.models.coval_monitors_api_monitor_event_resource_dispatched_channels_inner import CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner as CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner
 from coval_sdk.models.coval_monitors_api_monitor_match_mode import CovalMonitorsAPIMonitorMatchMode as CovalMonitorsAPIMonitorMatchMode
 from coval_sdk.models.coval_monitors_api_monitor_resource import CovalMonitorsAPIMonitorResource as CovalMonitorsAPIMonitorResource
 from coval_sdk.models.coval_monitors_api_monitor_scope import CovalMonitorsAPIMonitorScope as CovalMonitorsAPIMonitorScope
@@ -741,6 +787,8 @@ from coval_sdk.models.coval_reports_api_list_reports_response import CovalReport
 from coval_sdk.models.coval_reports_api_monitoring_filters_configuration import CovalReportsAPIMonitoringFiltersConfiguration as CovalReportsAPIMonitoringFiltersConfiguration
 from coval_sdk.models.coval_reports_api_monitoring_filters_patch import CovalReportsAPIMonitoringFiltersPatch as CovalReportsAPIMonitoringFiltersPatch
 from coval_sdk.models.coval_reports_api_report import CovalReportsAPIReport as CovalReportsAPIReport
+from coval_sdk.models.coval_reports_api_report_custom_dimension import CovalReportsAPIReportCustomDimension as CovalReportsAPIReportCustomDimension
+from coval_sdk.models.coval_reports_api_report_custom_dimension_group import CovalReportsAPIReportCustomDimensionGroup as CovalReportsAPIReportCustomDimensionGroup
 from coval_sdk.models.coval_reports_api_report_detail import CovalReportsAPIReportDetail as CovalReportsAPIReportDetail
 from coval_sdk.models.coval_reports_api_report_metric_configuration_entry import CovalReportsAPIReportMetricConfigurationEntry as CovalReportsAPIReportMetricConfigurationEntry
 from coval_sdk.models.coval_reports_api_report_metric_output import CovalReportsAPIReportMetricOutput as CovalReportsAPIReportMetricOutput

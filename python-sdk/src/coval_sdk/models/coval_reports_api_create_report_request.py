@@ -18,10 +18,11 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_reports_api_compare_by import CovalReportsAPICompareBy
+from coval_sdk.models.coval_reports_api_report_custom_dimension import CovalReportsAPIReportCustomDimension
 from coval_sdk.models.coval_reports_api_report_permission import CovalReportsAPIReportPermission
 from typing import Optional, Set
 from typing_extensions import Self
@@ -37,8 +38,21 @@ class CovalReportsAPICreateReportRequest(BaseModel):
     source_human_review_project_id: Optional[Annotated[str, Field(min_length=26, strict=True, max_length=26)]] = Field(default=None, description="Optional human review project the simulations were sourced from; `simulation_output_ids` must belong to it.")
     compare_by: Optional[CovalReportsAPICompareBy] = CovalReportsAPICompareBy.NONE
     metadata_key: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=200)]] = Field(default=None, description="Metadata key to group by. Required when `compare_by` is `metadata`; otherwise omit it. ")
+    custom_dimensions: Optional[Annotated[List[CovalReportsAPIReportCustomDimension], Field(min_length=1, max_length=10)]] = Field(default=None, description="Caller-defined groupings of the report's simulations. Required when `compare_by` is `custom`; otherwise omit it. This is how the app's \"Merge reports\" action builds one grouped report out of several. ")
+    custom_dimension_id: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=200)]] = Field(default=None, description="Which of `custom_dimensions` to group by. Only valid when `compare_by` is `custom`; defaults to the first dimension. ")
+    view_mode: Optional[StrictStr] = Field(default=None, description="Report layout. `grouped` aggregates each `compare_by` group; defaults to `rows`. ")
     permissions: Optional[CovalReportsAPIReportPermission] = CovalReportsAPIReportPermission.PRIVATE
-    __properties: ClassVar[List[str]] = ["name", "run_ids", "simulation_output_ids", "source_human_review_project_id", "compare_by", "metadata_key", "permissions"]
+    __properties: ClassVar[List[str]] = ["name", "run_ids", "simulation_output_ids", "source_human_review_project_id", "compare_by", "metadata_key", "custom_dimensions", "custom_dimension_id", "view_mode", "permissions"]
+
+    @field_validator('view_mode')
+    def view_mode_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['rows', 'grouped']):
+            raise ValueError("must be one of enum values ('rows', 'grouped')")
+        return value
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -79,6 +93,13 @@ class CovalReportsAPICreateReportRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in custom_dimensions (list)
+        _items = []
+        if self.custom_dimensions:
+            for _item_custom_dimensions in self.custom_dimensions:
+                if _item_custom_dimensions:
+                    _items.append(_item_custom_dimensions.to_dict())
+            _dict['custom_dimensions'] = _items
         # set to None if source_human_review_project_id (nullable) is None
         # and model_fields_set contains the field
         if self.source_human_review_project_id is None and "source_human_review_project_id" in self.model_fields_set:
@@ -88,6 +109,21 @@ class CovalReportsAPICreateReportRequest(BaseModel):
         # and model_fields_set contains the field
         if self.metadata_key is None and "metadata_key" in self.model_fields_set:
             _dict['metadata_key'] = None
+
+        # set to None if custom_dimensions (nullable) is None
+        # and model_fields_set contains the field
+        if self.custom_dimensions is None and "custom_dimensions" in self.model_fields_set:
+            _dict['custom_dimensions'] = None
+
+        # set to None if custom_dimension_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.custom_dimension_id is None and "custom_dimension_id" in self.model_fields_set:
+            _dict['custom_dimension_id'] = None
+
+        # set to None if view_mode (nullable) is None
+        # and model_fields_set contains the field
+        if self.view_mode is None and "view_mode" in self.model_fields_set:
+            _dict['view_mode'] = None
 
         return _dict
 
@@ -107,6 +143,9 @@ class CovalReportsAPICreateReportRequest(BaseModel):
             "source_human_review_project_id": obj.get("source_human_review_project_id"),
             "compare_by": obj.get("compare_by") if obj.get("compare_by") is not None else CovalReportsAPICompareBy.NONE,
             "metadata_key": obj.get("metadata_key"),
+            "custom_dimensions": [CovalReportsAPIReportCustomDimension.from_dict(_item) for _item in obj["custom_dimensions"]] if obj.get("custom_dimensions") is not None else None,
+            "custom_dimension_id": obj.get("custom_dimension_id"),
+            "view_mode": obj.get("view_mode"),
             "permissions": obj.get("permissions") if obj.get("permissions") is not None else CovalReportsAPIReportPermission.PRIVATE
         })
         return _obj

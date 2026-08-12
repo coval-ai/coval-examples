@@ -20,6 +20,13 @@ import {
     CovalReportsAPIMonitoringFiltersConfigurationToJSON,
     CovalReportsAPIMonitoringFiltersConfigurationToJSONTyped,
 } from './CovalReportsAPIMonitoringFiltersConfiguration.js';
+import type { CovalReportsAPIReportCustomDimension } from './CovalReportsAPIReportCustomDimension.js';
+import {
+    CovalReportsAPIReportCustomDimensionFromJSON,
+    CovalReportsAPIReportCustomDimensionFromJSONTyped,
+    CovalReportsAPIReportCustomDimensionToJSON,
+    CovalReportsAPIReportCustomDimensionToJSONTyped,
+} from './CovalReportsAPIReportCustomDimension.js';
 
 /**
  * 
@@ -46,6 +53,12 @@ export interface CovalReportsAPIReportViewConfiguration {
      */
     metadata_key: string | null;
     /**
+     * Required when `compare_by` is `custom`; null otherwise.
+     * @type {string}
+     * @memberof CovalReportsAPIReportViewConfiguration
+     */
+    custom_dimension_id: string | null;
+    /**
      * 
      * @type {CovalReportsAPIReportViewConfigurationViewModeEnum}
      * @memberof CovalReportsAPIReportViewConfiguration
@@ -63,6 +76,18 @@ export interface CovalReportsAPIReportViewConfiguration {
      * @memberof CovalReportsAPIReportViewConfiguration
      */
     secondary_metadata_key: string | null;
+    /**
+     * Required when `secondary_compare_by` is `custom`; null otherwise.
+     * @type {string}
+     * @memberof CovalReportsAPIReportViewConfiguration
+     */
+    secondary_custom_dimension_id: string | null;
+    /**
+     * Saved caller-defined groupings; empty for reports without custom dimensions.
+     * @type {Array<CovalReportsAPIReportCustomDimension>}
+     * @memberof CovalReportsAPIReportViewConfiguration
+     */
+    custom_dimensions: Array<CovalReportsAPIReportCustomDimension>;
     /**
      * Saved supported cohort filters; null for reports without monitoring filters.
      * @type {CovalReportsAPIMonitoringFiltersConfiguration}
@@ -82,7 +107,8 @@ export const CovalReportsAPIReportViewConfigurationCompareByEnum = {
     Mutation: 'mutation',
     Persona: 'persona',
     TestCase: 'test_case',
-    Metadata: 'metadata'
+    Metadata: 'metadata',
+    Custom: 'custom'
 } as const;
 export type CovalReportsAPIReportViewConfigurationCompareByEnum = typeof CovalReportsAPIReportViewConfigurationCompareByEnum[keyof typeof CovalReportsAPIReportViewConfigurationCompareByEnum];
 
@@ -105,7 +131,8 @@ export const CovalReportsAPIReportViewConfigurationSecondaryCompareByEnum = {
     Mutation: 'mutation',
     Persona: 'persona',
     TestCase: 'test_case',
-    Metadata: 'metadata'
+    Metadata: 'metadata',
+    Custom: 'custom'
 } as const;
 export type CovalReportsAPIReportViewConfigurationSecondaryCompareByEnum = typeof CovalReportsAPIReportViewConfigurationSecondaryCompareByEnum[keyof typeof CovalReportsAPIReportViewConfigurationSecondaryCompareByEnum];
 
@@ -117,9 +144,12 @@ export function instanceOfCovalReportsAPIReportViewConfiguration(value: object):
     if (!('is_monitoring' in value) || value['is_monitoring'] === undefined) return false;
     if (!('compare_by' in value) || value['compare_by'] === undefined) return false;
     if (!('metadata_key' in value) || value['metadata_key'] === undefined) return false;
+    if (!('custom_dimension_id' in value) || value['custom_dimension_id'] === undefined) return false;
     if (!('view_mode' in value) || value['view_mode'] === undefined) return false;
     if (!('secondary_compare_by' in value) || value['secondary_compare_by'] === undefined) return false;
     if (!('secondary_metadata_key' in value) || value['secondary_metadata_key'] === undefined) return false;
+    if (!('secondary_custom_dimension_id' in value) || value['secondary_custom_dimension_id'] === undefined) return false;
+    if (!('custom_dimensions' in value) || value['custom_dimensions'] === undefined) return false;
     if (!('monitoring_filters' in value) || value['monitoring_filters'] === undefined) return false;
     return true;
 }
@@ -137,9 +167,12 @@ export function CovalReportsAPIReportViewConfigurationFromJSONTyped(json: any, i
         'is_monitoring': json['is_monitoring'],
         'compare_by': json['compare_by'],
         'metadata_key': json['metadata_key'],
+        'custom_dimension_id': json['custom_dimension_id'],
         'view_mode': json['view_mode'],
         'secondary_compare_by': json['secondary_compare_by'],
         'secondary_metadata_key': json['secondary_metadata_key'],
+        'secondary_custom_dimension_id': json['secondary_custom_dimension_id'],
+        'custom_dimensions': ((json['custom_dimensions'] as Array<any>).map(CovalReportsAPIReportCustomDimensionFromJSON)),
         'monitoring_filters': CovalReportsAPIMonitoringFiltersConfigurationFromJSON(json['monitoring_filters']),
     };
 }
@@ -158,9 +191,12 @@ export function CovalReportsAPIReportViewConfigurationToJSONTyped(value?: CovalR
         'is_monitoring': value['is_monitoring'],
         'compare_by': value['compare_by'],
         'metadata_key': value['metadata_key'],
+        'custom_dimension_id': value['custom_dimension_id'],
         'view_mode': value['view_mode'],
         'secondary_compare_by': value['secondary_compare_by'],
         'secondary_metadata_key': value['secondary_metadata_key'],
+        'secondary_custom_dimension_id': value['secondary_custom_dimension_id'],
+        'custom_dimensions': ((value['custom_dimensions'] as Array<any>).map(CovalReportsAPIReportCustomDimensionToJSON)),
         'monitoring_filters': CovalReportsAPIMonitoringFiltersConfigurationToJSON(value['monitoring_filters']),
     };
 }

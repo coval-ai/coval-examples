@@ -18,20 +18,23 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
+from coval_sdk.models.coval_reports_api_report_custom_dimension_group import CovalReportsAPIReportCustomDimensionGroup
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
 
-class CovalMetricsAPIErrorResponseErrorDetailsInner(BaseModel):
+class CovalReportsAPIReportCustomDimension(BaseModel):
     """
-    CovalMetricsAPIErrorResponseErrorDetailsInner
+    CovalReportsAPIReportCustomDimension
     """ # noqa: E501
-    var_field: Optional[StrictStr] = Field(default=None, alias="field")
-    description: Optional[StrictStr] = None
-    additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["field", "description"]
+    id: Annotated[str, Field(min_length=1, strict=True, max_length=200)] = Field(description="Caller-chosen dimension ID, unique within the report.")
+    name: Annotated[str, Field(min_length=1, strict=True, max_length=200)] = Field(description="Dimension label shown in the report.")
+    groups: Annotated[List[CovalReportsAPIReportCustomDimensionGroup], Field(min_length=1, max_length=500)]
+    hide_unassigned: Optional[StrictBool] = Field(default=False, description="Hide simulations that no group claims instead of collecting them into an Unassigned group. ")
+    __properties: ClassVar[List[str]] = ["id", "name", "groups", "hide_unassigned"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -51,7 +54,7 @@ class CovalMetricsAPIErrorResponseErrorDetailsInner(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CovalMetricsAPIErrorResponseErrorDetailsInner from a JSON string"""
+        """Create an instance of CovalReportsAPIReportCustomDimension from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -63,10 +66,8 @@ class CovalMetricsAPIErrorResponseErrorDetailsInner(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
-        * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
-            "additional_properties",
         ])
 
         _dict = self.model_dump(
@@ -74,21 +75,18 @@ class CovalMetricsAPIErrorResponseErrorDetailsInner(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # puts key-value pairs in additional_properties in the top level
-        if self.additional_properties is not None:
-            for _key, _value in self.additional_properties.items():
-                _dict[_key] = _value
-
-        # set to None if var_field (nullable) is None
-        # and model_fields_set contains the field
-        if self.var_field is None and "var_field" in self.model_fields_set:
-            _dict['field'] = None
-
+        # override the default output from pydantic by calling `to_dict()` of each item in groups (list)
+        _items = []
+        if self.groups:
+            for _item_groups in self.groups:
+                if _item_groups:
+                    _items.append(_item_groups.to_dict())
+            _dict['groups'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CovalMetricsAPIErrorResponseErrorDetailsInner from a dict"""
+        """Create an instance of CovalReportsAPIReportCustomDimension from a dict"""
         if obj is None:
             return None
 
@@ -96,14 +94,11 @@ class CovalMetricsAPIErrorResponseErrorDetailsInner(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "field": obj.get("field"),
-            "description": obj.get("description")
+            "id": obj.get("id"),
+            "name": obj.get("name"),
+            "groups": [CovalReportsAPIReportCustomDimensionGroup.from_dict(_item) for _item in obj["groups"]] if obj.get("groups") is not None else None,
+            "hide_unassigned": obj.get("hide_unassigned") if obj.get("hide_unassigned") is not None else False
         })
-        # store additional fields in additional_properties
-        for _key in obj.keys():
-            if _key not in cls.__properties:
-                _obj.additional_properties[_key] = obj.get(_key)
-
         return _obj
 
 

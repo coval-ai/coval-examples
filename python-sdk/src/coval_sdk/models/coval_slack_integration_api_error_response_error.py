@@ -20,7 +20,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
-from coval_sdk.models.coval_metrics_api_error_response_error_details_inner import CovalMetricsAPIErrorResponseErrorDetailsInner
+from coval_sdk.models.coval_alerts_api_error_response_error_details_inner import CovalAlertsAPIErrorResponseErrorDetailsInner
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -31,7 +31,7 @@ class CovalSlackIntegrationAPIErrorResponseError(BaseModel):
     """ # noqa: E501
     code: StrictStr
     message: StrictStr
-    details: List[CovalMetricsAPIErrorResponseErrorDetailsInner]
+    details: List[CovalAlertsAPIErrorResponseErrorDetailsInner]
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["code", "message", "details"]
 
@@ -109,7 +109,7 @@ class CovalSlackIntegrationAPIErrorResponseError(BaseModel):
         _obj = cls.model_validate({
             "code": obj.get("code"),
             "message": obj.get("message"),
-            "details": [CovalMetricsAPIErrorResponseErrorDetailsInner.from_dict(_item) for _item in obj["details"]] if obj.get("details") is not None else None
+            "details": [CovalAlertsAPIErrorResponseErrorDetailsInner.from_dict(_item) for _item in obj["details"]] if obj.get("details") is not None else None
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

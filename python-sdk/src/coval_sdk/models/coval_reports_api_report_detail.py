@@ -39,19 +39,20 @@ class CovalReportsAPIReportDetail(BaseModel):
     source_human_review_project_id: Optional[StrictStr] = None
     compare_by: StrictStr
     metadata_key: Optional[StrictStr] = None
+    custom_dimension_id: Optional[StrictStr] = None
     permissions: StrictStr
     updated_at: datetime = Field(description="Last report mutation time.")
     revision: StrictStr = Field(description="Opaque revision also returned as the response `ETag`. Send the quoted ETag value in `If-Match` for `view_config` updates. ")
     view_config: CovalReportsAPIReportViewConfiguration
     metric_config: Dict[str, CovalReportsAPIReportMetricConfigurationEntry] = Field(description="Saved per-metric display configuration keyed by metric ID.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["id", "name", "run_ids", "simulation_output_ids", "source_human_review_project_id", "compare_by", "metadata_key", "permissions", "updated_at", "revision", "view_config", "metric_config"]
+    __properties: ClassVar[List[str]] = ["id", "name", "run_ids", "simulation_output_ids", "source_human_review_project_id", "compare_by", "metadata_key", "custom_dimension_id", "permissions", "updated_at", "revision", "view_config", "metric_config"]
 
     @field_validator('compare_by')
     def compare_by_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['none', 'run', 'agent', 'mutation', 'persona', 'test_case', 'metadata']):
-            raise ValueError("must be one of enum values ('none', 'run', 'agent', 'mutation', 'persona', 'test_case', 'metadata')")
+        if value not in set(['none', 'run', 'agent', 'mutation', 'persona', 'test_case', 'metadata', 'custom']):
+            raise ValueError("must be one of enum values ('none', 'run', 'agent', 'mutation', 'persona', 'test_case', 'metadata', 'custom')")
         return value
 
     @field_validator('permissions')
@@ -127,6 +128,11 @@ class CovalReportsAPIReportDetail(BaseModel):
         if self.metadata_key is None and "metadata_key" in self.model_fields_set:
             _dict['metadata_key'] = None
 
+        # set to None if custom_dimension_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.custom_dimension_id is None and "custom_dimension_id" in self.model_fields_set:
+            _dict['custom_dimension_id'] = None
+
         return _dict
 
     @classmethod
@@ -146,6 +152,7 @@ class CovalReportsAPIReportDetail(BaseModel):
             "source_human_review_project_id": obj.get("source_human_review_project_id"),
             "compare_by": obj.get("compare_by"),
             "metadata_key": obj.get("metadata_key"),
+            "custom_dimension_id": obj.get("custom_dimension_id"),
             "permissions": obj.get("permissions"),
             "updated_at": obj.get("updated_at"),
             "revision": obj.get("revision"),

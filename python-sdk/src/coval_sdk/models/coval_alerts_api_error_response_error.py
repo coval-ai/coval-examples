@@ -18,20 +18,29 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
-from coval_sdk.models.coval_alerts_api_error_response_error import CovalAlertsAPIErrorResponseError
+from coval_sdk.models.coval_alerts_api_error_response_error_details_inner import CovalAlertsAPIErrorResponseErrorDetailsInner
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
 
-class CovalMonitorsAPIErrorResponse(BaseModel):
+class CovalAlertsAPIErrorResponseError(BaseModel):
     """
-    CovalMonitorsAPIErrorResponse
+    CovalAlertsAPIErrorResponseError
     """ # noqa: E501
-    error: CovalAlertsAPIErrorResponseError
+    code: StrictStr
+    message: StrictStr = Field(description="Human-readable error message")
+    details: List[CovalAlertsAPIErrorResponseErrorDetailsInner]
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["error"]
+    __properties: ClassVar[List[str]] = ["code", "message", "details"]
+
+    @field_validator('code')
+    def code_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['INVALID_ARGUMENT', 'UNAUTHENTICATED', 'PERMISSION_DENIED', 'NOT_FOUND', 'ALREADY_EXISTS', 'INTERNAL']):
+            raise ValueError("must be one of enum values ('INVALID_ARGUMENT', 'UNAUTHENTICATED', 'PERMISSION_DENIED', 'NOT_FOUND', 'ALREADY_EXISTS', 'INTERNAL')")
+        return value
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -51,7 +60,7 @@ class CovalMonitorsAPIErrorResponse(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CovalMonitorsAPIErrorResponse from a JSON string"""
+        """Create an instance of CovalAlertsAPIErrorResponseError from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -74,9 +83,13 @@ class CovalMonitorsAPIErrorResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of error
-        if self.error:
-            _dict['error'] = self.error.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in details (list)
+        _items = []
+        if self.details:
+            for _item_details in self.details:
+                if _item_details:
+                    _items.append(_item_details.to_dict())
+            _dict['details'] = _items
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -86,7 +99,7 @@ class CovalMonitorsAPIErrorResponse(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CovalMonitorsAPIErrorResponse from a dict"""
+        """Create an instance of CovalAlertsAPIErrorResponseError from a dict"""
         if obj is None:
             return None
 
@@ -94,7 +107,9 @@ class CovalMonitorsAPIErrorResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "error": CovalAlertsAPIErrorResponseError.from_dict(obj["error"]) if obj.get("error") is not None else None
+            "code": obj.get("code"),
+            "message": obj.get("message"),
+            "details": [CovalAlertsAPIErrorResponseErrorDetailsInner.from_dict(_item) for _item in obj["details"]] if obj.get("details") is not None else None
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

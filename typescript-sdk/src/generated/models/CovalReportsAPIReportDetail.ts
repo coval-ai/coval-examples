@@ -78,6 +78,12 @@ export interface CovalReportsAPIReportDetail {
     metadata_key?: string | null;
     /**
      * 
+     * @type {string}
+     * @memberof CovalReportsAPIReportDetail
+     */
+    custom_dimension_id?: string | null;
+    /**
+     * 
      * @type {CovalReportsAPIReportDetailPermissionsEnum}
      * @memberof CovalReportsAPIReportDetail
      */
@@ -121,7 +127,8 @@ export const CovalReportsAPIReportDetailCompareByEnum = {
     Mutation: 'mutation',
     Persona: 'persona',
     TestCase: 'test_case',
-    Metadata: 'metadata'
+    Metadata: 'metadata',
+    Custom: 'custom'
 } as const;
 export type CovalReportsAPIReportDetailCompareByEnum = typeof CovalReportsAPIReportDetailCompareByEnum[keyof typeof CovalReportsAPIReportDetailCompareByEnum];
 
@@ -168,6 +175,7 @@ export function CovalReportsAPIReportDetailFromJSONTyped(json: any, ignoreDiscri
         'source_human_review_project_id': json['source_human_review_project_id'] == null ? undefined : json['source_human_review_project_id'],
         'compare_by': json['compare_by'],
         'metadata_key': json['metadata_key'] == null ? undefined : json['metadata_key'],
+        'custom_dimension_id': json['custom_dimension_id'] == null ? undefined : json['custom_dimension_id'],
         'permissions': json['permissions'],
         'updated_at': (new Date(json['updated_at'])),
         'revision': json['revision'],
@@ -194,6 +202,7 @@ export function CovalReportsAPIReportDetailToJSONTyped(value?: CovalReportsAPIRe
         'source_human_review_project_id': value['source_human_review_project_id'],
         'compare_by': value['compare_by'],
         'metadata_key': value['metadata_key'],
+        'custom_dimension_id': value['custom_dimension_id'],
         'permissions': value['permissions'],
         'updated_at': value['updated_at'].toISOString(),
         'revision': value['revision'],

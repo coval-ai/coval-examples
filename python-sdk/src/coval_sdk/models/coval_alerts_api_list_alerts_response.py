@@ -14,24 +14,27 @@
 
 
 from __future__ import annotations
+from coval_sdk.deserialization import deserialize_model_list
 import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
-from typing import Any, ClassVar, Dict, List
-from coval_sdk.models.coval_alerts_api_error_response_error import CovalAlertsAPIErrorResponseError
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
+from coval_sdk.models.coval_alerts_api_alert_resource import CovalAlertsAPIAlertResource
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
 
-class CovalMonitorsAPIErrorResponse(BaseModel):
+class CovalAlertsAPIListAlertsResponse(BaseModel):
     """
-    CovalMonitorsAPIErrorResponse
+    CovalAlertsAPIListAlertsResponse
     """ # noqa: E501
-    error: CovalAlertsAPIErrorResponseError
+    alerts: List[CovalAlertsAPIAlertResource]
+    next_page_token: Optional[StrictStr] = Field(default=None, description="Token for fetching the next page (null if no more results)")
+    total_count: StrictInt = Field(description="Total count of alerts matching filter")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["error"]
+    __properties: ClassVar[List[str]] = ["alerts", "next_page_token", "total_count"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -51,7 +54,7 @@ class CovalMonitorsAPIErrorResponse(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CovalMonitorsAPIErrorResponse from a JSON string"""
+        """Create an instance of CovalAlertsAPIListAlertsResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -74,19 +77,28 @@ class CovalMonitorsAPIErrorResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of error
-        if self.error:
-            _dict['error'] = self.error.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in alerts (list)
+        _items = []
+        if self.alerts:
+            for _item_alerts in self.alerts:
+                if _item_alerts:
+                    _items.append(_item_alerts.to_dict())
+            _dict['alerts'] = _items
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if next_page_token (nullable) is None
+        # and model_fields_set contains the field
+        if self.next_page_token is None and "next_page_token" in self.model_fields_set:
+            _dict['next_page_token'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CovalMonitorsAPIErrorResponse from a dict"""
+        """Create an instance of CovalAlertsAPIListAlertsResponse from a dict"""
         if obj is None:
             return None
 
@@ -94,7 +106,9 @@ class CovalMonitorsAPIErrorResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "error": CovalAlertsAPIErrorResponseError.from_dict(obj["error"]) if obj.get("error") is not None else None
+            "alerts": deserialize_model_list(obj["alerts"], CovalAlertsAPIAlertResource, response_model="CovalAlertsAPIListAlertsResponse", field="alerts") if obj.get("alerts") is not None else None,
+            "next_page_token": obj.get("next_page_token"),
+            "total_count": obj.get("total_count")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

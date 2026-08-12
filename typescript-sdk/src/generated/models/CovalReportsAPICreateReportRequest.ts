@@ -20,6 +20,13 @@ import {
     CovalReportsAPICompareByToJSON,
     CovalReportsAPICompareByToJSONTyped,
 } from './CovalReportsAPICompareBy.js';
+import type { CovalReportsAPIReportCustomDimension } from './CovalReportsAPIReportCustomDimension.js';
+import {
+    CovalReportsAPIReportCustomDimensionFromJSON,
+    CovalReportsAPIReportCustomDimensionFromJSONTyped,
+    CovalReportsAPIReportCustomDimensionToJSON,
+    CovalReportsAPIReportCustomDimensionToJSONTyped,
+} from './CovalReportsAPIReportCustomDimension.js';
 import type { CovalReportsAPIReportPermission } from './CovalReportsAPIReportPermission.js';
 import {
     CovalReportsAPIReportPermissionFromJSON,
@@ -76,6 +83,30 @@ export interface CovalReportsAPICreateReportRequest {
      */
     metadata_key?: string | null;
     /**
+     * Caller-defined groupings of the report's simulations. Required when
+     * `compare_by` is `custom`; otherwise omit it. This is how the app's
+     * "Merge reports" action builds one grouped report out of several.
+     * 
+     * @type {Array<CovalReportsAPIReportCustomDimension>}
+     * @memberof CovalReportsAPICreateReportRequest
+     */
+    custom_dimensions?: Array<CovalReportsAPIReportCustomDimension> | null;
+    /**
+     * Which of `custom_dimensions` to group by. Only valid when `compare_by`
+     * is `custom`; defaults to the first dimension.
+     * 
+     * @type {string}
+     * @memberof CovalReportsAPICreateReportRequest
+     */
+    custom_dimension_id?: string | null;
+    /**
+     * Report layout. `grouped` aggregates each `compare_by` group; defaults to `rows`.
+     * 
+     * @type {CovalReportsAPICreateReportRequestViewModeEnum}
+     * @memberof CovalReportsAPICreateReportRequest
+     */
+    view_mode?: CovalReportsAPICreateReportRequestViewModeEnum | null;
+    /**
      * 
      * @type {CovalReportsAPIReportPermission}
      * @memberof CovalReportsAPICreateReportRequest
@@ -83,6 +114,15 @@ export interface CovalReportsAPICreateReportRequest {
     permissions?: CovalReportsAPIReportPermission;
 }
 
+
+/**
+ * @export
+ */
+export const CovalReportsAPICreateReportRequestViewModeEnum = {
+    Rows: 'rows',
+    Grouped: 'grouped'
+} as const;
+export type CovalReportsAPICreateReportRequestViewModeEnum = typeof CovalReportsAPICreateReportRequestViewModeEnum[keyof typeof CovalReportsAPICreateReportRequestViewModeEnum];
 
 
 /**
@@ -110,6 +150,9 @@ export function CovalReportsAPICreateReportRequestFromJSONTyped(json: any, ignor
         'source_human_review_project_id': json['source_human_review_project_id'] == null ? undefined : json['source_human_review_project_id'],
         'compare_by': json['compare_by'] == null ? undefined : CovalReportsAPICompareByFromJSON(json['compare_by']),
         'metadata_key': json['metadata_key'] == null ? undefined : json['metadata_key'],
+        'custom_dimensions': json['custom_dimensions'] == null ? undefined : ((json['custom_dimensions'] as Array<any>).map(CovalReportsAPIReportCustomDimensionFromJSON)),
+        'custom_dimension_id': json['custom_dimension_id'] == null ? undefined : json['custom_dimension_id'],
+        'view_mode': json['view_mode'] == null ? undefined : json['view_mode'],
         'permissions': json['permissions'] == null ? undefined : CovalReportsAPIReportPermissionFromJSON(json['permissions']),
     };
 }
@@ -131,6 +174,9 @@ export function CovalReportsAPICreateReportRequestToJSONTyped(value?: CovalRepor
         'source_human_review_project_id': value['source_human_review_project_id'],
         'compare_by': CovalReportsAPICompareByToJSON(value['compare_by']),
         'metadata_key': value['metadata_key'],
+        'custom_dimensions': value['custom_dimensions'] == null ? undefined : ((value['custom_dimensions'] as Array<any>).map(CovalReportsAPIReportCustomDimensionToJSON)),
+        'custom_dimension_id': value['custom_dimension_id'],
+        'view_mode': value['view_mode'],
         'permissions': CovalReportsAPIReportPermissionToJSON(value['permissions']),
     };
 }

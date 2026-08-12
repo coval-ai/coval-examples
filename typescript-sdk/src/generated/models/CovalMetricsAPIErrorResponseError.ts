@@ -13,13 +13,13 @@
  */
 
 import { mapValues } from '../runtime.js';
-import type { CovalMetricsAPIErrorResponseErrorDetailsInner } from './CovalMetricsAPIErrorResponseErrorDetailsInner.js';
+import type { CovalAlertsAPIErrorResponseErrorDetailsInner } from './CovalAlertsAPIErrorResponseErrorDetailsInner.js';
 import {
-    CovalMetricsAPIErrorResponseErrorDetailsInnerFromJSON,
-    CovalMetricsAPIErrorResponseErrorDetailsInnerFromJSONTyped,
-    CovalMetricsAPIErrorResponseErrorDetailsInnerToJSON,
-    CovalMetricsAPIErrorResponseErrorDetailsInnerToJSONTyped,
-} from './CovalMetricsAPIErrorResponseErrorDetailsInner.js';
+    CovalAlertsAPIErrorResponseErrorDetailsInnerFromJSON,
+    CovalAlertsAPIErrorResponseErrorDetailsInnerFromJSONTyped,
+    CovalAlertsAPIErrorResponseErrorDetailsInnerToJSON,
+    CovalAlertsAPIErrorResponseErrorDetailsInnerToJSONTyped,
+} from './CovalAlertsAPIErrorResponseErrorDetailsInner.js';
 
 /**
  * 
@@ -41,10 +41,10 @@ export interface CovalMetricsAPIErrorResponseError {
     message: string;
     /**
      * 
-     * @type {Array<CovalMetricsAPIErrorResponseErrorDetailsInner>}
+     * @type {Array<CovalAlertsAPIErrorResponseErrorDetailsInner>}
      * @memberof CovalMetricsAPIErrorResponseError
      */
-    details?: Array<CovalMetricsAPIErrorResponseErrorDetailsInner>;
+    details?: Array<CovalAlertsAPIErrorResponseErrorDetailsInner>;
 }
 
 
@@ -83,7 +83,7 @@ export function CovalMetricsAPIErrorResponseErrorFromJSONTyped(json: any, ignore
         
         'code': json['code'],
         'message': json['message'],
-        'details': json['details'] == null ? undefined : ((json['details'] as Array<any>).map(CovalMetricsAPIErrorResponseErrorDetailsInnerFromJSON)),
+        'details': json['details'] == null ? undefined : ((json['details'] as Array<any>).map(CovalAlertsAPIErrorResponseErrorDetailsInnerFromJSON)),
     };
 }
 
@@ -100,7 +100,7 @@ export function CovalMetricsAPIErrorResponseErrorToJSONTyped(value?: CovalMetric
         
         'code': value['code'],
         'message': value['message'],
-        'details': value['details'] == null ? undefined : ((value['details'] as Array<any>).map(CovalMetricsAPIErrorResponseErrorDetailsInnerToJSON)),
+        'details': value['details'] == null ? undefined : ((value['details'] as Array<any>).map(CovalAlertsAPIErrorResponseErrorDetailsInnerToJSON)),
     };
 }
 

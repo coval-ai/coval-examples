@@ -77,6 +77,12 @@ export interface CovalReportsAPIReport {
      */
     metadata_key: string | null;
     /**
+     * Custom dimension used for grouping when `compare_by` is `custom`; null otherwise.
+     * @type {string}
+     * @memberof CovalReportsAPIReport
+     */
+    custom_dimension_id?: string | null;
+    /**
      * 
      * @type {CovalReportsAPIReportPermission}
      * @memberof CovalReportsAPIReport
@@ -116,6 +122,7 @@ export function CovalReportsAPIReportFromJSONTyped(json: any, ignoreDiscriminato
         'source_human_review_project_id': json['source_human_review_project_id'] == null ? undefined : json['source_human_review_project_id'],
         'compare_by': CovalReportsAPICompareByFromJSON(json['compare_by']),
         'metadata_key': json['metadata_key'],
+        'custom_dimension_id': json['custom_dimension_id'] == null ? undefined : json['custom_dimension_id'],
         'permissions': CovalReportsAPIReportPermissionFromJSON(json['permissions']),
     };
 }
@@ -138,6 +145,7 @@ export function CovalReportsAPIReportToJSONTyped(value?: CovalReportsAPIReport |
         'source_human_review_project_id': value['source_human_review_project_id'],
         'compare_by': CovalReportsAPICompareByToJSON(value['compare_by']),
         'metadata_key': value['metadata_key'],
+        'custom_dimension_id': value['custom_dimension_id'],
         'permissions': CovalReportsAPIReportPermissionToJSON(value['permissions']),
     };
 }

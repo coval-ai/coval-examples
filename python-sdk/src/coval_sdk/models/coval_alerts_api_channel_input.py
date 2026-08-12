@@ -18,20 +18,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List
-from coval_sdk.models.coval_alerts_api_error_response_error import CovalAlertsAPIErrorResponseError
+from coval_sdk.models.coval_alerts_api_channel_type import CovalAlertsAPIChannelType
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
 
-class CovalMonitorsAPIErrorResponse(BaseModel):
+class CovalAlertsAPIChannelInput(BaseModel):
     """
-    CovalMonitorsAPIErrorResponse
+    CovalAlertsAPIChannelInput
     """ # noqa: E501
-    error: CovalAlertsAPIErrorResponseError
+    channel_type: CovalAlertsAPIChannelType
+    config: Dict[str, Any] = Field(description="Channel-specific configuration")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["error"]
+    __properties: ClassVar[List[str]] = ["channel_type", "config"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -51,7 +52,7 @@ class CovalMonitorsAPIErrorResponse(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CovalMonitorsAPIErrorResponse from a JSON string"""
+        """Create an instance of CovalAlertsAPIChannelInput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -74,9 +75,6 @@ class CovalMonitorsAPIErrorResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of error
-        if self.error:
-            _dict['error'] = self.error.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -86,7 +84,7 @@ class CovalMonitorsAPIErrorResponse(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CovalMonitorsAPIErrorResponse from a dict"""
+        """Create an instance of CovalAlertsAPIChannelInput from a dict"""
         if obj is None:
             return None
 
@@ -94,7 +92,8 @@ class CovalMonitorsAPIErrorResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "error": CovalAlertsAPIErrorResponseError.from_dict(obj["error"]) if obj.get("error") is not None else None
+            "channel_type": obj.get("channel_type"),
+            "config": obj.get("config")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

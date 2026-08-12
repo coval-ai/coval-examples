@@ -19,26 +19,22 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class CovalReportsAPICompareBy(str, Enum):
+class CovalAlertsAPIAlertEventOutcome(str, Enum):
     """
-    Dimension to group and compare runs by in the report view. `custom` groups by a caller-defined dimension and requires `custom_dimensions`. 
+    Outcome of an alert evaluation
     """
 
     """
     allowed enum values
     """
-    NONE = 'none'
-    RUN = 'run'
-    AGENT = 'agent'
-    MUTATION = 'mutation'
-    PERSONA = 'persona'
-    TEST_CASE = 'test_case'
-    METADATA = 'metadata'
-    CUSTOM = 'custom'
+    TRIGGERED = 'TRIGGERED'
+    NOT_MET = 'NOT_MET'
+    SUPPRESSED = 'SUPPRESSED'
+    ERROR = 'ERROR'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of CovalReportsAPICompareBy from a JSON string"""
+        """Create an instance of CovalAlertsAPIAlertEventOutcome from a JSON string"""
         return cls(json.loads(json_str))
 
 
