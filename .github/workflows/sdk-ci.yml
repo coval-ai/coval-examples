@@ -11,12 +11,8 @@ on:
   push:
     branches:
       - main
-    paths:
-      - ".github/workflows/*sdk*.yml"
-      - ".openapi-generator-config/**"
-      - "python-sdk/**"
-      - "scripts/**"
-      - "typescript-sdk/**"
+    # Release tagging requires this successful run to match current main exactly.
+    # Run every main commit so an unrelated follow-up cannot strand an SDK release.
 
 permissions:
   contents: read

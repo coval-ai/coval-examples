@@ -20,7 +20,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List
-from coval_sdk.models.coval_monitors_api_error_response_error import CovalMonitorsAPIErrorResponseError
+from coval_sdk.models.coval_alerts_api_error_response_error import CovalAlertsAPIErrorResponseError
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -29,7 +29,7 @@ class CovalMonitorsAPIErrorResponse(BaseModel):
     """
     CovalMonitorsAPIErrorResponse
     """ # noqa: E501
-    error: CovalMonitorsAPIErrorResponseError
+    error: CovalAlertsAPIErrorResponseError
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["error"]
 
@@ -94,7 +94,7 @@ class CovalMonitorsAPIErrorResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "error": CovalMonitorsAPIErrorResponseError.from_dict(obj["error"]) if obj.get("error") is not None else None
+            "error": CovalAlertsAPIErrorResponseError.from_dict(obj["error"]) if obj.get("error") is not None else None
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

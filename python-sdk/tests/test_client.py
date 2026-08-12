@@ -1,46 +1,21 @@
+import importlib
 import logging
 import socket
 import threading
 import time
 from typing import Union
 
-from urllib3.util import Retry
-
 import pytest
+from urllib3.util import Retry
 
 import coval_sdk
 from coval_sdk import CovalClient
 from coval_sdk import api as generated_apis
-from coval_sdk.client import DEFAULT_MAX_IDLE_SECONDS, _IdleExpiryPoolMixin
-
-
-API_PROPERTIES = (
-  "api_keys",
-  "agents",
-  "audio",
-  "conversations",
-  "dashboards",
-  "integrations",
-  "metric_outputs",
-  "metrics",
-  "monitor_events",
-  "monitors",
-  "mutations",
-  "organization_conversations_config",
-  "personas",
-  "reports",
-  "review_annotations",
-  "review_projects",
-  "run_templates",
-  "runs",
-  "scheduled_runs",
-  "simulations",
-  "tags",
-  "test_cases",
-  "test_sets",
-  "traces",
-  "webhooks",
-  "widgets",
+from coval_sdk import models as generated_models
+from coval_sdk.client import (
+  API_PROPERTY_NAMES,
+  DEFAULT_MAX_IDLE_SECONDS,
+  _IdleExpiryPoolMixin,
 )
 
 
@@ -49,12 +24,53 @@ def test_client_exposes_every_generated_api() -> None:
   try:
     assert client.configuration.host == "https://api.coval.dev/v1"
     assert client.api_client.default_headers["x-api-key"] == "test-key"
-    assert all(getattr(client, name) is not None for name in API_PROPERTIES)
-    exposed_api_names = {type(getattr(client, name)).__name__ for name in API_PROPERTIES}
+    assert all(getattr(client, name) is not None for name in API_PROPERTY_NAMES)
+    exposed_api_names = {type(getattr(client, name)).__name__ for name in API_PROPERTY_NAMES}
     generated_api_names = {name for name in dir(generated_apis) if name.endswith("Api")}
     assert exposed_api_names == generated_api_names
   finally:
     client.close()
+
+
+@pytest.mark.parametrize(
+  ("old_module", "old_name", "new_name"),
+  (
+    (
+      "coval_metrics_api_error_response_error_details_inner",
+      "CovalMetricsAPIErrorResponseErrorDetailsInner",
+      "CovalAlertsAPIErrorResponseErrorDetailsInner",
+    ),
+    (
+      "coval_monitors_api_error_response_error",
+      "CovalMonitorsAPIErrorResponseError",
+      "CovalAlertsAPIErrorResponseError",
+    ),
+    (
+      "coval_monitors_api_monitor_event_resource_condition_results_inner",
+      "CovalMonitorsAPIMonitorEventResourceConditionResultsInner",
+      "CovalAlertsAPIAlertEventResourceConditionResultsInner",
+    ),
+    (
+      "coval_monitors_api_monitor_event_resource_condition_results_inner_computed_value",
+      "CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue",
+      "CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue",
+    ),
+    (
+      "coval_monitors_api_monitor_event_resource_dispatched_channels_inner",
+      "CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner",
+      "CovalAlertsAPIAlertEventResourceDispatchedChannelsInner",
+    ),
+  ),
+)
+def test_renamed_models_keep_compatibility_aliases(
+  old_module: str, old_name: str, new_name: str
+) -> None:
+  new_model = getattr(coval_sdk, new_name)
+  assert getattr(coval_sdk, old_name) is new_model
+  assert getattr(generated_models, old_name) is new_model
+
+  compatibility_module = importlib.import_module(f"coval_sdk.models.{old_module}")
+  assert getattr(compatibility_module, old_name) is new_model
 
 
 def test_generated_apis_share_the_canonical_v1_base_path() -> None:
@@ -123,7 +139,7 @@ def test_client_can_restore_strict_response_validation() -> None:
 
 def test_top_level_exports_and_version_match() -> None:
   assert coval_sdk.CovalClient is CovalClient
-  assert coval_sdk.__version__ == "0.6.1"
+  assert coval_sdk.__version__ == "0.6.2"
 
 
 def _pool_for(client: CovalClient, url: str):

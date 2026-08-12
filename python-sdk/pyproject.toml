@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "coval-sdk"
-version = "0.6.1"
+version = "0.6.2"
 description = "Typed Python client for the Coval evaluation platform API."
 readme = "README.md"
 license = "MIT"
@@ -48,3 +48,6 @@ include = ["coval_sdk*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/coval_sdk/api/*.py" = ["RUF036"]

@@ -49,6 +49,27 @@ jobs:
         working-directory: python-sdk
         run: python -m twine check dist/*
 
+      - name: Clean-install wheel smoke test
+        working-directory: python-sdk
+        run: |
+          set -euo pipefail
+          smoke_dir="${RUNNER_TEMP}/coval-sdk-smoke"
+          python -m venv "${smoke_dir}"
+          "${smoke_dir}/bin/pip" install dist/*.whl
+          "${smoke_dir}/bin/python" - <<'PY'
+          import pathlib
+          import tomllib
+
+          import coval_sdk
+
+          expected_version = tomllib.loads(pathlib.Path("pyproject.toml").read_text())["project"]["version"]
+          assert coval_sdk.__version__ == expected_version
+          assert hasattr(coval_sdk, "CovalMonitorsAPIErrorResponseError")
+          with coval_sdk.CovalClient("package-smoke-test") as client:
+            assert client.alerts is not None
+            assert client.alert_events is not None
+          PY
+
       - name: Verify tag matches pyproject version
         if: startsWith(github.ref, 'refs/tags/')
         working-directory: python-sdk

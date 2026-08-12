@@ -16,11 +16,161 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const repoRoot = resolve(__dirname, '..');
 const SPEC = resolve(repoRoot, 'dist/coval-openapi.yaml');
 const GENERATED_ROOT = resolve(repoRoot, 'typescript-sdk/src/generated');
+const APIS_INDEX = resolve(GENERATED_ROOT, 'apis/index.ts');
 const MODELS_DIR = resolve(GENERATED_ROOT, 'models');
+const MODELS_INDEX = resolve(MODELS_DIR, 'index.ts');
+const CLIENT = resolve(repoRoot, 'typescript-sdk/src/CovalClient.ts');
+
+const COMPATIBILITY_MODEL_ALIASES = [
+  [
+    'CovalMetricsAPIErrorResponseErrorDetailsInner',
+    'CovalAlertsAPIErrorResponseErrorDetailsInner',
+  ],
+  ['CovalMonitorsAPIErrorResponseError', 'CovalAlertsAPIErrorResponseError'],
+  [
+    'CovalMonitorsAPIMonitorEventResourceConditionResultsInner',
+    'CovalAlertsAPIAlertEventResourceConditionResultsInner',
+  ],
+  [
+    'CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue',
+    'CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue',
+  ],
+  [
+    'CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner',
+    'CovalAlertsAPIAlertEventResourceDispatchedChannelsInner',
+  ],
+];
 
 if (!existsSync(SPEC) || !existsSync(MODELS_DIR)) {
   console.error('✗ Run bundle + codegen before patch-generated-ts.');
   process.exit(1);
+}
+
+function replaceMarkedBlock(contents, startMarker, endMarker, lines) {
+  if (contents.split(startMarker).length !== 2 || contents.split(endMarker).length !== 2) {
+    throw new Error(`Expected exactly one ${startMarker}/${endMarker} block`);
+  }
+
+  const markerStart = contents.indexOf(startMarker);
+  const bodyStart = contents.indexOf('\n', markerStart) + 1;
+  const bodyEnd = contents.indexOf(endMarker, bodyStart);
+  return `${contents.slice(0, bodyStart)}${lines.join('\n')}\n${contents.slice(bodyEnd)}`;
+}
+
+function apiClassToProperty(className) {
+  const base = className.replace(/Api$/, '');
+  if (base.startsWith('API')) return `api${base.slice(3)}`;
+  return `${base.charAt(0).toLowerCase()}${base.slice(1)}`;
+}
+
+function patchClientApiSurface() {
+  const apiIndex = readFileSync(APIS_INDEX, 'utf8');
+  const classNames = [...apiIndex.matchAll(/export \* from '\.\/(\w+Api)\.js';/g)].map(
+    (match) => match[1],
+  );
+  if (classNames.length === 0) throw new Error('No generated TypeScript API exports found');
+
+  const apis = classNames.map((className) => [apiClassToProperty(className), className]);
+  if (new Set(apis.map(([propertyName]) => propertyName)).size !== apis.length) {
+    throw new Error('Generated TypeScript APIs produced duplicate client property names');
+  }
+
+  let contents = readFileSync(CLIENT, 'utf8');
+  contents = replaceMarkedBlock(
+    contents,
+    '  // sdk-api-imports:start',
+    '  // sdk-api-imports:end',
+    apis.map(([, className]) => `  ${className},`),
+  );
+  contents = replaceMarkedBlock(
+    contents,
+    '  // sdk-api-property-names:start',
+    '  // sdk-api-property-names:end',
+    apis.map(([propertyName]) => `  '${propertyName}',`),
+  );
+  contents = replaceMarkedBlock(
+    contents,
+    '  // sdk-api-properties:start',
+    '  // sdk-api-properties:end',
+    apis.map(([propertyName, className]) => `  readonly ${propertyName}: ${className};`),
+  );
+  contents = replaceMarkedBlock(
+    contents,
+    '    // sdk-api-assignments:start',
+    '    // sdk-api-assignments:end',
+    apis.map(
+      ([propertyName, className]) =>
+        `    this.${propertyName} = new ${className}(this.configuration);`,
+    ),
+  );
+  writeFileSync(CLIENT, contents);
+  return apis.length;
+}
+
+function patchCompatibilityModelAliases() {
+  let modelsIndex = readFileSync(MODELS_INDEX, 'utf8');
+  let patched = 0;
+
+  for (const [oldName, newName] of COMPATIBILITY_MODEL_ALIASES) {
+    const oldFile = join(MODELS_DIR, `${oldName}.ts`);
+    const newFile = join(MODELS_DIR, `${newName}.ts`);
+    const indexExport = `export * from './${oldName}.js';`;
+
+    if (!existsSync(oldFile)) {
+      if (!existsSync(newFile)) {
+        throw new Error(`Compatibility target does not exist: ${newFile}`);
+      }
+
+      const targetContents = readFileSync(newFile, 'utf8');
+      const typeExports = new Set(
+        [...targetContents.matchAll(/export (?:interface|type) (\w+)/g)].map(
+          (match) => match[1],
+        ),
+      );
+      const valueExports = new Set(
+        [...targetContents.matchAll(/export (?:const|function) (\w+)/g)].map(
+          (match) => match[1],
+        ),
+      );
+      const rename = (symbol) => symbol.replaceAll(newName, oldName);
+      const relevantValues = [...valueExports].filter((symbol) => symbol.includes(newName));
+      const relevantTypes = [...typeExports].filter(
+        (symbol) => symbol.includes(newName) && !valueExports.has(symbol),
+      );
+      if (relevantValues.length === 0 && relevantTypes.length === 0) {
+        throw new Error(`No compatibility exports found in ${newFile}`);
+      }
+
+      const lines = [
+        '/* tslint:disable */',
+        '/* eslint-disable */',
+        `/** Backward-compatible aliases for ${newName}. */`,
+      ];
+      if (relevantTypes.length > 0) {
+        lines.push(
+          'export type {',
+          ...relevantTypes.map((symbol) => `  ${symbol} as ${rename(symbol)},`),
+          `} from './${newName}.js';`,
+        );
+      }
+      if (relevantValues.length > 0) {
+        lines.push(
+          'export {',
+          ...relevantValues.map((symbol) => `  ${symbol} as ${rename(symbol)},`),
+          `} from './${newName}.js';`,
+        );
+      }
+      writeFileSync(oldFile, `${lines.join('\n')}\n`);
+      patched += 1;
+    }
+
+    if (!modelsIndex.includes(indexExport)) {
+      modelsIndex = `${modelsIndex.trimEnd()}\n${indexExport}\n`;
+    }
+  }
+
+  writeFileSync(MODELS_INDEX, modelsIndex);
+  return patched;
 }
 
 // --- ESM extension patch ----------------------------------------------------
@@ -55,6 +205,8 @@ if (extPatched > 0) {
   console.log(`  Added .js extensions to ${extPatched} generated file${extPatched === 1 ? '' : 's'}.`);
 }
 // --- end ESM extension patch ------------------------------------------------
+
+const apiCount = patchClientApiSurface();
 
 const doc = parse(readFileSync(SPEC, 'utf8'));
 const schemas = doc?.components?.schemas ?? {};
@@ -161,7 +313,11 @@ if (emptyAliases.length > 0) {
   process.exit(1);
 }
 
+const compatibilityAliases = patchCompatibilityModelAliases();
+
 console.log(
   `\n✓ Applied ${patches} enum patch${patches === 1 ? '' : 'es'} and ` +
-  `${unionPatches} union patch${unionPatches === 1 ? '' : 'es'}.`,
+  `${unionPatches} union patch${unionPatches === 1 ? '' : 'es'}, ` +
+  `synchronized ${apiCount} CovalClient API properties, and added ` +
+  `${compatibilityAliases} compatibility alias modules.`,
 );

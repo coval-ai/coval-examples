@@ -8,7 +8,9 @@ import {
   formatTransportStats,
   paginate,
 } from '../src/index.js';
+import { GENERATED_API_PROPERTY_NAMES } from '../src/CovalClient.js';
 import * as generatedApis from '../src/generated/apis/index.js';
+import * as generatedModels from '../src/generated/models/index.js';
 
 describe('apiKeyAuthMiddleware', () => {
   it('attaches lowercase x-api-key to every request', async () => {
@@ -39,21 +41,45 @@ describe('apiKeyAuthMiddleware', () => {
 
   it('exposes every generated API surface', () => {
     const coval = new CovalClient({ apiKey: 'test-key' });
-    const properties = [
-      'agents', 'alertEvents', 'alerts', 'apiKeys', 'audio', 'conversations', 'dashboards', 'integrations', 'metricOutputs',
-      'metrics', 'monitorEvents', 'monitors', 'mutations', 'organizationConversationsConfig',
-      'personas', 'reports', 'reviewAnnotations', 'reviewProjects', 'runs', 'runTemplates',
-      'scheduledRuns', 'simulations', 'tags', 'testCases', 'testSets',
-      'traces', 'webhooks', 'widgets',
-    ] as const;
-
-    for (const property of properties) {
+    for (const property of GENERATED_API_PROPERTY_NAMES) {
       expect(coval[property]).toBeDefined();
     }
 
-    const exposedApiNames = properties.map((property) => coval[property].constructor.name).sort();
+    const exposedApiNames = GENERATED_API_PROPERTY_NAMES.map(
+      (property) => coval[property].constructor.name,
+    ).sort();
     const generatedApiNames = Object.keys(generatedApis).filter((name) => name.endsWith('Api')).sort();
     expect(exposedApiNames).toEqual(generatedApiNames);
+  });
+
+  it('keeps renamed model serializers as compatibility aliases', () => {
+    const modelExports = new Map(Object.entries(generatedModels));
+    const compatibilityPairs = [
+      [
+        'CovalMetricsAPIErrorResponseErrorDetailsInnerFromJSON',
+        'CovalAlertsAPIErrorResponseErrorDetailsInnerFromJSON',
+      ],
+      [
+        'CovalMonitorsAPIErrorResponseErrorFromJSON',
+        'CovalAlertsAPIErrorResponseErrorFromJSON',
+      ],
+      [
+        'CovalMonitorsAPIMonitorEventResourceConditionResultsInnerFromJSON',
+        'CovalAlertsAPIAlertEventResourceConditionResultsInnerFromJSON',
+      ],
+      [
+        'CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValueFromJSON',
+        'CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValueFromJSON',
+      ],
+      [
+        'CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInnerFromJSON',
+        'CovalAlertsAPIAlertEventResourceDispatchedChannelsInnerFromJSON',
+      ],
+    ] as const;
+
+    for (const [oldName, newName] of compatibilityPairs) {
+      expect(modelExports.get(oldName)).toBe(modelExports.get(newName));
+    }
   });
 });
 

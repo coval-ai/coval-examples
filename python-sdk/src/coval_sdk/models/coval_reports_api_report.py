@@ -38,9 +38,10 @@ class CovalReportsAPIReport(BaseModel):
     source_human_review_project_id: Optional[StrictStr] = Field(default=None, description="Human review project the pinned simulations were sourced from; null when not report-linked.")
     compare_by: CovalReportsAPICompareBy
     metadata_key: Optional[StrictStr] = Field(description="Metadata key used for grouping when `compare_by` is `metadata`; null otherwise.")
+    custom_dimension_id: Optional[StrictStr] = Field(default=None, description="Custom dimension used for grouping when `compare_by` is `custom`; null otherwise.")
     permissions: CovalReportsAPIReportPermission
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["id", "name", "run_ids", "simulation_output_ids", "source_human_review_project_id", "compare_by", "metadata_key", "permissions"]
+    __properties: ClassVar[List[str]] = ["id", "name", "run_ids", "simulation_output_ids", "source_human_review_project_id", "compare_by", "metadata_key", "custom_dimension_id", "permissions"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -98,6 +99,11 @@ class CovalReportsAPIReport(BaseModel):
         if self.metadata_key is None and "metadata_key" in self.model_fields_set:
             _dict['metadata_key'] = None
 
+        # set to None if custom_dimension_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.custom_dimension_id is None and "custom_dimension_id" in self.model_fields_set:
+            _dict['custom_dimension_id'] = None
+
         return _dict
 
     @classmethod
@@ -117,6 +123,7 @@ class CovalReportsAPIReport(BaseModel):
             "source_human_review_project_id": obj.get("source_human_review_project_id"),
             "compare_by": obj.get("compare_by") if obj.get("compare_by") is not None else CovalReportsAPICompareBy.NONE,
             "metadata_key": obj.get("metadata_key"),
+            "custom_dimension_id": obj.get("custom_dimension_id"),
             "permissions": obj.get("permissions") if obj.get("permissions") is not None else CovalReportsAPIReportPermission.PRIVATE
         })
         # store additional fields in additional_properties

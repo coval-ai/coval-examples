@@ -219,6 +219,10 @@ export interface DeleteMetricThresholdRequest {
     thresholdId: string;
 }
 
+export interface DuplicateMetricRequest {
+    metricId: string;
+}
+
 export interface GetMetricRequest {
     metricId: string;
 }
@@ -549,6 +553,30 @@ export interface MetricsApiInterface {
      * Delete metric threshold
      */
     deleteMetricThreshold(requestParameters: DeleteMetricThresholdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object>;
+
+    /**
+     * Creates request options for duplicateMetric without sending the request
+     * @param {string} metricId ID of the metric to duplicate
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    duplicateMetricRequestOpts(requestParameters: DuplicateMetricRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Clone an existing metric into a new metric owned by your organization. Copies the metric configuration, tags, and active thresholds. Returns the new metric.
+     * @summary Duplicate a metric
+     * @param {string} metricId ID of the metric to duplicate
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApiInterface
+     */
+    duplicateMetricRaw(requestParameters: DuplicateMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIGetMetricResponse>>;
+
+    /**
+     * Clone an existing metric into a new metric owned by your organization. Copies the metric configuration, tags, and active thresholds. Returns the new metric.
+     * Duplicate a metric
+     */
+    duplicateMetric(requestParameters: DuplicateMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetMetricResponse>;
 
     /**
      * Creates request options for getMetric without sending the request
@@ -1636,6 +1664,57 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
      */
     async deleteMetricThreshold(requestParameters: DeleteMetricThresholdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
         const response = await this.deleteMetricThresholdRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for duplicateMetric without sending the request
+     */
+    async duplicateMetricRequestOpts(requestParameters: DuplicateMetricRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['metricId'] == null) {
+            throw new runtime.RequiredError(
+                'metricId',
+                'Required parameter "metricId" was null or undefined when calling duplicateMetric().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/metrics/{metric_id}/duplicate`;
+        urlPath = urlPath.replace('{metric_id}', encodeURIComponent(String(requestParameters['metricId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Clone an existing metric into a new metric owned by your organization. Copies the metric configuration, tags, and active thresholds. Returns the new metric.
+     * Duplicate a metric
+     */
+    async duplicateMetricRaw(requestParameters: DuplicateMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIGetMetricResponse>> {
+        const requestOptions = await this.duplicateMetricRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalMetricsAPIGetMetricResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Clone an existing metric into a new metric owned by your organization. Copies the metric configuration, tags, and active thresholds. Returns the new metric.
+     * Duplicate a metric
+     */
+    async duplicateMetric(requestParameters: DuplicateMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetMetricResponse> {
+        const response = await this.duplicateMetricRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

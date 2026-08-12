@@ -41,6 +41,10 @@ permissions:
   pull-requests: write
   issues: write
 
+concurrency:
+  group: regenerate-sdks
+  cancel-in-progress: false
+
 jobs:
   regenerate:
     runs-on: ubuntu-latest
@@ -57,6 +61,10 @@ jobs:
           # DOCS_REPO_TOKEN must be configured as a repo secret. GITHUB_TOKEN
           # cannot read another repository in the org by default.
           token: ${{ secrets.DOCS_REPO_TOKEN }}
+
+      - name: Capture exact docs revision
+        id: source
+        run: echo "docs_sha=$(git -C coval-docs rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Set up Node
         uses: actions/setup-node@v7
@@ -82,21 +90,26 @@ jobs:
         run: npm ci --prefix scripts
 
       - name: Bundle spec
+        id: bundle
         env:
           COVAL_SPECS_DIR: ${{ github.workspace }}/coval-docs/api-reference/v1
         run: node scripts/bundle-spec.mjs
 
       - name: Generate SDKs (pass 1)
+        id: generate
         run: bash scripts/generate-sdks.sh
 
       - name: Determinism check (regenerate into tmp + diff)
+        id: determinism
         env:
           COVAL_SPECS_DIR: ${{ github.workspace }}/coval-docs/api-reference/v1
         run: |
           set -euo pipefail
           # Snapshot pass-1 output.
           cp -r typescript-sdk/src/generated /tmp/ts-pass-1
+          cp typescript-sdk/src/CovalClient.ts /tmp/ts-client-pass-1.ts
           cp -r python-sdk/src/coval_sdk /tmp/py-pass-1
+          cp python-sdk/GENERATED_README.md /tmp/py-readme-pass-1.md
           cp dist/coval-openapi.yaml /tmp/spec-pass-1.yaml
           # Re-run bundle + codegen.
           node scripts/bundle-spec.mjs
@@ -104,13 +117,18 @@ jobs:
           # Diff. Any change between passes = upstream non-determinism.
           echo "=== TypeScript generated diff ==="
           diff -r /tmp/ts-pass-1 typescript-sdk/src/generated
+          echo "=== TypeScript CovalClient diff ==="
+          diff /tmp/ts-client-pass-1.ts typescript-sdk/src/CovalClient.ts
           echo "=== Python generated diff ==="
           diff -r /tmp/py-pass-1 python-sdk/src/coval_sdk
+          echo "=== Python generated README diff ==="
+          diff /tmp/py-readme-pass-1.md python-sdk/GENERATED_README.md
           echo "=== bundled spec diff ==="
           diff /tmp/spec-pass-1.yaml dist/coval-openapi.yaml
           echo "✓ Codegen output is deterministic across two consecutive runs."
 
       - name: Bump versions if the generated output changed
+        id: versions
         run: |
           set -euo pipefail
           # git status, not git diff — a new spec model arrives as an untracked
@@ -144,6 +162,8 @@ jobs:
           fi
 
       - name: Install TS SDK deps + build + test
+        id: typescript_validation
+        continue-on-error: true
         working-directory: typescript-sdk
         run: |
           npm ci
@@ -151,6 +171,8 @@ jobs:
           npm test
 
       - name: Install Python SDK + run tests
+        id: python_validation
+        continue-on-error: true
         working-directory: python-sdk
         run: |
           python -m pip install --upgrade pip
@@ -158,6 +180,12 @@ jobs:
           pytest
 
       - name: Open / update regen PR if there are changes
+        if: >-
+          always() &&
+          steps.bundle.outcome == 'success' &&
+          steps.generate.outcome == 'success' &&
+          steps.determinism.outcome == 'success' &&
+          steps.versions.outcome == 'success'
         uses: peter-evans/create-pull-request@v7
         with:
           # Uses a user PAT instead of GITHUB_TOKEN because the coval-ai
@@ -168,12 +196,18 @@ jobs:
           commit-message: "chore(sdks): regenerate from latest OpenAPI specs"
           title: "chore(sdks): regenerate from latest OpenAPI specs"
           body: |
-            Automated SDK regeneration from `coval-ai/docs@${{ github.event.inputs.docs_ref || 'main' }}`.
+            Automated SDK regeneration from `coval-ai/docs@${{ steps.source.outputs.docs_sha }}`
+            (`${{ github.event.inputs.docs_ref || 'main' }}`).
 
             - Bundled `dist/coval-openapi.yaml`
-            - Regenerated `typescript-sdk/src/generated/` + `python-sdk/src/coval_sdk/`
+            - Regenerated TypeScript + Python SDKs and synchronized their `CovalClient` API surfaces
             - Determinism check passed (two consecutive runs produced identical output)
-            - TS and Python test suites passed
+            - TypeScript validation: `${{ steps.typescript_validation.outcome }}`
+            - Python validation: `${{ steps.python_validation.outcome }}`
+
+            A failed validation result is intentionally committed to this PR so the
+            generated diff and failure are reviewable instead of being trapped in an
+            Actions log. Do not merge until both validations pass.
 
             If only the OpenAPI marker timestamp changed, this PR can be closed
             without merging.
@@ -184,6 +218,7 @@ jobs:
           add-paths: |
             dist/coval-openapi.yaml
             typescript-sdk/src/generated/
+            typescript-sdk/src/CovalClient.ts
             python-sdk/src/coval_sdk/
             python-sdk/GENERATED_README.md
             python-sdk/pyproject.toml
@@ -191,13 +226,56 @@ jobs:
             typescript-sdk/package.json
             typescript-sdk/package-lock.json
 
+      - name: Fail if SDK validation failed
+        if: >-
+          always() &&
+          (steps.typescript_validation.outcome == 'failure' ||
+          steps.python_validation.outcome == 'failure')
+        run: |
+          echo "TypeScript validation: ${{ steps.typescript_validation.outcome }}"
+          echo "Python validation: ${{ steps.python_validation.outcome }}"
+          exit 1
+
+      - name: Close the prior failure issue after recovery
+        if: >-
+          success() &&
+          (github.event_name == 'schedule' || github.event.inputs.docs_ref == 'main')
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const existing = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'sdk-regen-failure',
+            });
+
+            for (const issue of existing.data) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: `Recovered successfully. Run: ${runUrl}`,
+              });
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                state: 'closed',
+                state_reason: 'completed',
+              });
+            }
+
       # This job failed silently every week from 2026-07-13 to 2026-07-29. A
       # scheduled workflow has no reviewer and nobody watches the Actions tab,
       # so the SDKs drifted from the API for sixteen days with no signal. File
       # an issue on failure, and reuse a single one so repeated weekly failures
       # accumulate in one thread instead of spamming.
       - name: File an issue if the regen failed
-        if: failure()
+        if: >-
+          failure() &&
+          (github.event_name == 'schedule' || github.event.inputs.docs_ref == 'main')
         uses: actions/github-script@v7
         with:
           script: |
@@ -208,9 +286,9 @@ jobs:
               ``,
               `Run: ${runUrl}`,
               ``,
-              `While this is failing no regen PR is opened, so the published SDKs`,
-              `silently drift from the OpenAPI specs. Worth fixing promptly rather`,
-              `than letting it accumulate.`,
+              `When generation completed, the rolling regen PR was still opened or`,
+              `updated with the validation result. The published SDKs remain unchanged`,
+              `until that PR is fixed, reviewed, and merged.`,
             ].join('\n');
 
             const existing = await github.rest.issues.listForRepo({

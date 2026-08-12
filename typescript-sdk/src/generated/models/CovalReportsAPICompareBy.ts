@@ -14,7 +14,9 @@
 
 
 /**
- * Dimension to group and compare runs by in the report view.
+ * Dimension to group and compare runs by in the report view. `custom` groups by a
+ * caller-defined dimension and requires `custom_dimensions`.
+ * 
  * @export
  */
 export const CovalReportsAPICompareBy = {
@@ -24,7 +26,8 @@ export const CovalReportsAPICompareBy = {
     Mutation: 'mutation',
     Persona: 'persona',
     TestCase: 'test_case',
-    Metadata: 'metadata'
+    Metadata: 'metadata',
+    Custom: 'custom'
 } as const;
 export type CovalReportsAPICompareBy = typeof CovalReportsAPICompareBy[keyof typeof CovalReportsAPICompareBy];
 

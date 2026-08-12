@@ -13,20 +13,20 @@
  */
 
 import { mapValues } from '../runtime.js';
-import type { CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner } from './CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner.js';
+import type { CovalAlertsAPIAlertEventResourceConditionResultsInner } from './CovalAlertsAPIAlertEventResourceConditionResultsInner.js';
 import {
-    CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInnerFromJSON,
-    CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInnerFromJSONTyped,
-    CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInnerToJSON,
-    CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInnerToJSONTyped,
-} from './CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner.js';
-import type { CovalMonitorsAPIMonitorEventResourceConditionResultsInner } from './CovalMonitorsAPIMonitorEventResourceConditionResultsInner.js';
+    CovalAlertsAPIAlertEventResourceConditionResultsInnerFromJSON,
+    CovalAlertsAPIAlertEventResourceConditionResultsInnerFromJSONTyped,
+    CovalAlertsAPIAlertEventResourceConditionResultsInnerToJSON,
+    CovalAlertsAPIAlertEventResourceConditionResultsInnerToJSONTyped,
+} from './CovalAlertsAPIAlertEventResourceConditionResultsInner.js';
+import type { CovalAlertsAPIAlertEventResourceDispatchedChannelsInner } from './CovalAlertsAPIAlertEventResourceDispatchedChannelsInner.js';
 import {
-    CovalMonitorsAPIMonitorEventResourceConditionResultsInnerFromJSON,
-    CovalMonitorsAPIMonitorEventResourceConditionResultsInnerFromJSONTyped,
-    CovalMonitorsAPIMonitorEventResourceConditionResultsInnerToJSON,
-    CovalMonitorsAPIMonitorEventResourceConditionResultsInnerToJSONTyped,
-} from './CovalMonitorsAPIMonitorEventResourceConditionResultsInner.js';
+    CovalAlertsAPIAlertEventResourceDispatchedChannelsInnerFromJSON,
+    CovalAlertsAPIAlertEventResourceDispatchedChannelsInnerFromJSONTyped,
+    CovalAlertsAPIAlertEventResourceDispatchedChannelsInnerToJSON,
+    CovalAlertsAPIAlertEventResourceDispatchedChannelsInnerToJSONTyped,
+} from './CovalAlertsAPIAlertEventResourceDispatchedChannelsInner.js';
 import type { CovalMonitorsAPIMonitorEventOutcome } from './CovalMonitorsAPIMonitorEventOutcome.js';
 import {
     CovalMonitorsAPIMonitorEventOutcomeFromJSON,
@@ -67,16 +67,16 @@ export interface CovalMonitorsAPIMonitorEventResource {
     outcome: CovalMonitorsAPIMonitorEventOutcome;
     /**
      * Per-condition evaluation results
-     * @type {Array<CovalMonitorsAPIMonitorEventResourceConditionResultsInner>}
+     * @type {Array<CovalAlertsAPIAlertEventResourceConditionResultsInner>}
      * @memberof CovalMonitorsAPIMonitorEventResource
      */
-    condition_results?: Array<CovalMonitorsAPIMonitorEventResourceConditionResultsInner>;
+    condition_results?: Array<CovalAlertsAPIAlertEventResourceConditionResultsInner>;
     /**
      * Per-channel dispatch results
-     * @type {Array<CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner>}
+     * @type {Array<CovalAlertsAPIAlertEventResourceDispatchedChannelsInner>}
      * @memberof CovalMonitorsAPIMonitorEventResource
      */
-    dispatched_channels?: Array<CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner>;
+    dispatched_channels?: Array<CovalAlertsAPIAlertEventResourceDispatchedChannelsInner>;
     /**
      * Notification message that was dispatched
      * @type {string}
@@ -119,8 +119,8 @@ export function CovalMonitorsAPIMonitorEventResourceFromJSONTyped(json: any, ign
         'monitor_ulid': json['monitor_ulid'],
         'run_id': json['run_id'],
         'outcome': CovalMonitorsAPIMonitorEventOutcomeFromJSON(json['outcome']),
-        'condition_results': json['condition_results'] == null ? undefined : ((json['condition_results'] as Array<any>).map(CovalMonitorsAPIMonitorEventResourceConditionResultsInnerFromJSON)),
-        'dispatched_channels': json['dispatched_channels'] == null ? undefined : ((json['dispatched_channels'] as Array<any>).map(CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInnerFromJSON)),
+        'condition_results': json['condition_results'] == null ? undefined : ((json['condition_results'] as Array<any>).map(CovalAlertsAPIAlertEventResourceConditionResultsInnerFromJSON)),
+        'dispatched_channels': json['dispatched_channels'] == null ? undefined : ((json['dispatched_channels'] as Array<any>).map(CovalAlertsAPIAlertEventResourceDispatchedChannelsInnerFromJSON)),
         'message_sent': json['message_sent'] == null ? undefined : json['message_sent'],
         'created_at': (new Date(json['created_at'])),
     };
@@ -141,8 +141,8 @@ export function CovalMonitorsAPIMonitorEventResourceToJSONTyped(value?: CovalMon
         'monitor_ulid': value['monitor_ulid'],
         'run_id': value['run_id'],
         'outcome': CovalMonitorsAPIMonitorEventOutcomeToJSON(value['outcome']),
-        'condition_results': value['condition_results'] == null ? undefined : ((value['condition_results'] as Array<any>).map(CovalMonitorsAPIMonitorEventResourceConditionResultsInnerToJSON)),
-        'dispatched_channels': value['dispatched_channels'] == null ? undefined : ((value['dispatched_channels'] as Array<any>).map(CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInnerToJSON)),
+        'condition_results': value['condition_results'] == null ? undefined : ((value['condition_results'] as Array<any>).map(CovalAlertsAPIAlertEventResourceConditionResultsInnerToJSON)),
+        'dispatched_channels': value['dispatched_channels'] == null ? undefined : ((value['dispatched_channels'] as Array<any>).map(CovalAlertsAPIAlertEventResourceDispatchedChannelsInnerToJSON)),
         'message_sent': value['message_sent'],
         'created_at': value['created_at'].toISOString(),
     };
