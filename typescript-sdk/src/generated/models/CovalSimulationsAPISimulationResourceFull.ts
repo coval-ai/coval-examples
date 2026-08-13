@@ -157,6 +157,12 @@ export interface CovalSimulationsAPISimulationResourceFull {
      */
     metric_values?: { [key: string]: number; } | null;
     /**
+     * Twilio-compatible call identifier generated for this WebSocket simulation execution; null for other transports and historical simulations
+     * @type {string}
+     * @memberof CovalSimulationsAPISimulationResourceFull
+     */
+    call_sid?: string | null;
+    /**
      * Full conversation transcript (only included in GET, not LIST)
      * @type {Array<CovalSimulationsAPITranscriptMessage>}
      * @memberof CovalSimulationsAPISimulationResourceFull
@@ -221,6 +227,7 @@ export function CovalSimulationsAPISimulationResourceFullFromJSONTyped(json: any
         'notes': json['notes'] == null ? undefined : json['notes'],
         'is_public': json['is_public'] == null ? undefined : json['is_public'],
         'metric_values': json['metric_values'] == null ? undefined : json['metric_values'],
+        'call_sid': json['call_sid'] == null ? undefined : json['call_sid'],
         'transcript': json['transcript'] == null ? undefined : ((json['transcript'] as Array<any>).map(CovalSimulationsAPITranscriptMessageFromJSON)),
     };
 }
@@ -254,6 +261,7 @@ export function CovalSimulationsAPISimulationResourceFullToJSONTyped(value?: Cov
         'notes': value['notes'],
         'is_public': value['is_public'],
         'metric_values': value['metric_values'],
+        'call_sid': value['call_sid'],
         'transcript': value['transcript'] == null ? undefined : ((value['transcript'] as Array<any>).map(CovalSimulationsAPITranscriptMessageToJSON)),
     };
 }

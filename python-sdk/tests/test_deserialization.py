@@ -7,6 +7,7 @@ from pydantic import ValidationError
 
 from coval_sdk import CovalClient, InvalidListItemWarning
 from coval_sdk.deserialization import deserialize_model_list
+from coval_sdk.models.coval_runs_api_run_results import CovalRunsAPIRunResults
 from coval_sdk.models.list_test_sets200_response import ListTestSets200Response
 from coval_sdk.models.test_sets_api_test_set_resource import (
   TestSetsAPITestSetResource as ResourceModel,
@@ -66,6 +67,21 @@ def test_strict_response_validation_restores_fail_fast_behavior() -> None:
 def test_invalid_top_level_response_still_raises_validation_error() -> None:
   with pytest.raises(ValidationError):
     ListTestSets200Response.from_dict([])
+
+
+def test_run_results_deserialize_call_sids_by_simulation_output_id() -> None:
+  call_sid = "CA" + "a" * 32
+
+  results = CovalRunsAPIRunResults.from_dict(
+    {
+      "output_ids": ["sim-output-1"],
+      "call_sids": {"sim-output-1": call_sid},
+      "metrics": {},
+    }
+  )
+
+  assert results is not None
+  assert results.call_sids == {"sim-output-1": call_sid}
 
 
 @pytest.mark.parametrize("invalid_items", ["not-a-list", {"id": "12345678"}])
