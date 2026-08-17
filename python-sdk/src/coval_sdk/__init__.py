@@ -15,7 +15,7 @@
 """  # noqa: E501
 
 
-__version__ = "0.6.3"
+__version__ = "0.6.4"
 
 # Define package exports
 __all__ = [
@@ -242,6 +242,8 @@ __all__ = [
     "CovalMetricsAPISqlMetricTestSubvalue",
     "CovalMetricsAPISubvalueByTimestamp",
     "CovalMetricsAPITargetCondition",
+    "CovalMetricsAPITestMetricBatchItemResult",
+    "CovalMetricsAPITestMetricItemStatus",
     "CovalMetricsAPITestMetricRequest",
     "CovalMetricsAPITestMetricResponse",
     "CovalMetricsAPITestSqlMetricRequest",
@@ -719,6 +721,8 @@ from coval_sdk.models.coval_metrics_api_simulation_data_frames_schema_response i
 from coval_sdk.models.coval_metrics_api_sql_metric_test_subvalue import CovalMetricsAPISqlMetricTestSubvalue as CovalMetricsAPISqlMetricTestSubvalue
 from coval_sdk.models.coval_metrics_api_subvalue_by_timestamp import CovalMetricsAPISubvalueByTimestamp as CovalMetricsAPISubvalueByTimestamp
 from coval_sdk.models.coval_metrics_api_target_condition import CovalMetricsAPITargetCondition as CovalMetricsAPITargetCondition
+from coval_sdk.models.coval_metrics_api_test_metric_batch_item_result import CovalMetricsAPITestMetricBatchItemResult as CovalMetricsAPITestMetricBatchItemResult
+from coval_sdk.models.coval_metrics_api_test_metric_item_status import CovalMetricsAPITestMetricItemStatus as CovalMetricsAPITestMetricItemStatus
 from coval_sdk.models.coval_metrics_api_test_metric_request import CovalMetricsAPITestMetricRequest as CovalMetricsAPITestMetricRequest
 from coval_sdk.models.coval_metrics_api_test_metric_response import CovalMetricsAPITestMetricResponse as CovalMetricsAPITestMetricResponse
 from coval_sdk.models.coval_metrics_api_test_sql_metric_request import CovalMetricsAPITestSqlMetricRequest as CovalMetricsAPITestSqlMetricRequest

@@ -88,6 +88,12 @@ export interface CovalReviewsAPICreateReviewProjectRequest {
      * @memberof CovalReviewsAPICreateReviewProjectRequest
      */
     blind_labeling_shown_metric_ids?: Array<string> | null;
+    /**
+     * Enforce claims and explicit single-author completion for collaborative projects
+     * @type {boolean}
+     * @memberof CovalReviewsAPICreateReviewProjectRequest
+     */
+    enforced_collaboration?: boolean;
 }
 
 
@@ -122,6 +128,7 @@ export function CovalReviewsAPICreateReviewProjectRequestFromJSONTyped(json: any
         'notifications': json['notifications'] == null ? undefined : json['notifications'],
         'project_rules': json['project_rules'] == null ? undefined : ((json['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleFromJSON)),
         'blind_labeling_shown_metric_ids': json['blind_labeling_shown_metric_ids'] == null ? undefined : json['blind_labeling_shown_metric_ids'],
+        'enforced_collaboration': json['enforced_collaboration'] == null ? undefined : json['enforced_collaboration'],
     };
 }
 
@@ -145,6 +152,7 @@ export function CovalReviewsAPICreateReviewProjectRequestToJSONTyped(value?: Cov
         'notifications': value['notifications'],
         'project_rules': value['project_rules'] == null ? undefined : ((value['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleToJSON)),
         'blind_labeling_shown_metric_ids': value['blind_labeling_shown_metric_ids'],
+        'enforced_collaboration': value['enforced_collaboration'],
     };
 }
 

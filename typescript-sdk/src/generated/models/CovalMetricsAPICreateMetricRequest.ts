@@ -132,10 +132,51 @@ export interface CovalMetricsAPICreateMetricRequest {
      */
     sql_query?: string;
     /**
+     * Where the metric reads its criteria from. Required for METRIC_COMPOSITE_EVALUATION.
+     * `test_case` reads a field off each test case (most commonly its expected behaviors),
+     * `test_case_attribute` reads from the test case's attributes, and `metric_metadata`
+     * uses the fixed list in `criteria`.
+     * 
+     * @type {CovalMetricsAPICreateMetricRequestCriteriaSourceEnum}
+     * @memberof CovalMetricsAPICreateMetricRequest
+     */
+    criteria_source?: CovalMetricsAPICreateMetricRequestCriteriaSourceEnum;
+    /**
+     * Path to the criteria on the source. Required when `criteria_source` is `test_case`
+     * or `test_case_attribute`.
+     * 
+     * @type {string}
+     * @memberof CovalMetricsAPICreateMetricRequest
+     */
+    criteria_path?: string;
+    /**
+     * Literal list of criteria. Required when `criteria_source` is `metric_metadata`.
+     * @type {Array<string>}
+     * @memberof CovalMetricsAPICreateMetricRequest
+     */
+    criteria?: Array<string>;
+    /**
+     * How per-criterion verdicts aggregate into the metric's value. Each criterion is judged
+     * independently as met or not met; `percentage_of_criteria_met` scores the fraction met
+     * among the criteria the judge could evaluate.
+     * 
+     * @type {CovalMetricsAPICreateMetricRequestReportingMethodEnum}
+     * @memberof CovalMetricsAPICreateMetricRequest
+     */
+    reporting_method?: CovalMetricsAPICreateMetricRequestReportingMethodEnum;
+    /**
+     * Custom prompt template used to evaluate each criterion. Include a `{criterion}`
+     * placeholder; if it is omitted the criterion is appended to the prompt.
+     * 
+     * @type {string}
+     * @memberof CovalMetricsAPICreateMetricRequest
+     */
+    base_prompt_template?: string;
+    /**
      * Inject OTel trace context into the LLM judge prompt during evaluation.
-     * Supported for LLM judge metric types only (`METRIC_LLM_BINARY`, `METRIC_CATEGORICAL`,
-     * `METRIC_NUMERICAL_LLM_JUDGE`, `METRIC_AUDIO_LLM_BINARY`, `METRIC_AUDIO_LLM_CATEGORICAL`,
-     * `METRIC_AUDIO_LLM_NUMERICAL`).
+     * Supported for LLM judge metric types and `METRIC_COMPOSITE_EVALUATION` (`METRIC_LLM_BINARY`,
+     * `METRIC_CATEGORICAL`, `METRIC_NUMERICAL_LLM_JUDGE`, `METRIC_AUDIO_LLM_BINARY`,
+     * `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`, `METRIC_COMPOSITE_EVALUATION`).
      * 
      * @type {boolean}
      * @memberof CovalMetricsAPICreateMetricRequest
@@ -176,6 +217,26 @@ export const CovalMetricsAPICreateMetricRequestRoleEnum = {
 } as const;
 export type CovalMetricsAPICreateMetricRequestRoleEnum = typeof CovalMetricsAPICreateMetricRequestRoleEnum[keyof typeof CovalMetricsAPICreateMetricRequestRoleEnum];
 
+/**
+ * @export
+ */
+export const CovalMetricsAPICreateMetricRequestCriteriaSourceEnum = {
+    TestCase: 'test_case',
+    TestCaseAttribute: 'test_case_attribute',
+    MetricMetadata: 'metric_metadata'
+} as const;
+export type CovalMetricsAPICreateMetricRequestCriteriaSourceEnum = typeof CovalMetricsAPICreateMetricRequestCriteriaSourceEnum[keyof typeof CovalMetricsAPICreateMetricRequestCriteriaSourceEnum];
+
+/**
+ * @export
+ */
+export const CovalMetricsAPICreateMetricRequestReportingMethodEnum = {
+    PercentageOfCriteriaMet: 'percentage_of_criteria_met',
+    CountOfCriteriaMet: 'count_of_criteria_met',
+    AllCriteriaMet: 'all_criteria_met'
+} as const;
+export type CovalMetricsAPICreateMetricRequestReportingMethodEnum = typeof CovalMetricsAPICreateMetricRequestReportingMethodEnum[keyof typeof CovalMetricsAPICreateMetricRequestReportingMethodEnum];
+
 
 /**
  * Check if a given object implements the CovalMetricsAPICreateMetricRequest interface.
@@ -210,6 +271,11 @@ export function CovalMetricsAPICreateMetricRequestFromJSONTyped(json: any, ignor
         'role': json['role'] == null ? undefined : json['role'],
         'min_pause_duration_seconds': json['min_pause_duration_seconds'] == null ? undefined : json['min_pause_duration_seconds'],
         'sql_query': json['sql_query'] == null ? undefined : json['sql_query'],
+        'criteria_source': json['criteria_source'] == null ? undefined : json['criteria_source'],
+        'criteria_path': json['criteria_path'] == null ? undefined : json['criteria_path'],
+        'criteria': json['criteria'] == null ? undefined : json['criteria'],
+        'reporting_method': json['reporting_method'] == null ? undefined : json['reporting_method'],
+        'base_prompt_template': json['base_prompt_template'] == null ? undefined : json['base_prompt_template'],
         'include_traces': json['include_traces'] == null ? undefined : json['include_traces'],
         'runtime_config': json['runtime_config'] == null ? undefined : CovalMetricsAPIMetricRuntimeConfigFromJSON(json['runtime_config']),
         'target_condition': json['target_condition'] == null ? undefined : CovalMetricsAPITargetConditionFromJSON(json['target_condition']),
@@ -241,6 +307,11 @@ export function CovalMetricsAPICreateMetricRequestToJSONTyped(value?: CovalMetri
         'role': value['role'],
         'min_pause_duration_seconds': value['min_pause_duration_seconds'],
         'sql_query': value['sql_query'],
+        'criteria_source': value['criteria_source'],
+        'criteria_path': value['criteria_path'],
+        'criteria': value['criteria'],
+        'reporting_method': value['reporting_method'],
+        'base_prompt_template': value['base_prompt_template'],
         'include_traces': value['include_traces'],
         'runtime_config': CovalMetricsAPIMetricRuntimeConfigToJSON(value['runtime_config']),
         'target_condition': CovalMetricsAPITargetConditionToJSON(value['target_condition']),

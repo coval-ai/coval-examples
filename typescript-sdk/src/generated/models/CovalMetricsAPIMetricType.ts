@@ -27,6 +27,8 @@
  * - `METRIC_TRANSCRIPT_REGEX` - Regex pattern matching
  * - `METRIC_PAUSE_ANALYSIS` - Speech pause detection
  * - `METRIC_SQL_FLOAT` - Custom SQL query over the simulation's data (set `sql_query`)
+ * - `METRIC_COMPOSITE_EVALUATION` - Judges a list of criteria independently and reports how
+ *   many were met (set `criteria_source`, and `criteria_path` or `criteria` to match)
  * 
  * @export
  */
@@ -41,7 +43,8 @@ export const CovalMetricsAPIMetricType = {
     MetricMetadataField: 'METRIC_METADATA_FIELD',
     MetricTranscriptRegex: 'METRIC_TRANSCRIPT_REGEX',
     MetricPauseAnalysis: 'METRIC_PAUSE_ANALYSIS',
-    MetricSqlFloat: 'METRIC_SQL_FLOAT'
+    MetricSqlFloat: 'METRIC_SQL_FLOAT',
+    MetricCompositeEvaluation: 'METRIC_COMPOSITE_EVALUATION'
 } as const;
 export type CovalMetricsAPIMetricType = typeof CovalMetricsAPIMetricType[keyof typeof CovalMetricsAPIMetricType];
 

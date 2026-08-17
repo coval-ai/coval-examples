@@ -178,6 +178,8 @@ export * from './CovalMetricsAPISimulationDataFramesSchemaResponse.js';
 export * from './CovalMetricsAPISqlMetricTestSubvalue.js';
 export * from './CovalMetricsAPISubvalueByTimestamp.js';
 export * from './CovalMetricsAPITargetCondition.js';
+export * from './CovalMetricsAPITestMetricBatchItemResult.js';
+export * from './CovalMetricsAPITestMetricItemStatus.js';
 export * from './CovalMetricsAPITestMetricRequest.js';
 export * from './CovalMetricsAPITestMetricResponse.js';
 export * from './CovalMetricsAPITestSqlMetricRequest.js';

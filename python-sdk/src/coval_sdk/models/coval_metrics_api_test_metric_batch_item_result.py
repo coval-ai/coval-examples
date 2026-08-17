@@ -18,21 +18,33 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from coval_sdk.models.coval_metrics_api_test_metric_batch_item_result import CovalMetricsAPITestMetricBatchItemResult
+from coval_sdk.models.coval_metrics_api_test_metric_item_status import CovalMetricsAPITestMetricItemStatus
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
 
-class CovalMetricsAPITestMetricResponse(BaseModel):
+class CovalMetricsAPITestMetricBatchItemResult(BaseModel):
     """
-    CovalMetricsAPITestMetricResponse
+    Result for one simulation output in a test-metric request.
     """ # noqa: E501
-    results: List[CovalMetricsAPITestMetricBatchItemResult] = Field(description="One entry per requested simulation output.")
-    metric_output_ulid: Optional[Annotated[str, Field(min_length=26, strict=True, max_length=26)]] = Field(default=None, description="Deprecated: the ULID of the created metric output, used to track the result. Only set for single `simulation_output_id` requests; null for batch (`simulation_output_ids`) requests, which should read `results` instead.")
-    __properties: ClassVar[List[str]] = ["results", "metric_output_ulid"]
+    simulation_output_id: Annotated[str, Field(strict=True)] = Field(description="The simulation output ID this result applies to.")
+    status: CovalMetricsAPITestMetricItemStatus
+    metric_output_ulid: Optional[Annotated[str, Field(min_length=26, strict=True, max_length=26)]] = Field(default=None, description="ULID of the created metric output, used to poll for the result. Null unless `status` is `QUEUED`.")
+    error: Optional[StrictStr] = Field(default=None, description="Human-readable error detail when the item was not queued.")
+    __properties: ClassVar[List[str]] = ["simulation_output_id", "status", "metric_output_ulid", "error"]
+
+    @field_validator('simulation_output_id')
+    def simulation_output_id_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if not isinstance(value, str):
+            value = str(value)
+
+        if not re.match(r"^[a-zA-Z0-9]{22}$", value):
+            raise ValueError(r"must validate the regular expression /^[a-zA-Z0-9]{22}$/")
+        return value
 
     @field_validator('metric_output_ulid')
     def metric_output_ulid_validate_regular_expression(cls, value):
@@ -65,7 +77,7 @@ class CovalMetricsAPITestMetricResponse(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CovalMetricsAPITestMetricResponse from a JSON string"""
+        """Create an instance of CovalMetricsAPITestMetricBatchItemResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -86,23 +98,21 @@ class CovalMetricsAPITestMetricResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in results (list)
-        _items = []
-        if self.results:
-            for _item_results in self.results:
-                if _item_results:
-                    _items.append(_item_results.to_dict())
-            _dict['results'] = _items
         # set to None if metric_output_ulid (nullable) is None
         # and model_fields_set contains the field
         if self.metric_output_ulid is None and "metric_output_ulid" in self.model_fields_set:
             _dict['metric_output_ulid'] = None
 
+        # set to None if error (nullable) is None
+        # and model_fields_set contains the field
+        if self.error is None and "error" in self.model_fields_set:
+            _dict['error'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CovalMetricsAPITestMetricResponse from a dict"""
+        """Create an instance of CovalMetricsAPITestMetricBatchItemResult from a dict"""
         if obj is None:
             return None
 
@@ -110,8 +120,10 @@ class CovalMetricsAPITestMetricResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "results": [CovalMetricsAPITestMetricBatchItemResult.from_dict(_item) for _item in obj["results"]] if obj.get("results") is not None else None,
-            "metric_output_ulid": obj.get("metric_output_ulid")
+            "simulation_output_id": obj.get("simulation_output_id"),
+            "status": obj.get("status"),
+            "metric_output_ulid": obj.get("metric_output_ulid"),
+            "error": obj.get("error")
         })
         return _obj
 

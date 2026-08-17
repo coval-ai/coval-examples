@@ -46,12 +46,17 @@ class CovalMetricsAPICreateMetricRequest(BaseModel):
     role: Optional[StrictStr] = Field(default=None, description="Speaker role filter. Optional for METRIC_TRANSCRIPT_REGEX.")
     min_pause_duration_seconds: Optional[Union[Annotated[float, Field(strict=True, ge=0.5)], Annotated[int, Field(strict=True, ge=1)]]] = Field(default=None, description="Min pause duration in seconds. Required for METRIC_PAUSE_ANALYSIS.")
     sql_query: Optional[Annotated[str, Field(strict=True, max_length=50000)]] = Field(default=None, description="SQL query run against the simulation's data. Required for METRIC_SQL_FLOAT. The query returns one row per timestamp with a numeric `value` and a `start_offset_milliseconds`; set `aggregation_method` (SUM, AVERAGE, MIN, MAX, or COUNT; default AVERAGE) to reduce those rows to a single value, and `unit` for the reported unit. ")
-    include_traces: Optional[StrictBool] = Field(default=None, description="Inject OTel trace context into the LLM judge prompt during evaluation. Supported for LLM judge metric types only (`METRIC_LLM_BINARY`, `METRIC_CATEGORICAL`, `METRIC_NUMERICAL_LLM_JUDGE`, `METRIC_AUDIO_LLM_BINARY`, `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`). ")
+    criteria_source: Optional[StrictStr] = Field(default=None, description="Where the metric reads its criteria from. Required for METRIC_COMPOSITE_EVALUATION. `test_case` reads a field off each test case (most commonly its expected behaviors), `test_case_attribute` reads from the test case's attributes, and `metric_metadata` uses the fixed list in `criteria`. ")
+    criteria_path: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="Path to the criteria on the source. Required when `criteria_source` is `test_case` or `test_case_attribute`. ")
+    criteria: Optional[List[StrictStr]] = Field(default=None, description="Literal list of criteria. Required when `criteria_source` is `metric_metadata`.")
+    reporting_method: Optional[StrictStr] = Field(default=None, description="How per-criterion verdicts aggregate into the metric's value. Each criterion is judged independently as met or not met; `percentage_of_criteria_met` scores the fraction met among the criteria the judge could evaluate. ")
+    base_prompt_template: Optional[Annotated[str, Field(strict=True, max_length=50000)]] = Field(default=None, description="Custom prompt template used to evaluate each criterion. Include a `{criterion}` placeholder; if it is omitted the criterion is appended to the prompt. ")
+    include_traces: Optional[StrictBool] = Field(default=None, description="Inject OTel trace context into the LLM judge prompt during evaluation. Supported for LLM judge metric types and `METRIC_COMPOSITE_EVALUATION` (`METRIC_LLM_BINARY`, `METRIC_CATEGORICAL`, `METRIC_NUMERICAL_LLM_JUDGE`, `METRIC_AUDIO_LLM_BINARY`, `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`, `METRIC_COMPOSITE_EVALUATION`). ")
     runtime_config: Optional[CovalMetricsAPIMetricRuntimeConfig] = Field(default=None, description="Override the LLM model used for metric evaluation. If omitted, the platform default model is used. Use `GET /v1/models/metric` to list available models. Not supported for audio metric types (`METRIC_AUDIO_LLM_BINARY`, `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`), which always use the platform-default audio model. ")
     target_condition: Optional[CovalMetricsAPITargetCondition] = Field(default=None, description="Target condition for metric evaluation")
     tags: Optional[List[StrictStr]] = Field(default=None, description="Tags to associate with this metric. Null or omitted creates the metric with no tags. Pass [] for an empty tag list.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["metric_name", "description", "metric_type", "prompt", "categories", "min_value", "max_value", "metadata_field_type", "metadata_field_key", "regex_pattern", "role", "min_pause_duration_seconds", "sql_query", "include_traces", "runtime_config", "target_condition", "tags"]
+    __properties: ClassVar[List[str]] = ["metric_name", "description", "metric_type", "prompt", "categories", "min_value", "max_value", "metadata_field_type", "metadata_field_key", "regex_pattern", "role", "min_pause_duration_seconds", "sql_query", "criteria_source", "criteria_path", "criteria", "reporting_method", "base_prompt_template", "include_traces", "runtime_config", "target_condition", "tags"]
 
     @field_validator('role')
     def role_validate_enum(cls, value):
@@ -61,6 +66,26 @@ class CovalMetricsAPICreateMetricRequest(BaseModel):
 
         if value not in set(['agent', 'user']):
             raise ValueError("must be one of enum values ('agent', 'user')")
+        return value
+
+    @field_validator('criteria_source')
+    def criteria_source_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['test_case', 'test_case_attribute', 'metric_metadata']):
+            raise ValueError("must be one of enum values ('test_case', 'test_case_attribute', 'metric_metadata')")
+        return value
+
+    @field_validator('reporting_method')
+    def reporting_method_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['percentage_of_criteria_met', 'count_of_criteria_met', 'all_criteria_met']):
+            raise ValueError("must be one of enum values ('percentage_of_criteria_met', 'count_of_criteria_met', 'all_criteria_met')")
         return value
 
     model_config = ConfigDict(
@@ -150,6 +175,11 @@ class CovalMetricsAPICreateMetricRequest(BaseModel):
             "role": obj.get("role"),
             "min_pause_duration_seconds": obj.get("min_pause_duration_seconds"),
             "sql_query": obj.get("sql_query"),
+            "criteria_source": obj.get("criteria_source"),
+            "criteria_path": obj.get("criteria_path"),
+            "criteria": obj.get("criteria"),
+            "reporting_method": obj.get("reporting_method"),
+            "base_prompt_template": obj.get("base_prompt_template"),
             "include_traces": obj.get("include_traces"),
             "runtime_config": CovalMetricsAPIMetricRuntimeConfig.from_dict(obj["runtime_config"]) if obj.get("runtime_config") is not None else None,
             "target_condition": CovalMetricsAPITargetCondition.from_dict(obj["target_condition"]) if obj.get("target_condition") is not None else None,

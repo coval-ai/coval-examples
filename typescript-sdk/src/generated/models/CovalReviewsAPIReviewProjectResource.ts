@@ -95,6 +95,12 @@ export interface CovalReviewsAPIReviewProjectResource {
      */
     project_rules?: Array<CovalReviewsAPIProjectRule> | null;
     /**
+     * Whether collaborative claims and explicit single-author completion are enforced
+     * @type {boolean}
+     * @memberof CovalReviewsAPIReviewProjectResource
+     */
+    enforced_collaboration?: boolean;
+    /**
      * Creation timestamp (ISO 8601)
      * @type {Date}
      * @memberof CovalReviewsAPIReviewProjectResource
@@ -147,6 +153,7 @@ export function CovalReviewsAPIReviewProjectResourceFromJSONTyped(json: any, ign
         'project_type': CovalReviewsAPIProjectTypeFromJSON(json['project_type']),
         'notifications': json['notifications'],
         'project_rules': json['project_rules'] == null ? undefined : ((json['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleFromJSON)),
+        'enforced_collaboration': json['enforced_collaboration'] == null ? undefined : json['enforced_collaboration'],
         'create_time': (new Date(json['create_time'])),
         'update_time': (new Date(json['update_time'])),
     };
@@ -173,6 +180,7 @@ export function CovalReviewsAPIReviewProjectResourceToJSONTyped(value?: CovalRev
         'project_type': CovalReviewsAPIProjectTypeToJSON(value['project_type']),
         'notifications': value['notifications'],
         'project_rules': value['project_rules'] == null ? undefined : ((value['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleToJSON)),
+        'enforced_collaboration': value['enforced_collaboration'],
         'create_time': value['create_time'].toISOString(),
         'update_time': value['update_time'].toISOString(),
     };

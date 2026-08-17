@@ -70,6 +70,12 @@ export interface CovalReviewsAPIUpdateReviewProjectRequest {
      */
     linked_metric_ids?: Array<string> | null;
     /**
+     * Required only when adding metrics to choose whether valid enforced-collaborative completed conversations reopen; omitted keeps completed conversations unchanged
+     * @type {CovalReviewsAPIUpdateReviewProjectRequestMetricAdditionCompletionActionEnum}
+     * @memberof CovalReviewsAPIUpdateReviewProjectRequest
+     */
+    metric_addition_completion_action?: CovalReviewsAPIUpdateReviewProjectRequestMetricAdditionCompletionActionEnum | null;
+    /**
      * Updated notification setting
      * @type {boolean}
      * @memberof CovalReviewsAPIUpdateReviewProjectRequest
@@ -93,7 +99,24 @@ export interface CovalReviewsAPIUpdateReviewProjectRequest {
      * @memberof CovalReviewsAPIUpdateReviewProjectRequest
      */
     opted_out_assignees?: Array<string> | null;
+    /**
+     * Enforce claims and explicit single-author completion for collaborative projects
+     * @type {boolean}
+     * @memberof CovalReviewsAPIUpdateReviewProjectRequest
+     */
+    enforced_collaboration?: boolean;
 }
+
+
+/**
+ * @export
+ */
+export const CovalReviewsAPIUpdateReviewProjectRequestMetricAdditionCompletionActionEnum = {
+    KeepCompleted: 'KEEP_COMPLETED',
+    ReopenCompleted: 'REOPEN_COMPLETED'
+} as const;
+export type CovalReviewsAPIUpdateReviewProjectRequestMetricAdditionCompletionActionEnum = typeof CovalReviewsAPIUpdateReviewProjectRequestMetricAdditionCompletionActionEnum[keyof typeof CovalReviewsAPIUpdateReviewProjectRequestMetricAdditionCompletionActionEnum];
+
 
 /**
  * Check if a given object implements the CovalReviewsAPIUpdateReviewProjectRequest interface.
@@ -119,10 +142,12 @@ export function CovalReviewsAPIUpdateReviewProjectRequestFromJSONTyped(json: any
         'add_linked_simulation_ids': json['add_linked_simulation_ids'] == null ? undefined : json['add_linked_simulation_ids'],
         'remove_linked_simulation_ids': json['remove_linked_simulation_ids'] == null ? undefined : json['remove_linked_simulation_ids'],
         'linked_metric_ids': json['linked_metric_ids'] == null ? undefined : json['linked_metric_ids'],
+        'metric_addition_completion_action': json['metric_addition_completion_action'] == null ? undefined : json['metric_addition_completion_action'],
         'notifications': json['notifications'] == null ? undefined : json['notifications'],
         'project_rules': json['project_rules'] == null ? undefined : ((json['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleFromJSON)),
         'blind_labeling_shown_metric_ids': json['blind_labeling_shown_metric_ids'] == null ? undefined : json['blind_labeling_shown_metric_ids'],
         'opted_out_assignees': json['opted_out_assignees'] == null ? undefined : json['opted_out_assignees'],
+        'enforced_collaboration': json['enforced_collaboration'] == null ? undefined : json['enforced_collaboration'],
     };
 }
 
@@ -144,10 +169,12 @@ export function CovalReviewsAPIUpdateReviewProjectRequestToJSONTyped(value?: Cov
         'add_linked_simulation_ids': value['add_linked_simulation_ids'],
         'remove_linked_simulation_ids': value['remove_linked_simulation_ids'],
         'linked_metric_ids': value['linked_metric_ids'],
+        'metric_addition_completion_action': value['metric_addition_completion_action'],
         'notifications': value['notifications'],
         'project_rules': value['project_rules'] == null ? undefined : ((value['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleToJSON)),
         'blind_labeling_shown_metric_ids': value['blind_labeling_shown_metric_ids'],
         'opted_out_assignees': value['opted_out_assignees'],
+        'enforced_collaboration': value['enforced_collaboration'],
     };
 }
 
