@@ -262,7 +262,7 @@ def patch_missing_list_import() -> int:
 
 
 def patch_update_request_omission_fields() -> int:
-  patched = 0
+  ensured = 0
   for filename, field_name in UPDATE_REQUEST_OMISSION_FIELDS:
     path = MODELS / filename
     if not path.exists():
@@ -284,20 +284,19 @@ def patch_update_request_omission_fields() -> int:
         f"{contents[:default_match.start()]}{default_match.group('prefix')}None"
         f"{default_match.group('suffix')}{contents[default_match.end():]}"
       )
-      patched += 1
 
     fallback = f'"{field_name}": obj.get("{field_name}") if obj.get("{field_name}") is not None else False'
     direct = f'"{field_name}": obj.get("{field_name}")'
     if fallback in contents:
       contents = contents.replace(fallback, direct, 1)
-      patched += 1
     elif direct not in contents:
       raise RuntimeError(
         f"Generated update-request deserialization anchor changed: {path}:{field_name}"
       )
 
     path.write_text(contents)
-  return patched
+    ensured += 1
+  return ensured
 
 
 def main() -> None:
