@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime.js';
+import type { CovalMetricsAPITestMetricBatchItemResult } from './CovalMetricsAPITestMetricBatchItemResult.js';
+import {
+    CovalMetricsAPITestMetricBatchItemResultFromJSON,
+    CovalMetricsAPITestMetricBatchItemResultFromJSONTyped,
+    CovalMetricsAPITestMetricBatchItemResultToJSON,
+    CovalMetricsAPITestMetricBatchItemResultToJSONTyped,
+} from './CovalMetricsAPITestMetricBatchItemResult.js';
+
 /**
  * 
  * @export
@@ -20,17 +28,25 @@ import { mapValues } from '../runtime.js';
  */
 export interface CovalMetricsAPITestMetricResponse {
     /**
-     * The ULID of the created metric output, used to track result
-     * @type {string}
+     * One entry per requested simulation output.
+     * @type {Array<CovalMetricsAPITestMetricBatchItemResult>}
      * @memberof CovalMetricsAPITestMetricResponse
      */
-    metric_output_ulid?: string;
+    results: Array<CovalMetricsAPITestMetricBatchItemResult>;
+    /**
+     * Deprecated: the ULID of the created metric output, used to track the result. Only set for single `simulation_output_id` requests; null for batch (`simulation_output_ids`) requests, which should read `results` instead.
+     * @type {string}
+     * @memberof CovalMetricsAPITestMetricResponse
+     * @deprecated
+     */
+    metric_output_ulid?: string | null;
 }
 
 /**
  * Check if a given object implements the CovalMetricsAPITestMetricResponse interface.
  */
 export function instanceOfCovalMetricsAPITestMetricResponse(value: object): value is CovalMetricsAPITestMetricResponse {
+    if (!('results' in value) || value['results'] === undefined) return false;
     return true;
 }
 
@@ -44,6 +60,7 @@ export function CovalMetricsAPITestMetricResponseFromJSONTyped(json: any, ignore
     }
     return {
         
+        'results': ((json['results'] as Array<any>).map(CovalMetricsAPITestMetricBatchItemResultFromJSON)),
         'metric_output_ulid': json['metric_output_ulid'] == null ? undefined : json['metric_output_ulid'],
     };
 }
@@ -59,6 +76,7 @@ export function CovalMetricsAPITestMetricResponseToJSONTyped(value?: CovalMetric
 
     return {
         
+        'results': ((value['results'] as Array<any>).map(CovalMetricsAPITestMetricBatchItemResultToJSON)),
         'metric_output_ulid': value['metric_output_ulid'],
     };
 }

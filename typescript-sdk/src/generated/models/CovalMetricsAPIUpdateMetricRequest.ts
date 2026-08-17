@@ -127,8 +127,40 @@ export interface CovalMetricsAPIUpdateMetricRequest {
      */
     sql_query?: string;
     /**
+     * Where a METRIC_COMPOSITE_EVALUATION metric reads its criteria from.
+     * @type {CovalMetricsAPIUpdateMetricRequestCriteriaSourceEnum}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    criteria_source?: CovalMetricsAPIUpdateMetricRequestCriteriaSourceEnum;
+    /**
+     * Path to the criteria on the source, when `criteria_source` is `test_case`
+     * or `test_case_attribute`.
+     * 
+     * @type {string}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    criteria_path?: string;
+    /**
+     * Literal list of criteria, when `criteria_source` is `metric_metadata`.
+     * @type {Array<string>}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    criteria?: Array<string>;
+    /**
+     * How per-criterion verdicts aggregate into the metric's value.
+     * @type {CovalMetricsAPIUpdateMetricRequestReportingMethodEnum}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    reporting_method?: CovalMetricsAPIUpdateMetricRequestReportingMethodEnum;
+    /**
+     * Custom prompt template used to evaluate each criterion.
+     * @type {string}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    base_prompt_template?: string;
+    /**
      * Inject OTel trace context into the LLM judge prompt during evaluation.
-     * Supported for LLM judge metric types only.
+     * Supported for LLM judge metric types and `METRIC_COMPOSITE_EVALUATION`.
      * 
      * @type {boolean}
      * @memberof CovalMetricsAPIUpdateMetricRequest
@@ -169,6 +201,26 @@ export const CovalMetricsAPIUpdateMetricRequestRoleEnum = {
 } as const;
 export type CovalMetricsAPIUpdateMetricRequestRoleEnum = typeof CovalMetricsAPIUpdateMetricRequestRoleEnum[keyof typeof CovalMetricsAPIUpdateMetricRequestRoleEnum];
 
+/**
+ * @export
+ */
+export const CovalMetricsAPIUpdateMetricRequestCriteriaSourceEnum = {
+    TestCase: 'test_case',
+    TestCaseAttribute: 'test_case_attribute',
+    MetricMetadata: 'metric_metadata'
+} as const;
+export type CovalMetricsAPIUpdateMetricRequestCriteriaSourceEnum = typeof CovalMetricsAPIUpdateMetricRequestCriteriaSourceEnum[keyof typeof CovalMetricsAPIUpdateMetricRequestCriteriaSourceEnum];
+
+/**
+ * @export
+ */
+export const CovalMetricsAPIUpdateMetricRequestReportingMethodEnum = {
+    PercentageOfCriteriaMet: 'percentage_of_criteria_met',
+    CountOfCriteriaMet: 'count_of_criteria_met',
+    AllCriteriaMet: 'all_criteria_met'
+} as const;
+export type CovalMetricsAPIUpdateMetricRequestReportingMethodEnum = typeof CovalMetricsAPIUpdateMetricRequestReportingMethodEnum[keyof typeof CovalMetricsAPIUpdateMetricRequestReportingMethodEnum];
+
 
 /**
  * Check if a given object implements the CovalMetricsAPIUpdateMetricRequest interface.
@@ -200,6 +252,11 @@ export function CovalMetricsAPIUpdateMetricRequestFromJSONTyped(json: any, ignor
         'role': json['role'] == null ? undefined : json['role'],
         'min_pause_duration_seconds': json['min_pause_duration_seconds'] == null ? undefined : json['min_pause_duration_seconds'],
         'sql_query': json['sql_query'] == null ? undefined : json['sql_query'],
+        'criteria_source': json['criteria_source'] == null ? undefined : json['criteria_source'],
+        'criteria_path': json['criteria_path'] == null ? undefined : json['criteria_path'],
+        'criteria': json['criteria'] == null ? undefined : json['criteria'],
+        'reporting_method': json['reporting_method'] == null ? undefined : json['reporting_method'],
+        'base_prompt_template': json['base_prompt_template'] == null ? undefined : json['base_prompt_template'],
         'include_traces': json['include_traces'] == null ? undefined : json['include_traces'],
         'runtime_config': json['runtime_config'] == null ? undefined : CovalMetricsAPIMetricRuntimeConfigFromJSON(json['runtime_config']),
         'target_condition': json['target_condition'] == null ? undefined : CovalMetricsAPITargetConditionFromJSON(json['target_condition']),
@@ -231,6 +288,11 @@ export function CovalMetricsAPIUpdateMetricRequestToJSONTyped(value?: CovalMetri
         'role': value['role'],
         'min_pause_duration_seconds': value['min_pause_duration_seconds'],
         'sql_query': value['sql_query'],
+        'criteria_source': value['criteria_source'],
+        'criteria_path': value['criteria_path'],
+        'criteria': value['criteria'],
+        'reporting_method': value['reporting_method'],
+        'base_prompt_template': value['base_prompt_template'],
         'include_traces': value['include_traces'],
         'runtime_config': CovalMetricsAPIMetricRuntimeConfigToJSON(value['runtime_config']),
         'target_condition': CovalMetricsAPITargetConditionToJSON(value['target_condition']),

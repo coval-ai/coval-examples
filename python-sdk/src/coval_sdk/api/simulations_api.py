@@ -1508,7 +1508,7 @@ class SimulationsApi:
     ) -> CovalSimulationsAPIResimulateSimulationResponse:
         """Rerun a simulation
 
-        Requeue a single existing simulation to run again in place. The currently visible result for this simulation will be overwritten when the rerun completes. 
+        Requeue a single existing simulation to run again in place. The currently visible result for this simulation will be overwritten when the rerun completes. The rerun executes the agent's current configuration, while the persona prompt and test case parameters recorded on the original run are preserved. 
 
         :param simulation_id: The simulation ID to rerun (required)
         :type simulation_id: str
@@ -1584,7 +1584,7 @@ class SimulationsApi:
     ) -> ApiResponse[CovalSimulationsAPIResimulateSimulationResponse]:
         """Rerun a simulation
 
-        Requeue a single existing simulation to run again in place. The currently visible result for this simulation will be overwritten when the rerun completes. 
+        Requeue a single existing simulation to run again in place. The currently visible result for this simulation will be overwritten when the rerun completes. The rerun executes the agent's current configuration, while the persona prompt and test case parameters recorded on the original run are preserved. 
 
         :param simulation_id: The simulation ID to rerun (required)
         :type simulation_id: str
@@ -1660,7 +1660,7 @@ class SimulationsApi:
     ) -> RESTResponseType:
         """Rerun a simulation
 
-        Requeue a single existing simulation to run again in place. The currently visible result for this simulation will be overwritten when the rerun completes. 
+        Requeue a single existing simulation to run again in place. The currently visible result for this simulation will be overwritten when the rerun completes. The rerun executes the agent's current configuration, while the persona prompt and test case parameters recorded on the original run are preserved. 
 
         :param simulation_id: The simulation ID to rerun (required)
         :type simulation_id: str

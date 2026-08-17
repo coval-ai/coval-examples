@@ -7658,7 +7658,7 @@ class MetricsApi:
     ) -> CovalMetricsAPITestMetricResponse:
         """Trigger test metric execution
 
-        Trigger execution of a metric against a simulation output for testing purposes. This is an asynchronous operation that returns immediately with a metric output ULID.  **Retrieving the result:** poll `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` using the `simulation_output_id` you passed here as `simulation_id` and the returned 26-char `metric_output_ulid`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
+        Trigger execution of a metric against one or more simulation outputs for testing purposes. This is an asynchronous operation that returns immediately.  Provide exactly one of `simulation_output_id` (single, deprecated) or `simulation_output_ids` (batch, up to 100 IDs per call). Batch requests are best-effort: individual simulation outputs that cannot be queued are reported in `results` with a non-`QUEUED` status instead of failing the whole call.  The response contains one entry per requested simulation output in `results`, each with its own `status` and, when queued, a `metric_output_ulid`.  **Retrieving results:** for each queued entry, poll `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` using the entry's `simulation_output_id` as `simulation_id` and its 26-char `metric_output_ulid` as `metric_output_id`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
 
         :param metric_id: The metric ID (22-character ShortUUID) (required)
         :type metric_id: str
@@ -7697,6 +7697,7 @@ class MetricsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '202': "CovalMetricsAPITestMetricResponse",
+            '207': "CovalMetricsAPITestMetricResponse",
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",
@@ -7735,7 +7736,7 @@ class MetricsApi:
     ) -> ApiResponse[CovalMetricsAPITestMetricResponse]:
         """Trigger test metric execution
 
-        Trigger execution of a metric against a simulation output for testing purposes. This is an asynchronous operation that returns immediately with a metric output ULID.  **Retrieving the result:** poll `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` using the `simulation_output_id` you passed here as `simulation_id` and the returned 26-char `metric_output_ulid`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
+        Trigger execution of a metric against one or more simulation outputs for testing purposes. This is an asynchronous operation that returns immediately.  Provide exactly one of `simulation_output_id` (single, deprecated) or `simulation_output_ids` (batch, up to 100 IDs per call). Batch requests are best-effort: individual simulation outputs that cannot be queued are reported in `results` with a non-`QUEUED` status instead of failing the whole call.  The response contains one entry per requested simulation output in `results`, each with its own `status` and, when queued, a `metric_output_ulid`.  **Retrieving results:** for each queued entry, poll `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` using the entry's `simulation_output_id` as `simulation_id` and its 26-char `metric_output_ulid` as `metric_output_id`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
 
         :param metric_id: The metric ID (22-character ShortUUID) (required)
         :type metric_id: str
@@ -7774,6 +7775,7 @@ class MetricsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '202': "CovalMetricsAPITestMetricResponse",
+            '207': "CovalMetricsAPITestMetricResponse",
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",
@@ -7812,7 +7814,7 @@ class MetricsApi:
     ) -> RESTResponseType:
         """Trigger test metric execution
 
-        Trigger execution of a metric against a simulation output for testing purposes. This is an asynchronous operation that returns immediately with a metric output ULID.  **Retrieving the result:** poll `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` using the `simulation_output_id` you passed here as `simulation_id` and the returned 26-char `metric_output_ulid`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
+        Trigger execution of a metric against one or more simulation outputs for testing purposes. This is an asynchronous operation that returns immediately.  Provide exactly one of `simulation_output_id` (single, deprecated) or `simulation_output_ids` (batch, up to 100 IDs per call). Batch requests are best-effort: individual simulation outputs that cannot be queued are reported in `results` with a non-`QUEUED` status instead of failing the whole call.  The response contains one entry per requested simulation output in `results`, each with its own `status` and, when queued, a `metric_output_ulid`.  **Retrieving results:** for each queued entry, poll `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` using the entry's `simulation_output_id` as `simulation_id` and its 26-char `metric_output_ulid` as `metric_output_id`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
 
         :param metric_id: The metric ID (22-character ShortUUID) (required)
         :type metric_id: str
@@ -7851,6 +7853,7 @@ class MetricsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '202': "CovalMetricsAPITestMetricResponse",
+            '207': "CovalMetricsAPITestMetricResponse",
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",

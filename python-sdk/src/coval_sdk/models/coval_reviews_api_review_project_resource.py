@@ -41,10 +41,11 @@ class CovalReviewsAPIReviewProjectResource(BaseModel):
     project_type: CovalReviewsAPIProjectType
     notifications: StrictBool = Field(description="Whether notifications are enabled")
     project_rules: Optional[List[CovalReviewsAPIProjectRule]] = Field(default=None, description="Rules applied to this project (e.g. require notes on disagreement)")
+    enforced_collaboration: Optional[StrictBool] = Field(default=False, description="Whether collaborative claims and explicit single-author completion are enforced")
     create_time: datetime = Field(description="Creation timestamp (ISO 8601)")
     update_time: datetime = Field(description="Last update timestamp (ISO 8601)")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "id", "display_name", "description", "assignees", "linked_simulation_ids", "linked_metric_ids", "project_type", "notifications", "project_rules", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["name", "id", "display_name", "description", "assignees", "linked_simulation_ids", "linked_metric_ids", "project_type", "notifications", "project_rules", "enforced_collaboration", "create_time", "update_time"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -124,6 +125,7 @@ class CovalReviewsAPIReviewProjectResource(BaseModel):
             "project_type": obj.get("project_type") if obj.get("project_type") is not None else CovalReviewsAPIProjectType.PROJECT_INDIVIDUAL,
             "notifications": obj.get("notifications"),
             "project_rules": obj.get("project_rules"),
+            "enforced_collaboration": obj.get("enforced_collaboration") if obj.get("enforced_collaboration") is not None else False,
             "create_time": obj.get("create_time"),
             "update_time": obj.get("update_time")
         })

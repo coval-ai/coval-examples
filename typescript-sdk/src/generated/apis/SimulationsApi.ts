@@ -238,7 +238,7 @@ export interface SimulationsApiInterface {
     resimulateSimulationRequestOpts(requestParameters: ResimulateSimulationRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Requeue a single existing simulation to run again in place. The currently visible result for this simulation will be overwritten when the rerun completes. 
+     * Requeue a single existing simulation to run again in place. The currently visible result for this simulation will be overwritten when the rerun completes. The rerun executes the agent\'s current configuration, while the persona prompt and test case parameters recorded on the original run are preserved. 
      * @summary Rerun a simulation
      * @param {string} simulationId The simulation ID to rerun
      * @param {object} [body] 
@@ -249,7 +249,7 @@ export interface SimulationsApiInterface {
     resimulateSimulationRaw(requestParameters: ResimulateSimulationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalSimulationsAPIResimulateSimulationResponse>>;
 
     /**
-     * Requeue a single existing simulation to run again in place. The currently visible result for this simulation will be overwritten when the rerun completes. 
+     * Requeue a single existing simulation to run again in place. The currently visible result for this simulation will be overwritten when the rerun completes. The rerun executes the agent\'s current configuration, while the persona prompt and test case parameters recorded on the original run are preserved. 
      * Rerun a simulation
      */
     resimulateSimulation(requestParameters: ResimulateSimulationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalSimulationsAPIResimulateSimulationResponse>;
@@ -591,7 +591,7 @@ export class SimulationsApi extends runtime.BaseAPI implements SimulationsApiInt
     }
 
     /**
-     * Requeue a single existing simulation to run again in place. The currently visible result for this simulation will be overwritten when the rerun completes. 
+     * Requeue a single existing simulation to run again in place. The currently visible result for this simulation will be overwritten when the rerun completes. The rerun executes the agent\'s current configuration, while the persona prompt and test case parameters recorded on the original run are preserved. 
      * Rerun a simulation
      */
     async resimulateSimulationRaw(requestParameters: ResimulateSimulationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalSimulationsAPIResimulateSimulationResponse>> {
@@ -602,7 +602,7 @@ export class SimulationsApi extends runtime.BaseAPI implements SimulationsApiInt
     }
 
     /**
-     * Requeue a single existing simulation to run again in place. The currently visible result for this simulation will be overwritten when the rerun completes. 
+     * Requeue a single existing simulation to run again in place. The currently visible result for this simulation will be overwritten when the rerun completes. The rerun executes the agent\'s current configuration, while the persona prompt and test case parameters recorded on the original run are preserved. 
      * Rerun a simulation
      */
     async resimulateSimulation(requestParameters: ResimulateSimulationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalSimulationsAPIResimulateSimulationResponse> {

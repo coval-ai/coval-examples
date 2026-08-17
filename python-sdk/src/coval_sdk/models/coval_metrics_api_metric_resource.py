@@ -50,7 +50,12 @@ class CovalMetricsAPIMetricResource(BaseModel):
     role: Optional[StrictStr] = Field(default=None, description="Speaker role filter (for METRIC_TRANSCRIPT_REGEX)")
     min_pause_duration_seconds: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum pause duration (for METRIC_PAUSE_ANALYSIS)")
     sql_query: Optional[StrictStr] = Field(default=None, description="SQL query that defines the metric (for METRIC_SQL_FLOAT)")
-    include_traces: Optional[StrictBool] = Field(default=None, description="Whether OTel trace context is injected into the LLM judge prompt during evaluation. Supported for LLM judge metric types only (`METRIC_LLM_BINARY`, `METRIC_CATEGORICAL`, `METRIC_NUMERICAL_LLM_JUDGE`, `METRIC_AUDIO_LLM_BINARY`, `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`). ")
+    criteria_source: Optional[StrictStr] = Field(default=None, description="Where a METRIC_COMPOSITE_EVALUATION metric reads its criteria from.")
+    criteria_path: Optional[StrictStr] = Field(default=None, description="Path to the criteria on the source, when `criteria_source` is `test_case` or `test_case_attribute`.")
+    criteria: Optional[List[StrictStr]] = Field(default=None, description="Literal criteria, when `criteria_source` is `metric_metadata`.")
+    reporting_method: Optional[StrictStr] = Field(default=None, description="How the per-criterion verdicts are aggregated into the metric's value.")
+    base_prompt_template: Optional[StrictStr] = Field(default=None, description="Custom prompt template used to evaluate each criterion.")
+    include_traces: Optional[StrictBool] = Field(default=None, description="Whether OTel trace context is injected into the LLM judge prompt during evaluation. Supported for LLM judge metric types and `METRIC_COMPOSITE_EVALUATION` (`METRIC_LLM_BINARY`, `METRIC_CATEGORICAL`, `METRIC_NUMERICAL_LLM_JUDGE`, `METRIC_AUDIO_LLM_BINARY`, `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`, `METRIC_COMPOSITE_EVALUATION`). ")
     runtime_config: Optional[CovalMetricsAPIMetricRuntimeConfig] = Field(default=None, description="LLM model and thinking configuration for this metric. Not supported for audio metric types (`METRIC_AUDIO_LLM_BINARY`, `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`), which always use the platform-default audio model. ")
     target_condition: Optional[CovalMetricsAPITargetCondition] = Field(default=None, description="Target condition for metric evaluation")
     tags: Optional[List[StrictStr]] = Field(default=None, description="Tags associated with this metric")
@@ -59,7 +64,7 @@ class CovalMetricsAPIMetricResource(BaseModel):
     update_time: Optional[datetime] = Field(default=None, description="Last update timestamp")
     current_version: Optional[CovalMetricsAPICurrentMetricVersion] = Field(default=None, description="The metric's live version. Null for pre-versioning metrics that have not yet been saved or run under the versioning system. Full history at GET /v1/metrics/{metric_id}/versions.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "id", "metric_name", "description", "metric_type", "prompt", "categories", "min_value", "max_value", "metadata_field_type", "metadata_field_key", "regex_pattern", "role", "min_pause_duration_seconds", "sql_query", "include_traces", "runtime_config", "target_condition", "tags", "created_by", "create_time", "update_time", "current_version"]
+    __properties: ClassVar[List[str]] = ["name", "id", "metric_name", "description", "metric_type", "prompt", "categories", "min_value", "max_value", "metadata_field_type", "metadata_field_key", "regex_pattern", "role", "min_pause_duration_seconds", "sql_query", "criteria_source", "criteria_path", "criteria", "reporting_method", "base_prompt_template", "include_traces", "runtime_config", "target_condition", "tags", "created_by", "create_time", "update_time", "current_version"]
 
     @field_validator('role')
     def role_validate_enum(cls, value):
@@ -69,6 +74,26 @@ class CovalMetricsAPIMetricResource(BaseModel):
 
         if value not in set(['agent', 'user']):
             raise ValueError("must be one of enum values ('agent', 'user')")
+        return value
+
+    @field_validator('criteria_source')
+    def criteria_source_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['test_case', 'test_case_attribute', 'metric_metadata']):
+            raise ValueError("must be one of enum values ('test_case', 'test_case_attribute', 'metric_metadata')")
+        return value
+
+    @field_validator('reporting_method')
+    def reporting_method_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['percentage_of_criteria_met', 'count_of_criteria_met', 'all_criteria_met']):
+            raise ValueError("must be one of enum values ('percentage_of_criteria_met', 'count_of_criteria_met', 'all_criteria_met')")
         return value
 
     model_config = ConfigDict(
@@ -176,6 +201,31 @@ class CovalMetricsAPIMetricResource(BaseModel):
         if self.sql_query is None and "sql_query" in self.model_fields_set:
             _dict['sql_query'] = None
 
+        # set to None if criteria_source (nullable) is None
+        # and model_fields_set contains the field
+        if self.criteria_source is None and "criteria_source" in self.model_fields_set:
+            _dict['criteria_source'] = None
+
+        # set to None if criteria_path (nullable) is None
+        # and model_fields_set contains the field
+        if self.criteria_path is None and "criteria_path" in self.model_fields_set:
+            _dict['criteria_path'] = None
+
+        # set to None if criteria (nullable) is None
+        # and model_fields_set contains the field
+        if self.criteria is None and "criteria" in self.model_fields_set:
+            _dict['criteria'] = None
+
+        # set to None if reporting_method (nullable) is None
+        # and model_fields_set contains the field
+        if self.reporting_method is None and "reporting_method" in self.model_fields_set:
+            _dict['reporting_method'] = None
+
+        # set to None if base_prompt_template (nullable) is None
+        # and model_fields_set contains the field
+        if self.base_prompt_template is None and "base_prompt_template" in self.model_fields_set:
+            _dict['base_prompt_template'] = None
+
         # set to None if include_traces (nullable) is None
         # and model_fields_set contains the field
         if self.include_traces is None and "include_traces" in self.model_fields_set:
@@ -228,6 +278,11 @@ class CovalMetricsAPIMetricResource(BaseModel):
             "role": obj.get("role"),
             "min_pause_duration_seconds": obj.get("min_pause_duration_seconds"),
             "sql_query": obj.get("sql_query"),
+            "criteria_source": obj.get("criteria_source"),
+            "criteria_path": obj.get("criteria_path"),
+            "criteria": obj.get("criteria"),
+            "reporting_method": obj.get("reporting_method"),
+            "base_prompt_template": obj.get("base_prompt_template"),
             "include_traces": obj.get("include_traces"),
             "runtime_config": CovalMetricsAPIMetricRuntimeConfig.from_dict(obj["runtime_config"]) if obj.get("runtime_config") is not None else None,
             "target_condition": CovalMetricsAPITargetCondition.from_dict(obj["target_condition"]) if obj.get("target_condition") is not None else None,

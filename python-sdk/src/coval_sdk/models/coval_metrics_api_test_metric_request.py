@@ -27,15 +27,19 @@ from pydantic_core import to_jsonable_python
 
 class CovalMetricsAPITestMetricRequest(BaseModel):
     """
-    CovalMetricsAPITestMetricRequest
+    Provide exactly one of `simulation_output_id` or `simulation_output_ids`.
     """ # noqa: E501
-    simulation_output_id: Annotated[str, Field(strict=True)] = Field(description="The simulation output ID (22-character ShortUUID) to run the metric against")
+    simulation_output_id: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Deprecated: a single simulation output ID (22-character ShortUUID) to run the metric against. Prefer `simulation_output_ids`.")
+    simulation_output_ids: Optional[Annotated[List[Annotated[str, Field(strict=True)]], Field(min_length=1, max_length=100)]] = Field(default=None, description="Simulation output IDs (22-character ShortUUIDs) to run the metric against; 1–100 per call.")
     dev_id: Optional[StrictStr] = Field(default=None, description="Optional developer identifier for debugging")
-    __properties: ClassVar[List[str]] = ["simulation_output_id", "dev_id"]
+    __properties: ClassVar[List[str]] = ["simulation_output_id", "simulation_output_ids", "dev_id"]
 
     @field_validator('simulation_output_id')
     def simulation_output_id_validate_regular_expression(cls, value):
         """Validates the regular expression"""
+        if value is None:
+            return value
+
         if not isinstance(value, str):
             value = str(value)
 
@@ -95,6 +99,7 @@ class CovalMetricsAPITestMetricRequest(BaseModel):
 
         _obj = cls.model_validate({
             "simulation_output_id": obj.get("simulation_output_id"),
+            "simulation_output_ids": obj.get("simulation_output_ids"),
             "dev_id": obj.get("dev_id")
         })
         return _obj

@@ -157,9 +157,8 @@ export interface CovalAgentsAPICreateAgentRequest {
      * - `endpoint` - WebSocket endpoint URL (must be wss://, validated). Required in `direct` connection mode.
      * 
      * *Connection mode:*
-     * - `connection_mode` - `direct` (default), `http_first`, or `twiml_webhook`.
+     * - `connection_mode` - `direct` (default) or `http_first`. In `http_first` mode Coval issues an HTTP request first and dials the WebSocket URL returned in the response.
      * - `http_url`, `http_method`, `http_request_body`, `http_headers`, `websocket_url_response_path` - HTTP-first setup fields when `connection_mode=http_first`.
-     * - `voice_url`, `voice_http_method`, `voice_http_headers`, `voice_form_fields`, `twilio_account_sid`, `twilio_from_number`, `twilio_to_number` - TwiML voice-webhook fields when `connection_mode=twiml_webhook`. This mode is currently API-configured; it is not a connection-mode option in the agent editor.
      * 
      * *Authentication (optional):*
      * - `authorization_header` - Auth header sent during the WebSocket handshake. Supports:
@@ -170,8 +169,8 @@ export interface CovalAgentsAPICreateAgentRequest {
      * 
      * *Initialization & handshake (optional):*
      * - `initialization_json` - JSON object or JSON string payload sent after the WebSocket upgrade and before any ready-message wait.
-     * - `handshake_ready_message_type` - Message type to wait for before streaming audio (default `session_ready` in direct mode and empty in `http_first` and `twiml_webhook`; empty string skips the ready-message wait).
-     * - `handshake_requires_session_id` - Whether the ready message must include `session_id` (default `true` in direct mode and `false` in `http_first` and `twiml_webhook`).
+     * - `handshake_ready_message_type` - Message type to wait for before streaming audio (default `session_ready` in direct mode and empty in `http_first`; empty string skips the ready-message wait).
+     * - `handshake_requires_session_id` - Whether the ready message must include `session_id` (default `true` in direct mode and `false` in `http_first`).
      * - `handshake_timeout_seconds` - Seconds Coval waits for the ready message (default `30`).
      * 
      * *Audio format (optional):*
@@ -179,18 +178,13 @@ export interface CovalAgentsAPICreateAgentRequest {
      * - `message_type_path` - Dot-notation path to the field naming the inbound message kind (default `type`).
      * - `audio_message_type_value` - Value identifying an audio frame; use `*` to treat every JSON message as audio (default `audio_chunk`).
      * - `audio_data_path` - Dot-notation path to the inbound base64 audio payload (default `data`).
-     * - `audio_encoding` - JSON audio payload encoding: `pcm` (default), `mp3`, or `ulaw`. MP3 is inbound-only; `ulaw` sends and receives G.711 mu-law audio.
+     * - `audio_encoding` - Inbound JSON audio payload encoding: `pcm` (default) or `mp3`.
      * - `receive_audio_channels` - `1` for mono inbound JSON PCM or `2` for legacy stereo-to-mono averaging (default `2`).
      * - `send_sample_rate_hertz` - Outbound sample rate. One of 8000, 16000, 24000, 48000 (default 16000).
      * - `receive_sample_rate_hertz` - Inbound sample rate. One of 8000, 16000, 24000, 48000 (default 48000).
      * - `pipeline_sample_rate_hertz` - Pipeline-internal rate; must remain 16000.
      * - `pace_inbound_binary_audio` - Boolean, paces inbound binary PCM at real-time. Defaults on when outbound audio is configured for raw PCM bytes, off for JSON templates.
      * - `send_media_template` - Outbound template for image attachments. Must contain `{{media_data}}`; may also include `{{media_name}}` and `{{mime_type}}`. Set exactly to `{{media_data}}` to send raw bytes, otherwise Coval base64-encodes the image into the JSON template.
-     * - `send_dtmf_template` - Outbound template for keypad digits. Must contain `{{digit}}`.
-     * 
-     * *WebSocket placeholders:*
-     * - `{{simulation_output_id}}` (legacy alias `{{simulation_id}}`) resolves only in `initialization_json`.
-     * - `{{stream_sid}}` and `{{call_sid}}` resolve in `initialization_json` and the audio, media, and DTMF send templates. They are generated per simulation in Twilio SID format and are not Coval simulation output IDs.
      * 
      * *Non-audio event capture (optional):*
      * - `non_audio_event_message_types` - List of message-type values to emit as `WebsocketEventFrame`s instead of dropping. Each match carries the message type, optional `event` name, and original payload. Useful for cart updates, transcript fragments, or session telemetry.

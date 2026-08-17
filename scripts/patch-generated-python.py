@@ -66,6 +66,11 @@ COMPATIBILITY_MODEL_ALIASES = (
   ),
 )
 
+# Preserve omission for optional partial-update fields, regardless of OpenAPI defaults.
+UPDATE_REQUEST_OMISSION_FIELDS = (
+  ("coval_reviews_api_update_review_project_request.py", "enforced_collaboration"),
+)
+
 
 def replace_marked_block(contents: str, start_marker: str, end_marker: str, lines: list[str]) -> str:
   if contents.count(start_marker) != 1 or contents.count(end_marker) != 1:
@@ -256,10 +261,49 @@ def patch_missing_list_import() -> int:
   return patched
 
 
+def patch_update_request_omission_fields() -> int:
+  ensured = 0
+  for filename, field_name in UPDATE_REQUEST_OMISSION_FIELDS:
+    path = MODELS / filename
+    if not path.exists():
+      raise RuntimeError(f"Generated update-request model is missing: {path}")
+
+    contents = path.read_text()
+    default_pattern = re.compile(
+      rf"^(?P<prefix>\s*{re.escape(field_name)}: .* = Field\(default=)"
+      r"(?P<default>False|None)(?P<suffix>, description=.*)$",
+      re.MULTILINE,
+    )
+    default_match = default_pattern.search(contents)
+    if default_match is None:
+      raise RuntimeError(
+        f"Generated update-request default anchor changed: {path}:{field_name}"
+      )
+    if default_match.group("default") == "False":
+      contents = (
+        f"{contents[:default_match.start()]}{default_match.group('prefix')}None"
+        f"{default_match.group('suffix')}{contents[default_match.end():]}"
+      )
+
+    fallback = f'"{field_name}": obj.get("{field_name}") if obj.get("{field_name}") is not None else False'
+    direct = f'"{field_name}": obj.get("{field_name}")'
+    if fallback in contents:
+      contents = contents.replace(fallback, direct, 1)
+    elif direct not in contents:
+      raise RuntimeError(
+        f"Generated update-request deserialization anchor changed: {path}:{field_name}"
+      )
+
+    path.write_text(contents)
+    ensured += 1
+  return ensured
+
+
 def main() -> None:
   patch_api_client()
   patched_lists = patch_response_model_lists()
   patched_imports = patch_missing_list_import()
+  patched_update_fields = patch_update_request_omission_fields()
   api_count = patch_client_api_surface()
   compatibility_aliases = patch_compatibility_model_aliases()
   contents = INIT.read_text()
@@ -269,6 +313,7 @@ def main() -> None:
   INIT.write_text(contents)
   print(f"  Ensured ApiClient and {patched_lists} collection-response list deserializers are patched.")
   print(f"  Added the missing List import to {patched_imports} generated models.")
+  print(f"  Preserved omission for {patched_update_fields} generated update-request fields.")
   print(f"  Synchronized {api_count} CovalClient API properties.")
   print(f"  Added {compatibility_aliases} generated-model compatibility alias modules.")
   print("  Exported CovalClient, InvalidListItemWarning, and paginate from coval_sdk.")

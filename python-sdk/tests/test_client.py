@@ -139,7 +139,18 @@ def test_client_can_restore_strict_response_validation() -> None:
 
 def test_top_level_exports_and_version_match() -> None:
   assert coval_sdk.CovalClient is CovalClient
-  assert coval_sdk.__version__ == "0.6.3"
+  assert coval_sdk.__version__ == "0.6.4"
+
+
+def test_review_project_update_preserves_omitted_collaboration_setting() -> None:
+  update_model = generated_models.CovalReviewsAPIUpdateReviewProjectRequest
+
+  assert update_model(display_name="Renamed project").to_dict() == {"display_name": "Renamed project"}
+  assert "enforced_collaboration" not in update_model.from_dict(
+    {"display_name": "Renamed project"}
+  ).to_dict()
+  assert update_model(enforced_collaboration=False).to_dict() == {"enforced_collaboration": False}
+  assert update_model.from_dict({"enforced_collaboration": False}).to_dict()["enforced_collaboration"] is False
 
 
 def _pool_for(client: CovalClient, url: str):

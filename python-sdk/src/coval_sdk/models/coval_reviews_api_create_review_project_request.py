@@ -40,8 +40,9 @@ class CovalReviewsAPICreateReviewProjectRequest(BaseModel):
     notifications: Optional[StrictBool] = Field(default=True, description="Enable notifications for assignees")
     project_rules: Optional[List[CovalReviewsAPIProjectRule]] = Field(default=None, description="Rules to apply to this project")
     blind_labeling_shown_metric_ids: Optional[List[StrictStr]] = Field(default=None, description="Metric IDs whose machine score stays visible during blind labeling")
+    enforced_collaboration: Optional[StrictBool] = Field(default=False, description="Enforce claims and explicit single-author completion for collaborative projects")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["display_name", "description", "assignees", "linked_simulation_ids", "linked_metric_ids", "project_type", "notifications", "project_rules", "blind_labeling_shown_metric_ids"]
+    __properties: ClassVar[List[str]] = ["display_name", "description", "assignees", "linked_simulation_ids", "linked_metric_ids", "project_type", "notifications", "project_rules", "blind_labeling_shown_metric_ids", "enforced_collaboration"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -124,7 +125,8 @@ class CovalReviewsAPICreateReviewProjectRequest(BaseModel):
             "project_type": obj.get("project_type") if obj.get("project_type") is not None else CovalReviewsAPIProjectType.PROJECT_INDIVIDUAL,
             "notifications": obj.get("notifications") if obj.get("notifications") is not None else True,
             "project_rules": obj.get("project_rules"),
-            "blind_labeling_shown_metric_ids": obj.get("blind_labeling_shown_metric_ids")
+            "blind_labeling_shown_metric_ids": obj.get("blind_labeling_shown_metric_ids"),
+            "enforced_collaboration": obj.get("enforced_collaboration") if obj.get("enforced_collaboration") is not None else False
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

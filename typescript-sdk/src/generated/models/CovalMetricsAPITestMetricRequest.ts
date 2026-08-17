@@ -14,17 +14,24 @@
 
 import { mapValues } from '../runtime.js';
 /**
- * 
+ * Provide exactly one of `simulation_output_id` or `simulation_output_ids`.
  * @export
  * @interface CovalMetricsAPITestMetricRequest
  */
 export interface CovalMetricsAPITestMetricRequest {
     /**
-     * The simulation output ID (22-character ShortUUID) to run the metric against
+     * Deprecated: a single simulation output ID (22-character ShortUUID) to run the metric against. Prefer `simulation_output_ids`.
      * @type {string}
      * @memberof CovalMetricsAPITestMetricRequest
+     * @deprecated
      */
-    simulation_output_id: string;
+    simulation_output_id?: string;
+    /**
+     * Simulation output IDs (22-character ShortUUIDs) to run the metric against; 1–100 per call.
+     * @type {Array<string>}
+     * @memberof CovalMetricsAPITestMetricRequest
+     */
+    simulation_output_ids?: Array<string>;
     /**
      * Optional developer identifier for debugging
      * @type {string}
@@ -37,7 +44,6 @@ export interface CovalMetricsAPITestMetricRequest {
  * Check if a given object implements the CovalMetricsAPITestMetricRequest interface.
  */
 export function instanceOfCovalMetricsAPITestMetricRequest(value: object): value is CovalMetricsAPITestMetricRequest {
-    if (!('simulation_output_id' in value) || value['simulation_output_id'] === undefined) return false;
     return true;
 }
 
@@ -51,7 +57,8 @@ export function CovalMetricsAPITestMetricRequestFromJSONTyped(json: any, ignoreD
     }
     return {
         
-        'simulation_output_id': json['simulation_output_id'],
+        'simulation_output_id': json['simulation_output_id'] == null ? undefined : json['simulation_output_id'],
+        'simulation_output_ids': json['simulation_output_ids'] == null ? undefined : json['simulation_output_ids'],
         'dev_id': json['dev_id'] == null ? undefined : json['dev_id'],
     };
 }
@@ -68,6 +75,7 @@ export function CovalMetricsAPITestMetricRequestToJSONTyped(value?: CovalMetrics
     return {
         
         'simulation_output_id': value['simulation_output_id'],
+        'simulation_output_ids': value['simulation_output_ids'],
         'dev_id': value['dev_id'],
     };
 }

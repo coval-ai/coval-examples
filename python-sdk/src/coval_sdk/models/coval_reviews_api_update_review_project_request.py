@@ -18,7 +18,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_reviews_api_project_rule import CovalReviewsAPIProjectRule
@@ -37,12 +37,24 @@ class CovalReviewsAPIUpdateReviewProjectRequest(BaseModel):
     add_linked_simulation_ids: Optional[Annotated[List[StrictStr], Field(min_length=1)]] = Field(default=None, description="Simulation IDs to add atomically; cannot be combined with other project updates")
     remove_linked_simulation_ids: Optional[Annotated[List[StrictStr], Field(min_length=1)]] = Field(default=None, description="Simulation IDs to remove atomically; cannot be combined with other project updates")
     linked_metric_ids: Optional[List[StrictStr]] = Field(default=None, description="Updated metric IDs")
+    metric_addition_completion_action: Optional[StrictStr] = Field(default=None, description="Required only when adding metrics to choose whether valid enforced-collaborative completed conversations reopen; omitted keeps completed conversations unchanged")
     notifications: Optional[StrictBool] = Field(default=None, description="Updated notification setting")
     project_rules: Optional[List[CovalReviewsAPIProjectRule]] = Field(default=None, description="Updated project rules")
     blind_labeling_shown_metric_ids: Optional[List[StrictStr]] = Field(default=None, description="Metric IDs whose machine score stays visible during blind labeling")
     opted_out_assignees: Optional[List[StrictStr]] = Field(default=None, description="Assignees who opted out of notifications")
+    enforced_collaboration: Optional[StrictBool] = Field(default=None, description="Enforce claims and explicit single-author completion for collaborative projects")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["display_name", "description", "assignees", "linked_simulation_ids", "add_linked_simulation_ids", "remove_linked_simulation_ids", "linked_metric_ids", "notifications", "project_rules", "blind_labeling_shown_metric_ids", "opted_out_assignees"]
+    __properties: ClassVar[List[str]] = ["display_name", "description", "assignees", "linked_simulation_ids", "add_linked_simulation_ids", "remove_linked_simulation_ids", "linked_metric_ids", "metric_addition_completion_action", "notifications", "project_rules", "blind_labeling_shown_metric_ids", "opted_out_assignees", "enforced_collaboration"]
+
+    @field_validator('metric_addition_completion_action')
+    def metric_addition_completion_action_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['KEEP_COMPLETED', 'REOPEN_COMPLETED']):
+            raise ValueError("must be one of enum values ('KEEP_COMPLETED', 'REOPEN_COMPLETED')")
+        return value
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -125,6 +137,11 @@ class CovalReviewsAPIUpdateReviewProjectRequest(BaseModel):
         if self.linked_metric_ids is None and "linked_metric_ids" in self.model_fields_set:
             _dict['linked_metric_ids'] = None
 
+        # set to None if metric_addition_completion_action (nullable) is None
+        # and model_fields_set contains the field
+        if self.metric_addition_completion_action is None and "metric_addition_completion_action" in self.model_fields_set:
+            _dict['metric_addition_completion_action'] = None
+
         # set to None if notifications (nullable) is None
         # and model_fields_set contains the field
         if self.notifications is None and "notifications" in self.model_fields_set:
@@ -164,10 +181,12 @@ class CovalReviewsAPIUpdateReviewProjectRequest(BaseModel):
             "add_linked_simulation_ids": obj.get("add_linked_simulation_ids"),
             "remove_linked_simulation_ids": obj.get("remove_linked_simulation_ids"),
             "linked_metric_ids": obj.get("linked_metric_ids"),
+            "metric_addition_completion_action": obj.get("metric_addition_completion_action"),
             "notifications": obj.get("notifications"),
             "project_rules": obj.get("project_rules"),
             "blind_labeling_shown_metric_ids": obj.get("blind_labeling_shown_metric_ids"),
-            "opted_out_assignees": obj.get("opted_out_assignees")
+            "opted_out_assignees": obj.get("opted_out_assignees"),
+            "enforced_collaboration": obj.get("enforced_collaboration")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():
