@@ -42,7 +42,7 @@ class CovalReviewsAPIUpdateReviewProjectRequest(BaseModel):
     project_rules: Optional[List[CovalReviewsAPIProjectRule]] = Field(default=None, description="Updated project rules")
     blind_labeling_shown_metric_ids: Optional[List[StrictStr]] = Field(default=None, description="Metric IDs whose machine score stays visible during blind labeling")
     opted_out_assignees: Optional[List[StrictStr]] = Field(default=None, description="Assignees who opted out of notifications")
-    enforced_collaboration: Optional[StrictBool] = Field(default=False, description="Enforce claims and explicit single-author completion for collaborative projects")
+    enforced_collaboration: Optional[StrictBool] = Field(default=None, description="Enforce claims and explicit single-author completion for collaborative projects")
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["display_name", "description", "assignees", "linked_simulation_ids", "add_linked_simulation_ids", "remove_linked_simulation_ids", "linked_metric_ids", "metric_addition_completion_action", "notifications", "project_rules", "blind_labeling_shown_metric_ids", "opted_out_assignees", "enforced_collaboration"]
 
@@ -186,7 +186,7 @@ class CovalReviewsAPIUpdateReviewProjectRequest(BaseModel):
             "project_rules": obj.get("project_rules"),
             "blind_labeling_shown_metric_ids": obj.get("blind_labeling_shown_metric_ids"),
             "opted_out_assignees": obj.get("opted_out_assignees"),
-            "enforced_collaboration": obj.get("enforced_collaboration") if obj.get("enforced_collaboration") is not None else False
+            "enforced_collaboration": obj.get("enforced_collaboration")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():
