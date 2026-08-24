@@ -318,7 +318,7 @@ def patch_update_run_response_compatibility() -> None:
     "        if isinstance(obj, str):\n"
     "            obj = json.loads(obj)\n"
     "        if not isinstance(obj, dict):\n"
-    "            raise ValueError(\"UpdateRun200ResponseRun must be an object\")\n"
+    "            raise TypeError(\"UpdateRun200ResponseRun must be an object\")\n"
     "        if \"status\" in obj or \"create_time\" in obj:\n"
     "            return cls(CovalRunsAPIRunResource.from_dict(obj))\n"
     "        return cls(CovalRunsAPIMonitoringRunTagUpdateResource.from_dict(obj))\n\n"

@@ -88,7 +88,7 @@ class UpdateRun200ResponseRun(BaseModel):
         if isinstance(obj, str):
             obj = json.loads(obj)
         if not isinstance(obj, dict):
-            raise ValueError("UpdateRun200ResponseRun must be an object")
+            raise TypeError("UpdateRun200ResponseRun must be an object")
         if "status" in obj or "create_time" in obj:
             return cls(CovalRunsAPIRunResource.from_dict(obj))
         return cls(CovalRunsAPIMonitoringRunTagUpdateResource.from_dict(obj))
