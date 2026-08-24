@@ -48,6 +48,11 @@ import {
     ListRuns400ResponseFromJSON,
     ListRuns400ResponseToJSON,
 } from '../models/ListRuns400Response.js';
+import {
+    type UpdateRun200Response,
+    UpdateRun200ResponseFromJSON,
+    UpdateRun200ResponseToJSON,
+} from '../models/UpdateRun200Response.js';
 
 export interface DeleteRunRequest {
     runId: string;
@@ -209,7 +214,7 @@ export interface RunsApiInterface {
 
     /**
      * Creates request options for updateRun without sending the request
-     * @param {string} runId Unique identifier for the run
+     * @param {string} runId Unique identifier for the run. Simulation run ids are 22 characters; monitored conversations are their own runs and their ids may be up to 26 characters, so tagging a conversation uses its conversation id here.
      * @param {CovalRunsAPIUpdateRunRequest} covalRunsAPIUpdateRunRequest 
      * @throws {RequiredError}
      * @memberof RunsApiInterface
@@ -217,21 +222,21 @@ export interface RunsApiInterface {
     updateRunRequestOpts(requestParameters: UpdateRunRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Replace the tag set for an existing simulation run. Provide an empty list to clear all tags. 
+     * Replace the tag set for an existing run. Works for simulation runs and for monitored conversations, which are their own runs, so PATCHing a conversation\'s run id tags exactly that conversation. Provide an empty list to clear all tags.  For a monitored conversation the response is a minimal confirmation of the tag write (name, run_id, tags); conversation lifecycle fields belong to the `conversations:read` scope and are not returned here. 
      * @summary Update run
-     * @param {string} runId Unique identifier for the run
+     * @param {string} runId Unique identifier for the run. Simulation run ids are 22 characters; monitored conversations are their own runs and their ids may be up to 26 characters, so tagging a conversation uses its conversation id here.
      * @param {CovalRunsAPIUpdateRunRequest} covalRunsAPIUpdateRunRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RunsApiInterface
      */
-    updateRunRaw(requestParameters: UpdateRunRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetRun200Response>>;
+    updateRunRaw(requestParameters: UpdateRunRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UpdateRun200Response>>;
 
     /**
-     * Replace the tag set for an existing simulation run. Provide an empty list to clear all tags. 
+     * Replace the tag set for an existing run. Works for simulation runs and for monitored conversations, which are their own runs, so PATCHing a conversation\'s run id tags exactly that conversation. Provide an empty list to clear all tags.  For a monitored conversation the response is a minimal confirmation of the tag write (name, run_id, tags); conversation lifecycle fields belong to the `conversations:read` scope and are not returned here. 
      * Update run
      */
-    updateRun(requestParameters: UpdateRunRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetRun200Response>;
+    updateRun(requestParameters: UpdateRunRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UpdateRun200Response>;
 
 }
 
@@ -543,21 +548,21 @@ export class RunsApi extends runtime.BaseAPI implements RunsApiInterface {
     }
 
     /**
-     * Replace the tag set for an existing simulation run. Provide an empty list to clear all tags. 
+     * Replace the tag set for an existing run. Works for simulation runs and for monitored conversations, which are their own runs, so PATCHing a conversation\'s run id tags exactly that conversation. Provide an empty list to clear all tags.  For a monitored conversation the response is a minimal confirmation of the tag write (name, run_id, tags); conversation lifecycle fields belong to the `conversations:read` scope and are not returned here. 
      * Update run
      */
-    async updateRunRaw(requestParameters: UpdateRunRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetRun200Response>> {
+    async updateRunRaw(requestParameters: UpdateRunRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UpdateRun200Response>> {
         const requestOptions = await this.updateRunRequestOpts(requestParameters);
         const response = await this.request(requestOptions, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => GetRun200ResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => UpdateRun200ResponseFromJSON(jsonValue));
     }
 
     /**
-     * Replace the tag set for an existing simulation run. Provide an empty list to clear all tags. 
+     * Replace the tag set for an existing run. Works for simulation runs and for monitored conversations, which are their own runs, so PATCHing a conversation\'s run id tags exactly that conversation. Provide an empty list to clear all tags.  For a monitored conversation the response is a minimal confirmation of the tag write (name, run_id, tags); conversation lifecycle fields belong to the `conversations:read` scope and are not returned here. 
      * Update run
      */
-    async updateRun(requestParameters: UpdateRunRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetRun200Response> {
+    async updateRun(requestParameters: UpdateRunRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UpdateRun200Response> {
         const response = await this.updateRunRaw(requestParameters, initOverrides);
         return await response.value();
     }

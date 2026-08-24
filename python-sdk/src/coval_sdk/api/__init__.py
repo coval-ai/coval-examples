@@ -29,4 +29,5 @@ from coval_sdk.api.test_sets_api import TestSetsApi
 from coval_sdk.api.traces_api import TracesApi
 from coval_sdk.api.webhooks_api import WebhooksApi
 from coval_sdk.api.widgets_api import WidgetsApi
+from coval_sdk.api.workspaces_api import WorkspacesApi
 

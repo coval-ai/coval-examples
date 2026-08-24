@@ -28,3 +28,4 @@ export * from './TestSetsApi.js';
 export * from './TracesApi.js';
 export * from './WebhooksApi.js';
 export * from './WidgetsApi.js';
+export * from './WorkspacesApi.js';

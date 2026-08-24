@@ -42,6 +42,7 @@ from coval_sdk.api import (
   TracesApi,
   WebhooksApi,
   WidgetsApi,
+  WorkspacesApi,
   # sdk-api-imports:end
 )
 # isort: on
@@ -81,6 +82,7 @@ API_PROPERTY_NAMES = (
   "traces",
   "webhooks",
   "widgets",
+  "workspaces",
   # sdk-api-property-names:end
 )
 
@@ -275,6 +277,7 @@ class CovalClient:
     self.traces = TracesApi(self.api_client)
     self.webhooks = WebhooksApi(self.api_client)
     self.widgets = WidgetsApi(self.api_client)
+    self.workspaces = WorkspacesApi(self.api_client)
     # sdk-api-properties:end
 
   def close(self) -> None:

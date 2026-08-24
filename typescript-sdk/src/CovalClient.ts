@@ -44,6 +44,7 @@ import {
   TracesApi,
   WebhooksApi,
   WidgetsApi,
+  WorkspacesApi,
   // sdk-api-imports:end
   Configuration,
   type FetchAPI,
@@ -100,6 +101,7 @@ export const GENERATED_API_PROPERTY_NAMES = [
   'traces',
   'webhooks',
   'widgets',
+  'workspaces',
   // sdk-api-property-names:end
 ] as const;
 
@@ -133,6 +135,7 @@ export class CovalClient {
   readonly traces: TracesApi;
   readonly webhooks: WebhooksApi;
   readonly widgets: WidgetsApi;
+  readonly workspaces: WorkspacesApi;
   // sdk-api-properties:end
 
   readonly configuration: Configuration;
@@ -202,6 +205,7 @@ export class CovalClient {
     this.traces = new TracesApi(this.configuration);
     this.webhooks = new WebhooksApi(this.configuration);
     this.widgets = new WidgetsApi(this.configuration);
+    this.workspaces = new WorkspacesApi(this.configuration);
     // sdk-api-assignments:end
   }
 }

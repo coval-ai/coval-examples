@@ -139,7 +139,7 @@ def test_client_can_restore_strict_response_validation() -> None:
 
 def test_top_level_exports_and_version_match() -> None:
   assert coval_sdk.CovalClient is CovalClient
-  assert coval_sdk.__version__ == "0.6.4"
+  assert coval_sdk.__version__ == "0.6.5"
 
 
 def test_review_project_update_preserves_omitted_collaboration_setting() -> None:
