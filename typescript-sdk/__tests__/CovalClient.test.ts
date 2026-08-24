@@ -335,3 +335,38 @@ describe('paginate', () => {
     expect(calls).toBe(4);
   });
 });
+
+describe('updateRun oneOf response handling', () => {
+  it('classifies a tagged simulation run as a run resource', () => {
+    const parsed = generatedModels.UpdateRun200ResponseFromJSON({
+      run: {
+        name: 'runs/aaaaaaaaaaaaaaaaaaaaaa',
+        run_id: 'aaaaaaaaaaaaaaaaaaaaaa',
+        status: 'COMPLETED',
+        create_time: '2026-08-21T00:00:00Z',
+        tags: ['regression'],
+      },
+    });
+
+    const run = parsed.run;
+    expect('status' in run).toBe(true);
+    if ('status' in run) {
+      expect(run.status).toBe('COMPLETED');
+    }
+    expect(run.tags).toEqual(['regression']);
+  });
+
+  it('classifies a monitoring tag confirmation as a tag update resource', () => {
+    const parsed = generatedModels.UpdateRun200ResponseFromJSON({
+      run: {
+        name: 'runs/abcdefghijklmnopqrstuvwxyz',
+        run_id: 'abcdefghijklmnopqrstuvwxyz',
+        tags: ['escalated'],
+      },
+    });
+
+    const run = parsed.run;
+    expect('status' in run).toBe(false);
+    expect(run.tags).toEqual(['escalated']);
+  });
+});

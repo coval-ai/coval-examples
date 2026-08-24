@@ -45,11 +45,11 @@ export function UpdateRun200ResponseRunFromJSONTyped(json: any, ignoreDiscrimina
     if (typeof json !== 'object') {
         return json;
     }
-    if (instanceOfCovalRunsAPIMonitoringRunTagUpdateResource(json)) {
-        return CovalRunsAPIMonitoringRunTagUpdateResourceFromJSONTyped(json, true);
-    }
     if (instanceOfCovalRunsAPIRunResource(json)) {
         return CovalRunsAPIRunResourceFromJSONTyped(json, true);
+    }
+    if (instanceOfCovalRunsAPIMonitoringRunTagUpdateResource(json)) {
+        return CovalRunsAPIMonitoringRunTagUpdateResourceFromJSONTyped(json, true);
     }
     return {} as any;
 }
@@ -65,11 +65,11 @@ export function UpdateRun200ResponseRunToJSONTyped(value?: UpdateRun200ResponseR
     if (typeof value !== 'object') {
         return value;
     }
-    if (instanceOfCovalRunsAPIMonitoringRunTagUpdateResource(value)) {
-        return CovalRunsAPIMonitoringRunTagUpdateResourceToJSON(value as CovalRunsAPIMonitoringRunTagUpdateResource);
-    }
     if (instanceOfCovalRunsAPIRunResource(value)) {
         return CovalRunsAPIRunResourceToJSON(value as CovalRunsAPIRunResource);
+    }
+    if (instanceOfCovalRunsAPIMonitoringRunTagUpdateResource(value)) {
+        return CovalRunsAPIMonitoringRunTagUpdateResourceToJSON(value as CovalRunsAPIMonitoringRunTagUpdateResource);
     }
     return {};
 }
