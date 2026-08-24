@@ -17,6 +17,7 @@ from coval_sdk.client import (
   DEFAULT_MAX_IDLE_SECONDS,
   _IdleExpiryPoolMixin,
 )
+from coval_sdk.models.update_run200_response import UpdateRun200Response
 
 
 def test_client_exposes_every_generated_api() -> None:
@@ -139,7 +140,39 @@ def test_client_can_restore_strict_response_validation() -> None:
 
 def test_top_level_exports_and_version_match() -> None:
   assert coval_sdk.CovalClient is CovalClient
-  assert coval_sdk.__version__ == "0.6.4"
+  assert coval_sdk.__version__ == "0.6.5"
+
+
+def test_update_run_response_preserves_simulation_run_fields() -> None:
+  response = UpdateRun200Response.from_dict(
+    {
+      "run": {
+        "name": "runs/5BhqoFdXSuk6IcugFvkXeU",
+        "run_id": "5BhqoFdXSuk6IcugFvkXeU",
+        "status": "COMPLETED",
+        "create_time": "2025-10-14T12:00:00Z",
+        "tags": ["baseline"],
+      }
+    }
+  )
+
+  assert response is not None
+  assert response.run.status.value == "COMPLETED"
+
+
+def test_update_run_response_handles_monitoring_tag_confirmation() -> None:
+  response = UpdateRun200Response.from_dict(
+    {
+      "run": {
+        "name": "runs/6CirpGeYTvl7JdvhGwlYfV",
+        "run_id": "6CirpGeYTvl7JdvhGwlYfV",
+        "tags": ["monitoring"],
+      }
+    }
+  )
+
+  assert response is not None
+  assert response.run.tags == ["monitoring"]
 
 
 def test_review_project_update_preserves_omitted_collaboration_setting() -> None:

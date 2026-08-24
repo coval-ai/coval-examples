@@ -173,6 +173,64 @@ function patchCompatibilityModelAliases() {
   return patched;
 }
 
+// --- update_run oneOf ordering patch ----------------------------------------
+// update_run returns either a full run resource or, for monitored
+// conversations, a minimal tag-write confirmation whose fields are a subset of
+// the run resource's. The generated guards test the confirmation first, so a
+// tagged run would be misclassified and lose its fields; test the run resource
+// first instead.
+const UPDATE_RUN_ONE_OF_FILE = join(MODELS_DIR, 'UpdateRun200ResponseRun.ts');
+
+function patchUpdateRunOneOfOrdering() {
+  if (!existsSync(UPDATE_RUN_ONE_OF_FILE)) return 0;
+
+  const swaps = [
+    [
+      `    if (instanceOfCovalRunsAPIMonitoringRunTagUpdateResource(json)) {
+        return CovalRunsAPIMonitoringRunTagUpdateResourceFromJSONTyped(json, true);
+    }
+    if (instanceOfCovalRunsAPIRunResource(json)) {
+        return CovalRunsAPIRunResourceFromJSONTyped(json, true);
+    }`,
+      `    if (instanceOfCovalRunsAPIRunResource(json)) {
+        return CovalRunsAPIRunResourceFromJSONTyped(json, true);
+    }
+    if (instanceOfCovalRunsAPIMonitoringRunTagUpdateResource(json)) {
+        return CovalRunsAPIMonitoringRunTagUpdateResourceFromJSONTyped(json, true);
+    }`,
+    ],
+    [
+      `    if (instanceOfCovalRunsAPIMonitoringRunTagUpdateResource(value)) {
+        return CovalRunsAPIMonitoringRunTagUpdateResourceToJSON(value as CovalRunsAPIMonitoringRunTagUpdateResource);
+    }
+    if (instanceOfCovalRunsAPIRunResource(value)) {
+        return CovalRunsAPIRunResourceToJSON(value as CovalRunsAPIRunResource);
+    }`,
+      `    if (instanceOfCovalRunsAPIRunResource(value)) {
+        return CovalRunsAPIRunResourceToJSON(value as CovalRunsAPIRunResource);
+    }
+    if (instanceOfCovalRunsAPIMonitoringRunTagUpdateResource(value)) {
+        return CovalRunsAPIMonitoringRunTagUpdateResourceToJSON(value as CovalRunsAPIMonitoringRunTagUpdateResource);
+    }`,
+    ],
+  ];
+
+  let contents = readFileSync(UPDATE_RUN_ONE_OF_FILE, 'utf8');
+  let patched = 0;
+  for (const [monitoringFirst, runFirst] of swaps) {
+    if (contents.includes(monitoringFirst)) {
+      contents = contents.replace(monitoringFirst, runFirst);
+      patched += 1;
+    } else if (!contents.includes(runFirst)) {
+      throw new Error('Generated UpdateRun200ResponseRun oneOf ordering changed');
+    }
+  }
+
+  if (patched > 0) writeFileSync(UPDATE_RUN_ONE_OF_FILE, contents);
+  return patched;
+}
+// --- end update_run oneOf ordering patch ------------------------------------
+
 // --- ESM extension patch ----------------------------------------------------
 // openapi-generator emits extensionless relative imports (e.g., `from './runtime'`).
 // Node's strict ESM resolver requires .js extensions at runtime, so we append
@@ -314,10 +372,12 @@ if (emptyAliases.length > 0) {
 }
 
 const compatibilityAliases = patchCompatibilityModelAliases();
+const updateRunOneOfPatches = patchUpdateRunOneOfOrdering();
 
 console.log(
   `\n✓ Applied ${patches} enum patch${patches === 1 ? '' : 'es'} and ` +
   `${unionPatches} union patch${unionPatches === 1 ? '' : 'es'}, ` +
-  `synchronized ${apiCount} CovalClient API properties, and added ` +
-  `${compatibilityAliases} compatibility alias modules.`,
+  `synchronized ${apiCount} CovalClient API properties, added ` +
+  `${compatibilityAliases} compatibility alias modules, and applied ` +
+  `${updateRunOneOfPatches} update-run oneOf ordering patch${updateRunOneOfPatches === 1 ? '' : 'es'}.`,
 );

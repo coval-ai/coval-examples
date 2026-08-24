@@ -36,7 +36,7 @@ class CovalReviewsAPIUpdateReviewProjectRequest(BaseModel):
     linked_simulation_ids: Optional[List[StrictStr]] = Field(default=None, description="Updated simulation IDs")
     add_linked_simulation_ids: Optional[Annotated[List[StrictStr], Field(min_length=1)]] = Field(default=None, description="Simulation IDs to add atomically; cannot be combined with other project updates")
     remove_linked_simulation_ids: Optional[Annotated[List[StrictStr], Field(min_length=1)]] = Field(default=None, description="Simulation IDs to remove atomically; cannot be combined with other project updates")
-    linked_metric_ids: Optional[List[StrictStr]] = Field(default=None, description="Updated metric IDs")
+    linked_metric_ids: Optional[Annotated[List[StrictStr], Field(max_length=25)]] = Field(default=None, description="Updated metric IDs")
     metric_addition_completion_action: Optional[StrictStr] = Field(default=None, description="Required only when adding metrics to choose whether valid enforced-collaborative completed conversations reopen; omitted keeps completed conversations unchanged")
     notifications: Optional[StrictBool] = Field(default=None, description="Updated notification setting")
     project_rules: Optional[List[CovalReviewsAPIProjectRule]] = Field(default=None, description="Updated project rules")

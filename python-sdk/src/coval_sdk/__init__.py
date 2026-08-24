@@ -15,7 +15,7 @@
 """  # noqa: E501
 
 
-__version__ = "0.6.4"
+__version__ = "0.6.5"
 
 # Define package exports
 __all__ = [
@@ -55,6 +55,7 @@ __all__ = [
     "TracesApi",
     "WebhooksApi",
     "WidgetsApi",
+    "WorkspacesApi",
     "ApiResponse",
     "ApiClient",
     "Configuration",
@@ -383,6 +384,7 @@ __all__ = [
     "CovalRunsAPIMetricResult",
     "CovalRunsAPIMetricValue",
     "CovalRunsAPIMetricValueValue",
+    "CovalRunsAPIMonitoringRunTagUpdateResource",
     "CovalRunsAPIRunProgress",
     "CovalRunsAPIRunResource",
     "CovalRunsAPIRunResults",
@@ -453,6 +455,13 @@ __all__ = [
     "CovalWebhooksAPIUpdateWebhookRequest",
     "CovalWebhooksAPIWebhookResource",
     "CovalWebhooksAPIWebhookResponse",
+    "CovalWorkspacesAPICreateWorkspaceRequest",
+    "CovalWorkspacesAPIErrorResponse",
+    "CovalWorkspacesAPIErrorResponseError",
+    "CovalWorkspacesAPIListWorkspacesResponse",
+    "CovalWorkspacesAPIUpdateWorkspaceRequest",
+    "CovalWorkspacesAPIWorkspaceResource",
+    "CovalWorkspacesAPIWorkspaceResponse",
     "CreateTestCase201Response",
     "CreateTestSet201Response",
     "DuplicateAgentRequest",
@@ -499,6 +508,8 @@ __all__ = [
     "TracesAPITraceSearchFilters",
     "TracesAPITraceSearchRequest",
     "TracesAPITraceSearchResponse",
+    "UpdateRun200Response",
+    "UpdateRun200ResponseRun",
 ]
 
 # import apis into sdk package
@@ -530,6 +541,7 @@ from coval_sdk.api.test_sets_api import TestSetsApi as TestSetsApi
 from coval_sdk.api.traces_api import TracesApi as TracesApi
 from coval_sdk.api.webhooks_api import WebhooksApi as WebhooksApi
 from coval_sdk.api.widgets_api import WidgetsApi as WidgetsApi
+from coval_sdk.api.workspaces_api import WorkspacesApi as WorkspacesApi
 
 # import ApiClient
 from coval_sdk.api_response import ApiResponse as ApiResponse
@@ -862,6 +874,7 @@ from coval_sdk.models.coval_runs_api_list_run_tags_response import CovalRunsAPIL
 from coval_sdk.models.coval_runs_api_metric_result import CovalRunsAPIMetricResult as CovalRunsAPIMetricResult
 from coval_sdk.models.coval_runs_api_metric_value import CovalRunsAPIMetricValue as CovalRunsAPIMetricValue
 from coval_sdk.models.coval_runs_api_metric_value_value import CovalRunsAPIMetricValueValue as CovalRunsAPIMetricValueValue
+from coval_sdk.models.coval_runs_api_monitoring_run_tag_update_resource import CovalRunsAPIMonitoringRunTagUpdateResource as CovalRunsAPIMonitoringRunTagUpdateResource
 from coval_sdk.models.coval_runs_api_run_progress import CovalRunsAPIRunProgress as CovalRunsAPIRunProgress
 from coval_sdk.models.coval_runs_api_run_resource import CovalRunsAPIRunResource as CovalRunsAPIRunResource
 from coval_sdk.models.coval_runs_api_run_results import CovalRunsAPIRunResults as CovalRunsAPIRunResults
@@ -932,6 +945,13 @@ from coval_sdk.models.coval_webhooks_api_list_webhooks_response import CovalWebh
 from coval_sdk.models.coval_webhooks_api_update_webhook_request import CovalWebhooksAPIUpdateWebhookRequest as CovalWebhooksAPIUpdateWebhookRequest
 from coval_sdk.models.coval_webhooks_api_webhook_resource import CovalWebhooksAPIWebhookResource as CovalWebhooksAPIWebhookResource
 from coval_sdk.models.coval_webhooks_api_webhook_response import CovalWebhooksAPIWebhookResponse as CovalWebhooksAPIWebhookResponse
+from coval_sdk.models.coval_workspaces_api_create_workspace_request import CovalWorkspacesAPICreateWorkspaceRequest as CovalWorkspacesAPICreateWorkspaceRequest
+from coval_sdk.models.coval_workspaces_api_error_response import CovalWorkspacesAPIErrorResponse as CovalWorkspacesAPIErrorResponse
+from coval_sdk.models.coval_workspaces_api_error_response_error import CovalWorkspacesAPIErrorResponseError as CovalWorkspacesAPIErrorResponseError
+from coval_sdk.models.coval_workspaces_api_list_workspaces_response import CovalWorkspacesAPIListWorkspacesResponse as CovalWorkspacesAPIListWorkspacesResponse
+from coval_sdk.models.coval_workspaces_api_update_workspace_request import CovalWorkspacesAPIUpdateWorkspaceRequest as CovalWorkspacesAPIUpdateWorkspaceRequest
+from coval_sdk.models.coval_workspaces_api_workspace_resource import CovalWorkspacesAPIWorkspaceResource as CovalWorkspacesAPIWorkspaceResource
+from coval_sdk.models.coval_workspaces_api_workspace_response import CovalWorkspacesAPIWorkspaceResponse as CovalWorkspacesAPIWorkspaceResponse
 from coval_sdk.models.create_test_case201_response import CreateTestCase201Response as CreateTestCase201Response
 from coval_sdk.models.create_test_set201_response import CreateTestSet201Response as CreateTestSet201Response
 from coval_sdk.models.duplicate_agent_request import DuplicateAgentRequest as DuplicateAgentRequest
@@ -978,6 +998,8 @@ from coval_sdk.models.traces_api_trace_search_call_result import TracesAPITraceS
 from coval_sdk.models.traces_api_trace_search_filters import TracesAPITraceSearchFilters as TracesAPITraceSearchFilters
 from coval_sdk.models.traces_api_trace_search_request import TracesAPITraceSearchRequest as TracesAPITraceSearchRequest
 from coval_sdk.models.traces_api_trace_search_response import TracesAPITraceSearchResponse as TracesAPITraceSearchResponse
+from coval_sdk.models.update_run200_response import UpdateRun200Response as UpdateRun200Response
+from coval_sdk.models.update_run200_response_run import UpdateRun200ResponseRun as UpdateRun200ResponseRun
 
 from coval_sdk.models.coval_metrics_api_error_response_error_details_inner import CovalMetricsAPIErrorResponseErrorDetailsInner
 

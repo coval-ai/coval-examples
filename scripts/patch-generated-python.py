@@ -299,11 +299,65 @@ def patch_update_request_omission_fields() -> int:
   return ensured
 
 
+def patch_update_run_response_compatibility() -> None:
+  path = MODELS / "update_run200_response_run.py"
+  if not path.exists():
+    raise RuntimeError(f"Generated update-run response union is missing: {path}")
+
+  contents = path.read_text()
+  delegate = (
+    "    def __getattr__(self, name: str) -> Any:\n"
+    "        actual_instance = self.__dict__.get(\"actual_instance\")\n"
+    "        if actual_instance is not None:\n"
+    "            return getattr(actual_instance, name)\n"
+    "        raise AttributeError(name)\n\n"
+  )
+  from_dict = (
+    "    @classmethod\n"
+    "    def from_dict(cls, obj: Union[str, Dict[str, Any]]) -> Self:\n"
+    "        if isinstance(obj, str):\n"
+    "            obj = json.loads(obj)\n"
+    "        if not isinstance(obj, dict):\n"
+    "            raise TypeError(\"UpdateRun200ResponseRun must be an object\")\n"
+    "        if \"status\" in obj or \"create_time\" in obj:\n"
+    "            return cls(CovalRunsAPIRunResource.from_dict(obj))\n"
+    "        return cls(CovalRunsAPIMonitoringRunTagUpdateResource.from_dict(obj))\n\n"
+  )
+  from_json = (
+    "    @classmethod\n"
+    "    def from_json(cls, json_str: str) -> Self:\n"
+    "        return cls.from_dict(json.loads(json_str))\n\n"
+  )
+  original_from_dict = (
+    "    @classmethod\n"
+    "    def from_dict(cls, obj: Union[str, Dict[str, Any]]) -> Self:\n"
+    "        return cls.from_json(json.dumps(obj))\n\n"
+  )
+  if delegate not in contents:
+    if original_from_dict not in contents:
+      raise RuntimeError(f"Generated update-run response from_dict anchor changed: {path}")
+    contents = contents.replace(original_from_dict, f"{delegate}{from_dict}", 1)
+  elif from_dict not in contents:
+    raise RuntimeError(f"Generated update-run response compatibility shape changed: {path}")
+
+  if from_json not in contents:
+    pattern = re.compile(
+      r"    @classmethod\n    def from_json\(cls, json_str: str\) -> Self:\n.*?(?=    def to_json)",
+      re.DOTALL,
+    )
+    contents, substitutions = pattern.subn(from_json, contents, count=1)
+    if substitutions != 1:
+      raise RuntimeError(f"Generated update-run response from_json anchor changed: {path}")
+
+  path.write_text(contents)
+
+
 def main() -> None:
   patch_api_client()
   patched_lists = patch_response_model_lists()
   patched_imports = patch_missing_list_import()
   patched_update_fields = patch_update_request_omission_fields()
+  patch_update_run_response_compatibility()
   api_count = patch_client_api_surface()
   compatibility_aliases = patch_compatibility_model_aliases()
   contents = INIT.read_text()

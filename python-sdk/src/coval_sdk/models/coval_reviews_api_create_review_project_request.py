@@ -35,7 +35,7 @@ class CovalReviewsAPICreateReviewProjectRequest(BaseModel):
     description: Optional[StrictStr] = Field(default=None, description="Optional project description")
     assignees: Annotated[List[StrictStr], Field(min_length=1)] = Field(description="Reviewer emails (at least one required)")
     linked_simulation_ids: Annotated[List[StrictStr], Field(min_length=1)] = Field(description="Simulation output IDs (at least one required)")
-    linked_metric_ids: Annotated[List[StrictStr], Field(min_length=1)] = Field(description="Metric IDs (at least one required)")
+    linked_metric_ids: Annotated[List[StrictStr], Field(min_length=1, max_length=25)] = Field(description="Metric IDs (at least one required)")
     project_type: Optional[CovalReviewsAPIProjectType] = CovalReviewsAPIProjectType.PROJECT_INDIVIDUAL
     notifications: Optional[StrictBool] = Field(default=True, description="Enable notifications for assignees")
     project_rules: Optional[List[CovalReviewsAPIProjectRule]] = Field(default=None, description="Rules to apply to this project")
