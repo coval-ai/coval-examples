@@ -213,7 +213,7 @@ export interface SimulationsApiInterface {
     rerunMetricsRequestOpts(requestParameters: RerunMetricsRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Re-score a set of metrics against a set of existing simulations without re-running the simulations. The same metrics are applied to every simulation (metrics x simulations). Limits: up to 100 simulations, up to 500 metrics, and at most 500 total reruns (simulation_ids x metric_ids) per call. Best-effort per simulation: valid simulations are queued and a per-simulation status is returned. Existing metric results are overwritten when each rerun completes. 
+     * Re-score a set of metrics against a set of existing simulations without re-running the simulations. The same metrics are applied to every simulation (metrics x simulations). Limits: up to 100 simulations, up to 500 metrics, and at most 500 total reruns (simulation_ids x metric_ids) per call. Requests also count against an organization-level hourly limit on simulations queued (default 5000/hour); when exceeded the API returns 429 with a Retry-After header. Best-effort per simulation: valid simulations are queued and a per-simulation status is returned. Existing metric results are overwritten when each rerun completes. 
      * @summary Batch rerun metrics
      * @param {CovalSimulationsAPIRerunMetricsRequest} covalSimulationsAPIRerunMetricsRequest 
      * @param {*} [options] Override http request option.
@@ -223,7 +223,7 @@ export interface SimulationsApiInterface {
     rerunMetricsRaw(requestParameters: RerunMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalSimulationsAPIRerunMetricsResponse>>;
 
     /**
-     * Re-score a set of metrics against a set of existing simulations without re-running the simulations. The same metrics are applied to every simulation (metrics x simulations). Limits: up to 100 simulations, up to 500 metrics, and at most 500 total reruns (simulation_ids x metric_ids) per call. Best-effort per simulation: valid simulations are queued and a per-simulation status is returned. Existing metric results are overwritten when each rerun completes. 
+     * Re-score a set of metrics against a set of existing simulations without re-running the simulations. The same metrics are applied to every simulation (metrics x simulations). Limits: up to 100 simulations, up to 500 metrics, and at most 500 total reruns (simulation_ids x metric_ids) per call. Requests also count against an organization-level hourly limit on simulations queued (default 5000/hour); when exceeded the API returns 429 with a Retry-After header. Best-effort per simulation: valid simulations are queued and a per-simulation status is returned. Existing metric results are overwritten when each rerun completes. 
      * Batch rerun metrics
      */
     rerunMetrics(requestParameters: RerunMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalSimulationsAPIRerunMetricsResponse>;
@@ -537,7 +537,7 @@ export class SimulationsApi extends runtime.BaseAPI implements SimulationsApiInt
     }
 
     /**
-     * Re-score a set of metrics against a set of existing simulations without re-running the simulations. The same metrics are applied to every simulation (metrics x simulations). Limits: up to 100 simulations, up to 500 metrics, and at most 500 total reruns (simulation_ids x metric_ids) per call. Best-effort per simulation: valid simulations are queued and a per-simulation status is returned. Existing metric results are overwritten when each rerun completes. 
+     * Re-score a set of metrics against a set of existing simulations without re-running the simulations. The same metrics are applied to every simulation (metrics x simulations). Limits: up to 100 simulations, up to 500 metrics, and at most 500 total reruns (simulation_ids x metric_ids) per call. Requests also count against an organization-level hourly limit on simulations queued (default 5000/hour); when exceeded the API returns 429 with a Retry-After header. Best-effort per simulation: valid simulations are queued and a per-simulation status is returned. Existing metric results are overwritten when each rerun completes. 
      * Batch rerun metrics
      */
     async rerunMetricsRaw(requestParameters: RerunMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalSimulationsAPIRerunMetricsResponse>> {
@@ -548,7 +548,7 @@ export class SimulationsApi extends runtime.BaseAPI implements SimulationsApiInt
     }
 
     /**
-     * Re-score a set of metrics against a set of existing simulations without re-running the simulations. The same metrics are applied to every simulation (metrics x simulations). Limits: up to 100 simulations, up to 500 metrics, and at most 500 total reruns (simulation_ids x metric_ids) per call. Best-effort per simulation: valid simulations are queued and a per-simulation status is returned. Existing metric results are overwritten when each rerun completes. 
+     * Re-score a set of metrics against a set of existing simulations without re-running the simulations. The same metrics are applied to every simulation (metrics x simulations). Limits: up to 100 simulations, up to 500 metrics, and at most 500 total reruns (simulation_ids x metric_ids) per call. Requests also count against an organization-level hourly limit on simulations queued (default 5000/hour); when exceeded the API returns 429 with a Retry-After header. Best-effort per simulation: valid simulations are queued and a per-simulation status is returned. Existing metric results are overwritten when each rerun completes. 
      * Batch rerun metrics
      */
     async rerunMetrics(requestParameters: RerunMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalSimulationsAPIRerunMetricsResponse> {

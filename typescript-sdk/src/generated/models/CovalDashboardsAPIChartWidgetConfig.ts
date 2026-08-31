@@ -130,6 +130,12 @@ export interface CovalDashboardsAPIChartWidgetConfig {
      */
     groupBy?: CovalDashboardsAPIGroupByType;
     /**
+     * Customer metadata key to group by; mutually exclusive with groupBy. Rows fall into one of three groups: the 20 most common values are separate groups, remaining values are combined as a synthetic Other group distinct from a literal customer value named Other, and rows that do not carry the key at all form their own group with a null value, which clients render as Unknown. That last group never occupies one of the 20 slots.
+     * @type {string}
+     * @memberof CovalDashboardsAPIChartWidgetConfig
+     */
+    groupByMetadataKey?: string;
+    /**
      * Custom color assignments for series (max 200 entries)
      * @type {{ [key: string]: string; }}
      * @memberof CovalDashboardsAPIChartWidgetConfig
@@ -255,6 +261,7 @@ export function CovalDashboardsAPIChartWidgetConfigFromJSONTyped(json: any, igno
         'grouped': json['grouped'] == null ? undefined : json['grouped'],
         'showAsPercentage': json['showAsPercentage'] == null ? undefined : json['showAsPercentage'],
         'groupBy': json['groupBy'] == null ? undefined : CovalDashboardsAPIGroupByTypeFromJSON(json['groupBy']),
+        'groupByMetadataKey': json['groupByMetadataKey'] == null ? undefined : json['groupByMetadataKey'],
         'customColorMap': json['customColorMap'] == null ? undefined : json['customColorMap'],
         'xAxisLabel': json['xAxisLabel'] == null ? undefined : json['xAxisLabel'],
         'yAxisLabel': json['yAxisLabel'] == null ? undefined : json['yAxisLabel'],
@@ -293,6 +300,7 @@ export function CovalDashboardsAPIChartWidgetConfigToJSONTyped(value?: CovalDash
         'grouped': value['grouped'],
         'showAsPercentage': value['showAsPercentage'],
         'groupBy': CovalDashboardsAPIGroupByTypeToJSON(value['groupBy']),
+        'groupByMetadataKey': value['groupByMetadataKey'],
         'customColorMap': value['customColorMap'],
         'xAxisLabel': value['xAxisLabel'],
         'yAxisLabel': value['yAxisLabel'],

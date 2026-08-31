@@ -25,9 +25,9 @@ from coval_sdk.models.coval_conversations_api_get_conversation_response import C
 from coval_sdk.models.coval_conversations_api_list_conversation_metrics_response import CovalConversationsAPIListConversationMetricsResponse
 from coval_sdk.models.coval_conversations_api_patch_conversation_request import CovalConversationsAPIPatchConversationRequest
 from coval_sdk.models.coval_conversations_api_submit_conversation_request import CovalConversationsAPISubmitConversationRequest
-from coval_sdk.models.coval_conversations_api_submit_conversation_response import CovalConversationsAPISubmitConversationResponse
 from coval_sdk.models.get_conversation_metric200_response import GetConversationMetric200Response
 from coval_sdk.models.list_conversations200_response import ListConversations200Response
+from coval_sdk.models.submit_conversation200_response import SubmitConversation200Response
 
 from coval_sdk.api_client import ApiClient, RequestSerialized
 from coval_sdk.api_response import ApiResponse
@@ -896,6 +896,7 @@ class ConversationsApi:
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  **Supported fields:** - `metric_name` (string): Filter by metric name (e.g., `metric_name=latency`) - `status` (string): Filter by status (e.g., `status=COMPLETED`) - `output_type` (string): Filter by type (e.g., `output_type=float`)  **Examples:** - `filter=status=COMPLETED` - `filter=metric_name=latency AND status=COMPLETED` - `filter=output_type=float` ")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of metrics to return (1-1000)")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from previous response (for fetching next page)")] = None,
+        view: Annotated[Optional[StrictStr], Field(description="Response detail level. `FULL` preserves the historical response including structured `result` and `runtime_metadata`; `BASIC` omits those heavy fields while retaining value, status, explanation, and bounded subvalues. ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Field to order results by.  **Supported fields:** - `metric_name` (default): Sort by metric name alphabetically - `create_time`: Sort by creation time - `start_time`: Sort by computation start time - `end_time`: Sort by computation end time - `value`: Sort by metric value (float types only)  **Prefix with `-` for descending order** (e.g., `-create_time`) ")] = None,
         _request_timeout: Union[
             None,
@@ -922,6 +923,8 @@ class ConversationsApi:
         :type page_size: int
         :param page_token: Pagination token from previous response (for fetching next page)
         :type page_token: str
+        :param view: Response detail level. `FULL` preserves the historical response including structured `result` and `runtime_metadata`; `BASIC` omits those heavy fields while retaining value, status, explanation, and bounded subvalues. 
+        :type view: str
         :param order_by: Field to order results by.  **Supported fields:** - `metric_name` (default): Sort by metric name alphabetically - `create_time`: Sort by creation time - `start_time`: Sort by computation start time - `end_time`: Sort by computation end time - `value`: Sort by metric value (float types only)  **Prefix with `-` for descending order** (e.g., `-create_time`) 
         :type order_by: str
         :param _request_timeout: timeout setting for this request. If one
@@ -951,6 +954,7 @@ class ConversationsApi:
             filter=filter,
             page_size=page_size,
             page_token=page_token,
+            view=view,
             order_by=order_by,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -983,6 +987,7 @@ class ConversationsApi:
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  **Supported fields:** - `metric_name` (string): Filter by metric name (e.g., `metric_name=latency`) - `status` (string): Filter by status (e.g., `status=COMPLETED`) - `output_type` (string): Filter by type (e.g., `output_type=float`)  **Examples:** - `filter=status=COMPLETED` - `filter=metric_name=latency AND status=COMPLETED` - `filter=output_type=float` ")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of metrics to return (1-1000)")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from previous response (for fetching next page)")] = None,
+        view: Annotated[Optional[StrictStr], Field(description="Response detail level. `FULL` preserves the historical response including structured `result` and `runtime_metadata`; `BASIC` omits those heavy fields while retaining value, status, explanation, and bounded subvalues. ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Field to order results by.  **Supported fields:** - `metric_name` (default): Sort by metric name alphabetically - `create_time`: Sort by creation time - `start_time`: Sort by computation start time - `end_time`: Sort by computation end time - `value`: Sort by metric value (float types only)  **Prefix with `-` for descending order** (e.g., `-create_time`) ")] = None,
         _request_timeout: Union[
             None,
@@ -1009,6 +1014,8 @@ class ConversationsApi:
         :type page_size: int
         :param page_token: Pagination token from previous response (for fetching next page)
         :type page_token: str
+        :param view: Response detail level. `FULL` preserves the historical response including structured `result` and `runtime_metadata`; `BASIC` omits those heavy fields while retaining value, status, explanation, and bounded subvalues. 
+        :type view: str
         :param order_by: Field to order results by.  **Supported fields:** - `metric_name` (default): Sort by metric name alphabetically - `create_time`: Sort by creation time - `start_time`: Sort by computation start time - `end_time`: Sort by computation end time - `value`: Sort by metric value (float types only)  **Prefix with `-` for descending order** (e.g., `-create_time`) 
         :type order_by: str
         :param _request_timeout: timeout setting for this request. If one
@@ -1038,6 +1045,7 @@ class ConversationsApi:
             filter=filter,
             page_size=page_size,
             page_token=page_token,
+            view=view,
             order_by=order_by,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1070,6 +1078,7 @@ class ConversationsApi:
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  **Supported fields:** - `metric_name` (string): Filter by metric name (e.g., `metric_name=latency`) - `status` (string): Filter by status (e.g., `status=COMPLETED`) - `output_type` (string): Filter by type (e.g., `output_type=float`)  **Examples:** - `filter=status=COMPLETED` - `filter=metric_name=latency AND status=COMPLETED` - `filter=output_type=float` ")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of metrics to return (1-1000)")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from previous response (for fetching next page)")] = None,
+        view: Annotated[Optional[StrictStr], Field(description="Response detail level. `FULL` preserves the historical response including structured `result` and `runtime_metadata`; `BASIC` omits those heavy fields while retaining value, status, explanation, and bounded subvalues. ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Field to order results by.  **Supported fields:** - `metric_name` (default): Sort by metric name alphabetically - `create_time`: Sort by creation time - `start_time`: Sort by computation start time - `end_time`: Sort by computation end time - `value`: Sort by metric value (float types only)  **Prefix with `-` for descending order** (e.g., `-create_time`) ")] = None,
         _request_timeout: Union[
             None,
@@ -1096,6 +1105,8 @@ class ConversationsApi:
         :type page_size: int
         :param page_token: Pagination token from previous response (for fetching next page)
         :type page_token: str
+        :param view: Response detail level. `FULL` preserves the historical response including structured `result` and `runtime_metadata`; `BASIC` omits those heavy fields while retaining value, status, explanation, and bounded subvalues. 
+        :type view: str
         :param order_by: Field to order results by.  **Supported fields:** - `metric_name` (default): Sort by metric name alphabetically - `create_time`: Sort by creation time - `start_time`: Sort by computation start time - `end_time`: Sort by computation end time - `value`: Sort by metric value (float types only)  **Prefix with `-` for descending order** (e.g., `-create_time`) 
         :type order_by: str
         :param _request_timeout: timeout setting for this request. If one
@@ -1125,6 +1136,7 @@ class ConversationsApi:
             filter=filter,
             page_size=page_size,
             page_token=page_token,
+            view=view,
             order_by=order_by,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1152,6 +1164,7 @@ class ConversationsApi:
         filter,
         page_size,
         page_token,
+        view,
         order_by,
         _request_auth,
         _content_type,
@@ -1188,6 +1201,10 @@ class ConversationsApi:
         if page_token is not None:
             
             _query_params.append(('page_token', page_token))
+            
+        if view is not None:
+            
+            _query_params.append(('view', view))
             
         if order_by is not None:
             
@@ -1235,6 +1252,7 @@ class ConversationsApi:
         self,
         page_size: Annotated[Optional[Annotated[int, Field(le=250, strict=True, ge=1)]], Field(description="Maximum number of conversations to return (1-250)")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Token for retrieving next page (from previous response)")] = None,
+        consistency: Annotated[Optional[StrictStr], Field(description="Read consistency for the request. `strong` is available only for a single `external_conversation_id` equality filter with `page_size` at most 2 and without expansion, ordering, pagination, or aggregate-view parameters. All other list requests use `eventual` consistency. ")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  **Operators:** `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  **Fields:** - `status` - PENDING, IN_QUEUE, IN_PROGRESS, COMPLETED, FAILED, CANCELLED, DELETED - `external_conversation_id` - Your system's conversation ID - `create_time` - ISO 8601 timestamp - `occurred_at` - ISO 8601 timestamp - `metadata.{key}` - Custom metadata fields - `metric.{metric_id}` - Filter by a metric's value (score filtering)  **Metric-value filtering:** a `metric.{metric_id}` predicate (e.g. `metric.29Blkepvvx<\"0.9\"`; `>`/`<`/`>=`/`<=`/`=`/`!=` for float metrics, `=`/`!=` for string metrics) returns only conversations whose metric matches, with every metric's value embedded inline (`metric_values`). The metric type is inferred from the literal — a numeric literal is compared as a float metric. When a metric predicate is present the request is served with keyset pagination, ordered newest-first by creation time, and supports only `AND` alongside `create_time` (inclusive bounds), `agent_id`, and `metadata.{key}`; other filter fields (including `occurred_at`) and any non-default `order_by` are rejected with 400, and `page_size` is capped at 100.  **Examples:** - `status=COMPLETED` - `create_time>\"2025-11-01T00:00:00Z\"` - `status=COMPLETED AND occurred_at>=\"2025-11-01T00:00:00Z\"` - `external_conversation_id=external-call-abc` - `metric.29BlkepvvX19ebbLDB0y6Q<\"0.5\"` ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort field with optional `-` prefix for descending order.  **Fields:** `create_time`, `occurred_at`, `status`  **Examples:** - `create_time` (ascending) - `-create_time` (descending, most recent first) - `-occurred_at` (most recent conversations first) ")] = None,
         view: Annotated[Optional[StrictStr], Field(description="Set to `metric_breakdown` to return an aggregate of one metric's scores grouped by a `customer_metadata` key (e.g. vendor), computed over the whole scored monitoring corpus, instead of the conversation list. Requires `metric_id` and `group_by_metadata`; the response is a metric-breakdown object (`{view, metric_id, group_by_metadata, aggregation, breakdown:[{metadata_value, value, count}], total_count}`). ")] = None,
@@ -1265,6 +1283,8 @@ class ConversationsApi:
         :type page_size: int
         :param page_token: Token for retrieving next page (from previous response)
         :type page_token: str
+        :param consistency: Read consistency for the request. `strong` is available only for a single `external_conversation_id` equality filter with `page_size` at most 2 and without expansion, ordering, pagination, or aggregate-view parameters. All other list requests use `eventual` consistency. 
+        :type consistency: str
         :param filter: Filter expression syntax.  **Operators:** `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  **Fields:** - `status` - PENDING, IN_QUEUE, IN_PROGRESS, COMPLETED, FAILED, CANCELLED, DELETED - `external_conversation_id` - Your system's conversation ID - `create_time` - ISO 8601 timestamp - `occurred_at` - ISO 8601 timestamp - `metadata.{key}` - Custom metadata fields - `metric.{metric_id}` - Filter by a metric's value (score filtering)  **Metric-value filtering:** a `metric.{metric_id}` predicate (e.g. `metric.29Blkepvvx<\"0.9\"`; `>`/`<`/`>=`/`<=`/`=`/`!=` for float metrics, `=`/`!=` for string metrics) returns only conversations whose metric matches, with every metric's value embedded inline (`metric_values`). The metric type is inferred from the literal — a numeric literal is compared as a float metric. When a metric predicate is present the request is served with keyset pagination, ordered newest-first by creation time, and supports only `AND` alongside `create_time` (inclusive bounds), `agent_id`, and `metadata.{key}`; other filter fields (including `occurred_at`) and any non-default `order_by` are rejected with 400, and `page_size` is capped at 100.  **Examples:** - `status=COMPLETED` - `create_time>\"2025-11-01T00:00:00Z\"` - `status=COMPLETED AND occurred_at>=\"2025-11-01T00:00:00Z\"` - `external_conversation_id=external-call-abc` - `metric.29BlkepvvX19ebbLDB0y6Q<\"0.5\"` 
         :type filter: str
         :param order_by: Sort field with optional `-` prefix for descending order.  **Fields:** `create_time`, `occurred_at`, `status`  **Examples:** - `create_time` (ascending) - `-create_time` (descending, most recent first) - `-occurred_at` (most recent conversations first) 
@@ -1308,6 +1328,7 @@ class ConversationsApi:
         _param = self._list_conversations_serialize(
             page_size=page_size,
             page_token=page_token,
+            consistency=consistency,
             filter=filter,
             order_by=order_by,
             view=view,
@@ -1346,6 +1367,7 @@ class ConversationsApi:
         self,
         page_size: Annotated[Optional[Annotated[int, Field(le=250, strict=True, ge=1)]], Field(description="Maximum number of conversations to return (1-250)")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Token for retrieving next page (from previous response)")] = None,
+        consistency: Annotated[Optional[StrictStr], Field(description="Read consistency for the request. `strong` is available only for a single `external_conversation_id` equality filter with `page_size` at most 2 and without expansion, ordering, pagination, or aggregate-view parameters. All other list requests use `eventual` consistency. ")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  **Operators:** `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  **Fields:** - `status` - PENDING, IN_QUEUE, IN_PROGRESS, COMPLETED, FAILED, CANCELLED, DELETED - `external_conversation_id` - Your system's conversation ID - `create_time` - ISO 8601 timestamp - `occurred_at` - ISO 8601 timestamp - `metadata.{key}` - Custom metadata fields - `metric.{metric_id}` - Filter by a metric's value (score filtering)  **Metric-value filtering:** a `metric.{metric_id}` predicate (e.g. `metric.29Blkepvvx<\"0.9\"`; `>`/`<`/`>=`/`<=`/`=`/`!=` for float metrics, `=`/`!=` for string metrics) returns only conversations whose metric matches, with every metric's value embedded inline (`metric_values`). The metric type is inferred from the literal — a numeric literal is compared as a float metric. When a metric predicate is present the request is served with keyset pagination, ordered newest-first by creation time, and supports only `AND` alongside `create_time` (inclusive bounds), `agent_id`, and `metadata.{key}`; other filter fields (including `occurred_at`) and any non-default `order_by` are rejected with 400, and `page_size` is capped at 100.  **Examples:** - `status=COMPLETED` - `create_time>\"2025-11-01T00:00:00Z\"` - `status=COMPLETED AND occurred_at>=\"2025-11-01T00:00:00Z\"` - `external_conversation_id=external-call-abc` - `metric.29BlkepvvX19ebbLDB0y6Q<\"0.5\"` ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort field with optional `-` prefix for descending order.  **Fields:** `create_time`, `occurred_at`, `status`  **Examples:** - `create_time` (ascending) - `-create_time` (descending, most recent first) - `-occurred_at` (most recent conversations first) ")] = None,
         view: Annotated[Optional[StrictStr], Field(description="Set to `metric_breakdown` to return an aggregate of one metric's scores grouped by a `customer_metadata` key (e.g. vendor), computed over the whole scored monitoring corpus, instead of the conversation list. Requires `metric_id` and `group_by_metadata`; the response is a metric-breakdown object (`{view, metric_id, group_by_metadata, aggregation, breakdown:[{metadata_value, value, count}], total_count}`). ")] = None,
@@ -1376,6 +1398,8 @@ class ConversationsApi:
         :type page_size: int
         :param page_token: Token for retrieving next page (from previous response)
         :type page_token: str
+        :param consistency: Read consistency for the request. `strong` is available only for a single `external_conversation_id` equality filter with `page_size` at most 2 and without expansion, ordering, pagination, or aggregate-view parameters. All other list requests use `eventual` consistency. 
+        :type consistency: str
         :param filter: Filter expression syntax.  **Operators:** `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  **Fields:** - `status` - PENDING, IN_QUEUE, IN_PROGRESS, COMPLETED, FAILED, CANCELLED, DELETED - `external_conversation_id` - Your system's conversation ID - `create_time` - ISO 8601 timestamp - `occurred_at` - ISO 8601 timestamp - `metadata.{key}` - Custom metadata fields - `metric.{metric_id}` - Filter by a metric's value (score filtering)  **Metric-value filtering:** a `metric.{metric_id}` predicate (e.g. `metric.29Blkepvvx<\"0.9\"`; `>`/`<`/`>=`/`<=`/`=`/`!=` for float metrics, `=`/`!=` for string metrics) returns only conversations whose metric matches, with every metric's value embedded inline (`metric_values`). The metric type is inferred from the literal — a numeric literal is compared as a float metric. When a metric predicate is present the request is served with keyset pagination, ordered newest-first by creation time, and supports only `AND` alongside `create_time` (inclusive bounds), `agent_id`, and `metadata.{key}`; other filter fields (including `occurred_at`) and any non-default `order_by` are rejected with 400, and `page_size` is capped at 100.  **Examples:** - `status=COMPLETED` - `create_time>\"2025-11-01T00:00:00Z\"` - `status=COMPLETED AND occurred_at>=\"2025-11-01T00:00:00Z\"` - `external_conversation_id=external-call-abc` - `metric.29BlkepvvX19ebbLDB0y6Q<\"0.5\"` 
         :type filter: str
         :param order_by: Sort field with optional `-` prefix for descending order.  **Fields:** `create_time`, `occurred_at`, `status`  **Examples:** - `create_time` (ascending) - `-create_time` (descending, most recent first) - `-occurred_at` (most recent conversations first) 
@@ -1419,6 +1443,7 @@ class ConversationsApi:
         _param = self._list_conversations_serialize(
             page_size=page_size,
             page_token=page_token,
+            consistency=consistency,
             filter=filter,
             order_by=order_by,
             view=view,
@@ -1457,6 +1482,7 @@ class ConversationsApi:
         self,
         page_size: Annotated[Optional[Annotated[int, Field(le=250, strict=True, ge=1)]], Field(description="Maximum number of conversations to return (1-250)")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Token for retrieving next page (from previous response)")] = None,
+        consistency: Annotated[Optional[StrictStr], Field(description="Read consistency for the request. `strong` is available only for a single `external_conversation_id` equality filter with `page_size` at most 2 and without expansion, ordering, pagination, or aggregate-view parameters. All other list requests use `eventual` consistency. ")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  **Operators:** `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  **Fields:** - `status` - PENDING, IN_QUEUE, IN_PROGRESS, COMPLETED, FAILED, CANCELLED, DELETED - `external_conversation_id` - Your system's conversation ID - `create_time` - ISO 8601 timestamp - `occurred_at` - ISO 8601 timestamp - `metadata.{key}` - Custom metadata fields - `metric.{metric_id}` - Filter by a metric's value (score filtering)  **Metric-value filtering:** a `metric.{metric_id}` predicate (e.g. `metric.29Blkepvvx<\"0.9\"`; `>`/`<`/`>=`/`<=`/`=`/`!=` for float metrics, `=`/`!=` for string metrics) returns only conversations whose metric matches, with every metric's value embedded inline (`metric_values`). The metric type is inferred from the literal — a numeric literal is compared as a float metric. When a metric predicate is present the request is served with keyset pagination, ordered newest-first by creation time, and supports only `AND` alongside `create_time` (inclusive bounds), `agent_id`, and `metadata.{key}`; other filter fields (including `occurred_at`) and any non-default `order_by` are rejected with 400, and `page_size` is capped at 100.  **Examples:** - `status=COMPLETED` - `create_time>\"2025-11-01T00:00:00Z\"` - `status=COMPLETED AND occurred_at>=\"2025-11-01T00:00:00Z\"` - `external_conversation_id=external-call-abc` - `metric.29BlkepvvX19ebbLDB0y6Q<\"0.5\"` ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort field with optional `-` prefix for descending order.  **Fields:** `create_time`, `occurred_at`, `status`  **Examples:** - `create_time` (ascending) - `-create_time` (descending, most recent first) - `-occurred_at` (most recent conversations first) ")] = None,
         view: Annotated[Optional[StrictStr], Field(description="Set to `metric_breakdown` to return an aggregate of one metric's scores grouped by a `customer_metadata` key (e.g. vendor), computed over the whole scored monitoring corpus, instead of the conversation list. Requires `metric_id` and `group_by_metadata`; the response is a metric-breakdown object (`{view, metric_id, group_by_metadata, aggregation, breakdown:[{metadata_value, value, count}], total_count}`). ")] = None,
@@ -1487,6 +1513,8 @@ class ConversationsApi:
         :type page_size: int
         :param page_token: Token for retrieving next page (from previous response)
         :type page_token: str
+        :param consistency: Read consistency for the request. `strong` is available only for a single `external_conversation_id` equality filter with `page_size` at most 2 and without expansion, ordering, pagination, or aggregate-view parameters. All other list requests use `eventual` consistency. 
+        :type consistency: str
         :param filter: Filter expression syntax.  **Operators:** `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  **Fields:** - `status` - PENDING, IN_QUEUE, IN_PROGRESS, COMPLETED, FAILED, CANCELLED, DELETED - `external_conversation_id` - Your system's conversation ID - `create_time` - ISO 8601 timestamp - `occurred_at` - ISO 8601 timestamp - `metadata.{key}` - Custom metadata fields - `metric.{metric_id}` - Filter by a metric's value (score filtering)  **Metric-value filtering:** a `metric.{metric_id}` predicate (e.g. `metric.29Blkepvvx<\"0.9\"`; `>`/`<`/`>=`/`<=`/`=`/`!=` for float metrics, `=`/`!=` for string metrics) returns only conversations whose metric matches, with every metric's value embedded inline (`metric_values`). The metric type is inferred from the literal — a numeric literal is compared as a float metric. When a metric predicate is present the request is served with keyset pagination, ordered newest-first by creation time, and supports only `AND` alongside `create_time` (inclusive bounds), `agent_id`, and `metadata.{key}`; other filter fields (including `occurred_at`) and any non-default `order_by` are rejected with 400, and `page_size` is capped at 100.  **Examples:** - `status=COMPLETED` - `create_time>\"2025-11-01T00:00:00Z\"` - `status=COMPLETED AND occurred_at>=\"2025-11-01T00:00:00Z\"` - `external_conversation_id=external-call-abc` - `metric.29BlkepvvX19ebbLDB0y6Q<\"0.5\"` 
         :type filter: str
         :param order_by: Sort field with optional `-` prefix for descending order.  **Fields:** `create_time`, `occurred_at`, `status`  **Examples:** - `create_time` (ascending) - `-create_time` (descending, most recent first) - `-occurred_at` (most recent conversations first) 
@@ -1530,6 +1558,7 @@ class ConversationsApi:
         _param = self._list_conversations_serialize(
             page_size=page_size,
             page_token=page_token,
+            consistency=consistency,
             filter=filter,
             order_by=order_by,
             view=view,
@@ -1563,6 +1592,7 @@ class ConversationsApi:
         self,
         page_size,
         page_token,
+        consistency,
         filter,
         order_by,
         view,
@@ -1601,6 +1631,10 @@ class ConversationsApi:
         if page_token is not None:
             
             _query_params.append(('page_token', page_token))
+            
+        if consistency is not None:
+            
+            _query_params.append(('consistency', consistency))
             
         if filter is not None:
             
@@ -2013,7 +2047,7 @@ class ConversationsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CovalConversationsAPISubmitConversationResponse:
+    ) -> SubmitConversation200Response:
         """Submit conversation for evaluation
 
         Submit a conversation for monitoring evaluation. 
@@ -2051,7 +2085,7 @@ class ConversationsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CovalConversationsAPISubmitConversationResponse",
+            '200': "SubmitConversation200Response",
             '400': "CovalConversationsAPIErrorResponse",
             '401': "CovalConversationsAPIErrorResponse",
             '404': "CovalConversationsAPIErrorResponse",
@@ -2085,7 +2119,7 @@ class ConversationsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CovalConversationsAPISubmitConversationResponse]:
+    ) -> ApiResponse[SubmitConversation200Response]:
         """Submit conversation for evaluation
 
         Submit a conversation for monitoring evaluation. 
@@ -2123,7 +2157,7 @@ class ConversationsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CovalConversationsAPISubmitConversationResponse",
+            '200': "SubmitConversation200Response",
             '400': "CovalConversationsAPIErrorResponse",
             '401': "CovalConversationsAPIErrorResponse",
             '404': "CovalConversationsAPIErrorResponse",
@@ -2195,7 +2229,7 @@ class ConversationsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CovalConversationsAPISubmitConversationResponse",
+            '200': "SubmitConversation200Response",
             '400': "CovalConversationsAPIErrorResponse",
             '401': "CovalConversationsAPIErrorResponse",
             '404': "CovalConversationsAPIErrorResponse",

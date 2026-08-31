@@ -18,28 +18,26 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from coval_sdk.models.coval_simulations_api_error_detail import CovalSimulationsAPIErrorDetail
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
 
-class CovalSimulationsAPIErrorInfo(BaseModel):
+class CovalPersonasAPIAudioDegradationConfig(BaseModel):
     """
-    CovalSimulationsAPIErrorInfo
+    Channel degradation preset selection. `preset_version` pins the selection to a specific preset calibration, so that stored personas and any reference results captured against them stay tied to the tuning that produced them even if the preset is recalibrated later. 
     """ # noqa: E501
-    code: StrictStr = Field(description="Machine-readable error code")
-    message: StrictStr = Field(description="Human-readable error message")
-    details: Optional[List[CovalSimulationsAPIErrorDetail]] = Field(default=None, description="Detailed information about specific error fields")
+    preset: StrictStr = Field(description="Channel degradation preset id. - landline: clean, narrowband landline channel. - cell-poor: light, intermittent burst loss typical of a weak but stable cellular connection. - cell-handoff: heavier, more frequent burst loss as during a tower handoff. ")
+    preset_version: Optional[StrictInt] = Field(default=None, description="Calibration version of the preset. When omitted, the server uses the selected preset's current catalog version and stores that concrete version on the persona. ")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["code", "message", "details"]
+    __properties: ClassVar[List[str]] = ["preset", "preset_version"]
 
-    @field_validator('code')
-    def code_validate_enum(cls, value):
+    @field_validator('preset')
+    def preset_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['INVALID_ARGUMENT', 'UNAUTHENTICATED', 'PERMISSION_DENIED', 'NOT_FOUND', 'FAILED_PRECONDITION', 'RESOURCE_EXHAUSTED', 'INTERNAL']):
-            raise ValueError("must be one of enum values ('INVALID_ARGUMENT', 'UNAUTHENTICATED', 'PERMISSION_DENIED', 'NOT_FOUND', 'FAILED_PRECONDITION', 'RESOURCE_EXHAUSTED', 'INTERNAL')")
+        if value not in set(['landline', 'cell-poor', 'cell-handoff']):
+            raise ValueError("must be one of enum values ('landline', 'cell-poor', 'cell-handoff')")
         return value
 
     model_config = ConfigDict(
@@ -60,7 +58,7 @@ class CovalSimulationsAPIErrorInfo(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CovalSimulationsAPIErrorInfo from a JSON string"""
+        """Create an instance of CovalPersonasAPIAudioDegradationConfig from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -83,13 +81,6 @@ class CovalSimulationsAPIErrorInfo(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in details (list)
-        _items = []
-        if self.details:
-            for _item_details in self.details:
-                if _item_details:
-                    _items.append(_item_details.to_dict())
-            _dict['details'] = _items
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -99,7 +90,7 @@ class CovalSimulationsAPIErrorInfo(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CovalSimulationsAPIErrorInfo from a dict"""
+        """Create an instance of CovalPersonasAPIAudioDegradationConfig from a dict"""
         if obj is None:
             return None
 
@@ -107,9 +98,8 @@ class CovalSimulationsAPIErrorInfo(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "code": obj.get("code"),
-            "message": obj.get("message"),
-            "details": [CovalSimulationsAPIErrorDetail.from_dict(_item) for _item in obj["details"]] if obj.get("details") is not None else None
+            "preset": obj.get("preset"),
+            "preset_version": obj.get("preset_version")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

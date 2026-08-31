@@ -24,6 +24,7 @@ from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
 from coval_sdk.models.coval_metrics_api_current_metric_version import CovalMetricsAPICurrentMetricVersion
 from coval_sdk.models.coval_metrics_api_metadata_field_type import CovalMetricsAPIMetadataFieldType
+from coval_sdk.models.coval_metrics_api_metric_resource_expected_body import CovalMetricsAPIMetricResourceExpectedBody
 from coval_sdk.models.coval_metrics_api_metric_runtime_config import CovalMetricsAPIMetricRuntimeConfig
 from coval_sdk.models.coval_metrics_api_metric_type import CovalMetricsAPIMetricType
 from coval_sdk.models.coval_metrics_api_target_condition import CovalMetricsAPITargetCondition
@@ -49,6 +50,19 @@ class CovalMetricsAPIMetricResource(BaseModel):
     regex_pattern: Optional[StrictStr] = Field(default=None, description="Regex pattern (for METRIC_TRANSCRIPT_REGEX)")
     role: Optional[StrictStr] = Field(default=None, description="Speaker role filter (for METRIC_TRANSCRIPT_REGEX)")
     min_pause_duration_seconds: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum pause duration (for METRIC_PAUSE_ANALYSIS)")
+    max_silence_duration_seconds: Optional[Union[Annotated[float, Field(strict=True, gt=0)], Annotated[int, Field(strict=True, gt=0)]]] = None
+    min_silence_gap_seconds: Optional[Union[Annotated[float, Field(strict=True, gt=0)], Annotated[int, Field(strict=True, gt=0)]]] = None
+    frequency_threshold: Optional[Union[Annotated[float, Field(strict=True, gt=0)], Annotated[int, Field(strict=True, gt=0)]]] = None
+    direction: Optional[StrictStr] = None
+    success_sentiments: Optional[Annotated[List[StrictStr], Field(min_length=1)]] = None
+    percent_above: Optional[Union[Annotated[float, Field(le=100, strict=True, ge=0)], Annotated[int, Field(le=100, strict=True, ge=0)]]] = None
+    success_end_reasons: Optional[Annotated[List[StrictStr], Field(min_length=1)]] = None
+    observation_name: Optional[Annotated[str, Field(min_length=1, strict=True)]] = None
+    expected_body: Optional[CovalMetricsAPIMetricResourceExpectedBody] = None
+    match_path: Optional[Annotated[str, Field(min_length=1, strict=True)]] = Field(default=None, description="Optional dot path; brackets contain an integer index or comma-separated key=value filters.")
+    min_volume_change_for_pitch_misalignment: Optional[Union[Annotated[float, Field(strict=True, gt=0)], Annotated[int, Field(strict=True, gt=0)]]] = None
+    threshold: Optional[Annotated[int, Field(strict=True, ge=0)]] = None
+    operator: Optional[StrictStr] = None
     sql_query: Optional[StrictStr] = Field(default=None, description="SQL query that defines the metric (for METRIC_SQL_FLOAT)")
     criteria_source: Optional[StrictStr] = Field(default=None, description="Where a METRIC_COMPOSITE_EVALUATION metric reads its criteria from.")
     criteria_path: Optional[StrictStr] = Field(default=None, description="Path to the criteria on the source, when `criteria_source` is `test_case` or `test_case_attribute`.")
@@ -64,7 +78,7 @@ class CovalMetricsAPIMetricResource(BaseModel):
     update_time: Optional[datetime] = Field(default=None, description="Last update timestamp")
     current_version: Optional[CovalMetricsAPICurrentMetricVersion] = Field(default=None, description="The metric's live version. Null for pre-versioning metrics that have not yet been saved or run under the versioning system. Full history at GET /v1/metrics/{metric_id}/versions.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "id", "metric_name", "description", "metric_type", "prompt", "categories", "min_value", "max_value", "metadata_field_type", "metadata_field_key", "regex_pattern", "role", "min_pause_duration_seconds", "sql_query", "criteria_source", "criteria_path", "criteria", "reporting_method", "base_prompt_template", "include_traces", "runtime_config", "target_condition", "tags", "created_by", "create_time", "update_time", "current_version"]
+    __properties: ClassVar[List[str]] = ["name", "id", "metric_name", "description", "metric_type", "prompt", "categories", "min_value", "max_value", "metadata_field_type", "metadata_field_key", "regex_pattern", "role", "min_pause_duration_seconds", "max_silence_duration_seconds", "min_silence_gap_seconds", "frequency_threshold", "direction", "success_sentiments", "percent_above", "success_end_reasons", "observation_name", "expected_body", "match_path", "min_volume_change_for_pitch_misalignment", "threshold", "operator", "sql_query", "criteria_source", "criteria_path", "criteria", "reporting_method", "base_prompt_template", "include_traces", "runtime_config", "target_condition", "tags", "created_by", "create_time", "update_time", "current_version"]
 
     @field_validator('role')
     def role_validate_enum(cls, value):
@@ -72,8 +86,50 @@ class CovalMetricsAPIMetricResource(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['agent', 'user']):
-            raise ValueError("must be one of enum values ('agent', 'user')")
+        if value not in set(['agent', 'persona']):
+            raise ValueError("must be one of enum values ('agent', 'persona')")
+        return value
+
+    @field_validator('direction')
+    def direction_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['above', 'below']):
+            raise ValueError("must be one of enum values ('above', 'below')")
+        return value
+
+    @field_validator('success_sentiments')
+    def success_sentiments_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        for i in value:
+            if i not in set(['Neutral', 'Happy', 'Angry', 'Sad']):
+                raise ValueError("each list item must be one of ('Neutral', 'Happy', 'Angry', 'Sad')")
+        return value
+
+    @field_validator('success_end_reasons')
+    def success_end_reasons_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        for i in value:
+            if i not in set(['UNKNOWN', 'IDLE_TIMEOUT', 'PERSONA_DISCONNECTED', 'AGENT_DISCONNECTED', 'PIPELINE_ERROR', 'REPETITION_LOOP', 'AUDIO_UPLOAD_PLAYBACK_COMPLETED', 'SCRIPT_COMPLETED', 'SCRIPT_DIVERGED']):
+                raise ValueError("each list item must be one of ('UNKNOWN', 'IDLE_TIMEOUT', 'PERSONA_DISCONNECTED', 'AGENT_DISCONNECTED', 'PIPELINE_ERROR', 'REPETITION_LOOP', 'AUDIO_UPLOAD_PLAYBACK_COMPLETED', 'SCRIPT_COMPLETED', 'SCRIPT_DIVERGED')")
+        return value
+
+    @field_validator('operator')
+    def operator_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['<', '<=', '>', '>=', '==', '!=']):
+            raise ValueError("must be one of enum values ('<', '<=', '>', '>=', '==', '!=')")
         return value
 
     @field_validator('criteria_source')
@@ -137,6 +193,9 @@ class CovalMetricsAPIMetricResource(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of expected_body
+        if self.expected_body:
+            _dict['expected_body'] = self.expected_body.to_dict()
         # override the default output from pydantic by calling `to_dict()` of runtime_config
         if self.runtime_config:
             _dict['runtime_config'] = self.runtime_config.to_dict()
@@ -195,6 +254,71 @@ class CovalMetricsAPIMetricResource(BaseModel):
         # and model_fields_set contains the field
         if self.min_pause_duration_seconds is None and "min_pause_duration_seconds" in self.model_fields_set:
             _dict['min_pause_duration_seconds'] = None
+
+        # set to None if max_silence_duration_seconds (nullable) is None
+        # and model_fields_set contains the field
+        if self.max_silence_duration_seconds is None and "max_silence_duration_seconds" in self.model_fields_set:
+            _dict['max_silence_duration_seconds'] = None
+
+        # set to None if min_silence_gap_seconds (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_silence_gap_seconds is None and "min_silence_gap_seconds" in self.model_fields_set:
+            _dict['min_silence_gap_seconds'] = None
+
+        # set to None if frequency_threshold (nullable) is None
+        # and model_fields_set contains the field
+        if self.frequency_threshold is None and "frequency_threshold" in self.model_fields_set:
+            _dict['frequency_threshold'] = None
+
+        # set to None if direction (nullable) is None
+        # and model_fields_set contains the field
+        if self.direction is None and "direction" in self.model_fields_set:
+            _dict['direction'] = None
+
+        # set to None if success_sentiments (nullable) is None
+        # and model_fields_set contains the field
+        if self.success_sentiments is None and "success_sentiments" in self.model_fields_set:
+            _dict['success_sentiments'] = None
+
+        # set to None if percent_above (nullable) is None
+        # and model_fields_set contains the field
+        if self.percent_above is None and "percent_above" in self.model_fields_set:
+            _dict['percent_above'] = None
+
+        # set to None if success_end_reasons (nullable) is None
+        # and model_fields_set contains the field
+        if self.success_end_reasons is None and "success_end_reasons" in self.model_fields_set:
+            _dict['success_end_reasons'] = None
+
+        # set to None if observation_name (nullable) is None
+        # and model_fields_set contains the field
+        if self.observation_name is None and "observation_name" in self.model_fields_set:
+            _dict['observation_name'] = None
+
+        # set to None if expected_body (nullable) is None
+        # and model_fields_set contains the field
+        if self.expected_body is None and "expected_body" in self.model_fields_set:
+            _dict['expected_body'] = None
+
+        # set to None if match_path (nullable) is None
+        # and model_fields_set contains the field
+        if self.match_path is None and "match_path" in self.model_fields_set:
+            _dict['match_path'] = None
+
+        # set to None if min_volume_change_for_pitch_misalignment (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_volume_change_for_pitch_misalignment is None and "min_volume_change_for_pitch_misalignment" in self.model_fields_set:
+            _dict['min_volume_change_for_pitch_misalignment'] = None
+
+        # set to None if threshold (nullable) is None
+        # and model_fields_set contains the field
+        if self.threshold is None and "threshold" in self.model_fields_set:
+            _dict['threshold'] = None
+
+        # set to None if operator (nullable) is None
+        # and model_fields_set contains the field
+        if self.operator is None and "operator" in self.model_fields_set:
+            _dict['operator'] = None
 
         # set to None if sql_query (nullable) is None
         # and model_fields_set contains the field
@@ -277,6 +401,19 @@ class CovalMetricsAPIMetricResource(BaseModel):
             "regex_pattern": obj.get("regex_pattern"),
             "role": obj.get("role"),
             "min_pause_duration_seconds": obj.get("min_pause_duration_seconds"),
+            "max_silence_duration_seconds": obj.get("max_silence_duration_seconds"),
+            "min_silence_gap_seconds": obj.get("min_silence_gap_seconds"),
+            "frequency_threshold": obj.get("frequency_threshold"),
+            "direction": obj.get("direction"),
+            "success_sentiments": obj.get("success_sentiments"),
+            "percent_above": obj.get("percent_above"),
+            "success_end_reasons": obj.get("success_end_reasons"),
+            "observation_name": obj.get("observation_name"),
+            "expected_body": CovalMetricsAPIMetricResourceExpectedBody.from_dict(obj["expected_body"]) if obj.get("expected_body") is not None else None,
+            "match_path": obj.get("match_path"),
+            "min_volume_change_for_pitch_misalignment": obj.get("min_volume_change_for_pitch_misalignment"),
+            "threshold": obj.get("threshold"),
+            "operator": obj.get("operator"),
             "sql_query": obj.get("sql_query"),
             "criteria_source": obj.get("criteria_source"),
             "criteria_path": obj.get("criteria_path"),

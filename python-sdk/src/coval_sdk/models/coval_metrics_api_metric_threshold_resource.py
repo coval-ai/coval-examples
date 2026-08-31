@@ -21,6 +21,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing_extensions import Annotated
 from coval_sdk.models.coval_metrics_api_comparison_operator import CovalMetricsAPIComparisonOperator
 from coval_sdk.models.coval_metrics_api_threshold_source import CovalMetricsAPIThresholdSource
 from typing import Optional, Set
@@ -31,6 +32,7 @@ class CovalMetricsAPIMetricThresholdResource(BaseModel):
     """
     Org-specific threshold for a metric
     """ # noqa: E501
+    id: Optional[Annotated[str, Field(min_length=26, strict=True, max_length=26)]] = Field(description="26-character threshold ULID; null when no threshold is configured")
     name: Optional[StrictStr] = Field(default=None, description="Resource name: \"metrics/{metric_id}/threshold\"")
     comparison_operator: Optional[CovalMetricsAPIComparisonOperator] = None
     target_float_upper: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Target float value (upper bound for bt/nbt, single value for others)")
@@ -40,7 +42,7 @@ class CovalMetricsAPIMetricThresholdResource(BaseModel):
     create_time: Optional[datetime] = None
     update_time: Optional[datetime] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "comparison_operator", "target_float_upper", "target_float_lower", "target_values", "source", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["id", "name", "comparison_operator", "target_float_upper", "target_float_lower", "target_values", "source", "create_time", "update_time"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -87,6 +89,11 @@ class CovalMetricsAPIMetricThresholdResource(BaseModel):
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
+
+        # set to None if id (nullable) is None
+        # and model_fields_set contains the field
+        if self.id is None and "id" in self.model_fields_set:
+            _dict['id'] = None
 
         # set to None if comparison_operator (nullable) is None
         # and model_fields_set contains the field
@@ -135,6 +142,7 @@ class CovalMetricsAPIMetricThresholdResource(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "id": obj.get("id"),
             "name": obj.get("name"),
             "comparison_operator": obj.get("comparison_operator"),
             "target_float_upper": obj.get("target_float_upper"),

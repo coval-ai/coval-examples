@@ -39,6 +39,7 @@ export interface SimulationsListMetricsRequest {
     filter?: string;
     pageSize?: number;
     pageToken?: string;
+    view?: SimulationsListMetricsViewEnum;
     orderBy?: string;
 }
 
@@ -81,6 +82,7 @@ export interface MetricOutputsApiInterface {
      * @param {string} [filter] Filter expression syntax.  Supported fields: &#x60;status&#x60;, &#x60;metric_id&#x60;, &#x60;metric_name&#x60;, &#x60;value&#x60;, &#x60;create_time&#x60;, &#x60;start_time&#x60;, &#x60;end_time&#x60;  Operators: &#x60;&#x3D;&#x60;, &#x60;!&#x3D;&#x60;, &#x60;&gt;&#x60;, &#x60;&lt;&#x60;, &#x60;&gt;&#x3D;&#x60;, &#x60;&lt;&#x3D;&#x60;, &#x60;AND&#x60;, &#x60;OR&#x60;  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., &#x60;status&#x3D;\&quot;IN PROGRESS\&quot;&#x60;). 
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response
+     * @param {'BASIC' | 'FULL'} [view] Response detail level. &#x60;FULL&#x60; preserves the historical response including structured &#x60;result&#x60; and &#x60;runtime_metadata&#x60;; &#x60;BASIC&#x60; omits those heavy fields while retaining value, status, explanation, and bounded subvalues. 
      * @param {string} [orderBy] Sort order specification.  Format: &#x60;field&#x60; or &#x60;-field&#x60; (descending)  Supported fields: &#x60;metric_name&#x60;, &#x60;create_time&#x60;, &#x60;value&#x60;, &#x60;start_time&#x60;, &#x60;end_time&#x60; 
      * @throws {RequiredError}
      * @memberof MetricOutputsApiInterface
@@ -94,6 +96,7 @@ export interface MetricOutputsApiInterface {
      * @param {string} [filter] Filter expression syntax.  Supported fields: &#x60;status&#x60;, &#x60;metric_id&#x60;, &#x60;metric_name&#x60;, &#x60;value&#x60;, &#x60;create_time&#x60;, &#x60;start_time&#x60;, &#x60;end_time&#x60;  Operators: &#x60;&#x3D;&#x60;, &#x60;!&#x3D;&#x60;, &#x60;&gt;&#x60;, &#x60;&lt;&#x60;, &#x60;&gt;&#x3D;&#x60;, &#x60;&lt;&#x3D;&#x60;, &#x60;AND&#x60;, &#x60;OR&#x60;  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., &#x60;status&#x3D;\&quot;IN PROGRESS\&quot;&#x60;). 
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response
+     * @param {'BASIC' | 'FULL'} [view] Response detail level. &#x60;FULL&#x60; preserves the historical response including structured &#x60;result&#x60; and &#x60;runtime_metadata&#x60;; &#x60;BASIC&#x60; omits those heavy fields while retaining value, status, explanation, and bounded subvalues. 
      * @param {string} [orderBy] Sort order specification.  Format: &#x60;field&#x60; or &#x60;-field&#x60; (descending)  Supported fields: &#x60;metric_name&#x60;, &#x60;create_time&#x60;, &#x60;value&#x60;, &#x60;start_time&#x60;, &#x60;end_time&#x60; 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -198,6 +201,10 @@ export class MetricOutputsApi extends runtime.BaseAPI implements MetricOutputsAp
             queryParameters['page_token'] = requestParameters['pageToken'];
         }
 
+        if (requestParameters['view'] != null) {
+            queryParameters['view'] = requestParameters['view'];
+        }
+
         if (requestParameters['orderBy'] != null) {
             queryParameters['order_by'] = requestParameters['orderBy'];
         }
@@ -241,3 +248,12 @@ export class MetricOutputsApi extends runtime.BaseAPI implements MetricOutputsAp
     }
 
 }
+
+/**
+ * @export
+ */
+export const SimulationsListMetricsViewEnum = {
+    Basic: 'BASIC',
+    Full: 'FULL'
+} as const;
+export type SimulationsListMetricsViewEnum = typeof SimulationsListMetricsViewEnum[keyof typeof SimulationsListMetricsViewEnum];

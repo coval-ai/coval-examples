@@ -18,29 +18,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
-from coval_sdk.models.coval_simulations_api_error_detail import CovalSimulationsAPIErrorDetail
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
 
-class CovalSimulationsAPIErrorInfo(BaseModel):
+class CovalConversationsAPIFilteredSubmitResponse(BaseModel):
     """
-    CovalSimulationsAPIErrorInfo
+    Returned with HTTP 200 when a submit is dropped by the simulation filter. No conversation is created and nothing is billed. 
     """ # noqa: E501
-    code: StrictStr = Field(description="Machine-readable error code")
-    message: StrictStr = Field(description="Human-readable error message")
-    details: Optional[List[CovalSimulationsAPIErrorDetail]] = Field(default=None, description="Detailed information about specific error fields")
+    filtered: StrictBool = Field(description="Always true; the conversation was not created")
+    reason: StrictStr = Field(description="Why the submit was filtered")
+    simulation_id: StrictStr = Field(description="The platform simulation the submit matched")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["code", "message", "details"]
-
-    @field_validator('code')
-    def code_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['INVALID_ARGUMENT', 'UNAUTHENTICATED', 'PERMISSION_DENIED', 'NOT_FOUND', 'FAILED_PRECONDITION', 'RESOURCE_EXHAUSTED', 'INTERNAL']):
-            raise ValueError("must be one of enum values ('INVALID_ARGUMENT', 'UNAUTHENTICATED', 'PERMISSION_DENIED', 'NOT_FOUND', 'FAILED_PRECONDITION', 'RESOURCE_EXHAUSTED', 'INTERNAL')")
-        return value
+    __properties: ClassVar[List[str]] = ["filtered", "reason", "simulation_id"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -60,7 +52,7 @@ class CovalSimulationsAPIErrorInfo(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CovalSimulationsAPIErrorInfo from a JSON string"""
+        """Create an instance of CovalConversationsAPIFilteredSubmitResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -83,13 +75,6 @@ class CovalSimulationsAPIErrorInfo(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in details (list)
-        _items = []
-        if self.details:
-            for _item_details in self.details:
-                if _item_details:
-                    _items.append(_item_details.to_dict())
-            _dict['details'] = _items
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -99,7 +84,7 @@ class CovalSimulationsAPIErrorInfo(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CovalSimulationsAPIErrorInfo from a dict"""
+        """Create an instance of CovalConversationsAPIFilteredSubmitResponse from a dict"""
         if obj is None:
             return None
 
@@ -107,9 +92,9 @@ class CovalSimulationsAPIErrorInfo(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "code": obj.get("code"),
-            "message": obj.get("message"),
-            "details": [CovalSimulationsAPIErrorDetail.from_dict(_item) for _item in obj["details"]] if obj.get("details") is not None else None
+            "filtered": obj.get("filtered"),
+            "reason": obj.get("reason"),
+            "simulation_id": obj.get("simulation_id")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

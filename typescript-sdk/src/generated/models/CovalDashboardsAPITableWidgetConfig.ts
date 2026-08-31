@@ -80,6 +80,12 @@ export interface CovalDashboardsAPITableWidgetConfig {
      */
     groupBy?: CovalDashboardsAPIGroupByType;
     /**
+     * Customer metadata key to group by; mutually exclusive with groupBy. Rows fall into one of three groups: the 20 most common values are separate groups, remaining values are combined as a synthetic Other group distinct from a literal customer value named Other, and rows that do not carry the key at all form their own group with a null value, which clients render as Unknown. That last group never occupies one of the 20 slots.
+     * @type {string}
+     * @memberof CovalDashboardsAPITableWidgetConfig
+     */
+    groupByMetadataKey?: string;
+    /**
      * 
      * @type {CovalDashboardsAPIFilterConfig}
      * @memberof CovalDashboardsAPITableWidgetConfig
@@ -116,6 +122,7 @@ export function CovalDashboardsAPITableWidgetConfigFromJSONTyped(json: any, igno
         'monitoring': json['monitoring'] == null ? undefined : CovalDashboardsAPIDataSourceTypeFromJSON(json['monitoring']),
         'aggregation': json['aggregation'] == null ? undefined : CovalDashboardsAPIAggregationTypeFromJSON(json['aggregation']),
         'groupBy': json['groupBy'] == null ? undefined : CovalDashboardsAPIGroupByTypeFromJSON(json['groupBy']),
+        'groupByMetadataKey': json['groupByMetadataKey'] == null ? undefined : json['groupByMetadataKey'],
         'filters': json['filters'] == null ? undefined : CovalDashboardsAPIFilterConfigFromJSON(json['filters']),
         'metricFilter': json['metricFilter'] == null ? undefined : ((json['metricFilter'] as Array<any>).map(CovalDashboardsAPIMetricFilterFromJSON)),
     };
@@ -136,6 +143,7 @@ export function CovalDashboardsAPITableWidgetConfigToJSONTyped(value?: CovalDash
         'monitoring': CovalDashboardsAPIDataSourceTypeToJSON(value['monitoring']),
         'aggregation': CovalDashboardsAPIAggregationTypeToJSON(value['aggregation']),
         'groupBy': CovalDashboardsAPIGroupByTypeToJSON(value['groupBy']),
+        'groupByMetadataKey': value['groupByMetadataKey'],
         'filters': CovalDashboardsAPIFilterConfigToJSON(value['filters']),
         'metricFilter': value['metricFilter'] == null ? undefined : ((value['metricFilter'] as Array<any>).map(CovalDashboardsAPIMetricFilterToJSON)),
     };

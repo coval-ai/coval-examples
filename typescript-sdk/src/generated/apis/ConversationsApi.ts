@@ -44,11 +44,6 @@ import {
     CovalConversationsAPISubmitConversationRequestToJSON,
 } from '../models/CovalConversationsAPISubmitConversationRequest.js';
 import {
-    type CovalConversationsAPISubmitConversationResponse,
-    CovalConversationsAPISubmitConversationResponseFromJSON,
-    CovalConversationsAPISubmitConversationResponseToJSON,
-} from '../models/CovalConversationsAPISubmitConversationResponse.js';
-import {
     type GetConversationMetric200Response,
     GetConversationMetric200ResponseFromJSON,
     GetConversationMetric200ResponseToJSON,
@@ -58,6 +53,11 @@ import {
     ListConversations200ResponseFromJSON,
     ListConversations200ResponseToJSON,
 } from '../models/ListConversations200Response.js';
+import {
+    type SubmitConversation200Response,
+    SubmitConversation200ResponseFromJSON,
+    SubmitConversation200ResponseToJSON,
+} from '../models/SubmitConversation200Response.js';
 
 export interface DeleteConversationRequest {
     conversationId: string;
@@ -78,12 +78,14 @@ export interface ListConversationMetricsRequest {
     filter?: string;
     pageSize?: number;
     pageToken?: string;
+    view?: ListConversationMetricsViewEnum;
     orderBy?: string;
 }
 
 export interface ListConversationsRequest {
     pageSize?: number;
     pageToken?: string;
+    consistency?: ListConversationsConsistencyEnum;
     filter?: string;
     orderBy?: string;
     view?: ListConversationsViewEnum;
@@ -193,6 +195,7 @@ export interface ConversationsApiInterface {
      * @param {string} [filter] Filter expression syntax.  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  **Supported fields:** - &#x60;metric_name&#x60; (string): Filter by metric name (e.g., &#x60;metric_name&#x3D;latency&#x60;) - &#x60;status&#x60; (string): Filter by status (e.g., &#x60;status&#x3D;COMPLETED&#x60;) - &#x60;output_type&#x60; (string): Filter by type (e.g., &#x60;output_type&#x3D;float&#x60;)  **Examples:** - &#x60;filter&#x3D;status&#x3D;COMPLETED&#x60; - &#x60;filter&#x3D;metric_name&#x3D;latency AND status&#x3D;COMPLETED&#x60; - &#x60;filter&#x3D;output_type&#x3D;float&#x60; 
      * @param {number} [pageSize] Maximum number of metrics to return (1-1000)
      * @param {string} [pageToken] Pagination token from previous response (for fetching next page)
+     * @param {'BASIC' | 'FULL'} [view] Response detail level. &#x60;FULL&#x60; preserves the historical response including structured &#x60;result&#x60; and &#x60;runtime_metadata&#x60;; &#x60;BASIC&#x60; omits those heavy fields while retaining value, status, explanation, and bounded subvalues. 
      * @param {string} [orderBy] Field to order results by.  **Supported fields:** - &#x60;metric_name&#x60; (default): Sort by metric name alphabetically - &#x60;create_time&#x60;: Sort by creation time - &#x60;start_time&#x60;: Sort by computation start time - &#x60;end_time&#x60;: Sort by computation end time - &#x60;value&#x60;: Sort by metric value (float types only)  **Prefix with &#x60;-&#x60; for descending order** (e.g., &#x60;-create_time&#x60;) 
      * @throws {RequiredError}
      * @memberof ConversationsApiInterface
@@ -206,6 +209,7 @@ export interface ConversationsApiInterface {
      * @param {string} [filter] Filter expression syntax.  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  **Supported fields:** - &#x60;metric_name&#x60; (string): Filter by metric name (e.g., &#x60;metric_name&#x3D;latency&#x60;) - &#x60;status&#x60; (string): Filter by status (e.g., &#x60;status&#x3D;COMPLETED&#x60;) - &#x60;output_type&#x60; (string): Filter by type (e.g., &#x60;output_type&#x3D;float&#x60;)  **Examples:** - &#x60;filter&#x3D;status&#x3D;COMPLETED&#x60; - &#x60;filter&#x3D;metric_name&#x3D;latency AND status&#x3D;COMPLETED&#x60; - &#x60;filter&#x3D;output_type&#x3D;float&#x60; 
      * @param {number} [pageSize] Maximum number of metrics to return (1-1000)
      * @param {string} [pageToken] Pagination token from previous response (for fetching next page)
+     * @param {'BASIC' | 'FULL'} [view] Response detail level. &#x60;FULL&#x60; preserves the historical response including structured &#x60;result&#x60; and &#x60;runtime_metadata&#x60;; &#x60;BASIC&#x60; omits those heavy fields while retaining value, status, explanation, and bounded subvalues. 
      * @param {string} [orderBy] Field to order results by.  **Supported fields:** - &#x60;metric_name&#x60; (default): Sort by metric name alphabetically - &#x60;create_time&#x60;: Sort by creation time - &#x60;start_time&#x60;: Sort by computation start time - &#x60;end_time&#x60;: Sort by computation end time - &#x60;value&#x60;: Sort by metric value (float types only)  **Prefix with &#x60;-&#x60; for descending order** (e.g., &#x60;-create_time&#x60;) 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -223,6 +227,7 @@ export interface ConversationsApiInterface {
      * Creates request options for listConversations without sending the request
      * @param {number} [pageSize] Maximum number of conversations to return (1-250)
      * @param {string} [pageToken] Token for retrieving next page (from previous response)
+     * @param {'eventual' | 'strong'} [consistency] Read consistency for the request. &#x60;strong&#x60; is available only for a single &#x60;external_conversation_id&#x60; equality filter with &#x60;page_size&#x60; at most 2 and without expansion, ordering, pagination, or aggregate-view parameters. All other list requests use &#x60;eventual&#x60; consistency. 
      * @param {string} [filter] Filter expression syntax.  **Operators:** &#x60;&#x3D;&#x60;, &#x60;!&#x3D;&#x60;, &#x60;&gt;&#x60;, &#x60;&lt;&#x60;, &#x60;&gt;&#x3D;&#x60;, &#x60;&lt;&#x3D;&#x60;, &#x60;AND&#x60;, &#x60;OR&#x60;  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  **Fields:** - &#x60;status&#x60; - PENDING, IN_QUEUE, IN_PROGRESS, COMPLETED, FAILED, CANCELLED, DELETED - &#x60;external_conversation_id&#x60; - Your system\&#39;s conversation ID - &#x60;create_time&#x60; - ISO 8601 timestamp - &#x60;occurred_at&#x60; - ISO 8601 timestamp - &#x60;metadata.{key}&#x60; - Custom metadata fields - &#x60;metric.{metric_id}&#x60; - Filter by a metric\&#39;s value (score filtering)  **Metric-value filtering:** a &#x60;metric.{metric_id}&#x60; predicate (e.g. &#x60;metric.29Blkepvvx&lt;\&quot;0.9\&quot;&#x60;; &#x60;&gt;&#x60;/&#x60;&lt;&#x60;/&#x60;&gt;&#x3D;&#x60;/&#x60;&lt;&#x3D;&#x60;/&#x60;&#x3D;&#x60;/&#x60;!&#x3D;&#x60; for float metrics, &#x60;&#x3D;&#x60;/&#x60;!&#x3D;&#x60; for string metrics) returns only conversations whose metric matches, with every metric\&#39;s value embedded inline (&#x60;metric_values&#x60;). The metric type is inferred from the literal — a numeric literal is compared as a float metric. When a metric predicate is present the request is served with keyset pagination, ordered newest-first by creation time, and supports only &#x60;AND&#x60; alongside &#x60;create_time&#x60; (inclusive bounds), &#x60;agent_id&#x60;, and &#x60;metadata.{key}&#x60;; other filter fields (including &#x60;occurred_at&#x60;) and any non-default &#x60;order_by&#x60; are rejected with 400, and &#x60;page_size&#x60; is capped at 100.  **Examples:** - &#x60;status&#x3D;COMPLETED&#x60; - &#x60;create_time&gt;\&quot;2025-11-01T00:00:00Z\&quot;&#x60; - &#x60;status&#x3D;COMPLETED AND occurred_at&gt;&#x3D;\&quot;2025-11-01T00:00:00Z\&quot;&#x60; - &#x60;external_conversation_id&#x3D;external-call-abc&#x60; - &#x60;metric.29BlkepvvX19ebbLDB0y6Q&lt;\&quot;0.5\&quot;&#x60; 
      * @param {string} [orderBy] Sort field with optional &#x60;-&#x60; prefix for descending order.  **Fields:** &#x60;create_time&#x60;, &#x60;occurred_at&#x60;, &#x60;status&#x60;  **Examples:** - &#x60;create_time&#x60; (ascending) - &#x60;-create_time&#x60; (descending, most recent first) - &#x60;-occurred_at&#x60; (most recent conversations first) 
      * @param {'metric_breakdown'} [view] Set to &#x60;metric_breakdown&#x60; to return an aggregate of one metric\&#39;s scores grouped by a &#x60;customer_metadata&#x60; key (e.g. vendor), computed over the whole scored monitoring corpus, instead of the conversation list. Requires &#x60;metric_id&#x60; and &#x60;group_by_metadata&#x60;; the response is a metric-breakdown object (&#x60;{view, metric_id, group_by_metadata, aggregation, breakdown:[{metadata_value, value, count}], total_count}&#x60;). 
@@ -242,6 +247,7 @@ export interface ConversationsApiInterface {
      * @summary List conversations
      * @param {number} [pageSize] Maximum number of conversations to return (1-250)
      * @param {string} [pageToken] Token for retrieving next page (from previous response)
+     * @param {'eventual' | 'strong'} [consistency] Read consistency for the request. &#x60;strong&#x60; is available only for a single &#x60;external_conversation_id&#x60; equality filter with &#x60;page_size&#x60; at most 2 and without expansion, ordering, pagination, or aggregate-view parameters. All other list requests use &#x60;eventual&#x60; consistency. 
      * @param {string} [filter] Filter expression syntax.  **Operators:** &#x60;&#x3D;&#x60;, &#x60;!&#x3D;&#x60;, &#x60;&gt;&#x60;, &#x60;&lt;&#x60;, &#x60;&gt;&#x3D;&#x60;, &#x60;&lt;&#x3D;&#x60;, &#x60;AND&#x60;, &#x60;OR&#x60;  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  **Fields:** - &#x60;status&#x60; - PENDING, IN_QUEUE, IN_PROGRESS, COMPLETED, FAILED, CANCELLED, DELETED - &#x60;external_conversation_id&#x60; - Your system\&#39;s conversation ID - &#x60;create_time&#x60; - ISO 8601 timestamp - &#x60;occurred_at&#x60; - ISO 8601 timestamp - &#x60;metadata.{key}&#x60; - Custom metadata fields - &#x60;metric.{metric_id}&#x60; - Filter by a metric\&#39;s value (score filtering)  **Metric-value filtering:** a &#x60;metric.{metric_id}&#x60; predicate (e.g. &#x60;metric.29Blkepvvx&lt;\&quot;0.9\&quot;&#x60;; &#x60;&gt;&#x60;/&#x60;&lt;&#x60;/&#x60;&gt;&#x3D;&#x60;/&#x60;&lt;&#x3D;&#x60;/&#x60;&#x3D;&#x60;/&#x60;!&#x3D;&#x60; for float metrics, &#x60;&#x3D;&#x60;/&#x60;!&#x3D;&#x60; for string metrics) returns only conversations whose metric matches, with every metric\&#39;s value embedded inline (&#x60;metric_values&#x60;). The metric type is inferred from the literal — a numeric literal is compared as a float metric. When a metric predicate is present the request is served with keyset pagination, ordered newest-first by creation time, and supports only &#x60;AND&#x60; alongside &#x60;create_time&#x60; (inclusive bounds), &#x60;agent_id&#x60;, and &#x60;metadata.{key}&#x60;; other filter fields (including &#x60;occurred_at&#x60;) and any non-default &#x60;order_by&#x60; are rejected with 400, and &#x60;page_size&#x60; is capped at 100.  **Examples:** - &#x60;status&#x3D;COMPLETED&#x60; - &#x60;create_time&gt;\&quot;2025-11-01T00:00:00Z\&quot;&#x60; - &#x60;status&#x3D;COMPLETED AND occurred_at&gt;&#x3D;\&quot;2025-11-01T00:00:00Z\&quot;&#x60; - &#x60;external_conversation_id&#x3D;external-call-abc&#x60; - &#x60;metric.29BlkepvvX19ebbLDB0y6Q&lt;\&quot;0.5\&quot;&#x60; 
      * @param {string} [orderBy] Sort field with optional &#x60;-&#x60; prefix for descending order.  **Fields:** &#x60;create_time&#x60;, &#x60;occurred_at&#x60;, &#x60;status&#x60;  **Examples:** - &#x60;create_time&#x60; (ascending) - &#x60;-create_time&#x60; (descending, most recent first) - &#x60;-occurred_at&#x60; (most recent conversations first) 
      * @param {'metric_breakdown'} [view] Set to &#x60;metric_breakdown&#x60; to return an aggregate of one metric\&#39;s scores grouped by a &#x60;customer_metadata&#x60; key (e.g. vendor), computed over the whole scored monitoring corpus, instead of the conversation list. Requires &#x60;metric_id&#x60; and &#x60;group_by_metadata&#x60;; the response is a metric-breakdown object (&#x60;{view, metric_id, group_by_metadata, aggregation, breakdown:[{metadata_value, value, count}], total_count}&#x60;). 
@@ -305,13 +311,13 @@ export interface ConversationsApiInterface {
      * @throws {RequiredError}
      * @memberof ConversationsApiInterface
      */
-    submitConversationRaw(requestParameters: SubmitConversationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalConversationsAPISubmitConversationResponse>>;
+    submitConversationRaw(requestParameters: SubmitConversationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SubmitConversation200Response>>;
 
     /**
      * Submit a conversation for monitoring evaluation. 
      * Submit conversation for evaluation
      */
-    submitConversation(requestParameters: SubmitConversationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalConversationsAPISubmitConversationResponse>;
+    submitConversation(requestParameters: SubmitConversationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SubmitConversation200Response>;
 
 }
 
@@ -510,6 +516,10 @@ export class ConversationsApi extends runtime.BaseAPI implements ConversationsAp
             queryParameters['page_token'] = requestParameters['pageToken'];
         }
 
+        if (requestParameters['view'] != null) {
+            queryParameters['view'] = requestParameters['view'];
+        }
+
         if (requestParameters['orderBy'] != null) {
             queryParameters['order_by'] = requestParameters['orderBy'];
         }
@@ -564,6 +574,10 @@ export class ConversationsApi extends runtime.BaseAPI implements ConversationsAp
 
         if (requestParameters['pageToken'] != null) {
             queryParameters['page_token'] = requestParameters['pageToken'];
+        }
+
+        if (requestParameters['consistency'] != null) {
+            queryParameters['consistency'] = requestParameters['consistency'];
         }
 
         if (requestParameters['filter'] != null) {
@@ -737,24 +751,40 @@ export class ConversationsApi extends runtime.BaseAPI implements ConversationsAp
      * Submit a conversation for monitoring evaluation. 
      * Submit conversation for evaluation
      */
-    async submitConversationRaw(requestParameters: SubmitConversationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalConversationsAPISubmitConversationResponse>> {
+    async submitConversationRaw(requestParameters: SubmitConversationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SubmitConversation200Response>> {
         const requestOptions = await this.submitConversationRequestOpts(requestParameters);
         const response = await this.request(requestOptions, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CovalConversationsAPISubmitConversationResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => SubmitConversation200ResponseFromJSON(jsonValue));
     }
 
     /**
      * Submit a conversation for monitoring evaluation. 
      * Submit conversation for evaluation
      */
-    async submitConversation(requestParameters: SubmitConversationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalConversationsAPISubmitConversationResponse> {
+    async submitConversation(requestParameters: SubmitConversationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SubmitConversation200Response> {
         const response = await this.submitConversationRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
 }
 
+/**
+ * @export
+ */
+export const ListConversationMetricsViewEnum = {
+    Basic: 'BASIC',
+    Full: 'FULL'
+} as const;
+export type ListConversationMetricsViewEnum = typeof ListConversationMetricsViewEnum[keyof typeof ListConversationMetricsViewEnum];
+/**
+ * @export
+ */
+export const ListConversationsConsistencyEnum = {
+    Eventual: 'eventual',
+    Strong: 'strong'
+} as const;
+export type ListConversationsConsistencyEnum = typeof ListConversationsConsistencyEnum[keyof typeof ListConversationsConsistencyEnum];
 /**
  * @export
  */

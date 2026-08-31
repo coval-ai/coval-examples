@@ -38,10 +38,11 @@ class CovalDashboardsAPITableWidgetConfig(BaseModel):
     monitoring: Optional[CovalDashboardsAPIDataSourceType] = None
     aggregation: Optional[CovalDashboardsAPIAggregationType] = None
     group_by: Optional[CovalDashboardsAPIGroupByType] = Field(default=None, alias="groupBy")
+    group_by_metadata_key: Optional[Annotated[str, Field(min_length=1, strict=True)]] = Field(default=None, description="Customer metadata key to group by; mutually exclusive with groupBy. Rows fall into one of three groups: the 20 most common values are separate groups, remaining values are combined as a synthetic Other group distinct from a literal customer value named Other, and rows that do not carry the key at all form their own group with a null value, which clients render as Unknown. That last group never occupies one of the 20 slots.", alias="groupByMetadataKey")
     filters: Optional[CovalDashboardsAPIFilterConfig] = None
     metric_filter: Optional[List[CovalDashboardsAPIMetricFilter]] = Field(default=None, description="Metric value filters (max 50)", alias="metricFilter")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["metricIds", "monitoring", "aggregation", "groupBy", "filters", "metricFilter"]
+    __properties: ClassVar[List[str]] = ["metricIds", "monitoring", "aggregation", "groupBy", "groupByMetadataKey", "filters", "metricFilter"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -115,6 +116,7 @@ class CovalDashboardsAPITableWidgetConfig(BaseModel):
             "monitoring": obj.get("monitoring"),
             "aggregation": obj.get("aggregation"),
             "groupBy": obj.get("groupBy"),
+            "groupByMetadataKey": obj.get("groupByMetadataKey"),
             "filters": CovalDashboardsAPIFilterConfig.from_dict(obj["filters"]) if obj.get("filters") is not None else None,
             "metricFilter": [CovalDashboardsAPIMetricFilter.from_dict(_item) for _item in obj["metricFilter"]] if obj.get("metricFilter") is not None else None
         })

@@ -57,6 +57,7 @@ export const CovalSimulationsAPIErrorInfoCodeEnum = {
     PermissionDenied: 'PERMISSION_DENIED',
     NotFound: 'NOT_FOUND',
     FailedPrecondition: 'FAILED_PRECONDITION',
+    ResourceExhausted: 'RESOURCE_EXHAUSTED',
     Internal: 'INTERNAL'
 } as const;
 export type CovalSimulationsAPIErrorInfoCodeEnum = typeof CovalSimulationsAPIErrorInfoCodeEnum[keyof typeof CovalSimulationsAPIErrorInfoCodeEnum];
