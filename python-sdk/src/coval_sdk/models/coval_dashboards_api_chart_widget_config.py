@@ -46,6 +46,7 @@ class CovalDashboardsAPIChartWidgetConfig(BaseModel):
     grouped: Optional[StrictBool] = Field(default=None, description="Group series in the chart")
     show_as_percentage: Optional[StrictBool] = Field(default=None, description="Display values as percentages", alias="showAsPercentage")
     group_by: Optional[CovalDashboardsAPIGroupByType] = Field(default=None, alias="groupBy")
+    group_by_metadata_key: Optional[Annotated[str, Field(min_length=1, strict=True)]] = Field(default=None, description="Customer metadata key to group by; mutually exclusive with groupBy. Rows fall into one of three groups: the 20 most common values are separate groups, remaining values are combined as a synthetic Other group distinct from a literal customer value named Other, and rows that do not carry the key at all form their own group with a null value, which clients render as Unknown. That last group never occupies one of the 20 slots.", alias="groupByMetadataKey")
     custom_color_map: Optional[Dict[str, StrictStr]] = Field(default=None, description="Custom color assignments for series (max 200 entries)", alias="customColorMap")
     x_axis_label: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="Custom X-axis label", alias="xAxisLabel")
     y_axis_label: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="Custom Y-axis label", alias="yAxisLabel")
@@ -61,7 +62,7 @@ class CovalDashboardsAPIChartWidgetConfig(BaseModel):
     filters: Optional[CovalDashboardsAPIFilterConfig] = None
     metric_filter: Optional[List[CovalDashboardsAPIMetricFilter]] = Field(default=None, description="Metric value filters (max 50)", alias="metricFilter")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["metricId", "visualizationType", "monitoring", "aggregation", "metricOutputType", "bucketInterval", "stacked", "grouped", "showAsPercentage", "groupBy", "customColorMap", "xAxisLabel", "yAxisLabel", "customSeriesNames", "hiddenSeries", "precision", "units", "showCount", "showRange", "showStdDev", "showBoxPlot", "showTargetZone", "filters", "metricFilter"]
+    __properties: ClassVar[List[str]] = ["metricId", "visualizationType", "monitoring", "aggregation", "metricOutputType", "bucketInterval", "stacked", "grouped", "showAsPercentage", "groupBy", "groupByMetadataKey", "customColorMap", "xAxisLabel", "yAxisLabel", "customSeriesNames", "hiddenSeries", "precision", "units", "showCount", "showRange", "showStdDev", "showBoxPlot", "showTargetZone", "filters", "metricFilter"]
 
     @field_validator('bucket_interval')
     def bucket_interval_validate_enum(cls, value):
@@ -151,6 +152,7 @@ class CovalDashboardsAPIChartWidgetConfig(BaseModel):
             "grouped": obj.get("grouped"),
             "showAsPercentage": obj.get("showAsPercentage"),
             "groupBy": obj.get("groupBy"),
+            "groupByMetadataKey": obj.get("groupByMetadataKey"),
             "customColorMap": obj.get("customColorMap"),
             "xAxisLabel": obj.get("xAxisLabel"),
             "yAxisLabel": obj.get("yAxisLabel"),

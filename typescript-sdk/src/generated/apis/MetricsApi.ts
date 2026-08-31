@@ -463,7 +463,7 @@ export interface MetricsApiInterface {
     deleteMetricRequestOpts(requestParameters: DeleteMetricRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Soft-delete a metric.
+     * Soft-delete a metric in the active workspace. The default workspace can also delete organization-owned legacy metrics whose workspace is unset. Metrics outside that scope are left unchanged and return the same idempotent success response as an unknown or already-deleted metric. When no workspace resolves, only an organization-owned metric whose workspace is unset can be deleted.
      * @summary Delete metric
      * @param {string} metricId 22-character metric ID
      * @param {*} [options] Override http request option.
@@ -473,7 +473,7 @@ export interface MetricsApiInterface {
     deleteMetricRaw(requestParameters: DeleteMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>>;
 
     /**
-     * Soft-delete a metric.
+     * Soft-delete a metric in the active workspace. The default workspace can also delete organization-owned legacy metrics whose workspace is unset. Metrics outside that scope are left unchanged and return the same idempotent success response as an unknown or already-deleted metric. When no workspace resolves, only an organization-owned metric whose workspace is unset can be deleted.
      * Delete metric
      */
     deleteMetric(requestParameters: DeleteMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object>;
@@ -940,7 +940,7 @@ export interface MetricsApiInterface {
     listRecentlyDeletedMetricsRequestOpts(): Promise<runtime.RequestOpts>;
 
     /**
-     * List the organization\'s soft-deleted metrics still within the recovery window, newest first. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
+     * List the current workspace\'s soft-deleted metrics still within the recovery window, newest first. The default workspace also includes organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, the list is empty. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
      * @summary List recently-deleted metrics
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -949,7 +949,7 @@ export interface MetricsApiInterface {
     listRecentlyDeletedMetricsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIListRecentlyDeletedMetricsResponse>>;
 
     /**
-     * List the organization\'s soft-deleted metrics still within the recovery window, newest first. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
+     * List the current workspace\'s soft-deleted metrics still within the recovery window, newest first. The default workspace also includes organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, the list is empty. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
      * List recently-deleted metrics
      */
     listRecentlyDeletedMetrics(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListRecentlyDeletedMetricsResponse>;
@@ -963,7 +963,7 @@ export interface MetricsApiInterface {
     restoreMetricRequestOpts(requestParameters: RestoreMetricRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged returns 404.
+     * Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged or is outside the current workspace returns 404. The default workspace can restore organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, restore returns 404.
      * @summary Restore a recently-deleted metric
      * @param {string} metricId 22-character metric ID
      * @param {*} [options] Override http request option.
@@ -973,7 +973,7 @@ export interface MetricsApiInterface {
     restoreMetricRaw(requestParameters: RestoreMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIGetMetricResponse>>;
 
     /**
-     * Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged returns 404.
+     * Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged or is outside the current workspace returns 404. The default workspace can restore organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, restore returns 404.
      * Restore a recently-deleted metric
      */
     restoreMetric(requestParameters: RestoreMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetMetricResponse>;
@@ -1480,7 +1480,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Soft-delete a metric.
+     * Soft-delete a metric in the active workspace. The default workspace can also delete organization-owned legacy metrics whose workspace is unset. Metrics outside that scope are left unchanged and return the same idempotent success response as an unknown or already-deleted metric. When no workspace resolves, only an organization-owned metric whose workspace is unset can be deleted.
      * Delete metric
      */
     async deleteMetricRaw(requestParameters: DeleteMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
@@ -1491,7 +1491,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Soft-delete a metric.
+     * Soft-delete a metric in the active workspace. The default workspace can also delete organization-owned legacy metrics whose workspace is unset. Metrics outside that scope are left unchanged and return the same idempotent success response as an unknown or already-deleted metric. When no workspace resolves, only an organization-owned metric whose workspace is unset can be deleted.
      * Delete metric
      */
     async deleteMetric(requestParameters: DeleteMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
@@ -2473,7 +2473,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * List the organization\'s soft-deleted metrics still within the recovery window, newest first. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
+     * List the current workspace\'s soft-deleted metrics still within the recovery window, newest first. The default workspace also includes organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, the list is empty. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
      * List recently-deleted metrics
      */
     async listRecentlyDeletedMetricsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIListRecentlyDeletedMetricsResponse>> {
@@ -2484,7 +2484,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * List the organization\'s soft-deleted metrics still within the recovery window, newest first. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
+     * List the current workspace\'s soft-deleted metrics still within the recovery window, newest first. The default workspace also includes organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, the list is empty. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
      * List recently-deleted metrics
      */
     async listRecentlyDeletedMetrics(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListRecentlyDeletedMetricsResponse> {
@@ -2524,7 +2524,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged returns 404.
+     * Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged or is outside the current workspace returns 404. The default workspace can restore organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, restore returns 404.
      * Restore a recently-deleted metric
      */
     async restoreMetricRaw(requestParameters: RestoreMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIGetMetricResponse>> {
@@ -2535,7 +2535,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged returns 404.
+     * Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged or is outside the current workspace returns 404. The default workspace can restore organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, restore returns 404.
      * Restore a recently-deleted metric
      */
     async restoreMetric(requestParameters: RestoreMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetMetricResponse> {

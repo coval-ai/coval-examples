@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime.js';
+import type { CovalPersonasAPIAudioDegradationConfig } from './CovalPersonasAPIAudioDegradationConfig.js';
+import {
+    CovalPersonasAPIAudioDegradationConfigFromJSON,
+    CovalPersonasAPIAudioDegradationConfigFromJSONTyped,
+    CovalPersonasAPIAudioDegradationConfigToJSON,
+    CovalPersonasAPIAudioDegradationConfigToJSONTyped,
+} from './CovalPersonasAPIAudioDegradationConfig.js';
+
 /**
  * All fields are optional. Only provided fields will be updated.
  * @export
@@ -107,6 +115,17 @@ export interface CovalPersonasAPIUpdatePersonaRequest {
      */
     situate_speaker?: CovalPersonasAPIUpdatePersonaRequestSituateSpeakerEnum | null;
     /**
+     * Channel degradation preset. Mutually exclusive with situate_speaker. 'cell-poor' and
+     * 'cell-handoff' additionally require background_sound to be something other than
+     * 'off', to give their target SNR a noise bed to apply against; 'landline' has no
+     * target SNR and carries no such requirement. Send null to clear an existing
+     * audio_degradation preset.
+     * 
+     * @type {CovalPersonasAPIAudioDegradationConfig}
+     * @memberof CovalPersonasAPIUpdatePersonaRequest
+     */
+    audio_degradation?: CovalPersonasAPIAudioDegradationConfig | null;
+    /**
      * Tags to associate with this persona. Null or omitted leaves tags unchanged. Pass [] to clear all tags.
      * @type {Array<string>}
      * @memberof CovalPersonasAPIUpdatePersonaRequest
@@ -164,6 +183,7 @@ export function CovalPersonasAPIUpdatePersonaRequestFromJSONTyped(json: any, ign
         'multi_language_stt': json['multi_language_stt'] == null ? undefined : json['multi_language_stt'],
         'hold_music_timeout_seconds': json['hold_music_timeout_seconds'] == null ? undefined : json['hold_music_timeout_seconds'],
         'situate_speaker': json['situate_speaker'] == null ? undefined : json['situate_speaker'],
+        'audio_degradation': json['audio_degradation'] == null ? undefined : CovalPersonasAPIAudioDegradationConfigFromJSON(json['audio_degradation']),
         'tags': json['tags'] == null ? undefined : json['tags'],
     };
 }
@@ -192,6 +212,7 @@ export function CovalPersonasAPIUpdatePersonaRequestToJSONTyped(value?: CovalPer
         'multi_language_stt': value['multi_language_stt'],
         'hold_music_timeout_seconds': value['hold_music_timeout_seconds'],
         'situate_speaker': value['situate_speaker'],
+        'audio_degradation': CovalPersonasAPIAudioDegradationConfigToJSON(value['audio_degradation']),
         'tags': value['tags'],
     };
 }

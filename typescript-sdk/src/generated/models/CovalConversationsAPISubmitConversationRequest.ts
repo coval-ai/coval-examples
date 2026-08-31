@@ -119,6 +119,12 @@ export interface CovalConversationsAPISubmitConversationRequest {
      * - Filtering conversations
      * - Custom analytics and reporting
      * 
+     * Reserved key `coval_simulation_id`: set it to the value of the
+     * `X-Coval-Simulation-Id` SIP header delivered with every inbound
+     * simulation call. Organizations that opt in to the simulation
+     * filter have submits carrying a matching platform-simulation id
+     * dropped without creating a conversation (see the 200 response).
+     * 
      * @type {{ [key: string]: any; }}
      * @memberof CovalConversationsAPISubmitConversationRequest
      */

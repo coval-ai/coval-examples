@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime.js';
+import type { CovalPersonasAPIAudioDegradationConfig } from './CovalPersonasAPIAudioDegradationConfig.js';
+import {
+    CovalPersonasAPIAudioDegradationConfigFromJSON,
+    CovalPersonasAPIAudioDegradationConfigFromJSONTyped,
+    CovalPersonasAPIAudioDegradationConfigToJSON,
+    CovalPersonasAPIAudioDegradationConfigToJSONTyped,
+} from './CovalPersonasAPIAudioDegradationConfig.js';
+
 /**
  * Persona resource representation returned by API responses.
  * @export
@@ -122,6 +130,12 @@ export interface CovalPersonasAPIPersonaResource {
      */
     situate_speaker?: CovalPersonasAPIPersonaResourceSituateSpeakerEnum | null;
     /**
+     * Channel degradation preset applied to this persona, if any.
+     * @type {CovalPersonasAPIAudioDegradationConfig}
+     * @memberof CovalPersonasAPIPersonaResource
+     */
+    audio_degradation?: CovalPersonasAPIAudioDegradationConfig | null;
+    /**
      * Tags associated with this persona
      * @type {Array<string>}
      * @memberof CovalPersonasAPIPersonaResource
@@ -197,6 +211,7 @@ export function CovalPersonasAPIPersonaResourceFromJSONTyped(json: any, ignoreDi
         'multi_language_stt': json['multi_language_stt'] == null ? undefined : json['multi_language_stt'],
         'hold_music_timeout_seconds': json['hold_music_timeout_seconds'] == null ? undefined : json['hold_music_timeout_seconds'],
         'situate_speaker': json['situate_speaker'] == null ? undefined : json['situate_speaker'],
+        'audio_degradation': json['audio_degradation'] == null ? undefined : CovalPersonasAPIAudioDegradationConfigFromJSON(json['audio_degradation']),
         'tags': json['tags'] == null ? undefined : json['tags'],
         'create_time': (new Date(json['create_time'])),
         'update_time': json['update_time'] == null ? undefined : (new Date(json['update_time'])),
@@ -229,6 +244,7 @@ export function CovalPersonasAPIPersonaResourceToJSONTyped(value?: CovalPersonas
         'multi_language_stt': value['multi_language_stt'],
         'hold_music_timeout_seconds': value['hold_music_timeout_seconds'],
         'situate_speaker': value['situate_speaker'],
+        'audio_degradation': CovalPersonasAPIAudioDegradationConfigToJSON(value['audio_degradation']),
         'tags': value['tags'],
         'create_time': value['create_time'].toISOString(),
         'update_time': value['update_time'] == null ? value['update_time'] : value['update_time'].toISOString(),

@@ -21,6 +21,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
+from coval_sdk.models.coval_personas_api_audio_degradation_config import CovalPersonasAPIAudioDegradationConfig
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -42,9 +43,10 @@ class CovalPersonasAPIUpdatePersonaRequest(BaseModel):
     multi_language_stt: Optional[StrictBool] = Field(default=None, description="Enable multilingual speech-to-text so callers speaking languages other than the primary language_code are still transcribed accurately.")
     hold_music_timeout_seconds: Optional[Union[Annotated[float, Field(le=300, strict=True, ge=5)], Annotated[int, Field(le=300, strict=True, ge=5)]]] = Field(default=None, description="Disconnect after this many seconds of no speech (5-300)")
     situate_speaker: Optional[StrictStr] = Field(default=None, description="Persona placement preset. - speakerphone-easy: User speaking from a distance from the microphone - speakerphone-hard: User speaking from a distance from the microphone in an acoustically challenging environment. Send null to clear an existing situate_speaker preset. ")
+    audio_degradation: Optional[CovalPersonasAPIAudioDegradationConfig] = Field(default=None, description="Channel degradation preset. Mutually exclusive with situate_speaker. 'cell-poor' and 'cell-handoff' additionally require background_sound to be something other than 'off', to give their target SNR a noise bed to apply against; 'landline' has no target SNR and carries no such requirement. Send null to clear an existing audio_degradation preset. ")
     tags: Optional[List[StrictStr]] = Field(default=None, description="Tags to associate with this persona. Null or omitted leaves tags unchanged. Pass [] to clear all tags.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "persona_prompt", "voice_name", "language_code", "background_sound", "background_sound_volume", "voice_volume", "voice_speed", "wait_seconds", "conversation_initiation", "multi_language_stt", "hold_music_timeout_seconds", "situate_speaker", "tags"]
+    __properties: ClassVar[List[str]] = ["name", "persona_prompt", "voice_name", "language_code", "background_sound", "background_sound_volume", "voice_volume", "voice_speed", "wait_seconds", "conversation_initiation", "multi_language_stt", "hold_music_timeout_seconds", "situate_speaker", "audio_degradation", "tags"]
 
     @field_validator('background_sound')
     def background_sound_validate_regular_expression(cls, value):
@@ -120,6 +122,9 @@ class CovalPersonasAPIUpdatePersonaRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of audio_degradation
+        if self.audio_degradation:
+            _dict['audio_degradation'] = self.audio_degradation.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -190,6 +195,11 @@ class CovalPersonasAPIUpdatePersonaRequest(BaseModel):
         if self.situate_speaker is None and "situate_speaker" in self.model_fields_set:
             _dict['situate_speaker'] = None
 
+        # set to None if audio_degradation (nullable) is None
+        # and model_fields_set contains the field
+        if self.audio_degradation is None and "audio_degradation" in self.model_fields_set:
+            _dict['audio_degradation'] = None
+
         # set to None if tags (nullable) is None
         # and model_fields_set contains the field
         if self.tags is None and "tags" in self.model_fields_set:
@@ -220,6 +230,7 @@ class CovalPersonasAPIUpdatePersonaRequest(BaseModel):
             "multi_language_stt": obj.get("multi_language_stt"),
             "hold_music_timeout_seconds": obj.get("hold_music_timeout_seconds"),
             "situate_speaker": obj.get("situate_speaker"),
+            "audio_degradation": CovalPersonasAPIAudioDegradationConfig.from_dict(obj["audio_degradation"]) if obj.get("audio_degradation") is not None else None,
             "tags": obj.get("tags")
         })
         # store additional fields in additional_properties

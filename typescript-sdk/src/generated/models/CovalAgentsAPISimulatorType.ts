@@ -28,6 +28,7 @@
  * - **MODEL_TYPE_OPENAI_REALTIME**: OpenAI Realtime voice-to-voice agents
  * - **MODEL_TYPE_GEMINI_REALTIME**: Gemini Live voice-to-voice agents
  * - **MODEL_TYPE_GROK_REALTIME**: Grok (xAI) Voice Agent voice-to-voice agents
+ * - **MODEL_TYPE_DEEPGRAM_REALTIME**: Deepgram Voice Agent voice-to-voice agents
  * 
  * @export
  */
@@ -43,7 +44,8 @@ export const CovalAgentsAPISimulatorType = {
     ModelTypeDaily: 'MODEL_TYPE_DAILY',
     ModelTypeOpenaiRealtime: 'MODEL_TYPE_OPENAI_REALTIME',
     ModelTypeGeminiRealtime: 'MODEL_TYPE_GEMINI_REALTIME',
-    ModelTypeGrokRealtime: 'MODEL_TYPE_GROK_REALTIME'
+    ModelTypeGrokRealtime: 'MODEL_TYPE_GROK_REALTIME',
+    ModelTypeDeepgramRealtime: 'MODEL_TYPE_DEEPGRAM_REALTIME'
 } as const;
 export type CovalAgentsAPISimulatorType = typeof CovalAgentsAPISimulatorType[keyof typeof CovalAgentsAPISimulatorType];
 

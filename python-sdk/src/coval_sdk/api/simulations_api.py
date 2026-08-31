@@ -1215,7 +1215,7 @@ class SimulationsApi:
     ) -> CovalSimulationsAPIRerunMetricsResponse:
         """Batch rerun metrics
 
-        Re-score a set of metrics against a set of existing simulations without re-running the simulations. The same metrics are applied to every simulation (metrics x simulations). Limits: up to 100 simulations, up to 500 metrics, and at most 500 total reruns (simulation_ids x metric_ids) per call. Best-effort per simulation: valid simulations are queued and a per-simulation status is returned. Existing metric results are overwritten when each rerun completes. 
+        Re-score a set of metrics against a set of existing simulations without re-running the simulations. The same metrics are applied to every simulation (metrics x simulations). Limits: up to 100 simulations, up to 500 metrics, and at most 500 total reruns (simulation_ids x metric_ids) per call. Requests also count against an organization-level hourly limit on simulations queued (default 5000/hour); when exceeded the API returns 429 with a Retry-After header. Best-effort per simulation: valid simulations are queued and a per-simulation status is returned. Existing metric results are overwritten when each rerun completes. 
 
         :param coval_simulations_api_rerun_metrics_request: (required)
         :type coval_simulations_api_rerun_metrics_request: CovalSimulationsAPIRerunMetricsRequest
@@ -1255,6 +1255,7 @@ class SimulationsApi:
             '400': "CovalSimulationsAPIErrorResponse",
             '401': "CovalSimulationsAPIErrorResponse",
             '404': "CovalSimulationsAPIErrorResponse",
+            '429': "CovalSimulationsAPIErrorResponse",
             '500': "CovalSimulationsAPIErrorResponse",
             '503': "CovalSimulationsAPIErrorResponse",
         }
@@ -1288,7 +1289,7 @@ class SimulationsApi:
     ) -> ApiResponse[CovalSimulationsAPIRerunMetricsResponse]:
         """Batch rerun metrics
 
-        Re-score a set of metrics against a set of existing simulations without re-running the simulations. The same metrics are applied to every simulation (metrics x simulations). Limits: up to 100 simulations, up to 500 metrics, and at most 500 total reruns (simulation_ids x metric_ids) per call. Best-effort per simulation: valid simulations are queued and a per-simulation status is returned. Existing metric results are overwritten when each rerun completes. 
+        Re-score a set of metrics against a set of existing simulations without re-running the simulations. The same metrics are applied to every simulation (metrics x simulations). Limits: up to 100 simulations, up to 500 metrics, and at most 500 total reruns (simulation_ids x metric_ids) per call. Requests also count against an organization-level hourly limit on simulations queued (default 5000/hour); when exceeded the API returns 429 with a Retry-After header. Best-effort per simulation: valid simulations are queued and a per-simulation status is returned. Existing metric results are overwritten when each rerun completes. 
 
         :param coval_simulations_api_rerun_metrics_request: (required)
         :type coval_simulations_api_rerun_metrics_request: CovalSimulationsAPIRerunMetricsRequest
@@ -1328,6 +1329,7 @@ class SimulationsApi:
             '400': "CovalSimulationsAPIErrorResponse",
             '401': "CovalSimulationsAPIErrorResponse",
             '404': "CovalSimulationsAPIErrorResponse",
+            '429': "CovalSimulationsAPIErrorResponse",
             '500': "CovalSimulationsAPIErrorResponse",
             '503': "CovalSimulationsAPIErrorResponse",
         }
@@ -1361,7 +1363,7 @@ class SimulationsApi:
     ) -> RESTResponseType:
         """Batch rerun metrics
 
-        Re-score a set of metrics against a set of existing simulations without re-running the simulations. The same metrics are applied to every simulation (metrics x simulations). Limits: up to 100 simulations, up to 500 metrics, and at most 500 total reruns (simulation_ids x metric_ids) per call. Best-effort per simulation: valid simulations are queued and a per-simulation status is returned. Existing metric results are overwritten when each rerun completes. 
+        Re-score a set of metrics against a set of existing simulations without re-running the simulations. The same metrics are applied to every simulation (metrics x simulations). Limits: up to 100 simulations, up to 500 metrics, and at most 500 total reruns (simulation_ids x metric_ids) per call. Requests also count against an organization-level hourly limit on simulations queued (default 5000/hour); when exceeded the API returns 429 with a Retry-After header. Best-effort per simulation: valid simulations are queued and a per-simulation status is returned. Existing metric results are overwritten when each rerun completes. 
 
         :param coval_simulations_api_rerun_metrics_request: (required)
         :type coval_simulations_api_rerun_metrics_request: CovalSimulationsAPIRerunMetricsRequest
@@ -1401,6 +1403,7 @@ class SimulationsApi:
             '400': "CovalSimulationsAPIErrorResponse",
             '401': "CovalSimulationsAPIErrorResponse",
             '404': "CovalSimulationsAPIErrorResponse",
+            '429': "CovalSimulationsAPIErrorResponse",
             '500': "CovalSimulationsAPIErrorResponse",
             '503': "CovalSimulationsAPIErrorResponse",
         }

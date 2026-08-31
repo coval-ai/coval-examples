@@ -15,7 +15,7 @@
 """  # noqa: E501
 
 
-__version__ = "0.6.5"
+__version__ = "0.7.0"
 
 # Define package exports
 __all__ = [
@@ -139,6 +139,7 @@ __all__ = [
     "CovalConversationsAPIErrorDetail",
     "CovalConversationsAPIErrorResponse",
     "CovalConversationsAPIErrorResponseError",
+    "CovalConversationsAPIFilteredSubmitResponse",
     "CovalConversationsAPIGetConversationAudioResponse",
     "CovalConversationsAPIGetConversationMetricResponse",
     "CovalConversationsAPIGetConversationResponse",
@@ -203,6 +204,7 @@ __all__ = [
     "CovalMetricsAPICreateMetricBaselineRequest",
     "CovalMetricsAPICreateMetricFlowRequest",
     "CovalMetricsAPICreateMetricRequest",
+    "CovalMetricsAPICreateMetricRequestExpectedBody",
     "CovalMetricsAPICreateThresholdRequest",
     "CovalMetricsAPICreateThresholdResponse",
     "CovalMetricsAPICurrentMetricVersion",
@@ -225,6 +227,7 @@ __all__ = [
     "CovalMetricsAPIMetricModelResource",
     "CovalMetricsAPIMetricOutputCollection",
     "CovalMetricsAPIMetricResource",
+    "CovalMetricsAPIMetricResourceExpectedBody",
     "CovalMetricsAPIMetricRuntimeConfig",
     "CovalMetricsAPIMetricTagResource",
     "CovalMetricsAPIMetricTemplateVariableCategory",
@@ -280,6 +283,7 @@ __all__ = [
     "CovalOrganizationAPIErrorDetail",
     "CovalOrganizationAPIErrorResponse",
     "CovalOrganizationAPIUpdateConversationMetricsRequest",
+    "CovalPersonasAPIAudioDegradationConfig",
     "CovalPersonasAPIBackgroundSoundResource",
     "CovalPersonasAPICompleteBackgroundSoundResponse",
     "CovalPersonasAPICreateBackgroundSoundRequest",
@@ -476,6 +480,7 @@ __all__ = [
     "ListTestCases200Response",
     "ListTestSets200Response",
     "SimulationsGetMetric200Response",
+    "SubmitConversation200Response",
     "TestCasesAPICreateTestCaseRequest",
     "TestCasesAPIErrorResponse",
     "TestCasesAPIErrorResponseError",
@@ -629,6 +634,7 @@ from coval_sdk.models.coval_conversations_api_delete_conversation_response impor
 from coval_sdk.models.coval_conversations_api_error_detail import CovalConversationsAPIErrorDetail as CovalConversationsAPIErrorDetail
 from coval_sdk.models.coval_conversations_api_error_response import CovalConversationsAPIErrorResponse as CovalConversationsAPIErrorResponse
 from coval_sdk.models.coval_conversations_api_error_response_error import CovalConversationsAPIErrorResponseError as CovalConversationsAPIErrorResponseError
+from coval_sdk.models.coval_conversations_api_filtered_submit_response import CovalConversationsAPIFilteredSubmitResponse as CovalConversationsAPIFilteredSubmitResponse
 from coval_sdk.models.coval_conversations_api_get_conversation_audio_response import CovalConversationsAPIGetConversationAudioResponse as CovalConversationsAPIGetConversationAudioResponse
 from coval_sdk.models.coval_conversations_api_get_conversation_metric_response import CovalConversationsAPIGetConversationMetricResponse as CovalConversationsAPIGetConversationMetricResponse
 from coval_sdk.models.coval_conversations_api_get_conversation_response import CovalConversationsAPIGetConversationResponse as CovalConversationsAPIGetConversationResponse
@@ -693,6 +699,7 @@ from coval_sdk.models.coval_metrics_api_comparison_operator import CovalMetricsA
 from coval_sdk.models.coval_metrics_api_create_metric_baseline_request import CovalMetricsAPICreateMetricBaselineRequest as CovalMetricsAPICreateMetricBaselineRequest
 from coval_sdk.models.coval_metrics_api_create_metric_flow_request import CovalMetricsAPICreateMetricFlowRequest as CovalMetricsAPICreateMetricFlowRequest
 from coval_sdk.models.coval_metrics_api_create_metric_request import CovalMetricsAPICreateMetricRequest as CovalMetricsAPICreateMetricRequest
+from coval_sdk.models.coval_metrics_api_create_metric_request_expected_body import CovalMetricsAPICreateMetricRequestExpectedBody as CovalMetricsAPICreateMetricRequestExpectedBody
 from coval_sdk.models.coval_metrics_api_create_threshold_request import CovalMetricsAPICreateThresholdRequest as CovalMetricsAPICreateThresholdRequest
 from coval_sdk.models.coval_metrics_api_create_threshold_response import CovalMetricsAPICreateThresholdResponse as CovalMetricsAPICreateThresholdResponse
 from coval_sdk.models.coval_metrics_api_current_metric_version import CovalMetricsAPICurrentMetricVersion as CovalMetricsAPICurrentMetricVersion
@@ -715,6 +722,7 @@ from coval_sdk.models.coval_metrics_api_metric_flow_response import CovalMetrics
 from coval_sdk.models.coval_metrics_api_metric_model_resource import CovalMetricsAPIMetricModelResource as CovalMetricsAPIMetricModelResource
 from coval_sdk.models.coval_metrics_api_metric_output_collection import CovalMetricsAPIMetricOutputCollection as CovalMetricsAPIMetricOutputCollection
 from coval_sdk.models.coval_metrics_api_metric_resource import CovalMetricsAPIMetricResource as CovalMetricsAPIMetricResource
+from coval_sdk.models.coval_metrics_api_metric_resource_expected_body import CovalMetricsAPIMetricResourceExpectedBody as CovalMetricsAPIMetricResourceExpectedBody
 from coval_sdk.models.coval_metrics_api_metric_runtime_config import CovalMetricsAPIMetricRuntimeConfig as CovalMetricsAPIMetricRuntimeConfig
 from coval_sdk.models.coval_metrics_api_metric_tag_resource import CovalMetricsAPIMetricTagResource as CovalMetricsAPIMetricTagResource
 from coval_sdk.models.coval_metrics_api_metric_template_variable_category import CovalMetricsAPIMetricTemplateVariableCategory as CovalMetricsAPIMetricTemplateVariableCategory
@@ -770,6 +778,7 @@ from coval_sdk.models.coval_organization_api_error import CovalOrganizationAPIEr
 from coval_sdk.models.coval_organization_api_error_detail import CovalOrganizationAPIErrorDetail as CovalOrganizationAPIErrorDetail
 from coval_sdk.models.coval_organization_api_error_response import CovalOrganizationAPIErrorResponse as CovalOrganizationAPIErrorResponse
 from coval_sdk.models.coval_organization_api_update_conversation_metrics_request import CovalOrganizationAPIUpdateConversationMetricsRequest as CovalOrganizationAPIUpdateConversationMetricsRequest
+from coval_sdk.models.coval_personas_api_audio_degradation_config import CovalPersonasAPIAudioDegradationConfig as CovalPersonasAPIAudioDegradationConfig
 from coval_sdk.models.coval_personas_api_background_sound_resource import CovalPersonasAPIBackgroundSoundResource as CovalPersonasAPIBackgroundSoundResource
 from coval_sdk.models.coval_personas_api_complete_background_sound_response import CovalPersonasAPICompleteBackgroundSoundResponse as CovalPersonasAPICompleteBackgroundSoundResponse
 from coval_sdk.models.coval_personas_api_create_background_sound_request import CovalPersonasAPICreateBackgroundSoundRequest as CovalPersonasAPICreateBackgroundSoundRequest
@@ -966,6 +975,7 @@ from coval_sdk.models.list_runs400_response import ListRuns400Response as ListRu
 from coval_sdk.models.list_test_cases200_response import ListTestCases200Response as ListTestCases200Response
 from coval_sdk.models.list_test_sets200_response import ListTestSets200Response as ListTestSets200Response
 from coval_sdk.models.simulations_get_metric200_response import SimulationsGetMetric200Response as SimulationsGetMetric200Response
+from coval_sdk.models.submit_conversation200_response import SubmitConversation200Response as SubmitConversation200Response
 from coval_sdk.models.test_cases_api_create_test_case_request import TestCasesAPICreateTestCaseRequest as TestCasesAPICreateTestCaseRequest
 from coval_sdk.models.test_cases_api_error_response import TestCasesAPIErrorResponse as TestCasesAPIErrorResponse
 from coval_sdk.models.test_cases_api_error_response_error import TestCasesAPIErrorResponseError as TestCasesAPIErrorResponseError

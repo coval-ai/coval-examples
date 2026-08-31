@@ -16,7 +16,7 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictStr
+from pydantic import Field, StrictStr, field_validator
 from typing import Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_simulations_api_list_metrics_response import CovalSimulationsAPIListMetricsResponse
@@ -332,6 +332,7 @@ class MetricOutputsApi:
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Supported fields: `status`, `metric_id`, `metric_name`, `value`, `create_time`, `start_time`, `end_time`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`). ")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
+        view: Annotated[Optional[StrictStr], Field(description="Response detail level. `FULL` preserves the historical response including structured `result` and `runtime_metadata`; `BASIC` omits those heavy fields while retaining value, status, explanation, and bounded subvalues. ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `metric_name`, `create_time`, `value`, `start_time`, `end_time` ")] = None,
         _request_timeout: Union[
             None,
@@ -358,6 +359,8 @@ class MetricOutputsApi:
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
         :type page_token: str
+        :param view: Response detail level. `FULL` preserves the historical response including structured `result` and `runtime_metadata`; `BASIC` omits those heavy fields while retaining value, status, explanation, and bounded subvalues. 
+        :type view: str
         :param order_by: Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `metric_name`, `create_time`, `value`, `start_time`, `end_time` 
         :type order_by: str
         :param _request_timeout: timeout setting for this request. If one
@@ -387,6 +390,7 @@ class MetricOutputsApi:
             filter=filter,
             page_size=page_size,
             page_token=page_token,
+            view=view,
             order_by=order_by,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -419,6 +423,7 @@ class MetricOutputsApi:
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Supported fields: `status`, `metric_id`, `metric_name`, `value`, `create_time`, `start_time`, `end_time`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`). ")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
+        view: Annotated[Optional[StrictStr], Field(description="Response detail level. `FULL` preserves the historical response including structured `result` and `runtime_metadata`; `BASIC` omits those heavy fields while retaining value, status, explanation, and bounded subvalues. ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `metric_name`, `create_time`, `value`, `start_time`, `end_time` ")] = None,
         _request_timeout: Union[
             None,
@@ -445,6 +450,8 @@ class MetricOutputsApi:
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
         :type page_token: str
+        :param view: Response detail level. `FULL` preserves the historical response including structured `result` and `runtime_metadata`; `BASIC` omits those heavy fields while retaining value, status, explanation, and bounded subvalues. 
+        :type view: str
         :param order_by: Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `metric_name`, `create_time`, `value`, `start_time`, `end_time` 
         :type order_by: str
         :param _request_timeout: timeout setting for this request. If one
@@ -474,6 +481,7 @@ class MetricOutputsApi:
             filter=filter,
             page_size=page_size,
             page_token=page_token,
+            view=view,
             order_by=order_by,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -506,6 +514,7 @@ class MetricOutputsApi:
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Supported fields: `status`, `metric_id`, `metric_name`, `value`, `create_time`, `start_time`, `end_time`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`). ")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
+        view: Annotated[Optional[StrictStr], Field(description="Response detail level. `FULL` preserves the historical response including structured `result` and `runtime_metadata`; `BASIC` omits those heavy fields while retaining value, status, explanation, and bounded subvalues. ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `metric_name`, `create_time`, `value`, `start_time`, `end_time` ")] = None,
         _request_timeout: Union[
             None,
@@ -532,6 +541,8 @@ class MetricOutputsApi:
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
         :type page_token: str
+        :param view: Response detail level. `FULL` preserves the historical response including structured `result` and `runtime_metadata`; `BASIC` omits those heavy fields while retaining value, status, explanation, and bounded subvalues. 
+        :type view: str
         :param order_by: Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `metric_name`, `create_time`, `value`, `start_time`, `end_time` 
         :type order_by: str
         :param _request_timeout: timeout setting for this request. If one
@@ -561,6 +572,7 @@ class MetricOutputsApi:
             filter=filter,
             page_size=page_size,
             page_token=page_token,
+            view=view,
             order_by=order_by,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -588,6 +600,7 @@ class MetricOutputsApi:
         filter,
         page_size,
         page_token,
+        view,
         order_by,
         _request_auth,
         _content_type,
@@ -624,6 +637,10 @@ class MetricOutputsApi:
         if page_token is not None:
             
             _query_params.append(('page_token', page_token))
+            
+        if view is not None:
+            
+            _query_params.append(('view', view))
             
         if order_by is not None:
             

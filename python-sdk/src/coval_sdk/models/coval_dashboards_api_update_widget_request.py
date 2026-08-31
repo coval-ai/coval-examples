@@ -29,7 +29,7 @@ from pydantic_core import to_jsonable_python
 
 class CovalDashboardsAPIUpdateWidgetRequest(BaseModel):
     """
-    CovalDashboardsAPIUpdateWidgetRequest
+    All fields optional (PATCH semantics). Unlike the dashboard-level config, which is replaced, config is MERGED into the stored blob one key at a time: a key you send replaces its stored value and a key you omit keeps its stored value. Three exceptions are worth knowing before you rely on that. Null-valued keys are dropped before the merge, so they do not clear anything -- and if dropping them leaves the object empty, the result is an empty object, which clears the whole blob. Sending \"type\": \"table\" validates config as a table widget, whose metricIds defaults to an empty list, so any table-widget PATCH that omits metricIds overwrites it with []; omitting \"type\" validates against the chart shape instead and leaves metricIds alone. Clearing a single key requires sending an empty value for it (for example \"metricFilter\": []), which is only possible for the list- and object-valued keys -- scalar keys such as metricId, aggregation or groupByMetadataKey have no empty value and cannot be individually cleared. To clear the whole blob, send an empty object.
     """ # noqa: E501
     display_name: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=255)]] = Field(default=None, description="Updated widget name")
     type: Optional[CovalDashboardsAPIWidgetType] = None

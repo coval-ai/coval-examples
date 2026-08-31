@@ -1301,6 +1301,7 @@ class MetricsApi:
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '409': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -1376,6 +1377,7 @@ class MetricsApi:
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '409': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -1451,6 +1453,7 @@ class MetricsApi:
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '409': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -1559,7 +1562,7 @@ class MetricsApi:
     ) -> object:
         """Delete metric
 
-        Soft-delete a metric.
+        Soft-delete a metric in the active workspace. The default workspace can also delete organization-owned legacy metrics whose workspace is unset. Metrics outside that scope are left unchanged and return the same idempotent success response as an unknown or already-deleted metric. When no workspace resolves, only an organization-owned metric whose workspace is unset can be deleted.
 
         :param metric_id: 22-character metric ID (required)
         :type metric_id: str
@@ -1628,7 +1631,7 @@ class MetricsApi:
     ) -> ApiResponse[object]:
         """Delete metric
 
-        Soft-delete a metric.
+        Soft-delete a metric in the active workspace. The default workspace can also delete organization-owned legacy metrics whose workspace is unset. Metrics outside that scope are left unchanged and return the same idempotent success response as an unknown or already-deleted metric. When no workspace resolves, only an organization-owned metric whose workspace is unset can be deleted.
 
         :param metric_id: 22-character metric ID (required)
         :type metric_id: str
@@ -1697,7 +1700,7 @@ class MetricsApi:
     ) -> RESTResponseType:
         """Delete metric
 
-        Soft-delete a metric.
+        Soft-delete a metric in the active workspace. The default workspace can also delete organization-owned legacy metrics whose workspace is unset. Metrics outside that scope are left unchanged and return the same idempotent success response as an unknown or already-deleted metric. When no workspace resolves, only an organization-owned metric whose workspace is unset can be deleted.
 
         :param metric_id: 22-character metric ID (required)
         :type metric_id: str
@@ -6846,7 +6849,7 @@ class MetricsApi:
     ) -> CovalMetricsAPIListRecentlyDeletedMetricsResponse:
         """List recently-deleted metrics
 
-        List the organization's soft-deleted metrics still within the recovery window, newest first. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
+        List the current workspace's soft-deleted metrics still within the recovery window, newest first. The default workspace also includes organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, the list is empty. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -6911,7 +6914,7 @@ class MetricsApi:
     ) -> ApiResponse[CovalMetricsAPIListRecentlyDeletedMetricsResponse]:
         """List recently-deleted metrics
 
-        List the organization's soft-deleted metrics still within the recovery window, newest first. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
+        List the current workspace's soft-deleted metrics still within the recovery window, newest first. The default workspace also includes organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, the list is empty. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -6976,7 +6979,7 @@ class MetricsApi:
     ) -> RESTResponseType:
         """List recently-deleted metrics
 
-        List the organization's soft-deleted metrics still within the recovery window, newest first. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
+        List the current workspace's soft-deleted metrics still within the recovery window, newest first. The default workspace also includes organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, the list is empty. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -7099,7 +7102,7 @@ class MetricsApi:
     ) -> CovalMetricsAPIGetMetricResponse:
         """Restore a recently-deleted metric
 
-        Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged returns 404.
+        Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged or is outside the current workspace returns 404. The default workspace can restore organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, restore returns 404.
 
         :param metric_id: 22-character metric ID (required)
         :type metric_id: str
@@ -7169,7 +7172,7 @@ class MetricsApi:
     ) -> ApiResponse[CovalMetricsAPIGetMetricResponse]:
         """Restore a recently-deleted metric
 
-        Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged returns 404.
+        Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged or is outside the current workspace returns 404. The default workspace can restore organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, restore returns 404.
 
         :param metric_id: 22-character metric ID (required)
         :type metric_id: str
@@ -7239,7 +7242,7 @@ class MetricsApi:
     ) -> RESTResponseType:
         """Restore a recently-deleted metric
 
-        Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged returns 404.
+        Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged or is outside the current workspace returns 404. The default workspace can restore organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, restore returns 404.
 
         :param metric_id: 22-character metric ID (required)
         :type metric_id: str
@@ -9226,6 +9229,7 @@ class MetricsApi:
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '409': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -9301,6 +9305,7 @@ class MetricsApi:
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '409': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -9376,6 +9381,7 @@ class MetricsApi:
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '409': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(

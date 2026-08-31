@@ -35,6 +35,12 @@ import {
  */
 export interface CovalMetricsAPIMetricThresholdResource {
     /**
+     * 26-character threshold ULID; null when no threshold is configured
+     * @type {string}
+     * @memberof CovalMetricsAPIMetricThresholdResource
+     */
+    id: string | null;
+    /**
      * Resource name: "metrics/{metric_id}/threshold"
      * @type {string}
      * @memberof CovalMetricsAPIMetricThresholdResource
@@ -90,6 +96,7 @@ export interface CovalMetricsAPIMetricThresholdResource {
  * Check if a given object implements the CovalMetricsAPIMetricThresholdResource interface.
  */
 export function instanceOfCovalMetricsAPIMetricThresholdResource(value: object): value is CovalMetricsAPIMetricThresholdResource {
+    if (!('id' in value) || value['id'] === undefined) return false;
     return true;
 }
 
@@ -103,6 +110,7 @@ export function CovalMetricsAPIMetricThresholdResourceFromJSONTyped(json: any, i
     }
     return {
         
+        'id': json['id'],
         'name': json['name'] == null ? undefined : json['name'],
         'comparison_operator': json['comparison_operator'] == null ? undefined : CovalMetricsAPIComparisonOperatorFromJSON(json['comparison_operator']),
         'target_float_upper': json['target_float_upper'] == null ? undefined : json['target_float_upper'],
@@ -125,6 +133,7 @@ export function CovalMetricsAPIMetricThresholdResourceToJSONTyped(value?: CovalM
 
     return {
         
+        'id': value['id'],
         'name': value['name'],
         'comparison_operator': CovalMetricsAPIComparisonOperatorToJSON(value['comparison_operator']),
         'target_float_upper': value['target_float_upper'],

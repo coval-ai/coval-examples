@@ -44,7 +44,17 @@ export const CovalMetricsAPIMetricType = {
     MetricTranscriptRegex: 'METRIC_TRANSCRIPT_REGEX',
     MetricPauseAnalysis: 'METRIC_PAUSE_ANALYSIS',
     MetricSqlFloat: 'METRIC_SQL_FLOAT',
-    MetricCompositeEvaluation: 'METRIC_COMPOSITE_EVALUATION'
+    MetricCompositeEvaluation: 'METRIC_COMPOSITE_EVALUATION',
+    MetricCustomAgentFailsToRespond: 'METRIC_CUSTOM_AGENT_FAILS_TO_RESPOND',
+    MetricCustomAgentNeedsReprompting: 'METRIC_CUSTOM_AGENT_NEEDS_REPROMPTING',
+    MetricCustomAudioFrequency: 'METRIC_CUSTOM_AUDIO_FREQUENCY',
+    MetricCustomAudioSentiment: 'METRIC_CUSTOM_AUDIO_SENTIMENT',
+    MetricCustomEndReason: 'METRIC_CUSTOM_END_REASON',
+    MetricMatchExpectedOutput: 'METRIC_MATCH_EXPECTED_OUTPUT',
+    MetricSpeakingTimePercentage: 'METRIC_SPEAKING_TIME_PERCENTAGE',
+    MetricSpectrogramPitchAnalysis: 'METRIC_SPECTROGRAM_PITCH_ANALYSIS',
+    MetricVolumePitchMisalignment: 'METRIC_VOLUME_PITCH_MISALIGNMENT',
+    MetricWordsPerMessageWithThreshold: 'METRIC_WORDS_PER_MESSAGE_WITH_THRESHOLD'
 } as const;
 export type CovalMetricsAPIMetricType = typeof CovalMetricsAPIMetricType[keyof typeof CovalMetricsAPIMetricType];
 

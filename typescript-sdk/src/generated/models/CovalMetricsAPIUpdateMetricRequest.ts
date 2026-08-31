@@ -20,6 +20,13 @@ import {
     CovalMetricsAPIMetricRuntimeConfigToJSON,
     CovalMetricsAPIMetricRuntimeConfigToJSONTyped,
 } from './CovalMetricsAPIMetricRuntimeConfig.js';
+import type { CovalMetricsAPICreateMetricRequestExpectedBody } from './CovalMetricsAPICreateMetricRequestExpectedBody.js';
+import {
+    CovalMetricsAPICreateMetricRequestExpectedBodyFromJSON,
+    CovalMetricsAPICreateMetricRequestExpectedBodyFromJSONTyped,
+    CovalMetricsAPICreateMetricRequestExpectedBodyToJSON,
+    CovalMetricsAPICreateMetricRequestExpectedBodyToJSONTyped,
+} from './CovalMetricsAPICreateMetricRequestExpectedBody.js';
 import type { CovalMetricsAPITargetCondition } from './CovalMetricsAPITargetCondition.js';
 import {
     CovalMetricsAPITargetConditionFromJSON,
@@ -121,6 +128,84 @@ export interface CovalMetricsAPIUpdateMetricRequest {
      */
     min_pause_duration_seconds?: number;
     /**
+     * 
+     * @type {number}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    max_silence_duration_seconds?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    min_silence_gap_seconds?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    frequency_threshold?: number;
+    /**
+     * 
+     * @type {CovalMetricsAPIUpdateMetricRequestDirectionEnum}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    direction?: CovalMetricsAPIUpdateMetricRequestDirectionEnum;
+    /**
+     * 
+     * @type {Array<CovalMetricsAPIUpdateMetricRequestSuccessSentimentsEnum>}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    success_sentiments?: Array<CovalMetricsAPIUpdateMetricRequestSuccessSentimentsEnum>;
+    /**
+     * 
+     * @type {number}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    percent_above?: number;
+    /**
+     * 
+     * @type {Array<CovalMetricsAPIUpdateMetricRequestSuccessEndReasonsEnum>}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    success_end_reasons?: Array<CovalMetricsAPIUpdateMetricRequestSuccessEndReasonsEnum>;
+    /**
+     * 
+     * @type {string}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    observation_name?: string;
+    /**
+     * 
+     * @type {CovalMetricsAPICreateMetricRequestExpectedBody}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    expected_body?: CovalMetricsAPICreateMetricRequestExpectedBody;
+    /**
+     * Optional dot path; brackets must contain an integer index or comma-separated key=value filters.
+     * @type {string}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    match_path?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    min_volume_change_for_pitch_misalignment?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    threshold?: number;
+    /**
+     * 
+     * @type {CovalMetricsAPIUpdateMetricRequestOperatorEnum}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    operator?: CovalMetricsAPIUpdateMetricRequestOperatorEnum;
+    /**
      * SQL query that defines the metric (for METRIC_SQL_FLOAT).
      * @type {string}
      * @memberof CovalMetricsAPIUpdateMetricRequest
@@ -197,9 +282,60 @@ export interface CovalMetricsAPIUpdateMetricRequest {
  */
 export const CovalMetricsAPIUpdateMetricRequestRoleEnum = {
     Agent: 'agent',
-    User: 'user'
+    Persona: 'persona',
+    User: 'user',
+    Assistant: 'assistant'
 } as const;
 export type CovalMetricsAPIUpdateMetricRequestRoleEnum = typeof CovalMetricsAPIUpdateMetricRequestRoleEnum[keyof typeof CovalMetricsAPIUpdateMetricRequestRoleEnum];
+
+/**
+ * @export
+ */
+export const CovalMetricsAPIUpdateMetricRequestDirectionEnum = {
+    Above: 'above',
+    Below: 'below'
+} as const;
+export type CovalMetricsAPIUpdateMetricRequestDirectionEnum = typeof CovalMetricsAPIUpdateMetricRequestDirectionEnum[keyof typeof CovalMetricsAPIUpdateMetricRequestDirectionEnum];
+
+/**
+ * @export
+ */
+export const CovalMetricsAPIUpdateMetricRequestSuccessSentimentsEnum = {
+    Neutral: 'Neutral',
+    Happy: 'Happy',
+    Angry: 'Angry',
+    Sad: 'Sad'
+} as const;
+export type CovalMetricsAPIUpdateMetricRequestSuccessSentimentsEnum = typeof CovalMetricsAPIUpdateMetricRequestSuccessSentimentsEnum[keyof typeof CovalMetricsAPIUpdateMetricRequestSuccessSentimentsEnum];
+
+/**
+ * @export
+ */
+export const CovalMetricsAPIUpdateMetricRequestSuccessEndReasonsEnum = {
+    Unknown: 'UNKNOWN',
+    IdleTimeout: 'IDLE_TIMEOUT',
+    PersonaDisconnected: 'PERSONA_DISCONNECTED',
+    AgentDisconnected: 'AGENT_DISCONNECTED',
+    PipelineError: 'PIPELINE_ERROR',
+    RepetitionLoop: 'REPETITION_LOOP',
+    AudioUploadPlaybackCompleted: 'AUDIO_UPLOAD_PLAYBACK_COMPLETED',
+    ScriptCompleted: 'SCRIPT_COMPLETED',
+    ScriptDiverged: 'SCRIPT_DIVERGED'
+} as const;
+export type CovalMetricsAPIUpdateMetricRequestSuccessEndReasonsEnum = typeof CovalMetricsAPIUpdateMetricRequestSuccessEndReasonsEnum[keyof typeof CovalMetricsAPIUpdateMetricRequestSuccessEndReasonsEnum];
+
+/**
+ * @export
+ */
+export const CovalMetricsAPIUpdateMetricRequestOperatorEnum = {
+    LessThan: '<',
+    LessThanOrEqualTo: '<=',
+    GreaterThan: '>',
+    GreaterThanOrEqualTo: '>=',
+    DoubleEqual: '==',
+    NotEqual: '!='
+} as const;
+export type CovalMetricsAPIUpdateMetricRequestOperatorEnum = typeof CovalMetricsAPIUpdateMetricRequestOperatorEnum[keyof typeof CovalMetricsAPIUpdateMetricRequestOperatorEnum];
 
 /**
  * @export
@@ -251,6 +387,19 @@ export function CovalMetricsAPIUpdateMetricRequestFromJSONTyped(json: any, ignor
         'regex_pattern': json['regex_pattern'] == null ? undefined : json['regex_pattern'],
         'role': json['role'] == null ? undefined : json['role'],
         'min_pause_duration_seconds': json['min_pause_duration_seconds'] == null ? undefined : json['min_pause_duration_seconds'],
+        'max_silence_duration_seconds': json['max_silence_duration_seconds'] == null ? undefined : json['max_silence_duration_seconds'],
+        'min_silence_gap_seconds': json['min_silence_gap_seconds'] == null ? undefined : json['min_silence_gap_seconds'],
+        'frequency_threshold': json['frequency_threshold'] == null ? undefined : json['frequency_threshold'],
+        'direction': json['direction'] == null ? undefined : json['direction'],
+        'success_sentiments': json['success_sentiments'] == null ? undefined : json['success_sentiments'],
+        'percent_above': json['percent_above'] == null ? undefined : json['percent_above'],
+        'success_end_reasons': json['success_end_reasons'] == null ? undefined : json['success_end_reasons'],
+        'observation_name': json['observation_name'] == null ? undefined : json['observation_name'],
+        'expected_body': json['expected_body'] == null ? undefined : CovalMetricsAPICreateMetricRequestExpectedBodyFromJSON(json['expected_body']),
+        'match_path': json['match_path'] == null ? undefined : json['match_path'],
+        'min_volume_change_for_pitch_misalignment': json['min_volume_change_for_pitch_misalignment'] == null ? undefined : json['min_volume_change_for_pitch_misalignment'],
+        'threshold': json['threshold'] == null ? undefined : json['threshold'],
+        'operator': json['operator'] == null ? undefined : json['operator'],
         'sql_query': json['sql_query'] == null ? undefined : json['sql_query'],
         'criteria_source': json['criteria_source'] == null ? undefined : json['criteria_source'],
         'criteria_path': json['criteria_path'] == null ? undefined : json['criteria_path'],
@@ -287,6 +436,19 @@ export function CovalMetricsAPIUpdateMetricRequestToJSONTyped(value?: CovalMetri
         'regex_pattern': value['regex_pattern'],
         'role': value['role'],
         'min_pause_duration_seconds': value['min_pause_duration_seconds'],
+        'max_silence_duration_seconds': value['max_silence_duration_seconds'],
+        'min_silence_gap_seconds': value['min_silence_gap_seconds'],
+        'frequency_threshold': value['frequency_threshold'],
+        'direction': value['direction'],
+        'success_sentiments': value['success_sentiments'],
+        'percent_above': value['percent_above'],
+        'success_end_reasons': value['success_end_reasons'],
+        'observation_name': value['observation_name'],
+        'expected_body': CovalMetricsAPICreateMetricRequestExpectedBodyToJSON(value['expected_body']),
+        'match_path': value['match_path'],
+        'min_volume_change_for_pitch_misalignment': value['min_volume_change_for_pitch_misalignment'],
+        'threshold': value['threshold'],
+        'operator': value['operator'],
         'sql_query': value['sql_query'],
         'criteria_source': value['criteria_source'],
         'criteria_path': value['criteria_path'],
