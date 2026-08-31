@@ -17,6 +17,7 @@ from coval_sdk.client import (
   DEFAULT_MAX_IDLE_SECONDS,
   _IdleExpiryPoolMixin,
 )
+from coval_sdk.models.submit_conversation200_response import SubmitConversation200Response
 from coval_sdk.models.update_run200_response import UpdateRun200Response
 
 
@@ -140,7 +141,7 @@ def test_client_can_restore_strict_response_validation() -> None:
 
 def test_top_level_exports_and_version_match() -> None:
   assert coval_sdk.CovalClient is CovalClient
-  assert coval_sdk.__version__ == "0.6.6"
+  assert coval_sdk.__version__ == "0.7.0"
 
 
 def test_update_run_response_preserves_simulation_run_fields() -> None:
@@ -173,6 +174,41 @@ def test_update_run_response_handles_monitoring_tag_confirmation() -> None:
 
   assert response is not None
   assert response.run.tags == ["monitoring"]
+
+
+def test_submit_conversation_response_preserves_conversation_fields() -> None:
+  response = SubmitConversation200Response.from_dict(
+    {
+      "conversation": {
+        "name": "conversations/5BhqoFdXSuk6IcugFvkXeU",
+        "conversation_id": "5BhqoFdXSuk6IcugFvkXeU",
+        "status": "IN_QUEUE",
+      }
+    }
+  )
+
+  assert response.conversation.conversation_id == "5BhqoFdXSuk6IcugFvkXeU"
+  assert isinstance(
+    response.actual_instance,
+    generated_models.CovalConversationsAPISubmitConversationResponse,
+  )
+
+
+def test_submit_conversation_response_surfaces_simulation_filter_result() -> None:
+  response = SubmitConversation200Response.from_dict(
+    {
+      "filtered": True,
+      "reason": "Submit matched the organization's simulation filter.",
+      "simulation_id": "6CirpGeYTvl7JdvhGwlYfV",
+    }
+  )
+
+  assert response.filtered is True
+  assert response.simulation_id == "6CirpGeYTvl7JdvhGwlYfV"
+  assert isinstance(
+    response.actual_instance,
+    generated_models.CovalConversationsAPIFilteredSubmitResponse,
+  )
 
 
 def test_review_project_update_preserves_omitted_collaboration_setting() -> None:

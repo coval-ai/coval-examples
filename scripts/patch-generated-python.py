@@ -299,10 +299,17 @@ def patch_update_request_omission_fields() -> int:
   return ensured
 
 
-def patch_update_run_response_compatibility() -> None:
-  path = MODELS / "update_run200_response_run.py"
+def _patch_oneof_response_compatibility(path: Path, discriminated_from_dict: str) -> None:
+  """Give a generated oneOf response wrapper direct attribute access.
+
+  The generator wraps oneOf responses in an ``actual_instance`` holder, so
+  callers would otherwise read every field through ``.actual_instance``.
+  Delegate attribute access to the wrapped instance and dispatch
+  ``from_dict`` on a member-identifying key instead of trial-and-error
+  validation.
+  """
   if not path.exists():
-    raise RuntimeError(f"Generated update-run response union is missing: {path}")
+    raise RuntimeError(f"Generated response union is missing: {path}")
 
   contents = path.read_text()
   delegate = (
@@ -311,17 +318,6 @@ def patch_update_run_response_compatibility() -> None:
     "        if actual_instance is not None:\n"
     "            return getattr(actual_instance, name)\n"
     "        raise AttributeError(name)\n\n"
-  )
-  from_dict = (
-    "    @classmethod\n"
-    "    def from_dict(cls, obj: Union[str, Dict[str, Any]]) -> Self:\n"
-    "        if isinstance(obj, str):\n"
-    "            obj = json.loads(obj)\n"
-    "        if not isinstance(obj, dict):\n"
-    "            raise TypeError(\"UpdateRun200ResponseRun must be an object\")\n"
-    "        if \"status\" in obj or \"create_time\" in obj:\n"
-    "            return cls(CovalRunsAPIRunResource.from_dict(obj))\n"
-    "        return cls(CovalRunsAPIMonitoringRunTagUpdateResource.from_dict(obj))\n\n"
   )
   from_json = (
     "    @classmethod\n"
@@ -335,10 +331,10 @@ def patch_update_run_response_compatibility() -> None:
   )
   if delegate not in contents:
     if original_from_dict not in contents:
-      raise RuntimeError(f"Generated update-run response from_dict anchor changed: {path}")
-    contents = contents.replace(original_from_dict, f"{delegate}{from_dict}", 1)
-  elif from_dict not in contents:
-    raise RuntimeError(f"Generated update-run response compatibility shape changed: {path}")
+      raise RuntimeError(f"Generated response union from_dict anchor changed: {path}")
+    contents = contents.replace(original_from_dict, f"{delegate}{discriminated_from_dict}", 1)
+  elif discriminated_from_dict not in contents:
+    raise RuntimeError(f"Generated response union compatibility shape changed: {path}")
 
   if from_json not in contents:
     pattern = re.compile(
@@ -347,9 +343,39 @@ def patch_update_run_response_compatibility() -> None:
     )
     contents, substitutions = pattern.subn(from_json, contents, count=1)
     if substitutions != 1:
-      raise RuntimeError(f"Generated update-run response from_json anchor changed: {path}")
+      raise RuntimeError(f"Generated response union from_json anchor changed: {path}")
 
   path.write_text(contents)
+
+
+def patch_update_run_response_compatibility() -> None:
+  from_dict = (
+    "    @classmethod\n"
+    "    def from_dict(cls, obj: Union[str, Dict[str, Any]]) -> Self:\n"
+    "        if isinstance(obj, str):\n"
+    "            obj = json.loads(obj)\n"
+    "        if not isinstance(obj, dict):\n"
+    "            raise TypeError(\"UpdateRun200ResponseRun must be an object\")\n"
+    "        if \"status\" in obj or \"create_time\" in obj:\n"
+    "            return cls(CovalRunsAPIRunResource.from_dict(obj))\n"
+    "        return cls(CovalRunsAPIMonitoringRunTagUpdateResource.from_dict(obj))\n\n"
+  )
+  _patch_oneof_response_compatibility(MODELS / "update_run200_response_run.py", from_dict)
+
+
+def patch_submit_conversation_response_compatibility() -> None:
+  from_dict = (
+    "    @classmethod\n"
+    "    def from_dict(cls, obj: Union[str, Dict[str, Any]]) -> Self:\n"
+    "        if isinstance(obj, str):\n"
+    "            obj = json.loads(obj)\n"
+    "        if not isinstance(obj, dict):\n"
+    "            raise TypeError(\"SubmitConversation200Response must be an object\")\n"
+    "        if \"filtered\" in obj:\n"
+    "            return cls(CovalConversationsAPIFilteredSubmitResponse.from_dict(obj))\n"
+    "        return cls(CovalConversationsAPISubmitConversationResponse.from_dict(obj))\n\n"
+  )
+  _patch_oneof_response_compatibility(MODELS / "submit_conversation200_response.py", from_dict)
 
 
 def main() -> None:
@@ -358,6 +384,7 @@ def main() -> None:
   patched_imports = patch_missing_list_import()
   patched_update_fields = patch_update_request_omission_fields()
   patch_update_run_response_compatibility()
+  patch_submit_conversation_response_compatibility()
   api_count = patch_client_api_surface()
   compatibility_aliases = patch_compatibility_model_aliases()
   contents = INIT.read_text()

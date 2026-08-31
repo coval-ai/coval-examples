@@ -77,38 +77,25 @@ class SubmitConversation200Response(BaseModel):
         else:
             return v
 
+    def __getattr__(self, name: str) -> Any:
+        actual_instance = self.__dict__.get("actual_instance")
+        if actual_instance is not None:
+            return getattr(actual_instance, name)
+        raise AttributeError(name)
+
     @classmethod
     def from_dict(cls, obj: Union[str, Dict[str, Any]]) -> Self:
-        return cls.from_json(json.dumps(obj))
+        if isinstance(obj, str):
+            obj = json.loads(obj)
+        if not isinstance(obj, dict):
+            raise TypeError("SubmitConversation200Response must be an object")
+        if "filtered" in obj:
+            return cls(CovalConversationsAPIFilteredSubmitResponse.from_dict(obj))
+        return cls(CovalConversationsAPISubmitConversationResponse.from_dict(obj))
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Returns the object represented by the json string"""
-        instance = cls.model_construct()
-        error_messages = []
-        match = 0
-
-        # deserialize data into CovalConversationsAPISubmitConversationResponse
-        try:
-            instance.actual_instance = CovalConversationsAPISubmitConversationResponse.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into CovalConversationsAPIFilteredSubmitResponse
-        try:
-            instance.actual_instance = CovalConversationsAPIFilteredSubmitResponse.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-
-        if match > 1:
-            # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into SubmitConversation200Response with oneOf schemas: CovalConversationsAPIFilteredSubmitResponse, CovalConversationsAPISubmitConversationResponse. Details: " + ", ".join(error_messages))
-        elif match == 0:
-            # no match
-            raise ValueError("No match found when deserializing the JSON string into SubmitConversation200Response with oneOf schemas: CovalConversationsAPIFilteredSubmitResponse, CovalConversationsAPISubmitConversationResponse. Details: " + ", ".join(error_messages))
-        else:
-            return instance
+        return cls.from_dict(json.loads(json_str))
 
     def to_json(self) -> str:
         """Returns the JSON representation of the actual instance"""
