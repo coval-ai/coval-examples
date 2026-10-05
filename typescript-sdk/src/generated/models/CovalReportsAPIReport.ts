@@ -20,6 +20,13 @@ import {
     CovalReportsAPICompareByToJSON,
     CovalReportsAPICompareByToJSONTyped,
 } from './CovalReportsAPICompareBy.js';
+import type { CovalReportsAPIResourceAttribution } from './CovalReportsAPIResourceAttribution.js';
+import {
+    CovalReportsAPIResourceAttributionFromJSON,
+    CovalReportsAPIResourceAttributionFromJSONTyped,
+    CovalReportsAPIResourceAttributionToJSON,
+    CovalReportsAPIResourceAttributionToJSONTyped,
+} from './CovalReportsAPIResourceAttribution.js';
 import type { CovalReportsAPIReportPermission } from './CovalReportsAPIReportPermission.js';
 import {
     CovalReportsAPIReportPermissionFromJSON,
@@ -34,6 +41,12 @@ import {
  * @interface CovalReportsAPIReport
  */
 export interface CovalReportsAPIReport {
+    /**
+     * Authoring timestamps and user IDs. Unknown or deleted users are null.
+     * @type {CovalReportsAPIResourceAttribution}
+     * @memberof CovalReportsAPIReport
+     */
+    readonly attribution?: CovalReportsAPIResourceAttribution | null;
     /**
      * The report's ULID. Open it in the app at /<organization>/reports/<id>.
      * @type {string}
@@ -75,7 +88,7 @@ export interface CovalReportsAPIReport {
      * @type {string}
      * @memberof CovalReportsAPIReport
      */
-    metadata_key: string | null;
+    metadata_key?: string | null;
     /**
      * Custom dimension used for grouping when `compare_by` is `custom`; null otherwise.
      * @type {string}
@@ -100,7 +113,6 @@ export function instanceOfCovalReportsAPIReport(value: object): value is CovalRe
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('run_ids' in value) || value['run_ids'] === undefined) return false;
     if (!('compare_by' in value) || value['compare_by'] === undefined) return false;
-    if (!('metadata_key' in value) || value['metadata_key'] === undefined) return false;
     if (!('permissions' in value) || value['permissions'] === undefined) return false;
     return true;
 }
@@ -115,13 +127,14 @@ export function CovalReportsAPIReportFromJSONTyped(json: any, ignoreDiscriminato
     }
     return {
         
+        'attribution': json['attribution'] == null ? undefined : CovalReportsAPIResourceAttributionFromJSON(json['attribution']),
         'id': json['id'],
         'name': json['name'],
         'run_ids': json['run_ids'],
         'simulation_output_ids': json['simulation_output_ids'] == null ? undefined : json['simulation_output_ids'],
         'source_human_review_project_id': json['source_human_review_project_id'] == null ? undefined : json['source_human_review_project_id'],
         'compare_by': CovalReportsAPICompareByFromJSON(json['compare_by']),
-        'metadata_key': json['metadata_key'],
+        'metadata_key': json['metadata_key'] == null ? undefined : json['metadata_key'],
         'custom_dimension_id': json['custom_dimension_id'] == null ? undefined : json['custom_dimension_id'],
         'permissions': CovalReportsAPIReportPermissionFromJSON(json['permissions']),
     };
@@ -131,7 +144,7 @@ export function CovalReportsAPIReportToJSON(json: any): CovalReportsAPIReport {
     return CovalReportsAPIReportToJSONTyped(json, false);
 }
 
-export function CovalReportsAPIReportToJSONTyped(value?: CovalReportsAPIReport | null, ignoreDiscriminator: boolean = false): any {
+export function CovalReportsAPIReportToJSONTyped(value?: Omit<CovalReportsAPIReport, 'attribution'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

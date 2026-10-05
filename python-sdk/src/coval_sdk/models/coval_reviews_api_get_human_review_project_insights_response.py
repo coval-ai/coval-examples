@@ -21,6 +21,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List
 from coval_sdk.models.coval_reviews_api_get_human_review_project_insights_response_project import CovalReviewsAPIGetHumanReviewProjectInsightsResponseProject
+from coval_sdk.models.coval_reviews_api_human_review_project_metric_insight_resource import CovalReviewsAPIHumanReviewProjectMetricInsightResource
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -32,7 +33,7 @@ class CovalReviewsAPIGetHumanReviewProjectInsightsResponse(BaseModel):
     project: CovalReviewsAPIGetHumanReviewProjectInsightsResponseProject
     label_overview: Dict[str, Any] = Field(description="Aggregate label coverage for the project window.")
     label_stats: List[Dict[str, Any]] = Field(description="Per-label insight rows.")
-    metric_stats: List[Dict[str, Any]] = Field(description="Per-metric insight rows (counts, agreement rate, simulation output ids).")
+    metric_stats: List[CovalReviewsAPIHumanReviewProjectMetricInsightResource] = Field(description="Per-metric insight rows (counts, agreement rate, simulation output ids).")
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["project", "label_overview", "label_stats", "metric_stats"]
 
@@ -80,6 +81,13 @@ class CovalReviewsAPIGetHumanReviewProjectInsightsResponse(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of project
         if self.project:
             _dict['project'] = self.project.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in metric_stats (list)
+        _items = []
+        if self.metric_stats:
+            for _item_metric_stats in self.metric_stats:
+                if _item_metric_stats:
+                    _items.append(_item_metric_stats.to_dict())
+            _dict['metric_stats'] = _items
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -100,7 +108,7 @@ class CovalReviewsAPIGetHumanReviewProjectInsightsResponse(BaseModel):
             "project": CovalReviewsAPIGetHumanReviewProjectInsightsResponseProject.from_dict(obj["project"]) if obj.get("project") is not None else None,
             "label_overview": obj.get("label_overview"),
             "label_stats": obj.get("label_stats"),
-            "metric_stats": obj.get("metric_stats")
+            "metric_stats": [CovalReviewsAPIHumanReviewProjectMetricInsightResource.from_dict(_item) for _item in obj["metric_stats"]] if obj.get("metric_stats") is not None else None
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

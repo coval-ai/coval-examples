@@ -52,20 +52,24 @@ import {
 export interface CreateMutationRequest {
     agentId: string;
     covalAgentMutationsAPICreateMutationRequest: CovalAgentMutationsAPICreateMutationRequest;
+    xCovalWorkspaceId?: string;
 }
 
 export interface DeleteMutationRequest {
     agentId: string;
     mutationId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface GetMutationRequest {
     agentId: string;
     mutationId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface ListMutationsRequest {
     agentId: string;
+    xCovalWorkspaceId?: string;
     pageSize?: number;
     pageToken?: string;
 }
@@ -74,6 +78,7 @@ export interface UpdateMutationRequest {
     agentId: string;
     mutationId: string;
     covalAgentMutationsAPIUpdateMutationRequest: CovalAgentMutationsAPIUpdateMutationRequest;
+    xCovalWorkspaceId?: string;
 }
 
 /**
@@ -87,6 +92,7 @@ export interface MutationsApiInterface {
      * Creates request options for createMutation without sending the request
      * @param {string} agentId Parent agent ID (22-character ShortUUID)
      * @param {CovalAgentMutationsAPICreateMutationRequest} covalAgentMutationsAPICreateMutationRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof MutationsApiInterface
      */
@@ -97,6 +103,7 @@ export interface MutationsApiInterface {
      * @summary Create mutation
      * @param {string} agentId Parent agent ID (22-character ShortUUID)
      * @param {CovalAgentMutationsAPICreateMutationRequest} covalAgentMutationsAPICreateMutationRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MutationsApiInterface
@@ -113,16 +120,18 @@ export interface MutationsApiInterface {
      * Creates request options for deleteMutation without sending the request
      * @param {string} agentId Parent agent ID (22-character ShortUUID)
      * @param {string} mutationId Mutation ID (26-character ULID)
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof MutationsApiInterface
      */
     deleteMutationRequestOpts(requestParameters: DeleteMutationRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Delete a mutation.
+     * Delete a mutation. Mutations referenced by active Templates cannot be deleted.
      * @summary Delete mutation
      * @param {string} agentId Parent agent ID (22-character ShortUUID)
      * @param {string} mutationId Mutation ID (26-character ULID)
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MutationsApiInterface
@@ -130,7 +139,7 @@ export interface MutationsApiInterface {
     deleteMutationRaw(requestParameters: DeleteMutationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>>;
 
     /**
-     * Delete a mutation.
+     * Delete a mutation. Mutations referenced by active Templates cannot be deleted.
      * Delete mutation
      */
     deleteMutation(requestParameters: DeleteMutationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void>;
@@ -139,6 +148,7 @@ export interface MutationsApiInterface {
      * Creates request options for getMutation without sending the request
      * @param {string} agentId Parent agent ID (22-character ShortUUID)
      * @param {string} mutationId Mutation ID (26-character ULID)
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof MutationsApiInterface
      */
@@ -149,6 +159,7 @@ export interface MutationsApiInterface {
      * @summary Get mutation
      * @param {string} agentId Parent agent ID (22-character ShortUUID)
      * @param {string} mutationId Mutation ID (26-character ULID)
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MutationsApiInterface
@@ -164,6 +175,7 @@ export interface MutationsApiInterface {
     /**
      * Creates request options for listMutations without sending the request
      * @param {string} agentId Parent agent ID (22-character ShortUUID)
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response
      * @throws {RequiredError}
@@ -175,6 +187,7 @@ export interface MutationsApiInterface {
      * Retrieve a paginated list of mutations for a specific agent.
      * @summary List mutations
      * @param {string} agentId Parent agent ID (22-character ShortUUID)
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response
      * @param {*} [options] Override http request option.
@@ -194,6 +207,7 @@ export interface MutationsApiInterface {
      * @param {string} agentId Parent agent ID (22-character ShortUUID)
      * @param {string} mutationId Mutation ID (26-character ULID)
      * @param {CovalAgentMutationsAPIUpdateMutationRequest} covalAgentMutationsAPIUpdateMutationRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof MutationsApiInterface
      */
@@ -205,6 +219,7 @@ export interface MutationsApiInterface {
      * @param {string} agentId Parent agent ID (22-character ShortUUID)
      * @param {string} mutationId Mutation ID (26-character ULID)
      * @param {CovalAgentMutationsAPIUpdateMutationRequest} covalAgentMutationsAPIUpdateMutationRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MutationsApiInterface
@@ -247,6 +262,10 @@ export class MutationsApi extends runtime.BaseAPI implements MutationsApiInterfa
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Agent_Mutations_API_ApiKeyAuth authentication
@@ -307,6 +326,10 @@ export class MutationsApi extends runtime.BaseAPI implements MutationsApiInterfa
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Agent_Mutations_API_ApiKeyAuth authentication
         }
@@ -325,7 +348,7 @@ export class MutationsApi extends runtime.BaseAPI implements MutationsApiInterfa
     }
 
     /**
-     * Delete a mutation.
+     * Delete a mutation. Mutations referenced by active Templates cannot be deleted.
      * Delete mutation
      */
     async deleteMutationRaw(requestParameters: DeleteMutationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
@@ -336,7 +359,7 @@ export class MutationsApi extends runtime.BaseAPI implements MutationsApiInterfa
     }
 
     /**
-     * Delete a mutation.
+     * Delete a mutation. Mutations referenced by active Templates cannot be deleted.
      * Delete mutation
      */
     async deleteMutation(requestParameters: DeleteMutationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
@@ -364,6 +387,10 @@ export class MutationsApi extends runtime.BaseAPI implements MutationsApiInterfa
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Agent_Mutations_API_ApiKeyAuth authentication
@@ -424,6 +451,10 @@ export class MutationsApi extends runtime.BaseAPI implements MutationsApiInterfa
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Agent_Mutations_API_ApiKeyAuth authentication
@@ -491,6 +522,10 @@ export class MutationsApi extends runtime.BaseAPI implements MutationsApiInterfa
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Agent_Mutations_API_ApiKeyAuth authentication

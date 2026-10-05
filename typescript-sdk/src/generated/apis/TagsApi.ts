@@ -56,24 +56,33 @@ import {
 
 export interface CreateTagRequest {
     covalTagsAPICreateTagRequest: CovalTagsAPICreateTagRequest;
+    xCovalWorkspaceId?: string;
 }
 
 export interface DeleteTagRequest {
     tagId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface GetTagRequest {
     tagId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface ListTagsRequest {
+    xCovalWorkspaceId?: string;
     pageSize?: number;
     pageToken?: string;
+    search?: string;
+    unusedOnly?: boolean;
+    tagId?: string;
+    includeUsage?: boolean;
 }
 
 export interface UpdateTagRequest {
     tagId: string;
     covalTagsAPIUpdateTagRequest: CovalTagsAPIUpdateTagRequest;
+    xCovalWorkspaceId?: string;
 }
 
 /**
@@ -86,15 +95,17 @@ export interface TagsApiInterface {
     /**
      * Creates request options for createTag without sending the request
      * @param {CovalTagsAPICreateTagRequest} covalTagsAPICreateTagRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof TagsApiInterface
      */
     createTagRequestOpts(requestParameters: CreateTagRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Create a new tag. Tag names are normalized to lowercase before persistence. Returns 409 if a tag with the same name already exists and is active. 
+     * Create a new tag. Tag names are normalized to lowercase before persistence. Returns 409 if a tag with the same name already exists and is active. Reusing a deleted name reactivates the same tag without restoring prior assignments. 
      * @summary Create tag
      * @param {CovalTagsAPICreateTagRequest} covalTagsAPICreateTagRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TagsApiInterface
@@ -102,7 +113,7 @@ export interface TagsApiInterface {
     createTagRaw(requestParameters: CreateTagRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalTagsAPICreateTagResponse>>;
 
     /**
-     * Create a new tag. Tag names are normalized to lowercase before persistence. Returns 409 if a tag with the same name already exists and is active. 
+     * Create a new tag. Tag names are normalized to lowercase before persistence. Returns 409 if a tag with the same name already exists and is active. Reusing a deleted name reactivates the same tag without restoring prior assignments. 
      * Create tag
      */
     createTag(requestParameters: CreateTagRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalTagsAPICreateTagResponse>;
@@ -110,15 +121,17 @@ export interface TagsApiInterface {
     /**
      * Creates request options for deleteTag without sending the request
      * @param {string} tagId Tag resource ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof TagsApiInterface
      */
     deleteTagRequestOpts(requestParameters: DeleteTagRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Delete a tag. The tag is soft-deleted (status=\'DELETED\') and removed from all associated resources. Creating a new tag with the same name will reactivate this record. 
+     * Delete a tag. The tag is soft-deleted (status=\'DELETED\') and removed from all associated resources. Creating a new tag with the same name will reactivate this record without restoring prior assignments. Inactive resources are also unassigned; the resources themselves remain. 
      * @summary Delete tag
      * @param {string} tagId Tag resource ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TagsApiInterface
@@ -126,7 +139,7 @@ export interface TagsApiInterface {
     deleteTagRaw(requestParameters: DeleteTagRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalTagsAPIDeleteTagResponse>>;
 
     /**
-     * Delete a tag. The tag is soft-deleted (status=\'DELETED\') and removed from all associated resources. Creating a new tag with the same name will reactivate this record. 
+     * Delete a tag. The tag is soft-deleted (status=\'DELETED\') and removed from all associated resources. Creating a new tag with the same name will reactivate this record without restoring prior assignments. Inactive resources are also unassigned; the resources themselves remain. 
      * Delete tag
      */
     deleteTag(requestParameters: DeleteTagRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalTagsAPIDeleteTagResponse>;
@@ -134,6 +147,7 @@ export interface TagsApiInterface {
     /**
      * Creates request options for getTag without sending the request
      * @param {string} tagId Tag resource ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof TagsApiInterface
      */
@@ -143,6 +157,7 @@ export interface TagsApiInterface {
      * Retrieve a specific tag by its unique identifier.
      * @summary Get tag
      * @param {string} tagId Tag resource ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TagsApiInterface
@@ -157,18 +172,28 @@ export interface TagsApiInterface {
 
     /**
      * Creates request options for listTags without sending the request
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response
+     * @param {string} [search] Case-insensitive substring of the tag name.
+     * @param {boolean} [unusedOnly] Only tags with no live resource assignments in the workspace.
+     * @param {string} [tagId] Filter by exact tag ID within the workspace. Cannot be combined with page_token.
+     * @param {boolean} [includeUsage] Include counts of live resource assignments by type.
      * @throws {RequiredError}
      * @memberof TagsApiInterface
      */
     listTagsRequestOpts(requestParameters: ListTagsRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Retrieve all active tags for your organization.
+     * Retrieve active tags in the authenticated workspace. Follow next_page_token until null to browse the complete catalog.
      * @summary List tags
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response
+     * @param {string} [search] Case-insensitive substring of the tag name.
+     * @param {boolean} [unusedOnly] Only tags with no live resource assignments in the workspace.
+     * @param {string} [tagId] Filter by exact tag ID within the workspace. Cannot be combined with page_token.
+     * @param {boolean} [includeUsage] Include counts of live resource assignments by type.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TagsApiInterface
@@ -176,7 +201,7 @@ export interface TagsApiInterface {
     listTagsRaw(requestParameters: ListTagsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalTagsAPIListTagsResponse>>;
 
     /**
-     * Retrieve all active tags for your organization.
+     * Retrieve active tags in the authenticated workspace. Follow next_page_token until null to browse the complete catalog.
      * List tags
      */
     listTags(requestParameters: ListTagsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalTagsAPIListTagsResponse>;
@@ -185,6 +210,7 @@ export interface TagsApiInterface {
      * Creates request options for updateTag without sending the request
      * @param {string} tagId Tag resource ID
      * @param {CovalTagsAPIUpdateTagRequest} covalTagsAPIUpdateTagRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof TagsApiInterface
      */
@@ -195,6 +221,7 @@ export interface TagsApiInterface {
      * @summary Update tag
      * @param {string} tagId Tag resource ID
      * @param {CovalTagsAPIUpdateTagRequest} covalTagsAPIUpdateTagRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TagsApiInterface
@@ -231,6 +258,10 @@ export class TagsApi extends runtime.BaseAPI implements TagsApiInterface {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Tags_API_ApiKeyAuth authentication
         }
@@ -248,7 +279,7 @@ export class TagsApi extends runtime.BaseAPI implements TagsApiInterface {
     }
 
     /**
-     * Create a new tag. Tag names are normalized to lowercase before persistence. Returns 409 if a tag with the same name already exists and is active. 
+     * Create a new tag. Tag names are normalized to lowercase before persistence. Returns 409 if a tag with the same name already exists and is active. Reusing a deleted name reactivates the same tag without restoring prior assignments. 
      * Create tag
      */
     async createTagRaw(requestParameters: CreateTagRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalTagsAPICreateTagResponse>> {
@@ -259,7 +290,7 @@ export class TagsApi extends runtime.BaseAPI implements TagsApiInterface {
     }
 
     /**
-     * Create a new tag. Tag names are normalized to lowercase before persistence. Returns 409 if a tag with the same name already exists and is active. 
+     * Create a new tag. Tag names are normalized to lowercase before persistence. Returns 409 if a tag with the same name already exists and is active. Reusing a deleted name reactivates the same tag without restoring prior assignments. 
      * Create tag
      */
     async createTag(requestParameters: CreateTagRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalTagsAPICreateTagResponse> {
@@ -282,6 +313,10 @@ export class TagsApi extends runtime.BaseAPI implements TagsApiInterface {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Tags_API_ApiKeyAuth authentication
         }
@@ -299,7 +334,7 @@ export class TagsApi extends runtime.BaseAPI implements TagsApiInterface {
     }
 
     /**
-     * Delete a tag. The tag is soft-deleted (status=\'DELETED\') and removed from all associated resources. Creating a new tag with the same name will reactivate this record. 
+     * Delete a tag. The tag is soft-deleted (status=\'DELETED\') and removed from all associated resources. Creating a new tag with the same name will reactivate this record without restoring prior assignments. Inactive resources are also unassigned; the resources themselves remain. 
      * Delete tag
      */
     async deleteTagRaw(requestParameters: DeleteTagRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalTagsAPIDeleteTagResponse>> {
@@ -310,7 +345,7 @@ export class TagsApi extends runtime.BaseAPI implements TagsApiInterface {
     }
 
     /**
-     * Delete a tag. The tag is soft-deleted (status=\'DELETED\') and removed from all associated resources. Creating a new tag with the same name will reactivate this record. 
+     * Delete a tag. The tag is soft-deleted (status=\'DELETED\') and removed from all associated resources. Creating a new tag with the same name will reactivate this record without restoring prior assignments. Inactive resources are also unassigned; the resources themselves remain. 
      * Delete tag
      */
     async deleteTag(requestParameters: DeleteTagRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalTagsAPIDeleteTagResponse> {
@@ -332,6 +367,10 @@ export class TagsApi extends runtime.BaseAPI implements TagsApiInterface {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Tags_API_ApiKeyAuth authentication
@@ -383,7 +422,27 @@ export class TagsApi extends runtime.BaseAPI implements TagsApiInterface {
             queryParameters['page_token'] = requestParameters['pageToken'];
         }
 
+        if (requestParameters['search'] != null) {
+            queryParameters['search'] = requestParameters['search'];
+        }
+
+        if (requestParameters['unusedOnly'] != null) {
+            queryParameters['unused_only'] = requestParameters['unusedOnly'];
+        }
+
+        if (requestParameters['tagId'] != null) {
+            queryParameters['tag_id'] = requestParameters['tagId'];
+        }
+
+        if (requestParameters['includeUsage'] != null) {
+            queryParameters['include_usage'] = requestParameters['includeUsage'];
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Tags_API_ApiKeyAuth authentication
@@ -401,7 +460,7 @@ export class TagsApi extends runtime.BaseAPI implements TagsApiInterface {
     }
 
     /**
-     * Retrieve all active tags for your organization.
+     * Retrieve active tags in the authenticated workspace. Follow next_page_token until null to browse the complete catalog.
      * List tags
      */
     async listTagsRaw(requestParameters: ListTagsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalTagsAPIListTagsResponse>> {
@@ -412,7 +471,7 @@ export class TagsApi extends runtime.BaseAPI implements TagsApiInterface {
     }
 
     /**
-     * Retrieve all active tags for your organization.
+     * Retrieve active tags in the authenticated workspace. Follow next_page_token until null to browse the complete catalog.
      * List tags
      */
     async listTags(requestParameters: ListTagsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalTagsAPIListTagsResponse> {
@@ -443,6 +502,10 @@ export class TagsApi extends runtime.BaseAPI implements TagsApiInterface {
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Tags_API_ApiKeyAuth authentication

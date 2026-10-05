@@ -34,7 +34,7 @@ export interface CovalTagsAPIListTagsResponse {
      */
     tags: Array<CovalTagsAPITagResource>;
     /**
-     * Token for fetching next page (null if no more results)
+     * Opaque continuation token; null when there are no more tags.
      * @type {string}
      * @memberof CovalTagsAPIListTagsResponse
      */

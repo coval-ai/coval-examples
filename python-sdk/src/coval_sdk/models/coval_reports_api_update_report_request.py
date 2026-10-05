@@ -32,7 +32,7 @@ class CovalReportsAPIUpdateReportRequest(BaseModel):
     """
     CovalReportsAPIUpdateReportRequest
     """ # noqa: E501
-    name: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=200)]] = Field(default=None, description="Display name for the saved report.")
+    name: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=200)]] = Field(default=None, description="Report name, trimmed to 1–200 characters. Whitespace-only names are rejected. Omit to preserve the name; null is rejected.")
     run_ids: Optional[Annotated[List[StrictStr], Field(min_length=1, max_length=2000)]] = Field(default=None, description="Replacement run IDs. All must belong to the authenticated organization.")
     simulation_output_ids: Optional[Annotated[List[StrictStr], Field(max_length=10000)]] = Field(default=None, description="Replacement simulation IDs pinning the report to a subset of simulations. When set, this is the report's authoritative scope. ")
     source_human_review_project_id: Optional[Annotated[str, Field(min_length=26, strict=True, max_length=26)]] = Field(default=None, description="Human review project the simulations were sourced from; `simulation_output_ids` must belong to it. Omit to leave unchanged — null is rejected, the linkage cannot be cleared via update. ")

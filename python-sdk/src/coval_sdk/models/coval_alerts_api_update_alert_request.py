@@ -18,14 +18,15 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_alerts_api_alert_evaluation_type import CovalAlertsAPIAlertEvaluationType
 from coval_sdk.models.coval_alerts_api_alert_match_mode import CovalAlertsAPIAlertMatchMode
-from coval_sdk.models.coval_alerts_api_alert_scope import CovalAlertsAPIAlertScope
+from coval_sdk.models.coval_alerts_api_alert_resource_customer_metadata_value import CovalAlertsAPIAlertResourceCustomerMetadataValue
 from coval_sdk.models.coval_alerts_api_channel_input import CovalAlertsAPIChannelInput
 from coval_sdk.models.coval_alerts_api_condition_input import CovalAlertsAPIConditionInput
+from coval_sdk.models.coval_alerts_api_conversation_source_filter import CovalAlertsAPIConversationSourceFilter
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -34,20 +35,22 @@ class CovalAlertsAPIUpdateAlertRequest(BaseModel):
     """
     CovalAlertsAPIUpdateAlertRequest
     """ # noqa: E501
+    enabled: Optional[StrictBool] = Field(default=None, description="Pause or resume the whole alert rule. Set false to pause, true to resume; omission or null leaves the current value unchanged.")
     name: Optional[Annotated[str, Field(strict=True, max_length=200)]] = None
     description: Optional[Annotated[str, Field(strict=True, max_length=2000)]] = None
     evaluation_type: Optional[CovalAlertsAPIAlertEvaluationType] = None
-    scope: Optional[CovalAlertsAPIAlertScope] = None
+    conversation_source: Optional[CovalAlertsAPIConversationSourceFilter] = None
     match_mode: Optional[CovalAlertsAPIAlertMatchMode] = None
     cooldown_seconds: Optional[Annotated[int, Field(le=86400, strict=True, ge=0)]] = None
     custom_message_template: Optional[StrictStr] = None
     agent_ids: Optional[List[StrictStr]] = None
     required_tags: Optional[List[StrictStr]] = None
     scheduled_run_ids: Optional[List[StrictStr]] = None
-    conditions: Optional[Annotated[List[CovalAlertsAPIConditionInput], Field(min_length=1)]] = Field(default=None, description="Replaces all existing conditions")
-    channels: Optional[List[CovalAlertsAPIChannelInput]] = Field(default=None, description="Replaces all existing channels")
+    customer_metadata: Optional[Dict[str, CovalAlertsAPIAlertResourceCustomerMetadataValue]] = Field(default=None, description="Exact scalar Run customer metadata filters, joined by AND. Literal keys are 1–256 characters; values are case-sensitive text. A list of values matches when the metadata equals any one of them. Numbers and booleans use JSON text; missing, null, array, and object values do not match. Omission or null leaves filters unchanged. An empty object clears filters only if at least one metric condition remains.")
+    conditions: Optional[List[CovalAlertsAPIConditionInput]] = Field(default=None, description="Replaces all existing conditions. An empty list requires nonempty customer_metadata filters; null or omission preserves conditions.")
+    channels: Optional[List[CovalAlertsAPIChannelInput]] = Field(default=None, description="Replaces all channels; at most one HUMAN_REVIEW channel is allowed. Null or omission preserves channels.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "description", "evaluation_type", "scope", "match_mode", "cooldown_seconds", "custom_message_template", "agent_ids", "required_tags", "scheduled_run_ids", "conditions", "channels"]
+    __properties: ClassVar[List[str]] = ["enabled", "name", "description", "evaluation_type", "conversation_source", "match_mode", "cooldown_seconds", "custom_message_template", "agent_ids", "required_tags", "scheduled_run_ids", "customer_metadata", "conditions", "channels"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -90,6 +93,13 @@ class CovalAlertsAPIUpdateAlertRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each value in customer_metadata (dict)
+        _field_dict = {}
+        if self.customer_metadata:
+            for _key_customer_metadata in self.customer_metadata:
+                if self.customer_metadata[_key_customer_metadata]:
+                    _field_dict[_key_customer_metadata] = self.customer_metadata[_key_customer_metadata].to_dict()
+            _dict['customer_metadata'] = _field_dict
         # override the default output from pydantic by calling `to_dict()` of each item in conditions (list)
         _items = []
         if self.conditions:
@@ -108,6 +118,11 @@ class CovalAlertsAPIUpdateAlertRequest(BaseModel):
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
+
+        # set to None if enabled (nullable) is None
+        # and model_fields_set contains the field
+        if self.enabled is None and "enabled" in self.model_fields_set:
+            _dict['enabled'] = None
 
         # set to None if custom_message_template (nullable) is None
         # and model_fields_set contains the field
@@ -129,6 +144,11 @@ class CovalAlertsAPIUpdateAlertRequest(BaseModel):
         if self.scheduled_run_ids is None and "scheduled_run_ids" in self.model_fields_set:
             _dict['scheduled_run_ids'] = None
 
+        # set to None if customer_metadata (nullable) is None
+        # and model_fields_set contains the field
+        if self.customer_metadata is None and "customer_metadata" in self.model_fields_set:
+            _dict['customer_metadata'] = None
+
         return _dict
 
     @classmethod
@@ -141,16 +161,23 @@ class CovalAlertsAPIUpdateAlertRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "enabled": obj.get("enabled"),
             "name": obj.get("name"),
             "description": obj.get("description"),
             "evaluation_type": obj.get("evaluation_type"),
-            "scope": obj.get("scope"),
+            "conversation_source": obj.get("conversation_source"),
             "match_mode": obj.get("match_mode"),
             "cooldown_seconds": obj.get("cooldown_seconds"),
             "custom_message_template": obj.get("custom_message_template"),
             "agent_ids": obj.get("agent_ids"),
             "required_tags": obj.get("required_tags"),
             "scheduled_run_ids": obj.get("scheduled_run_ids"),
+            "customer_metadata": dict(
+                (_k, CovalAlertsAPIAlertResourceCustomerMetadataValue.from_dict(_v))
+                for _k, _v in obj["customer_metadata"].items()
+            )
+            if obj.get("customer_metadata") is not None
+            else None,
             "conditions": [CovalAlertsAPIConditionInput.from_dict(_item) for _item in obj["conditions"]] if obj.get("conditions") is not None else None,
             "channels": [CovalAlertsAPIChannelInput.from_dict(_item) for _item in obj["channels"]] if obj.get("channels") is not None else None
         })

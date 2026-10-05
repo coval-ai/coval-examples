@@ -38,8 +38,8 @@ class CovalMetricsAPITargetCondition(BaseModel):
     @field_validator('comparison_operator')
     def comparison_operator_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'in', 'nin']):
-            raise ValueError("must be one of enum values ('eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'in', 'nin')")
+        if value not in set(['eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'in', 'nin', 'bt', 'nbt']):
+            raise ValueError("must be one of enum values ('eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'in', 'nin', 'bt', 'nbt')")
         return value
 
     model_config = ConfigDict(

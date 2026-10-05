@@ -18,7 +18,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_reviews_api_project_rule import CovalReviewsAPIProjectRule
@@ -34,15 +34,38 @@ class CovalReviewsAPICreateReviewProjectRequest(BaseModel):
     display_name: Annotated[str, Field(min_length=1, strict=True, max_length=200)] = Field(description="Project name")
     description: Optional[StrictStr] = Field(default=None, description="Optional project description")
     assignees: Annotated[List[StrictStr], Field(min_length=1)] = Field(description="Reviewer emails (at least one required)")
-    linked_simulation_ids: Annotated[List[StrictStr], Field(min_length=1)] = Field(description="Simulation output IDs (at least one required)")
-    linked_metric_ids: Annotated[List[StrictStr], Field(min_length=1, max_length=25)] = Field(description="Metric IDs (at least one required)")
+    linked_simulation_ids: Optional[Annotated[List[StrictStr], Field(min_length=1)]] = Field(default=None, description="Simulation output IDs (at least one required)")
+    linked_metric_ids: Optional[Annotated[List[StrictStr], Field(min_length=1, max_length=25)]] = Field(default=None, description="Metric IDs (at least one required)")
     project_type: Optional[CovalReviewsAPIProjectType] = CovalReviewsAPIProjectType.PROJECT_INDIVIDUAL
     notifications: Optional[StrictBool] = Field(default=True, description="Enable notifications for assignees")
     project_rules: Optional[List[CovalReviewsAPIProjectRule]] = Field(default=None, description="Rules to apply to this project")
     blind_labeling_shown_metric_ids: Optional[List[StrictStr]] = Field(default=None, description="Metric IDs whose machine score stays visible during blind labeling")
     enforced_collaboration: Optional[StrictBool] = Field(default=False, description="Enforce claims and explicit single-author completion for collaborative projects")
+    review_label_input_mode: Optional[StrictStr] = None
+    review_label_options: Optional[List[StrictStr]] = None
+    review_label_selection_mode: Optional[StrictStr] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["display_name", "description", "assignees", "linked_simulation_ids", "linked_metric_ids", "project_type", "notifications", "project_rules", "blind_labeling_shown_metric_ids", "enforced_collaboration"]
+    __properties: ClassVar[List[str]] = ["display_name", "description", "assignees", "linked_simulation_ids", "linked_metric_ids", "project_type", "notifications", "project_rules", "blind_labeling_shown_metric_ids", "enforced_collaboration", "review_label_input_mode", "review_label_options", "review_label_selection_mode"]
+
+    @field_validator('review_label_input_mode')
+    def review_label_input_mode_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['OPTION_ONLY', 'CUSTOM_ONLY', 'OPTION_OR_CUSTOM']):
+            raise ValueError("must be one of enum values ('OPTION_ONLY', 'CUSTOM_ONLY', 'OPTION_OR_CUSTOM')")
+        return value
+
+    @field_validator('review_label_selection_mode')
+    def review_label_selection_mode_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['SINGLE', 'MULTIPLE']):
+            raise ValueError("must be one of enum values ('SINGLE', 'MULTIPLE')")
+        return value
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -105,6 +128,21 @@ class CovalReviewsAPICreateReviewProjectRequest(BaseModel):
         if self.blind_labeling_shown_metric_ids is None and "blind_labeling_shown_metric_ids" in self.model_fields_set:
             _dict['blind_labeling_shown_metric_ids'] = None
 
+        # set to None if review_label_input_mode (nullable) is None
+        # and model_fields_set contains the field
+        if self.review_label_input_mode is None and "review_label_input_mode" in self.model_fields_set:
+            _dict['review_label_input_mode'] = None
+
+        # set to None if review_label_options (nullable) is None
+        # and model_fields_set contains the field
+        if self.review_label_options is None and "review_label_options" in self.model_fields_set:
+            _dict['review_label_options'] = None
+
+        # set to None if review_label_selection_mode (nullable) is None
+        # and model_fields_set contains the field
+        if self.review_label_selection_mode is None and "review_label_selection_mode" in self.model_fields_set:
+            _dict['review_label_selection_mode'] = None
+
         return _dict
 
     @classmethod
@@ -126,7 +164,10 @@ class CovalReviewsAPICreateReviewProjectRequest(BaseModel):
             "notifications": obj.get("notifications") if obj.get("notifications") is not None else True,
             "project_rules": obj.get("project_rules"),
             "blind_labeling_shown_metric_ids": obj.get("blind_labeling_shown_metric_ids"),
-            "enforced_collaboration": obj.get("enforced_collaboration") if obj.get("enforced_collaboration") is not None else False
+            "enforced_collaboration": obj.get("enforced_collaboration") if obj.get("enforced_collaboration") is not None else False,
+            "review_label_input_mode": obj.get("review_label_input_mode"),
+            "review_label_options": obj.get("review_label_options"),
+            "review_label_selection_mode": obj.get("review_label_selection_mode")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

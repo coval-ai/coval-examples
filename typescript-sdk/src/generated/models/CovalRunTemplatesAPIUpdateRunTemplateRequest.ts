@@ -32,23 +32,23 @@ export interface CovalRunTemplatesAPIUpdateRunTemplateRequest {
      */
     description?: string;
     /**
-     * Agent to test
-     * @type {string}
+     * Agents to test. Omit to leave unchanged.
+     * @type {Set<string>}
      * @memberof CovalRunTemplatesAPIUpdateRunTemplateRequest
      */
-    agent_id?: string;
+    agent_ids?: Set<string>;
     /**
-     * Simulated persona to use
-     * @type {string}
+     * Simulated personas to use. Omit to leave unchanged.
+     * @type {Set<string>}
      * @memberof CovalRunTemplatesAPIUpdateRunTemplateRequest
      */
-    persona_id?: string;
+    persona_ids?: Set<string>;
     /**
-     * Test set containing test cases
-     * @type {string}
+     * Test sets containing test cases. Omit to leave unchanged.
+     * @type {Set<string>}
      * @memberof CovalRunTemplatesAPIUpdateRunTemplateRequest
      */
-    test_set_id?: string;
+    test_set_ids?: Set<string>;
     /**
      * Metrics to evaluate (null = no change, [] = use agent defaults)
      * @type {Array<string>}
@@ -86,6 +86,12 @@ export interface CovalRunTemplatesAPIUpdateRunTemplateRequest {
      */
     sub_sample_seed?: number | null;
     /**
+     * Optional test cases to run from the selected test sets
+     * @type {Array<string>}
+     * @memberof CovalRunTemplatesAPIUpdateRunTemplateRequest
+     */
+    test_case_ids?: Array<string> | null;
+    /**
      * Custom metadata (null = no change, {} = clear)
      * @type {{ [key: string]: any; }}
      * @memberof CovalRunTemplatesAPIUpdateRunTemplateRequest
@@ -118,15 +124,16 @@ export function CovalRunTemplatesAPIUpdateRunTemplateRequestFromJSONTyped(json: 
         
         'display_name': json['display_name'] == null ? undefined : json['display_name'],
         'description': json['description'] == null ? undefined : json['description'],
-        'agent_id': json['agent_id'] == null ? undefined : json['agent_id'],
-        'persona_id': json['persona_id'] == null ? undefined : json['persona_id'],
-        'test_set_id': json['test_set_id'] == null ? undefined : json['test_set_id'],
+        'agent_ids': json['agent_ids'] == null ? undefined : new Set(json['agent_ids']),
+        'persona_ids': json['persona_ids'] == null ? undefined : new Set(json['persona_ids']),
+        'test_set_ids': json['test_set_ids'] == null ? undefined : new Set(json['test_set_ids']),
         'metric_ids': json['metric_ids'] == null ? undefined : json['metric_ids'],
         'mutation_ids': json['mutation_ids'] == null ? undefined : json['mutation_ids'],
         'iteration_count': json['iteration_count'] == null ? undefined : json['iteration_count'],
         'concurrency': json['concurrency'] == null ? undefined : json['concurrency'],
         'sub_sample_size': json['sub_sample_size'] == null ? undefined : json['sub_sample_size'],
         'sub_sample_seed': json['sub_sample_seed'] == null ? undefined : json['sub_sample_seed'],
+        'test_case_ids': json['test_case_ids'] == null ? undefined : json['test_case_ids'],
         'metadata': json['metadata'] == null ? undefined : json['metadata'],
         'tags': json['tags'] == null ? undefined : json['tags'],
     };
@@ -145,15 +152,16 @@ export function CovalRunTemplatesAPIUpdateRunTemplateRequestToJSONTyped(value?: 
         
         'display_name': value['display_name'],
         'description': value['description'],
-        'agent_id': value['agent_id'],
-        'persona_id': value['persona_id'],
-        'test_set_id': value['test_set_id'],
+        'agent_ids': value['agent_ids'] == null ? undefined : Array.from(value['agent_ids'] as Set<any>),
+        'persona_ids': value['persona_ids'] == null ? undefined : Array.from(value['persona_ids'] as Set<any>),
+        'test_set_ids': value['test_set_ids'] == null ? undefined : Array.from(value['test_set_ids'] as Set<any>),
         'metric_ids': value['metric_ids'],
         'mutation_ids': value['mutation_ids'],
         'iteration_count': value['iteration_count'],
         'concurrency': value['concurrency'],
         'sub_sample_size': value['sub_sample_size'],
         'sub_sample_seed': value['sub_sample_seed'],
+        'test_case_ids': value['test_case_ids'],
         'metadata': value['metadata'],
         'tags': value['tags'],
     };

@@ -30,6 +30,7 @@ class CovalDashboardsAPIGroupByType(str, Enum):
     AGENT = 'agent'
     MUTATION = 'mutation'
     PERSONA = 'persona'
+    ASSIGNEE = 'assignee'
     TEMPLATE = 'template'
     TEST_SET = 'test_set'
 

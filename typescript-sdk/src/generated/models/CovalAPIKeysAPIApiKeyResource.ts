@@ -46,19 +46,19 @@ export interface CovalAPIKeysAPIApiKeyResource {
      * @type {string}
      * @memberof CovalAPIKeysAPIApiKeyResource
      */
-    id?: string;
+    id: string;
     /**
      * Organization ID that owns this API key
      * @type {string}
      * @memberof CovalAPIKeysAPIApiKeyResource
      */
-    organization_id?: string;
+    organization_id: string;
     /**
      * The API key value (masked except during creation).
      * @type {string}
      * @memberof CovalAPIKeysAPIApiKeyResource
      */
-    api_key?: string;
+    api_key: string;
     /**
      * 
      * @type {CovalAPIKeysAPIKeyType}
@@ -76,13 +76,13 @@ export interface CovalAPIKeysAPIApiKeyResource {
      * @type {string}
      * @memberof CovalAPIKeysAPIApiKeyResource
      */
-    name?: string | null;
+    name?: string;
     /**
      * Detailed description of the API key purpose
      * @type {string}
      * @memberof CovalAPIKeysAPIApiKeyResource
      */
-    description?: string | null;
+    description?: string;
     /**
      * Permission scopes granted to this key. Empty array grants full access.
      * See `PermissionScope` for valid values.
@@ -96,7 +96,7 @@ export interface CovalAPIKeysAPIApiKeyResource {
      * @type {Date}
      * @memberof CovalAPIKeysAPIApiKeyResource
      */
-    create_time?: Date;
+    create_time: Date;
     /**
      * Last update timestamp (ISO 8601)
      * @type {Date}
@@ -109,14 +109,40 @@ export interface CovalAPIKeysAPIApiKeyResource {
      * @memberof CovalAPIKeysAPIApiKeyResource
      */
     last_used_at?: Date | null;
+    /**
+     * User ULID of whoever created the key
+     * @type {string}
+     * @memberof CovalAPIKeysAPIApiKeyResource
+     */
+    created_by_id?: string | null;
+    /**
+     * API key environment values.
+     * @type {CovalAPIKeysAPIApiKeyResourceEnvironmentEnum}
+     * @memberof CovalAPIKeysAPIApiKeyResource
+     */
+    environment?: CovalAPIKeysAPIApiKeyResourceEnvironmentEnum;
 }
 
+
+/**
+ * @export
+ */
+export const CovalAPIKeysAPIApiKeyResourceEnvironmentEnum = {
+    Production: 'PRODUCTION',
+    Staging: 'STAGING',
+    Development: 'DEVELOPMENT'
+} as const;
+export type CovalAPIKeysAPIApiKeyResourceEnvironmentEnum = typeof CovalAPIKeysAPIApiKeyResourceEnvironmentEnum[keyof typeof CovalAPIKeysAPIApiKeyResourceEnvironmentEnum];
 
 
 /**
  * Check if a given object implements the CovalAPIKeysAPIApiKeyResource interface.
  */
 export function instanceOfCovalAPIKeysAPIApiKeyResource(value: object): value is CovalAPIKeysAPIApiKeyResource {
+    if (!('id' in value) || value['id'] === undefined) return false;
+    if (!('organization_id' in value) || value['organization_id'] === undefined) return false;
+    if (!('api_key' in value) || value['api_key'] === undefined) return false;
+    if (!('create_time' in value) || value['create_time'] === undefined) return false;
     return true;
 }
 
@@ -130,17 +156,19 @@ export function CovalAPIKeysAPIApiKeyResourceFromJSONTyped(json: any, ignoreDisc
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
-        'organization_id': json['organization_id'] == null ? undefined : json['organization_id'],
-        'api_key': json['api_key'] == null ? undefined : json['api_key'],
+        'id': json['id'],
+        'organization_id': json['organization_id'],
+        'api_key': json['api_key'],
         'key_type': json['key_type'] == null ? undefined : CovalAPIKeysAPIKeyTypeFromJSON(json['key_type']),
         'status': json['status'] == null ? undefined : CovalAPIKeysAPIApiKeyStatusFromJSON(json['status']),
         'name': json['name'] == null ? undefined : json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'permissions': json['permissions'] == null ? undefined : ((json['permissions'] as Array<any>).map(CovalAPIKeysAPIPermissionScopeFromJSON)),
-        'create_time': json['create_time'] == null ? undefined : (new Date(json['create_time'])),
+        'create_time': (new Date(json['create_time'])),
         'update_time': json['update_time'] == null ? undefined : (new Date(json['update_time'])),
         'last_used_at': json['last_used_at'] == null ? undefined : (new Date(json['last_used_at'])),
+        'created_by_id': json['created_by_id'] == null ? undefined : json['created_by_id'],
+        'environment': json['environment'] == null ? undefined : json['environment'],
     };
 }
 
@@ -163,9 +191,11 @@ export function CovalAPIKeysAPIApiKeyResourceToJSONTyped(value?: CovalAPIKeysAPI
         'name': value['name'],
         'description': value['description'],
         'permissions': value['permissions'] == null ? undefined : ((value['permissions'] as Array<any>).map(CovalAPIKeysAPIPermissionScopeToJSON)),
-        'create_time': value['create_time'] == null ? value['create_time'] : value['create_time'].toISOString(),
+        'create_time': value['create_time'].toISOString(),
         'update_time': value['update_time'] == null ? value['update_time'] : value['update_time'].toISOString(),
         'last_used_at': value['last_used_at'] == null ? value['last_used_at'] : value['last_used_at'].toISOString(),
+        'created_by_id': value['created_by_id'],
+        'environment': value['environment'],
     };
 }
 

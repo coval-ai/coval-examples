@@ -28,21 +28,21 @@ from pydantic_core import to_jsonable_python
 
 class CovalAgentsAPIUpdateAgentRequest(BaseModel):
     """
-    Partial update request (PATCH semantics - only provided fields are updated)
+    Fields to update on an agent.
     """ # noqa: E501
     display_name: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=200)]] = Field(default=None, description="Human-readable agent name")
     model_type: Optional[CovalAgentsAPISimulatorType] = None
     phone_number: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="Phone number in E.164 format or SIP address for voice/SMS agents")
     endpoint: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="Custom API endpoint URL")
-    prompt: Optional[StrictStr] = Field(default=None, description="Agent instructions/system prompt")
-    customer_agent_id: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=200)]] = Field(default=None, description="New external id for the agent")
+    prompt: Optional[Annotated[str, Field(strict=True, max_length=50000)]] = Field(default=None, description="Agent instructions/system prompt")
+    customer_agent_id: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=200)]] = Field(default=None, description="External identifier for the agent")
     language: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="Primary language for the agent")
-    attributes: Optional[Dict[str, Any]] = Field(default=None, description="Free-form agent attributes. None means don't update; {} clears them.")
-    metadata: Optional[Dict[str, Any]] = Field(default=None, description="Simulator-specific configuration (null = no change, {} = clear)")
-    workflows: Optional[Dict[str, Any]] = Field(default=None, description="Workflow configuration (null = no change, {} = clear)")
-    metric_ids: Optional[List[StrictStr]] = Field(default=None, description="Associated metric IDs (null = no change, [] = clear)")
-    test_set_ids: Optional[List[StrictStr]] = Field(default=None, description="Associated test set IDs (null = no change, [] = clear)")
-    tags: Optional[List[StrictStr]] = Field(default=None, description="Tags to associate with this agent. Null or omitted leaves tags unchanged. Pass [] to clear all tags.")
+    attributes: Optional[Dict[str, Any]] = Field(default=None, description="Free-form agent attributes")
+    metadata: Optional[Dict[str, Any]] = Field(default=None, description="Simulator-specific configuration")
+    workflows: Optional[Dict[str, Any]] = Field(default=None, description="Workflow configuration")
+    metric_ids: Optional[List[StrictStr]] = Field(default=None, description="Associated metric IDs")
+    test_set_ids: Optional[List[StrictStr]] = Field(default=None, description="Associated test set IDs")
+    tags: Optional[Annotated[List[Annotated[str, Field(min_length=1, strict=True, max_length=200)]], Field(max_length=20)]] = Field(default=None, description="Tags associated with the agent")
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["display_name", "model_type", "phone_number", "endpoint", "prompt", "customer_agent_id", "language", "attributes", "metadata", "workflows", "metric_ids", "test_set_ids", "tags"]
 
@@ -106,11 +106,6 @@ class CovalAgentsAPIUpdateAgentRequest(BaseModel):
         # and model_fields_set contains the field
         if self.prompt is None and "prompt" in self.model_fields_set:
             _dict['prompt'] = None
-
-        # set to None if customer_agent_id (nullable) is None
-        # and model_fields_set contains the field
-        if self.customer_agent_id is None and "customer_agent_id" in self.model_fields_set:
-            _dict['customer_agent_id'] = None
 
         # set to None if language (nullable) is None
         # and model_fields_set contains the field

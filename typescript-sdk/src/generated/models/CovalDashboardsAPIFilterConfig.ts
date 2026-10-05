@@ -61,6 +61,12 @@ export interface CovalDashboardsAPIFilterConfig {
      * @memberof CovalDashboardsAPIFilterConfig
      */
     metadata?: Array<object>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CovalDashboardsAPIFilterConfig
+     */
+    tagFilters?: Array<string>;
 }
 
 /**
@@ -87,6 +93,7 @@ export function CovalDashboardsAPIFilterConfigFromJSONTyped(json: any, ignoreDis
         'templateNames': json['templateNames'] == null ? undefined : json['templateNames'],
         'testSetIds': json['testSetIds'] == null ? undefined : json['testSetIds'],
         'metadata': json['metadata'] == null ? undefined : json['metadata'],
+        'tagFilters': json['tagFilters'] == null ? undefined : json['tagFilters'],
     };
 }
 
@@ -108,6 +115,7 @@ export function CovalDashboardsAPIFilterConfigToJSONTyped(value?: CovalDashboard
         'templateNames': value['templateNames'],
         'testSetIds': value['testSetIds'],
         'metadata': value['metadata'],
+        'tagFilters': value['tagFilters'],
     };
 }
 

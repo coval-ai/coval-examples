@@ -13,13 +13,20 @@
  */
 
 import { mapValues } from '../runtime.js';
-import type { CovalAlertsAPIAlertScope } from './CovalAlertsAPIAlertScope.js';
+import type { CovalAlertsAPIResourceAttribution } from './CovalAlertsAPIResourceAttribution.js';
 import {
-    CovalAlertsAPIAlertScopeFromJSON,
-    CovalAlertsAPIAlertScopeFromJSONTyped,
-    CovalAlertsAPIAlertScopeToJSON,
-    CovalAlertsAPIAlertScopeToJSONTyped,
-} from './CovalAlertsAPIAlertScope.js';
+    CovalAlertsAPIResourceAttributionFromJSON,
+    CovalAlertsAPIResourceAttributionFromJSONTyped,
+    CovalAlertsAPIResourceAttributionToJSON,
+    CovalAlertsAPIResourceAttributionToJSONTyped,
+} from './CovalAlertsAPIResourceAttribution.js';
+import type { CovalAlertsAPIAlertResourceCustomerMetadataValue } from './CovalAlertsAPIAlertResourceCustomerMetadataValue.js';
+import {
+    CovalAlertsAPIAlertResourceCustomerMetadataValueFromJSON,
+    CovalAlertsAPIAlertResourceCustomerMetadataValueFromJSONTyped,
+    CovalAlertsAPIAlertResourceCustomerMetadataValueToJSON,
+    CovalAlertsAPIAlertResourceCustomerMetadataValueToJSONTyped,
+} from './CovalAlertsAPIAlertResourceCustomerMetadataValue.js';
 import type { CovalAlertsAPIAlertChannel } from './CovalAlertsAPIAlertChannel.js';
 import {
     CovalAlertsAPIAlertChannelFromJSON,
@@ -34,6 +41,13 @@ import {
     CovalAlertsAPIAlertMatchModeToJSON,
     CovalAlertsAPIAlertMatchModeToJSONTyped,
 } from './CovalAlertsAPIAlertMatchMode.js';
+import type { CovalAlertsAPIConversationSourceFilter } from './CovalAlertsAPIConversationSourceFilter.js';
+import {
+    CovalAlertsAPIConversationSourceFilterFromJSON,
+    CovalAlertsAPIConversationSourceFilterFromJSONTyped,
+    CovalAlertsAPIConversationSourceFilterToJSON,
+    CovalAlertsAPIConversationSourceFilterToJSONTyped,
+} from './CovalAlertsAPIConversationSourceFilter.js';
 import type { CovalAlertsAPIAlertCondition } from './CovalAlertsAPIAlertCondition.js';
 import {
     CovalAlertsAPIAlertConditionFromJSON,
@@ -55,6 +69,12 @@ import {
  * @interface CovalAlertsAPIAlertResource
  */
 export interface CovalAlertsAPIAlertResource {
+    /**
+     * Authoring timestamps and user IDs. Unknown or deleted users are null.
+     * @type {CovalAlertsAPIResourceAttribution}
+     * @memberof CovalAlertsAPIAlertResource
+     */
+    readonly attribution?: CovalAlertsAPIResourceAttribution | null;
     /**
      * Alert ULID
      * @type {string}
@@ -80,6 +100,12 @@ export interface CovalAlertsAPIAlertResource {
      */
     status: CovalAlertsAPIAlertResourceStatusEnum;
     /**
+     * Whether the alert evaluates and dispatches. Legacy alerts without this value are treated as enabled.
+     * @type {boolean}
+     * @memberof CovalAlertsAPIAlertResource
+     */
+    enabled: boolean;
+    /**
      * 
      * @type {CovalAlertsAPIAlertEvaluationType}
      * @memberof CovalAlertsAPIAlertResource
@@ -87,10 +113,10 @@ export interface CovalAlertsAPIAlertResource {
     evaluation_type: CovalAlertsAPIAlertEvaluationType;
     /**
      * 
-     * @type {CovalAlertsAPIAlertScope}
+     * @type {CovalAlertsAPIConversationSourceFilter}
      * @memberof CovalAlertsAPIAlertResource
      */
-    scope: CovalAlertsAPIAlertScope;
+    conversation_source: CovalAlertsAPIConversationSourceFilter;
     /**
      * 
      * @type {CovalAlertsAPIAlertMatchMode}
@@ -128,11 +154,17 @@ export interface CovalAlertsAPIAlertResource {
      */
     scheduled_run_ids?: Array<string> | null;
     /**
+     * Exact scalar Run customer metadata filters, joined by AND. Literal keys are 1–256 characters; values are case-sensitive text. A list of values matches when the metadata equals any one of them. Numbers and booleans use JSON text; missing, null, array, and object values do not match. An empty object applies no metadata filter.
+     * @type {{ [key: string]: CovalAlertsAPIAlertResourceCustomerMetadataValue; }}
+     * @memberof CovalAlertsAPIAlertResource
+     */
+    customer_metadata?: { [key: string]: CovalAlertsAPIAlertResourceCustomerMetadataValue; };
+    /**
      * Number of times this alert has triggered
      * @type {number}
      * @memberof CovalAlertsAPIAlertResource
      */
-    trigger_count: number;
+    trigger_count?: number;
     /**
      * Last trigger timestamp
      * @type {Date}
@@ -144,13 +176,13 @@ export interface CovalAlertsAPIAlertResource {
      * @type {Array<CovalAlertsAPIAlertCondition>}
      * @memberof CovalAlertsAPIAlertResource
      */
-    conditions: Array<CovalAlertsAPIAlertCondition>;
+    conditions?: Array<CovalAlertsAPIAlertCondition>;
     /**
      * Notification channels
      * @type {Array<CovalAlertsAPIAlertChannel>}
      * @memberof CovalAlertsAPIAlertResource
      */
-    channels: Array<CovalAlertsAPIAlertChannel>;
+    channels?: Array<CovalAlertsAPIAlertChannel>;
     /**
      * Creation timestamp
      * @type {Date}
@@ -183,13 +215,11 @@ export function instanceOfCovalAlertsAPIAlertResource(value: object): value is C
     if (!('ulid' in value) || value['ulid'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('status' in value) || value['status'] === undefined) return false;
+    if (!('enabled' in value) || value['enabled'] === undefined) return false;
     if (!('evaluation_type' in value) || value['evaluation_type'] === undefined) return false;
-    if (!('scope' in value) || value['scope'] === undefined) return false;
+    if (!('conversation_source' in value) || value['conversation_source'] === undefined) return false;
     if (!('match_mode' in value) || value['match_mode'] === undefined) return false;
     if (!('cooldown_seconds' in value) || value['cooldown_seconds'] === undefined) return false;
-    if (!('trigger_count' in value) || value['trigger_count'] === undefined) return false;
-    if (!('conditions' in value) || value['conditions'] === undefined) return false;
-    if (!('channels' in value) || value['channels'] === undefined) return false;
     if (!('create_time' in value) || value['create_time'] === undefined) return false;
     if (!('update_time' in value) || value['update_time'] === undefined) return false;
     return true;
@@ -205,22 +235,25 @@ export function CovalAlertsAPIAlertResourceFromJSONTyped(json: any, ignoreDiscri
     }
     return {
         
+        'attribution': json['attribution'] == null ? undefined : CovalAlertsAPIResourceAttributionFromJSON(json['attribution']),
         'ulid': json['ulid'],
         'name': json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'status': json['status'],
+        'enabled': json['enabled'],
         'evaluation_type': CovalAlertsAPIAlertEvaluationTypeFromJSON(json['evaluation_type']),
-        'scope': CovalAlertsAPIAlertScopeFromJSON(json['scope']),
+        'conversation_source': CovalAlertsAPIConversationSourceFilterFromJSON(json['conversation_source']),
         'match_mode': CovalAlertsAPIAlertMatchModeFromJSON(json['match_mode']),
         'cooldown_seconds': json['cooldown_seconds'],
         'custom_message_template': json['custom_message_template'] == null ? undefined : json['custom_message_template'],
         'agent_ids': json['agent_ids'] == null ? undefined : json['agent_ids'],
         'required_tags': json['required_tags'] == null ? undefined : json['required_tags'],
         'scheduled_run_ids': json['scheduled_run_ids'] == null ? undefined : json['scheduled_run_ids'],
-        'trigger_count': json['trigger_count'],
+        'customer_metadata': json['customer_metadata'] == null ? undefined : (mapValues(json['customer_metadata'], CovalAlertsAPIAlertResourceCustomerMetadataValueFromJSON)),
+        'trigger_count': json['trigger_count'] == null ? undefined : json['trigger_count'],
         'last_triggered_at': json['last_triggered_at'] == null ? undefined : (new Date(json['last_triggered_at'])),
-        'conditions': ((json['conditions'] as Array<any>).map(CovalAlertsAPIAlertConditionFromJSON)),
-        'channels': ((json['channels'] as Array<any>).map(CovalAlertsAPIAlertChannelFromJSON)),
+        'conditions': json['conditions'] == null ? undefined : ((json['conditions'] as Array<any>).map(CovalAlertsAPIAlertConditionFromJSON)),
+        'channels': json['channels'] == null ? undefined : ((json['channels'] as Array<any>).map(CovalAlertsAPIAlertChannelFromJSON)),
         'create_time': (new Date(json['create_time'])),
         'update_time': (new Date(json['update_time'])),
     };
@@ -230,7 +263,7 @@ export function CovalAlertsAPIAlertResourceToJSON(json: any): CovalAlertsAPIAler
     return CovalAlertsAPIAlertResourceToJSONTyped(json, false);
 }
 
-export function CovalAlertsAPIAlertResourceToJSONTyped(value?: CovalAlertsAPIAlertResource | null, ignoreDiscriminator: boolean = false): any {
+export function CovalAlertsAPIAlertResourceToJSONTyped(value?: Omit<CovalAlertsAPIAlertResource, 'attribution'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -241,18 +274,20 @@ export function CovalAlertsAPIAlertResourceToJSONTyped(value?: CovalAlertsAPIAle
         'name': value['name'],
         'description': value['description'],
         'status': value['status'],
+        'enabled': value['enabled'],
         'evaluation_type': CovalAlertsAPIAlertEvaluationTypeToJSON(value['evaluation_type']),
-        'scope': CovalAlertsAPIAlertScopeToJSON(value['scope']),
+        'conversation_source': CovalAlertsAPIConversationSourceFilterToJSON(value['conversation_source']),
         'match_mode': CovalAlertsAPIAlertMatchModeToJSON(value['match_mode']),
         'cooldown_seconds': value['cooldown_seconds'],
         'custom_message_template': value['custom_message_template'],
         'agent_ids': value['agent_ids'],
         'required_tags': value['required_tags'],
         'scheduled_run_ids': value['scheduled_run_ids'],
+        'customer_metadata': value['customer_metadata'] == null ? undefined : (mapValues(value['customer_metadata'], CovalAlertsAPIAlertResourceCustomerMetadataValueToJSON)),
         'trigger_count': value['trigger_count'],
         'last_triggered_at': value['last_triggered_at'] == null ? value['last_triggered_at'] : value['last_triggered_at'].toISOString(),
-        'conditions': ((value['conditions'] as Array<any>).map(CovalAlertsAPIAlertConditionToJSON)),
-        'channels': ((value['channels'] as Array<any>).map(CovalAlertsAPIAlertChannelToJSON)),
+        'conditions': value['conditions'] == null ? undefined : ((value['conditions'] as Array<any>).map(CovalAlertsAPIAlertConditionToJSON)),
+        'channels': value['channels'] == null ? undefined : ((value['channels'] as Array<any>).map(CovalAlertsAPIAlertChannelToJSON)),
         'create_time': value['create_time'].toISOString(),
         'update_time': value['update_time'].toISOString(),
     };

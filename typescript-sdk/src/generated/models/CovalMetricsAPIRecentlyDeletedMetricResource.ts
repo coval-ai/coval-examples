@@ -14,7 +14,7 @@
 
 import { mapValues } from '../runtime.js';
 /**
- * A soft-deleted metric in the Recently Deleted list, with its purge countdown.
+ * A soft-deleted metric in the Recently Deleted list, with deletion metadata.
  * @export
  * @interface CovalMetricsAPIRecentlyDeletedMetricResource
  */
@@ -49,12 +49,6 @@ export interface CovalMetricsAPIRecentlyDeletedMetricResource {
      * @memberof CovalMetricsAPIRecentlyDeletedMetricResource
      */
     deleted_by?: string | null;
-    /**
-     * When the metric will be permanently purged (delete_time + retention window)
-     * @type {Date}
-     * @memberof CovalMetricsAPIRecentlyDeletedMetricResource
-     */
-    purge_time?: Date | null;
 }
 
 /**
@@ -82,7 +76,6 @@ export function CovalMetricsAPIRecentlyDeletedMetricResourceFromJSONTyped(json: 
         'metric_name': json['metric_name'],
         'delete_time': json['delete_time'] == null ? undefined : (new Date(json['delete_time'])),
         'deleted_by': json['deleted_by'] == null ? undefined : json['deleted_by'],
-        'purge_time': json['purge_time'] == null ? undefined : (new Date(json['purge_time'])),
     };
 }
 
@@ -102,7 +95,6 @@ export function CovalMetricsAPIRecentlyDeletedMetricResourceToJSONTyped(value?: 
         'metric_name': value['metric_name'],
         'delete_time': value['delete_time'] == null ? value['delete_time'] : value['delete_time'].toISOString(),
         'deleted_by': value['deleted_by'],
-        'purge_time': value['purge_time'] == null ? value['purge_time'] : value['purge_time'].toISOString(),
     };
 }
 

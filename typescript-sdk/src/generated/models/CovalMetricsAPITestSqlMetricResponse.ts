@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime.js';
+import type { CovalMetricsAPITestSqlMetricSimulationResult } from './CovalMetricsAPITestSqlMetricSimulationResult.js';
+import {
+    CovalMetricsAPITestSqlMetricSimulationResultFromJSON,
+    CovalMetricsAPITestSqlMetricSimulationResultFromJSONTyped,
+    CovalMetricsAPITestSqlMetricSimulationResultToJSON,
+    CovalMetricsAPITestSqlMetricSimulationResultToJSONTyped,
+} from './CovalMetricsAPITestSqlMetricSimulationResult.js';
 import type { CovalMetricsAPISqlMetricTestSubvalue } from './CovalMetricsAPISqlMetricTestSubvalue.js';
 import {
     CovalMetricsAPISqlMetricTestSubvalueFromJSON,
@@ -46,7 +53,7 @@ export interface CovalMetricsAPITestSqlMetricResponse {
      */
     aggregation_method?: string | null;
     /**
-     * Number of rows the query returned against the sample data.
+     * Number of rows the query returned for the newest or selected simulation.
      * @type {number}
      * @memberof CovalMetricsAPITestSqlMetricResponse
      */
@@ -65,6 +72,18 @@ export interface CovalMetricsAPITestSqlMetricResponse {
      * @memberof CovalMetricsAPITestSqlMetricResponse
      */
     error?: string | null;
+    /**
+     * Results for each recent simulation, or one result when simulation_output_id was provided.
+     * @type {Array<CovalMetricsAPITestSqlMetricSimulationResult>}
+     * @memberof CovalMetricsAPITestSqlMetricResponse
+     */
+    simulation_results?: Array<CovalMetricsAPITestSqlMetricSimulationResult>;
+    /**
+     * Whether simulation data must become available before the query can be tested.
+     * @type {boolean}
+     * @memberof CovalMetricsAPITestSqlMetricResponse
+     */
+    requires_simulations?: boolean;
 }
 
 /**
@@ -90,6 +109,8 @@ export function CovalMetricsAPITestSqlMetricResponseFromJSONTyped(json: any, ign
         'row_count': json['row_count'] == null ? undefined : json['row_count'],
         'subvalues': json['subvalues'] == null ? undefined : ((json['subvalues'] as Array<any>).map(CovalMetricsAPISqlMetricTestSubvalueFromJSON)),
         'error': json['error'] == null ? undefined : json['error'],
+        'simulation_results': json['simulation_results'] == null ? undefined : ((json['simulation_results'] as Array<any>).map(CovalMetricsAPITestSqlMetricSimulationResultFromJSON)),
+        'requires_simulations': json['requires_simulations'] == null ? undefined : json['requires_simulations'],
     };
 }
 
@@ -110,6 +131,8 @@ export function CovalMetricsAPITestSqlMetricResponseToJSONTyped(value?: CovalMet
         'row_count': value['row_count'],
         'subvalues': value['subvalues'] == null ? undefined : ((value['subvalues'] as Array<any>).map(CovalMetricsAPISqlMetricTestSubvalueToJSON)),
         'error': value['error'],
+        'simulation_results': value['simulation_results'] == null ? undefined : ((value['simulation_results'] as Array<any>).map(CovalMetricsAPITestSqlMetricSimulationResultToJSON)),
+        'requires_simulations': value['requires_simulations'],
     };
 }
 

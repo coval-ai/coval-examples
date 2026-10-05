@@ -48,6 +48,7 @@ class AlertsApi:
     def create_alert(
         self,
         coval_alerts_api_create_alert_request: CovalAlertsAPICreateAlertRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -67,6 +68,8 @@ class AlertsApi:
 
         :param coval_alerts_api_create_alert_request: (required)
         :type coval_alerts_api_create_alert_request: CovalAlertsAPICreateAlertRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -91,6 +94,7 @@ class AlertsApi:
 
         _param = self._create_alert_serialize(
             coval_alerts_api_create_alert_request=coval_alerts_api_create_alert_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -120,6 +124,7 @@ class AlertsApi:
     def create_alert_with_http_info(
         self,
         coval_alerts_api_create_alert_request: CovalAlertsAPICreateAlertRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -139,6 +144,8 @@ class AlertsApi:
 
         :param coval_alerts_api_create_alert_request: (required)
         :type coval_alerts_api_create_alert_request: CovalAlertsAPICreateAlertRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -163,6 +170,7 @@ class AlertsApi:
 
         _param = self._create_alert_serialize(
             coval_alerts_api_create_alert_request=coval_alerts_api_create_alert_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -192,6 +200,7 @@ class AlertsApi:
     def create_alert_without_preload_content(
         self,
         coval_alerts_api_create_alert_request: CovalAlertsAPICreateAlertRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -211,6 +220,8 @@ class AlertsApi:
 
         :param coval_alerts_api_create_alert_request: (required)
         :type coval_alerts_api_create_alert_request: CovalAlertsAPICreateAlertRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -235,6 +246,7 @@ class AlertsApi:
 
         _param = self._create_alert_serialize(
             coval_alerts_api_create_alert_request=coval_alerts_api_create_alert_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -259,6 +271,7 @@ class AlertsApi:
     def _create_alert_serialize(
         self,
         coval_alerts_api_create_alert_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -282,6 +295,8 @@ class AlertsApi:
         # process the path parameters
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_alerts_api_create_alert_request is not None:
@@ -337,6 +352,7 @@ class AlertsApi:
     def delete_alert(
         self,
         alert_id: Annotated[str, Field(strict=True, description="Alert ULID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -356,6 +372,8 @@ class AlertsApi:
 
         :param alert_id: Alert ULID (required)
         :type alert_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -380,6 +398,7 @@ class AlertsApi:
 
         _param = self._delete_alert_serialize(
             alert_id=alert_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -408,6 +427,7 @@ class AlertsApi:
     def delete_alert_with_http_info(
         self,
         alert_id: Annotated[str, Field(strict=True, description="Alert ULID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -427,6 +447,8 @@ class AlertsApi:
 
         :param alert_id: Alert ULID (required)
         :type alert_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -451,6 +473,7 @@ class AlertsApi:
 
         _param = self._delete_alert_serialize(
             alert_id=alert_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -479,6 +502,7 @@ class AlertsApi:
     def delete_alert_without_preload_content(
         self,
         alert_id: Annotated[str, Field(strict=True, description="Alert ULID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -498,6 +522,8 @@ class AlertsApi:
 
         :param alert_id: Alert ULID (required)
         :type alert_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -522,6 +548,7 @@ class AlertsApi:
 
         _param = self._delete_alert_serialize(
             alert_id=alert_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -545,6 +572,7 @@ class AlertsApi:
     def _delete_alert_serialize(
         self,
         alert_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -570,6 +598,8 @@ class AlertsApi:
             _path_params['alert_id'] = alert_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -610,6 +640,7 @@ class AlertsApi:
     def get_alert(
         self,
         alert_id: Annotated[str, Field(strict=True, description="Alert ULID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -629,6 +660,8 @@ class AlertsApi:
 
         :param alert_id: Alert ULID (required)
         :type alert_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -653,6 +686,7 @@ class AlertsApi:
 
         _param = self._get_alert_serialize(
             alert_id=alert_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -681,6 +715,7 @@ class AlertsApi:
     def get_alert_with_http_info(
         self,
         alert_id: Annotated[str, Field(strict=True, description="Alert ULID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -700,6 +735,8 @@ class AlertsApi:
 
         :param alert_id: Alert ULID (required)
         :type alert_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -724,6 +761,7 @@ class AlertsApi:
 
         _param = self._get_alert_serialize(
             alert_id=alert_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -752,6 +790,7 @@ class AlertsApi:
     def get_alert_without_preload_content(
         self,
         alert_id: Annotated[str, Field(strict=True, description="Alert ULID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -771,6 +810,8 @@ class AlertsApi:
 
         :param alert_id: Alert ULID (required)
         :type alert_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -795,6 +836,7 @@ class AlertsApi:
 
         _param = self._get_alert_serialize(
             alert_id=alert_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -818,6 +860,7 @@ class AlertsApi:
     def _get_alert_serialize(
         self,
         alert_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -843,6 +886,8 @@ class AlertsApi:
             _path_params['alert_id'] = alert_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -882,7 +927,8 @@ class AlertsApi:
     @validate_call
     def list_alerts(
         self,
-        scope: Annotated[Optional[StrictStr], Field(description="Filter alerts by scope")] = None,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
+        conversation_source: Annotated[Optional[StrictStr], Field(description="Filter alerts by conversation source")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Token for fetching the next page of results")] = None,
         _request_timeout: Union[
@@ -900,10 +946,12 @@ class AlertsApi:
     ) -> CovalAlertsAPIListAlertsResponse:
         """List alerts
 
-        Returns all active alerts for the authenticated organization.  Supports optional filtering by scope and pagination. 
+        Returns all active alerts for the authenticated organization.  Supports optional filtering by conversation source and pagination. 
 
-        :param scope: Filter alerts by scope
-        :type scope: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
+        :param conversation_source: Filter alerts by conversation source
+        :type conversation_source: str
         :param page_size: Number of results per page
         :type page_size: int
         :param page_token: Token for fetching the next page of results
@@ -931,7 +979,8 @@ class AlertsApi:
         """ # noqa: E501
 
         _param = self._list_alerts_serialize(
-            scope=scope,
+            x_coval_workspace_id=x_coval_workspace_id,
+            conversation_source=conversation_source,
             page_size=page_size,
             page_token=page_token,
             _request_auth=_request_auth,
@@ -960,7 +1009,8 @@ class AlertsApi:
     @validate_call
     def list_alerts_with_http_info(
         self,
-        scope: Annotated[Optional[StrictStr], Field(description="Filter alerts by scope")] = None,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
+        conversation_source: Annotated[Optional[StrictStr], Field(description="Filter alerts by conversation source")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Token for fetching the next page of results")] = None,
         _request_timeout: Union[
@@ -978,10 +1028,12 @@ class AlertsApi:
     ) -> ApiResponse[CovalAlertsAPIListAlertsResponse]:
         """List alerts
 
-        Returns all active alerts for the authenticated organization.  Supports optional filtering by scope and pagination. 
+        Returns all active alerts for the authenticated organization.  Supports optional filtering by conversation source and pagination. 
 
-        :param scope: Filter alerts by scope
-        :type scope: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
+        :param conversation_source: Filter alerts by conversation source
+        :type conversation_source: str
         :param page_size: Number of results per page
         :type page_size: int
         :param page_token: Token for fetching the next page of results
@@ -1009,7 +1061,8 @@ class AlertsApi:
         """ # noqa: E501
 
         _param = self._list_alerts_serialize(
-            scope=scope,
+            x_coval_workspace_id=x_coval_workspace_id,
+            conversation_source=conversation_source,
             page_size=page_size,
             page_token=page_token,
             _request_auth=_request_auth,
@@ -1038,7 +1091,8 @@ class AlertsApi:
     @validate_call
     def list_alerts_without_preload_content(
         self,
-        scope: Annotated[Optional[StrictStr], Field(description="Filter alerts by scope")] = None,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
+        conversation_source: Annotated[Optional[StrictStr], Field(description="Filter alerts by conversation source")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Token for fetching the next page of results")] = None,
         _request_timeout: Union[
@@ -1056,10 +1110,12 @@ class AlertsApi:
     ) -> RESTResponseType:
         """List alerts
 
-        Returns all active alerts for the authenticated organization.  Supports optional filtering by scope and pagination. 
+        Returns all active alerts for the authenticated organization.  Supports optional filtering by conversation source and pagination. 
 
-        :param scope: Filter alerts by scope
-        :type scope: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
+        :param conversation_source: Filter alerts by conversation source
+        :type conversation_source: str
         :param page_size: Number of results per page
         :type page_size: int
         :param page_token: Token for fetching the next page of results
@@ -1087,7 +1143,8 @@ class AlertsApi:
         """ # noqa: E501
 
         _param = self._list_alerts_serialize(
-            scope=scope,
+            x_coval_workspace_id=x_coval_workspace_id,
+            conversation_source=conversation_source,
             page_size=page_size,
             page_token=page_token,
             _request_auth=_request_auth,
@@ -1111,7 +1168,8 @@ class AlertsApi:
 
     def _list_alerts_serialize(
         self,
-        scope,
+        x_coval_workspace_id,
+        conversation_source,
         page_size,
         page_token,
         _request_auth,
@@ -1136,9 +1194,9 @@ class AlertsApi:
 
         # process the path parameters
         # process the query parameters
-        if scope is not None:
+        if conversation_source is not None:
             
-            _query_params.append(('scope', scope))
+            _query_params.append(('conversation_source', conversation_source))
             
         if page_size is not None:
             
@@ -1149,6 +1207,8 @@ class AlertsApi:
             _query_params.append(('page_token', page_token))
             
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -1494,6 +1554,7 @@ class AlertsApi:
         self,
         alert_id: Annotated[str, Field(strict=True, description="Alert ULID")],
         coval_alerts_api_update_alert_request: CovalAlertsAPIUpdateAlertRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1515,6 +1576,8 @@ class AlertsApi:
         :type alert_id: str
         :param coval_alerts_api_update_alert_request: (required)
         :type coval_alerts_api_update_alert_request: CovalAlertsAPIUpdateAlertRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1540,6 +1603,7 @@ class AlertsApi:
         _param = self._update_alert_serialize(
             alert_id=alert_id,
             coval_alerts_api_update_alert_request=coval_alerts_api_update_alert_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1571,6 +1635,7 @@ class AlertsApi:
         self,
         alert_id: Annotated[str, Field(strict=True, description="Alert ULID")],
         coval_alerts_api_update_alert_request: CovalAlertsAPIUpdateAlertRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1592,6 +1657,8 @@ class AlertsApi:
         :type alert_id: str
         :param coval_alerts_api_update_alert_request: (required)
         :type coval_alerts_api_update_alert_request: CovalAlertsAPIUpdateAlertRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1617,6 +1684,7 @@ class AlertsApi:
         _param = self._update_alert_serialize(
             alert_id=alert_id,
             coval_alerts_api_update_alert_request=coval_alerts_api_update_alert_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1648,6 +1716,7 @@ class AlertsApi:
         self,
         alert_id: Annotated[str, Field(strict=True, description="Alert ULID")],
         coval_alerts_api_update_alert_request: CovalAlertsAPIUpdateAlertRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1669,6 +1738,8 @@ class AlertsApi:
         :type alert_id: str
         :param coval_alerts_api_update_alert_request: (required)
         :type coval_alerts_api_update_alert_request: CovalAlertsAPIUpdateAlertRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1694,6 +1765,7 @@ class AlertsApi:
         _param = self._update_alert_serialize(
             alert_id=alert_id,
             coval_alerts_api_update_alert_request=coval_alerts_api_update_alert_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1720,6 +1792,7 @@ class AlertsApi:
         self,
         alert_id,
         coval_alerts_api_update_alert_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -1745,6 +1818,8 @@ class AlertsApi:
             _path_params['alert_id'] = alert_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_alerts_api_update_alert_request is not None:

@@ -48,6 +48,7 @@ class DashboardsApi:
     def create_dashboard(
         self,
         coval_dashboards_api_create_dashboard_request: CovalDashboardsAPICreateDashboardRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -67,6 +68,8 @@ class DashboardsApi:
 
         :param coval_dashboards_api_create_dashboard_request: (required)
         :type coval_dashboards_api_create_dashboard_request: CovalDashboardsAPICreateDashboardRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -91,6 +94,7 @@ class DashboardsApi:
 
         _param = self._create_dashboard_serialize(
             coval_dashboards_api_create_dashboard_request=coval_dashboards_api_create_dashboard_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -118,6 +122,7 @@ class DashboardsApi:
     def create_dashboard_with_http_info(
         self,
         coval_dashboards_api_create_dashboard_request: CovalDashboardsAPICreateDashboardRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -137,6 +142,8 @@ class DashboardsApi:
 
         :param coval_dashboards_api_create_dashboard_request: (required)
         :type coval_dashboards_api_create_dashboard_request: CovalDashboardsAPICreateDashboardRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -161,6 +168,7 @@ class DashboardsApi:
 
         _param = self._create_dashboard_serialize(
             coval_dashboards_api_create_dashboard_request=coval_dashboards_api_create_dashboard_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -188,6 +196,7 @@ class DashboardsApi:
     def create_dashboard_without_preload_content(
         self,
         coval_dashboards_api_create_dashboard_request: CovalDashboardsAPICreateDashboardRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -207,6 +216,8 @@ class DashboardsApi:
 
         :param coval_dashboards_api_create_dashboard_request: (required)
         :type coval_dashboards_api_create_dashboard_request: CovalDashboardsAPICreateDashboardRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -231,6 +242,7 @@ class DashboardsApi:
 
         _param = self._create_dashboard_serialize(
             coval_dashboards_api_create_dashboard_request=coval_dashboards_api_create_dashboard_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -253,6 +265,7 @@ class DashboardsApi:
     def _create_dashboard_serialize(
         self,
         coval_dashboards_api_create_dashboard_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -276,6 +289,8 @@ class DashboardsApi:
         # process the path parameters
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_dashboards_api_create_dashboard_request is not None:
@@ -331,6 +346,7 @@ class DashboardsApi:
     def delete_dashboard(
         self,
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -350,6 +366,8 @@ class DashboardsApi:
 
         :param dashboard_id: Dashboard resource ID (22-character ShortUUID) (required)
         :type dashboard_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -374,6 +392,7 @@ class DashboardsApi:
 
         _param = self._delete_dashboard_serialize(
             dashboard_id=dashboard_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -401,6 +420,7 @@ class DashboardsApi:
     def delete_dashboard_with_http_info(
         self,
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -420,6 +440,8 @@ class DashboardsApi:
 
         :param dashboard_id: Dashboard resource ID (22-character ShortUUID) (required)
         :type dashboard_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -444,6 +466,7 @@ class DashboardsApi:
 
         _param = self._delete_dashboard_serialize(
             dashboard_id=dashboard_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -471,6 +494,7 @@ class DashboardsApi:
     def delete_dashboard_without_preload_content(
         self,
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -490,6 +514,8 @@ class DashboardsApi:
 
         :param dashboard_id: Dashboard resource ID (22-character ShortUUID) (required)
         :type dashboard_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -514,6 +540,7 @@ class DashboardsApi:
 
         _param = self._delete_dashboard_serialize(
             dashboard_id=dashboard_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -536,6 +563,7 @@ class DashboardsApi:
     def _delete_dashboard_serialize(
         self,
         dashboard_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -561,6 +589,8 @@ class DashboardsApi:
             _path_params['dashboard_id'] = dashboard_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -601,6 +631,7 @@ class DashboardsApi:
     def get_dashboard(
         self,
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -620,6 +651,8 @@ class DashboardsApi:
 
         :param dashboard_id: Dashboard resource ID (22-character ShortUUID) (required)
         :type dashboard_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -644,6 +677,7 @@ class DashboardsApi:
 
         _param = self._get_dashboard_serialize(
             dashboard_id=dashboard_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -671,6 +705,7 @@ class DashboardsApi:
     def get_dashboard_with_http_info(
         self,
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -690,6 +725,8 @@ class DashboardsApi:
 
         :param dashboard_id: Dashboard resource ID (22-character ShortUUID) (required)
         :type dashboard_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -714,6 +751,7 @@ class DashboardsApi:
 
         _param = self._get_dashboard_serialize(
             dashboard_id=dashboard_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -741,6 +779,7 @@ class DashboardsApi:
     def get_dashboard_without_preload_content(
         self,
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -760,6 +799,8 @@ class DashboardsApi:
 
         :param dashboard_id: Dashboard resource ID (22-character ShortUUID) (required)
         :type dashboard_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -784,6 +825,7 @@ class DashboardsApi:
 
         _param = self._get_dashboard_serialize(
             dashboard_id=dashboard_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -806,6 +848,7 @@ class DashboardsApi:
     def _get_dashboard_serialize(
         self,
         dashboard_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -831,6 +874,8 @@ class DashboardsApi:
             _path_params['dashboard_id'] = dashboard_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -870,6 +915,7 @@ class DashboardsApi:
     @validate_call
     def list_dashboards(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort field and direction. Prefix with - for descending (e.g. -create_time).")] = None,
@@ -890,6 +936,8 @@ class DashboardsApi:
 
         List dashboards for your organization.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of results per page
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
@@ -919,6 +967,7 @@ class DashboardsApi:
         """ # noqa: E501
 
         _param = self._list_dashboards_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             order_by=order_by,
@@ -948,6 +997,7 @@ class DashboardsApi:
     @validate_call
     def list_dashboards_with_http_info(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort field and direction. Prefix with - for descending (e.g. -create_time).")] = None,
@@ -968,6 +1018,8 @@ class DashboardsApi:
 
         List dashboards for your organization.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of results per page
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
@@ -997,6 +1049,7 @@ class DashboardsApi:
         """ # noqa: E501
 
         _param = self._list_dashboards_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             order_by=order_by,
@@ -1026,6 +1079,7 @@ class DashboardsApi:
     @validate_call
     def list_dashboards_without_preload_content(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort field and direction. Prefix with - for descending (e.g. -create_time).")] = None,
@@ -1046,6 +1100,8 @@ class DashboardsApi:
 
         List dashboards for your organization.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of results per page
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
@@ -1075,6 +1131,7 @@ class DashboardsApi:
         """ # noqa: E501
 
         _param = self._list_dashboards_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             order_by=order_by,
@@ -1099,6 +1156,7 @@ class DashboardsApi:
 
     def _list_dashboards_serialize(
         self,
+        x_coval_workspace_id,
         page_size,
         page_token,
         order_by,
@@ -1137,6 +1195,8 @@ class DashboardsApi:
             _query_params.append(('order_by', order_by))
             
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -1178,6 +1238,7 @@ class DashboardsApi:
         self,
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
         coval_dashboards_api_update_dashboard_request: CovalDashboardsAPIUpdateDashboardRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1199,6 +1260,8 @@ class DashboardsApi:
         :type dashboard_id: str
         :param coval_dashboards_api_update_dashboard_request: (required)
         :type coval_dashboards_api_update_dashboard_request: CovalDashboardsAPIUpdateDashboardRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1224,6 +1287,7 @@ class DashboardsApi:
         _param = self._update_dashboard_serialize(
             dashboard_id=dashboard_id,
             coval_dashboards_api_update_dashboard_request=coval_dashboards_api_update_dashboard_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1253,6 +1317,7 @@ class DashboardsApi:
         self,
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
         coval_dashboards_api_update_dashboard_request: CovalDashboardsAPIUpdateDashboardRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1274,6 +1339,8 @@ class DashboardsApi:
         :type dashboard_id: str
         :param coval_dashboards_api_update_dashboard_request: (required)
         :type coval_dashboards_api_update_dashboard_request: CovalDashboardsAPIUpdateDashboardRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1299,6 +1366,7 @@ class DashboardsApi:
         _param = self._update_dashboard_serialize(
             dashboard_id=dashboard_id,
             coval_dashboards_api_update_dashboard_request=coval_dashboards_api_update_dashboard_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1328,6 +1396,7 @@ class DashboardsApi:
         self,
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
         coval_dashboards_api_update_dashboard_request: CovalDashboardsAPIUpdateDashboardRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1349,6 +1418,8 @@ class DashboardsApi:
         :type dashboard_id: str
         :param coval_dashboards_api_update_dashboard_request: (required)
         :type coval_dashboards_api_update_dashboard_request: CovalDashboardsAPIUpdateDashboardRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1374,6 +1445,7 @@ class DashboardsApi:
         _param = self._update_dashboard_serialize(
             dashboard_id=dashboard_id,
             coval_dashboards_api_update_dashboard_request=coval_dashboards_api_update_dashboard_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1398,6 +1470,7 @@ class DashboardsApi:
         self,
         dashboard_id,
         coval_dashboards_api_update_dashboard_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -1423,6 +1496,8 @@ class DashboardsApi:
             _path_params['dashboard_id'] = dashboard_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_dashboards_api_update_dashboard_request is not None:

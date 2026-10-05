@@ -21,6 +21,8 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
+from coval_sdk.models.coval_tags_api_tag_usage import CovalTagsAPITagUsage
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -29,14 +31,16 @@ class CovalTagsAPITagResource(BaseModel):
     """
     Tag resource. Tags are used to organize agents, personas, test sets, metrics, and run templates.
     """ # noqa: E501
-    name: Optional[StrictStr] = Field(default=None, description="Resource name in format \"tags/{tag_id}\"")
-    id: Optional[StrictStr] = Field(default=None, description="Tag resource ID")
-    tag_name: Optional[StrictStr] = Field(default=None, description="Lowercase tag display name")
+    name: StrictStr = Field(description="Resource name in format \"tags/{tag_id}\"")
+    id: StrictStr = Field(description="Tag resource ID")
+    tag_name: StrictStr = Field(description="Lowercase tag display name")
     color: Optional[StrictStr] = Field(default=None, description="Hex color code (#RGB,")
-    create_time: Optional[datetime] = Field(default=None, description="Creation timestamp (ISO 8601)")
+    create_time: datetime = Field(description="Creation timestamp (ISO 8601)")
+    assignment_count: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="All resource assignments, including inactive resources, when include_usage is true.")
+    usage: Optional[CovalTagsAPITagUsage] = Field(default=None, description="Live assignment counts when include_usage is true; otherwise null.")
     created_by: Optional[StrictStr] = Field(default=None, description="Email of the user who created the tag")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "id", "tag_name", "color", "create_time", "created_by"]
+    __properties: ClassVar[List[str]] = ["name", "id", "tag_name", "color", "create_time", "assignment_count", "usage", "created_by"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -79,6 +83,9 @@ class CovalTagsAPITagResource(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of usage
+        if self.usage:
+            _dict['usage'] = self.usage.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -88,6 +95,16 @@ class CovalTagsAPITagResource(BaseModel):
         # and model_fields_set contains the field
         if self.color is None and "color" in self.model_fields_set:
             _dict['color'] = None
+
+        # set to None if assignment_count (nullable) is None
+        # and model_fields_set contains the field
+        if self.assignment_count is None and "assignment_count" in self.model_fields_set:
+            _dict['assignment_count'] = None
+
+        # set to None if usage (nullable) is None
+        # and model_fields_set contains the field
+        if self.usage is None and "usage" in self.model_fields_set:
+            _dict['usage'] = None
 
         # set to None if created_by (nullable) is None
         # and model_fields_set contains the field
@@ -111,6 +128,8 @@ class CovalTagsAPITagResource(BaseModel):
             "tag_name": obj.get("tag_name"),
             "color": obj.get("color"),
             "create_time": obj.get("create_time"),
+            "assignment_count": obj.get("assignment_count"),
+            "usage": CovalTagsAPITagUsage.from_dict(obj["usage"]) if obj.get("usage") is not None else None,
             "created_by": obj.get("created_by")
         })
         # store additional fields in additional_properties

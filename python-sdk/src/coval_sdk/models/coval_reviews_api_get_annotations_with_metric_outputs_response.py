@@ -20,7 +20,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from coval_sdk.models.coval_reviews_api_review_annotation_resource import CovalReviewsAPIReviewAnnotationResource
+from coval_sdk.models.coval_reviews_api_review_annotation_with_metric_version_resource import CovalReviewsAPIReviewAnnotationWithMetricVersionResource
 from coval_sdk.models.coval_reviews_api_review_metric_output_for_annotation_resource import CovalReviewsAPIReviewMetricOutputForAnnotationResource
 from typing import Optional, Set
 from typing_extensions import Self
@@ -30,7 +30,7 @@ class CovalReviewsAPIGetAnnotationsWithMetricOutputsResponse(BaseModel):
     """
     CovalReviewsAPIGetAnnotationsWithMetricOutputsResponse
     """ # noqa: E501
-    annotations: Dict[str, List[CovalReviewsAPIReviewAnnotationResource]] = Field(description="Annotations keyed by metric ID.")
+    annotations: Dict[str, List[CovalReviewsAPIReviewAnnotationWithMetricVersionResource]] = Field(description="Annotations keyed by metric ID.")
     metric_outputs: Dict[str, Dict[str, CovalReviewsAPIReviewMetricOutputForAnnotationResource]] = Field(description="Latest pipeline metric output keyed by metric ID then simulation output ID.")
     audio_lengths_by_simulation_output_id: Dict[str, Optional[Union[StrictFloat, StrictInt]]]
     next_page_token: Optional[StrictStr] = None
@@ -119,7 +119,7 @@ class CovalReviewsAPIGetAnnotationsWithMetricOutputsResponse(BaseModel):
 
         _obj = cls.model_validate({
             "annotations": {
-                _k: [CovalReviewsAPIReviewAnnotationResource.from_dict(_item) for _item in _v] if _v is not None else None
+                _k: [CovalReviewsAPIReviewAnnotationWithMetricVersionResource.from_dict(_item) for _item in _v] if _v is not None else None
                 for _k, _v in obj["annotations"].items()
             }
             if obj.get("annotations") is not None

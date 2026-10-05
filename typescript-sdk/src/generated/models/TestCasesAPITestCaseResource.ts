@@ -13,6 +13,21 @@
  */
 
 import { mapValues } from '../runtime.js';
+import type { TestCasesAPIResourceAttribution } from './TestCasesAPIResourceAttribution.js';
+import {
+    TestCasesAPIResourceAttributionFromJSON,
+    TestCasesAPIResourceAttributionFromJSONTyped,
+    TestCasesAPIResourceAttributionToJSON,
+    TestCasesAPIResourceAttributionToJSONTyped,
+} from './TestCasesAPIResourceAttribution.js';
+import type { TestCasesAPITestCaseResourceScriptTurnsInner } from './TestCasesAPITestCaseResourceScriptTurnsInner.js';
+import {
+    TestCasesAPITestCaseResourceScriptTurnsInnerFromJSON,
+    TestCasesAPITestCaseResourceScriptTurnsInnerFromJSONTyped,
+    TestCasesAPITestCaseResourceScriptTurnsInnerToJSON,
+    TestCasesAPITestCaseResourceScriptTurnsInnerToJSONTyped,
+} from './TestCasesAPITestCaseResourceScriptTurnsInner.js';
+
 /**
  * Test case resource.
  * @export
@@ -20,17 +35,23 @@ import { mapValues } from '../runtime.js';
  */
 export interface TestCasesAPITestCaseResource {
     /**
+     * Authoring timestamps and user IDs. Unknown or deleted users are null.
+     * @type {TestCasesAPIResourceAttribution}
+     * @memberof TestCasesAPITestCaseResource
+     */
+    readonly attribution?: TestCasesAPIResourceAttribution | null;
+    /**
      * Resource name in format `test-cases/{id}`
      * @type {string}
      * @memberof TestCasesAPITestCaseResource
      */
-    name?: string;
+    name: string;
     /**
      * Test case ID
      * @type {string}
      * @memberof TestCasesAPITestCaseResource
      */
-    id?: string;
+    id: string;
     /**
      * Test set ID (8-character ID)
      * @type {string}
@@ -42,13 +63,13 @@ export interface TestCasesAPITestCaseResource {
      * @type {string}
      * @memberof TestCasesAPITestCaseResource
      */
-    input_str?: string;
+    input_str: string;
     /**
-     * Expected output string
-     * @type {string}
+     * Expected behaviors (list of strings), returned in the form they were written.
+     * @type {Array<string>}
      * @memberof TestCasesAPITestCaseResource
      */
-    expected_output_str?: string | null;
+    expected_behaviors?: Array<string> | null;
     /**
      * Expected output as JSON object
      * @type {{ [key: string]: any; }}
@@ -62,19 +83,20 @@ export interface TestCasesAPITestCaseResource {
      */
     description?: string | null;
     /**
-     * Type of input for the test case. Defaults to SCENARIO. When set
-     * to SCRIPT, the simulation_metadata_input should contain a
-     * script_turns field with ordered persona turn texts.
-     * 
+     * Type of input for the test case. IVR_CRAWL identifies crawler-managed cases and is response-only in this API.
      * @type {TestCasesAPITestCaseResourceInputTypeEnum}
      * @memberof TestCasesAPITestCaseResource
      */
     input_type?: TestCasesAPITestCaseResourceInputTypeEnum | null;
     /**
-     * Metadata for simulation execution. Contents vary by input_type.
-     * When input_type is SCRIPT, this object should contain a
-     * script_turns field (array of strings) with the ordered lines
-     * for the persona to deliver.
+     * Ordered persona turns for SCRIPT and IVR_CRAWL cases, exposed at the preferred top-level field. Each entry is either a bare string (spoken text), {"type": "text", "text": ...} (spoken text, explicit form), {"type": "dtmf", "digits": ...} (keypad presses; digits 0-9, *, #, and phone punctuation), or {"type": "skip"} (the persona stays silent for one turn).
+     * @type {Array<TestCasesAPITestCaseResourceScriptTurnsInner>}
+     * @memberof TestCasesAPITestCaseResource
+     */
+    script_turns?: Array<TestCasesAPITestCaseResourceScriptTurnsInner> | null;
+    /**
+     * Legacy simulation metadata. For SCRIPT and IVR_CRAWL cases, script_turns may also be returned here for backward
+     * compatibility; new integrations should use the top-level script_turns field.
      * 
      * @type {{ [key: string]: any; }}
      * @memberof TestCasesAPITestCaseResource
@@ -97,7 +119,7 @@ export interface TestCasesAPITestCaseResource {
      * @type {Date}
      * @memberof TestCasesAPITestCaseResource
      */
-    create_time?: Date;
+    create_time: Date;
     /**
      * Timestamp when test case was last updated
      * @type {Date}
@@ -116,7 +138,8 @@ export const TestCasesAPITestCaseResourceInputTypeEnum = {
     Ivr: 'IVR',
     Audio: 'AUDIO',
     Manual: 'MANUAL',
-    Script: 'SCRIPT'
+    Script: 'SCRIPT',
+    IvrCrawl: 'IVR_CRAWL'
 } as const;
 export type TestCasesAPITestCaseResourceInputTypeEnum = typeof TestCasesAPITestCaseResourceInputTypeEnum[keyof typeof TestCasesAPITestCaseResourceInputTypeEnum];
 
@@ -125,6 +148,10 @@ export type TestCasesAPITestCaseResourceInputTypeEnum = typeof TestCasesAPITestC
  * Check if a given object implements the TestCasesAPITestCaseResource interface.
  */
 export function instanceOfTestCasesAPITestCaseResource(value: object): value is TestCasesAPITestCaseResource {
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('id' in value) || value['id'] === undefined) return false;
+    if (!('input_str' in value) || value['input_str'] === undefined) return false;
+    if (!('create_time' in value) || value['create_time'] === undefined) return false;
     return true;
 }
 
@@ -138,18 +165,20 @@ export function TestCasesAPITestCaseResourceFromJSONTyped(json: any, ignoreDiscr
     }
     return {
         
-        'name': json['name'] == null ? undefined : json['name'],
-        'id': json['id'] == null ? undefined : json['id'],
+        'attribution': json['attribution'] == null ? undefined : TestCasesAPIResourceAttributionFromJSON(json['attribution']),
+        'name': json['name'],
+        'id': json['id'],
         'test_set_id': json['test_set_id'] == null ? undefined : json['test_set_id'],
-        'input_str': json['input_str'] == null ? undefined : json['input_str'],
-        'expected_output_str': json['expected_output_str'] == null ? undefined : json['expected_output_str'],
+        'input_str': json['input_str'],
+        'expected_behaviors': json['expected_behaviors'] == null ? undefined : json['expected_behaviors'],
         'expected_output_json': json['expected_output_json'] == null ? undefined : json['expected_output_json'],
         'description': json['description'] == null ? undefined : json['description'],
         'input_type': json['input_type'] == null ? undefined : json['input_type'],
+        'script_turns': json['script_turns'] == null ? undefined : ((json['script_turns'] as Array<any>).map(TestCasesAPITestCaseResourceScriptTurnsInnerFromJSON)),
         'simulation_metadata_input': json['simulation_metadata_input'] == null ? undefined : json['simulation_metadata_input'],
         'metric_input': json['metric_input'] == null ? undefined : json['metric_input'],
         'user_notes': json['user_notes'] == null ? undefined : json['user_notes'],
-        'create_time': json['create_time'] == null ? undefined : (new Date(json['create_time'])),
+        'create_time': (new Date(json['create_time'])),
         'update_time': json['update_time'] == null ? undefined : (new Date(json['update_time'])),
     };
 }
@@ -158,7 +187,7 @@ export function TestCasesAPITestCaseResourceToJSON(json: any): TestCasesAPITestC
     return TestCasesAPITestCaseResourceToJSONTyped(json, false);
 }
 
-export function TestCasesAPITestCaseResourceToJSONTyped(value?: TestCasesAPITestCaseResource | null, ignoreDiscriminator: boolean = false): any {
+export function TestCasesAPITestCaseResourceToJSONTyped(value?: Omit<TestCasesAPITestCaseResource, 'attribution'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -169,14 +198,15 @@ export function TestCasesAPITestCaseResourceToJSONTyped(value?: TestCasesAPITest
         'id': value['id'],
         'test_set_id': value['test_set_id'],
         'input_str': value['input_str'],
-        'expected_output_str': value['expected_output_str'],
+        'expected_behaviors': value['expected_behaviors'],
         'expected_output_json': value['expected_output_json'],
         'description': value['description'],
         'input_type': value['input_type'],
+        'script_turns': value['script_turns'] == null ? undefined : ((value['script_turns'] as Array<any>).map(TestCasesAPITestCaseResourceScriptTurnsInnerToJSON)),
         'simulation_metadata_input': value['simulation_metadata_input'],
         'metric_input': value['metric_input'],
         'user_notes': value['user_notes'],
-        'create_time': value['create_time'] == null ? value['create_time'] : value['create_time'].toISOString(),
+        'create_time': value['create_time'].toISOString(),
         'update_time': value['update_time'] == null ? value['update_time'] : value['update_time'].toISOString(),
     };
 }

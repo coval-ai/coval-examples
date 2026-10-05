@@ -18,9 +18,10 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from coval_sdk.models.coval_metrics_api_sql_metric_test_subvalue import CovalMetricsAPISqlMetricTestSubvalue
+from coval_sdk.models.coval_metrics_api_test_sql_metric_simulation_result import CovalMetricsAPITestSqlMetricSimulationResult
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -32,11 +33,13 @@ class CovalMetricsAPITestSqlMetricResponse(BaseModel):
     value: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The aggregated metric value, or null when the query produced no value.")
     unit: Optional[StrictStr] = None
     aggregation_method: Optional[StrictStr] = None
-    row_count: Optional[StrictInt] = Field(default=None, description="Number of rows the query returned against the sample data.")
+    row_count: Optional[StrictInt] = Field(default=None, description="Number of rows the query returned for the newest or selected simulation.")
     subvalues: Optional[List[CovalMetricsAPISqlMetricTestSubvalue]] = None
     error: Optional[StrictStr] = Field(default=None, description="Set when the query could not be evaluated (invalid SQL, missing columns, or no matching rows). Present on a 200 response — routine authoring failures are not HTTP errors. ")
+    simulation_results: Optional[List[CovalMetricsAPITestSqlMetricSimulationResult]] = Field(default=None, description="Results for each recent simulation, or one result when simulation_output_id was provided.")
+    requires_simulations: Optional[StrictBool] = Field(default=None, description="Whether simulation data must become available before the query can be tested.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["value", "unit", "aggregation_method", "row_count", "subvalues", "error"]
+    __properties: ClassVar[List[str]] = ["value", "unit", "aggregation_method", "row_count", "subvalues", "error", "simulation_results", "requires_simulations"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -86,6 +89,13 @@ class CovalMetricsAPITestSqlMetricResponse(BaseModel):
                 if _item_subvalues:
                     _items.append(_item_subvalues.to_dict())
             _dict['subvalues'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in simulation_results (list)
+        _items = []
+        if self.simulation_results:
+            for _item_simulation_results in self.simulation_results:
+                if _item_simulation_results:
+                    _items.append(_item_simulation_results.to_dict())
+            _dict['simulation_results'] = _items
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -128,7 +138,9 @@ class CovalMetricsAPITestSqlMetricResponse(BaseModel):
             "aggregation_method": obj.get("aggregation_method"),
             "row_count": obj.get("row_count"),
             "subvalues": [CovalMetricsAPISqlMetricTestSubvalue.from_dict(_item) for _item in obj["subvalues"]] if obj.get("subvalues") is not None else None,
-            "error": obj.get("error")
+            "error": obj.get("error"),
+            "simulation_results": [CovalMetricsAPITestSqlMetricSimulationResult.from_dict(_item) for _item in obj["simulation_results"]] if obj.get("simulation_results") is not None else None,
+            "requires_simulations": obj.get("requires_simulations")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

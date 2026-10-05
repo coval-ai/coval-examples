@@ -27,7 +27,7 @@ export interface CovalMetricsAPIMetricRuntimeConfig {
      * @type {string}
      * @memberof CovalMetricsAPIMetricRuntimeConfig
      */
-    model_version?: string;
+    model_version?: string | null;
     /**
      * Enable extended thinking / reasoning mode. Only supported on select enterprise
      * models (`supports_thinking: true` in the model list). Attempting to enable this

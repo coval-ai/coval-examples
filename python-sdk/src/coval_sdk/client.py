@@ -35,11 +35,14 @@ from coval_sdk.api import (
   RunTemplatesApi,
   RunsApi,
   ScheduledRunsApi,
+  SimulatedConversationsApi,
   SimulationsApi,
+  SofiaApi,
   TagsApi,
   TestCasesApi,
   TestSetsApi,
   TracesApi,
+  UploadedConversationsApi,
   WebhooksApi,
   WidgetsApi,
   WorkspacesApi,
@@ -75,11 +78,14 @@ API_PROPERTY_NAMES = (
   "run_templates",
   "runs",
   "scheduled_runs",
+  "simulated_conversations",
   "simulations",
+  "sofia",
   "tags",
   "test_cases",
   "test_sets",
   "traces",
+  "uploaded_conversations",
   "webhooks",
   "widgets",
   "workspaces",
@@ -270,11 +276,14 @@ class CovalClient:
     self.run_templates = RunTemplatesApi(self.api_client)
     self.runs = RunsApi(self.api_client)
     self.scheduled_runs = ScheduledRunsApi(self.api_client)
+    self.simulated_conversations = SimulatedConversationsApi(self.api_client)
     self.simulations = SimulationsApi(self.api_client)
+    self.sofia = SofiaApi(self.api_client)
     self.tags = TagsApi(self.api_client)
     self.test_cases = TestCasesApi(self.api_client)
     self.test_sets = TestSetsApi(self.api_client)
     self.traces = TracesApi(self.api_client)
+    self.uploaded_conversations = UploadedConversationsApi(self.api_client)
     self.webhooks = WebhooksApi(self.api_client)
     self.widgets = WidgetsApi(self.api_client)
     self.workspaces = WorkspacesApi(self.api_client)

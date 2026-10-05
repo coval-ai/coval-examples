@@ -18,7 +18,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from coval_sdk.models.coval_metrics_api_column_enum_resource import CovalMetricsAPIColumnEnumResource
 from typing import Optional, Set
@@ -30,7 +30,7 @@ class CovalMetricsAPISchemaColumnResource(BaseModel):
     CovalMetricsAPISchemaColumnResource
     """ # noqa: E501
     name: StrictStr
-    sql_type: StrictStr
+    sql_type: StrictStr = Field(description="SQL column type, such as `String`, `LowCardinality(String)`, or `Int64`.")
     enum: Optional[CovalMetricsAPIColumnEnumResource] = None
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["name", "sql_type", "enum"]

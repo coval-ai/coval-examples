@@ -13,12 +13,26 @@
  */
 
 import { mapValues } from '../runtime.js';
+import type { CovalAgentMutationsAPIResourceAttribution } from './CovalAgentMutationsAPIResourceAttribution.js';
+import {
+    CovalAgentMutationsAPIResourceAttributionFromJSON,
+    CovalAgentMutationsAPIResourceAttributionFromJSONTyped,
+    CovalAgentMutationsAPIResourceAttributionToJSON,
+    CovalAgentMutationsAPIResourceAttributionToJSONTyped,
+} from './CovalAgentMutationsAPIResourceAttribution.js';
+
 /**
  * Agent mutation resource representing a configuration variant.
  * @export
  * @interface CovalAgentMutationsAPIMutationResource
  */
 export interface CovalAgentMutationsAPIMutationResource {
+    /**
+     * Authoring timestamps and user IDs. Unknown or deleted users are null.
+     * @type {CovalAgentMutationsAPIResourceAttribution}
+     * @memberof CovalAgentMutationsAPIMutationResource
+     */
+    readonly attribution?: CovalAgentMutationsAPIResourceAttribution | null;
     /**
      * Mutation ID (26-character ULID)
      * @type {string}
@@ -50,7 +64,7 @@ export interface CovalAgentMutationsAPIMutationResource {
      * @type {{ [key: string]: any; }}
      * @memberof CovalAgentMutationsAPIMutationResource
      */
-    config_overrides: { [key: string]: any; };
+    config_overrides?: { [key: string]: any; };
     /**
      * Flattened key-value pairs for display purposes.
      * Auto-derived from config_overrides if not provided at creation.
@@ -58,7 +72,7 @@ export interface CovalAgentMutationsAPIMutationResource {
      * @type {{ [key: string]: string; }}
      * @memberof CovalAgentMutationsAPIMutationResource
      */
-    parameter_values: { [key: string]: string; };
+    parameter_values?: { [key: string]: string; };
     /**
      * Creation timestamp (ISO 8601)
      * @type {Date}
@@ -71,7 +85,24 @@ export interface CovalAgentMutationsAPIMutationResource {
      * @memberof CovalAgentMutationsAPIMutationResource
      */
     update_time?: Date | null;
+    /**
+     * Mutation lifecycle status
+     * @type {CovalAgentMutationsAPIMutationResourceStatusEnum}
+     * @memberof CovalAgentMutationsAPIMutationResource
+     */
+    status?: CovalAgentMutationsAPIMutationResourceStatusEnum;
 }
+
+
+/**
+ * @export
+ */
+export const CovalAgentMutationsAPIMutationResourceStatusEnum = {
+    Active: 'ACTIVE',
+    Deleted: 'DELETED'
+} as const;
+export type CovalAgentMutationsAPIMutationResourceStatusEnum = typeof CovalAgentMutationsAPIMutationResourceStatusEnum[keyof typeof CovalAgentMutationsAPIMutationResourceStatusEnum];
+
 
 /**
  * Check if a given object implements the CovalAgentMutationsAPIMutationResource interface.
@@ -80,8 +111,6 @@ export function instanceOfCovalAgentMutationsAPIMutationResource(value: object):
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('agent_id' in value) || value['agent_id'] === undefined) return false;
     if (!('display_name' in value) || value['display_name'] === undefined) return false;
-    if (!('config_overrides' in value) || value['config_overrides'] === undefined) return false;
-    if (!('parameter_values' in value) || value['parameter_values'] === undefined) return false;
     if (!('create_time' in value) || value['create_time'] === undefined) return false;
     return true;
 }
@@ -96,14 +125,16 @@ export function CovalAgentMutationsAPIMutationResourceFromJSONTyped(json: any, i
     }
     return {
         
+        'attribution': json['attribution'] == null ? undefined : CovalAgentMutationsAPIResourceAttributionFromJSON(json['attribution']),
         'id': json['id'],
         'agent_id': json['agent_id'],
         'display_name': json['display_name'],
         'description': json['description'] == null ? undefined : json['description'],
-        'config_overrides': json['config_overrides'],
-        'parameter_values': json['parameter_values'],
+        'config_overrides': json['config_overrides'] == null ? undefined : json['config_overrides'],
+        'parameter_values': json['parameter_values'] == null ? undefined : json['parameter_values'],
         'create_time': (new Date(json['create_time'])),
         'update_time': json['update_time'] == null ? undefined : (new Date(json['update_time'])),
+        'status': json['status'] == null ? undefined : json['status'],
     };
 }
 
@@ -111,7 +142,7 @@ export function CovalAgentMutationsAPIMutationResourceToJSON(json: any): CovalAg
     return CovalAgentMutationsAPIMutationResourceToJSONTyped(json, false);
 }
 
-export function CovalAgentMutationsAPIMutationResourceToJSONTyped(value?: CovalAgentMutationsAPIMutationResource | null, ignoreDiscriminator: boolean = false): any {
+export function CovalAgentMutationsAPIMutationResourceToJSONTyped(value?: Omit<CovalAgentMutationsAPIMutationResource, 'attribution'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -126,6 +157,7 @@ export function CovalAgentMutationsAPIMutationResourceToJSONTyped(value?: CovalA
         'parameter_values': value['parameter_values'],
         'create_time': value['create_time'].toISOString(),
         'update_time': value['update_time'] == null ? value['update_time'] : value['update_time'].toISOString(),
+        'status': value['status'],
     };
 }
 

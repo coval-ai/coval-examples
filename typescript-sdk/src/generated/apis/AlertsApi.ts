@@ -51,18 +51,22 @@ import {
 
 export interface CreateAlertRequest {
     covalAlertsAPICreateAlertRequest: CovalAlertsAPICreateAlertRequest;
+    xCovalWorkspaceId?: string;
 }
 
 export interface DeleteAlertRequest {
     alertId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface GetAlertRequest {
     alertId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface ListAlertsRequest {
-    scope?: ListAlertsScopeEnum;
+    xCovalWorkspaceId?: string;
+    conversationSource?: ListAlertsConversationSourceEnum;
     pageSize?: number;
     pageToken?: string;
 }
@@ -75,6 +79,7 @@ export interface TestEvaluateAlertRequest {
 export interface UpdateAlertRequest {
     alertId: string;
     covalAlertsAPIUpdateAlertRequest: CovalAlertsAPIUpdateAlertRequest;
+    xCovalWorkspaceId?: string;
 }
 
 /**
@@ -87,6 +92,7 @@ export interface AlertsApiInterface {
     /**
      * Creates request options for createAlert without sending the request
      * @param {CovalAlertsAPICreateAlertRequest} covalAlertsAPICreateAlertRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof AlertsApiInterface
      */
@@ -96,6 +102,7 @@ export interface AlertsApiInterface {
      * Creates a new alert with conditions and notification channels.  At least one condition is required. Channels are optional — an alert without channels will still evaluate and log events but won\'t dispatch notifications. 
      * @summary Create an alert
      * @param {CovalAlertsAPICreateAlertRequest} covalAlertsAPICreateAlertRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AlertsApiInterface
@@ -111,6 +118,7 @@ export interface AlertsApiInterface {
     /**
      * Creates request options for deleteAlert without sending the request
      * @param {string} alertId Alert ULID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof AlertsApiInterface
      */
@@ -120,6 +128,7 @@ export interface AlertsApiInterface {
      * Soft-deletes an alert by setting its status to DELETED. The alert and its channels are deactivated but retained for audit. 
      * @summary Delete an alert
      * @param {string} alertId Alert ULID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AlertsApiInterface
@@ -135,6 +144,7 @@ export interface AlertsApiInterface {
     /**
      * Creates request options for getAlert without sending the request
      * @param {string} alertId Alert ULID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof AlertsApiInterface
      */
@@ -144,6 +154,7 @@ export interface AlertsApiInterface {
      * Returns a single alert with its conditions and channels.
      * @summary Get an alert
      * @param {string} alertId Alert ULID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AlertsApiInterface
@@ -158,7 +169,8 @@ export interface AlertsApiInterface {
 
     /**
      * Creates request options for listAlerts without sending the request
-     * @param {'ALL' | 'MONITORING' | 'SIMULATION'} [scope] Filter alerts by scope
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
+     * @param {'ALL' | 'UPLOADED' | 'SIMULATED'} [conversationSource] Filter alerts by conversation source
      * @param {number} [pageSize] Number of results per page
      * @param {string} [pageToken] Token for fetching the next page of results
      * @throws {RequiredError}
@@ -167,9 +179,10 @@ export interface AlertsApiInterface {
     listAlertsRequestOpts(requestParameters: ListAlertsRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Returns all active alerts for the authenticated organization.  Supports optional filtering by scope and pagination. 
+     * Returns all active alerts for the authenticated organization.  Supports optional filtering by conversation source and pagination. 
      * @summary List alerts
-     * @param {'ALL' | 'MONITORING' | 'SIMULATION'} [scope] Filter alerts by scope
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
+     * @param {'ALL' | 'UPLOADED' | 'SIMULATED'} [conversationSource] Filter alerts by conversation source
      * @param {number} [pageSize] Number of results per page
      * @param {string} [pageToken] Token for fetching the next page of results
      * @param {*} [options] Override http request option.
@@ -179,7 +192,7 @@ export interface AlertsApiInterface {
     listAlertsRaw(requestParameters: ListAlertsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalAlertsAPIListAlertsResponse>>;
 
     /**
-     * Returns all active alerts for the authenticated organization.  Supports optional filtering by scope and pagination. 
+     * Returns all active alerts for the authenticated organization.  Supports optional filtering by conversation source and pagination. 
      * List alerts
      */
     listAlerts(requestParameters: ListAlertsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalAlertsAPIListAlertsResponse>;
@@ -214,6 +227,7 @@ export interface AlertsApiInterface {
      * Creates request options for updateAlert without sending the request
      * @param {string} alertId Alert ULID
      * @param {CovalAlertsAPIUpdateAlertRequest} covalAlertsAPIUpdateAlertRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof AlertsApiInterface
      */
@@ -224,6 +238,7 @@ export interface AlertsApiInterface {
      * @summary Update an alert
      * @param {string} alertId Alert ULID
      * @param {CovalAlertsAPIUpdateAlertRequest} covalAlertsAPIUpdateAlertRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AlertsApiInterface
@@ -259,6 +274,10 @@ export class AlertsApi extends runtime.BaseAPI implements AlertsApiInterface {
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Alerts_API_ApiKeyAuth authentication
@@ -311,6 +330,10 @@ export class AlertsApi extends runtime.BaseAPI implements AlertsApiInterface {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Alerts_API_ApiKeyAuth authentication
         }
@@ -361,6 +384,10 @@ export class AlertsApi extends runtime.BaseAPI implements AlertsApiInterface {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Alerts_API_ApiKeyAuth authentication
         }
@@ -403,8 +430,8 @@ export class AlertsApi extends runtime.BaseAPI implements AlertsApiInterface {
     async listAlertsRequestOpts(requestParameters: ListAlertsRequest): Promise<runtime.RequestOpts> {
         const queryParameters: any = {};
 
-        if (requestParameters['scope'] != null) {
-            queryParameters['scope'] = requestParameters['scope'];
+        if (requestParameters['conversationSource'] != null) {
+            queryParameters['conversation_source'] = requestParameters['conversationSource'];
         }
 
         if (requestParameters['pageSize'] != null) {
@@ -416,6 +443,10 @@ export class AlertsApi extends runtime.BaseAPI implements AlertsApiInterface {
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Alerts_API_ApiKeyAuth authentication
@@ -433,7 +464,7 @@ export class AlertsApi extends runtime.BaseAPI implements AlertsApiInterface {
     }
 
     /**
-     * Returns all active alerts for the authenticated organization.  Supports optional filtering by scope and pagination. 
+     * Returns all active alerts for the authenticated organization.  Supports optional filtering by conversation source and pagination. 
      * List alerts
      */
     async listAlertsRaw(requestParameters: ListAlertsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalAlertsAPIListAlertsResponse>> {
@@ -444,7 +475,7 @@ export class AlertsApi extends runtime.BaseAPI implements AlertsApiInterface {
     }
 
     /**
-     * Returns all active alerts for the authenticated organization.  Supports optional filtering by scope and pagination. 
+     * Returns all active alerts for the authenticated organization.  Supports optional filtering by conversation source and pagination. 
      * List alerts
      */
     async listAlerts(requestParameters: ListAlertsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalAlertsAPIListAlertsResponse> {
@@ -537,6 +568,10 @@ export class AlertsApi extends runtime.BaseAPI implements AlertsApiInterface {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Alerts_API_ApiKeyAuth authentication
         }
@@ -579,9 +614,9 @@ export class AlertsApi extends runtime.BaseAPI implements AlertsApiInterface {
 /**
  * @export
  */
-export const ListAlertsScopeEnum = {
+export const ListAlertsConversationSourceEnum = {
     All: 'ALL',
-    Monitoring: 'MONITORING',
-    Simulation: 'SIMULATION'
+    Uploaded: 'UPLOADED',
+    Simulated: 'SIMULATED'
 } as const;
-export type ListAlertsScopeEnum = typeof ListAlertsScopeEnum[keyof typeof ListAlertsScopeEnum];
+export type ListAlertsConversationSourceEnum = typeof ListAlertsConversationSourceEnum[keyof typeof ListAlertsConversationSourceEnum];

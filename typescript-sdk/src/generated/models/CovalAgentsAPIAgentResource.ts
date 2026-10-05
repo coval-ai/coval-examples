@@ -13,13 +13,20 @@
  */
 
 import { mapValues } from '../runtime.js';
-import type { CovalAgentsAPISimulatorType } from './CovalAgentsAPISimulatorType.js';
+import type { CovalAgentsAPIResourceAttribution } from './CovalAgentsAPIResourceAttribution.js';
 import {
-    CovalAgentsAPISimulatorTypeFromJSON,
-    CovalAgentsAPISimulatorTypeFromJSONTyped,
-    CovalAgentsAPISimulatorTypeToJSON,
-    CovalAgentsAPISimulatorTypeToJSONTyped,
-} from './CovalAgentsAPISimulatorType.js';
+    CovalAgentsAPIResourceAttributionFromJSON,
+    CovalAgentsAPIResourceAttributionFromJSONTyped,
+    CovalAgentsAPIResourceAttributionToJSON,
+    CovalAgentsAPIResourceAttributionToJSONTyped,
+} from './CovalAgentsAPIResourceAttribution.js';
+import type { CovalAgentsAPIAgentResourceModelType } from './CovalAgentsAPIAgentResourceModelType.js';
+import {
+    CovalAgentsAPIAgentResourceModelTypeFromJSON,
+    CovalAgentsAPIAgentResourceModelTypeFromJSONTyped,
+    CovalAgentsAPIAgentResourceModelTypeToJSON,
+    CovalAgentsAPIAgentResourceModelTypeToJSONTyped,
+} from './CovalAgentsAPIAgentResourceModelType.js';
 
 /**
  * Agent configuration resource.
@@ -31,11 +38,17 @@ import {
  */
 export interface CovalAgentsAPIAgentResource {
     /**
+     * Authoring timestamps and user IDs. Unknown or deleted users are null.
+     * @type {CovalAgentsAPIResourceAttribution}
+     * @memberof CovalAgentsAPIAgentResource
+     */
+    readonly attribution?: CovalAgentsAPIResourceAttribution | null;
+    /**
      * Agent resource ID
      * @type {string}
      * @memberof CovalAgentsAPIAgentResource
      */
-    id?: string;
+    id: string;
     /**
      * Customer-supplied external id for the agent. Defaults to `id` when not set at creation.
      * @type {string}
@@ -47,13 +60,13 @@ export interface CovalAgentsAPIAgentResource {
      * @type {string}
      * @memberof CovalAgentsAPIAgentResource
      */
-    display_name?: string;
+    display_name: string;
     /**
      * 
-     * @type {CovalAgentsAPISimulatorType}
+     * @type {CovalAgentsAPIAgentResourceModelType}
      * @memberof CovalAgentsAPIAgentResource
      */
-    model_type?: CovalAgentsAPISimulatorType;
+    model_type: CovalAgentsAPIAgentResourceModelType;
     /**
      * Phone number in E.164 format or SIP address for voice/SMS agents
      * @type {string}
@@ -125,7 +138,7 @@ export interface CovalAgentsAPIAgentResource {
      * @type {Date}
      * @memberof CovalAgentsAPIAgentResource
      */
-    create_time?: Date;
+    create_time: Date;
     /**
      * Last update timestamp (ISO 8601)
      * @type {Date}
@@ -140,7 +153,11 @@ export interface CovalAgentsAPIAgentResource {
  * Check if a given object implements the CovalAgentsAPIAgentResource interface.
  */
 export function instanceOfCovalAgentsAPIAgentResource(value: object): value is CovalAgentsAPIAgentResource {
+    if (!('id' in value) || value['id'] === undefined) return false;
     if (!('customer_agent_id' in value) || value['customer_agent_id'] === undefined) return false;
+    if (!('display_name' in value) || value['display_name'] === undefined) return false;
+    if (!('model_type' in value) || value['model_type'] === undefined) return false;
+    if (!('create_time' in value) || value['create_time'] === undefined) return false;
     return true;
 }
 
@@ -154,10 +171,11 @@ export function CovalAgentsAPIAgentResourceFromJSONTyped(json: any, ignoreDiscri
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'attribution': json['attribution'] == null ? undefined : CovalAgentsAPIResourceAttributionFromJSON(json['attribution']),
+        'id': json['id'],
         'customer_agent_id': json['customer_agent_id'],
-        'display_name': json['display_name'] == null ? undefined : json['display_name'],
-        'model_type': json['model_type'] == null ? undefined : CovalAgentsAPISimulatorTypeFromJSON(json['model_type']),
+        'display_name': json['display_name'],
+        'model_type': CovalAgentsAPIAgentResourceModelTypeFromJSON(json['model_type']),
         'phone_number': json['phone_number'] == null ? undefined : json['phone_number'],
         'endpoint': json['endpoint'] == null ? undefined : json['endpoint'],
         'prompt': json['prompt'] == null ? undefined : json['prompt'],
@@ -169,7 +187,7 @@ export function CovalAgentsAPIAgentResourceFromJSONTyped(json: any, ignoreDiscri
         'test_set_ids': json['test_set_ids'] == null ? undefined : json['test_set_ids'],
         'knowledge_base_ids': json['knowledge_base_ids'] == null ? undefined : json['knowledge_base_ids'],
         'tags': json['tags'] == null ? undefined : json['tags'],
-        'create_time': json['create_time'] == null ? undefined : (new Date(json['create_time'])),
+        'create_time': (new Date(json['create_time'])),
         'update_time': json['update_time'] == null ? undefined : (new Date(json['update_time'])),
     };
 }
@@ -178,7 +196,7 @@ export function CovalAgentsAPIAgentResourceToJSON(json: any): CovalAgentsAPIAgen
     return CovalAgentsAPIAgentResourceToJSONTyped(json, false);
 }
 
-export function CovalAgentsAPIAgentResourceToJSONTyped(value?: Omit<CovalAgentsAPIAgentResource, 'knowledge_base_ids'> | null, ignoreDiscriminator: boolean = false): any {
+export function CovalAgentsAPIAgentResourceToJSONTyped(value?: Omit<CovalAgentsAPIAgentResource, 'attribution'|'knowledge_base_ids'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -188,7 +206,7 @@ export function CovalAgentsAPIAgentResourceToJSONTyped(value?: Omit<CovalAgentsA
         'id': value['id'],
         'customer_agent_id': value['customer_agent_id'],
         'display_name': value['display_name'],
-        'model_type': CovalAgentsAPISimulatorTypeToJSON(value['model_type']),
+        'model_type': CovalAgentsAPIAgentResourceModelTypeToJSON(value['model_type']),
         'phone_number': value['phone_number'],
         'endpoint': value['endpoint'],
         'prompt': value['prompt'],
@@ -199,7 +217,7 @@ export function CovalAgentsAPIAgentResourceToJSONTyped(value?: Omit<CovalAgentsA
         'metric_ids': value['metric_ids'],
         'test_set_ids': value['test_set_ids'],
         'tags': value['tags'],
-        'create_time': value['create_time'] == null ? value['create_time'] : value['create_time'].toISOString(),
+        'create_time': value['create_time'].toISOString(),
         'update_time': value['update_time'] == null ? value['update_time'] : value['update_time'].toISOString(),
     };
 }

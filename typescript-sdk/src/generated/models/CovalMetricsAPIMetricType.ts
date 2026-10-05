@@ -16,6 +16,9 @@
 /**
  * Metric evaluation type.
  * 
+ * - `METRIC_AGENT_JUDGE` - Agentic binary evaluation with bounded evidence tools
+ * - `METRIC_AGENT_JUDGE_CATEGORICAL` - Agentic categorical evaluation with bounded evidence tools
+ * - `METRIC_AGENT_JUDGE_NUMERICAL` - Agentic numerical evaluation with bounded evidence tools
  * - `METRIC_LLM_BINARY` - Yes/no LLM evaluation
  * - `METRIC_CATEGORICAL` - Multi-class classification
  * - `METRIC_NUMERICAL_LLM_JUDGE` - Numerical scoring (1-N)
@@ -34,17 +37,49 @@
  */
 export const CovalMetricsAPIMetricType = {
     MetricLlmBinary: 'METRIC_LLM_BINARY',
+    MetricAgentJudge: 'METRIC_AGENT_JUDGE',
+    MetricAgentJudgeCategorical: 'METRIC_AGENT_JUDGE_CATEGORICAL',
     MetricCategorical: 'METRIC_CATEGORICAL',
-    MetricNumericalLlmJudge: 'METRIC_NUMERICAL_LLM_JUDGE',
     MetricAudioLlmBinary: 'METRIC_AUDIO_LLM_BINARY',
     MetricAudioLlmCategorical: 'METRIC_AUDIO_LLM_CATEGORICAL',
-    MetricAudioLlmNumerical: 'METRIC_AUDIO_LLM_NUMERICAL',
     MetricToolcall: 'METRIC_TOOLCALL',
     MetricMetadataField: 'METRIC_METADATA_FIELD',
+    MetricAgentJudgeNumerical: 'METRIC_AGENT_JUDGE_NUMERICAL',
+    MetricNumericalLlmJudge: 'METRIC_NUMERICAL_LLM_JUDGE',
+    MetricAudioLlmNumerical: 'METRIC_AUDIO_LLM_NUMERICAL',
     MetricTranscriptRegex: 'METRIC_TRANSCRIPT_REGEX',
+    MetricUserFrustration: 'METRIC_USER_FRUSTRATION',
+    MetricAgentRefusal: 'METRIC_AGENT_REFUSAL',
     MetricPauseAnalysis: 'METRIC_PAUSE_ANALYSIS',
     MetricSqlFloat: 'METRIC_SQL_FLOAT',
     MetricCompositeEvaluation: 'METRIC_COMPOSITE_EVALUATION',
+    MetricLlmTtfb: 'METRIC_LLM_TTFB',
+    MetricTtsTtfb: 'METRIC_TTS_TTFB',
+    MetricSttTtfb: 'METRIC_STT_TTFB',
+    MetricLlmTokenUsage: 'METRIC_LLM_TOKEN_USAGE',
+    MetricToolCallRate: 'METRIC_TOOL_CALL_RATE',
+    MetricTraceSttWer: 'METRIC_TRACE_STT_WER',
+    MetricTraceAudioUploadSttWer: 'METRIC_TRACE_AUDIO_UPLOAD_STT_WER',
+    MetricCustomTrace: 'METRIC_CUSTOM_TRACE',
+    MetricVoiceQuality: 'METRIC_VOICE_QUALITY',
+    MetricPhonemeStretch: 'METRIC_PHONEME_STRETCH',
+    MetricSyllableRate: 'METRIC_SYLLABLE_RATE',
+    MetricLoopDetection: 'METRIC_LOOP_DETECTION',
+    MetricCodecArtifact: 'METRIC_CODEC_ARTIFACT',
+    MetricClippingArtifact: 'METRIC_CLIPPING_ARTIFACT',
+    MetricDropoutArtifact: 'METRIC_DROPOUT_ARTIFACT',
+    MetricTimbreDrift: 'METRIC_TIMBRE_DRIFT',
+    MetricSpeechArtifactAnomaly: 'METRIC_SPEECH_ARTIFACT_ANOMALY',
+    MetricPitchVariability: 'METRIC_PITCH_VARIABILITY',
+    MetricNonExpressivePauses: 'METRIC_NON_EXPRESSIVE_PAUSES',
+    MetricAbruptPitchChanges: 'METRIC_ABRUPT_PITCH_CHANGES',
+    MetricTerminalContour: 'METRIC_TERMINAL_CONTOUR',
+    MetricLufs: 'METRIC_LUFS',
+    MetricVolume: 'METRIC_VOLUME',
+    MetricVocalFry: 'METRIC_VOCAL_FRY',
+    MetricDerivedStrictLogic: 'METRIC_DERIVED_STRICT_LOGIC',
+    MetricDerivedAggregate: 'METRIC_DERIVED_AGGREGATE',
+    MetricIvrFlowAdherence: 'METRIC_IVR_FLOW_ADHERENCE',
     MetricCustomAgentFailsToRespond: 'METRIC_CUSTOM_AGENT_FAILS_TO_RESPOND',
     MetricCustomAgentNeedsReprompting: 'METRIC_CUSTOM_AGENT_NEEDS_REPROMPTING',
     MetricCustomAudioFrequency: 'METRIC_CUSTOM_AUDIO_FREQUENCY',

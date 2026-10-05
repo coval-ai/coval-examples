@@ -20,11 +20,12 @@ import { mapValues } from '../runtime.js';
  */
 export interface CovalWorkspacesAPICreateWorkspaceRequest {
     /**
-     * 
+     * Deprecated and ignored, including when null. Use the returned id to identify the workspace.
      * @type {string}
      * @memberof CovalWorkspacesAPICreateWorkspaceRequest
+     * @deprecated
      */
-    slug: string;
+    slug?: string | null;
     /**
      * 
      * @type {string}
@@ -37,7 +38,6 @@ export interface CovalWorkspacesAPICreateWorkspaceRequest {
  * Check if a given object implements the CovalWorkspacesAPICreateWorkspaceRequest interface.
  */
 export function instanceOfCovalWorkspacesAPICreateWorkspaceRequest(value: object): value is CovalWorkspacesAPICreateWorkspaceRequest {
-    if (!('slug' in value) || value['slug'] === undefined) return false;
     if (!('display_name' in value) || value['display_name'] === undefined) return false;
     return true;
 }
@@ -52,7 +52,7 @@ export function CovalWorkspacesAPICreateWorkspaceRequestFromJSONTyped(json: any,
     }
     return {
         
-        'slug': json['slug'],
+        'slug': json['slug'] == null ? undefined : json['slug'],
         'display_name': json['display_name'],
     };
 }

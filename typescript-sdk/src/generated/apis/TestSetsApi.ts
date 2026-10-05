@@ -66,10 +66,12 @@ export interface AddTestSetAgentsRequest {
 
 export interface CreateTestSetRequest {
     testSetsAPICreateTestSetRequest: TestSetsAPICreateTestSetRequest;
+    xCovalWorkspaceId?: string;
 }
 
 export interface DeleteTestSetRequest {
     testSetId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface DuplicateTestSetRequest {
@@ -78,6 +80,7 @@ export interface DuplicateTestSetRequest {
 
 export interface GetTestSetRequest {
     testSetId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface ListTestSetAgentsRequest {
@@ -93,6 +96,7 @@ export interface ListTestSetVersionsRequest {
 }
 
 export interface ListTestSetsRequest {
+    xCovalWorkspaceId?: string;
     filter?: string;
     pageSize?: number;
     pageToken?: string;
@@ -113,6 +117,7 @@ export interface RevertTestSetVersionRequest {
 export interface UpdateTestSetRequest {
     testSetId: string;
     testSetsAPIUpdateTestSetRequest: TestSetsAPIUpdateTestSetRequest;
+    xCovalWorkspaceId?: string;
 }
 
 /**
@@ -151,6 +156,7 @@ export interface TestSetsApiInterface {
     /**
      * Creates request options for createTestSet without sending the request
      * @param {TestSetsAPICreateTestSetRequest} testSetsAPICreateTestSetRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof TestSetsApiInterface
      */
@@ -160,6 +166,7 @@ export interface TestSetsApiInterface {
      * Create a new test set.
      * @summary Create test set
      * @param {TestSetsAPICreateTestSetRequest} testSetsAPICreateTestSetRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TestSetsApiInterface
@@ -175,15 +182,17 @@ export interface TestSetsApiInterface {
     /**
      * Creates request options for deleteTestSet without sending the request
      * @param {string} testSetId Test set ID (8-character ID)
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof TestSetsApiInterface
      */
     deleteTestSetRequestOpts(requestParameters: DeleteTestSetRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Delete a test set. 
+     * Delete a test set. Test sets referenced by active Templates cannot be deleted. 
      * @summary Delete test set
      * @param {string} testSetId Test set ID (8-character ID)
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TestSetsApiInterface
@@ -191,7 +200,7 @@ export interface TestSetsApiInterface {
     deleteTestSetRaw(requestParameters: DeleteTestSetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>>;
 
     /**
-     * Delete a test set. 
+     * Delete a test set. Test sets referenced by active Templates cannot be deleted. 
      * Delete test set
      */
     deleteTestSet(requestParameters: DeleteTestSetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object>;
@@ -223,6 +232,7 @@ export interface TestSetsApiInterface {
     /**
      * Creates request options for getTestSet without sending the request
      * @param {string} testSetId Test set ID (8-character ID)
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof TestSetsApiInterface
      */
@@ -232,6 +242,7 @@ export interface TestSetsApiInterface {
      * Retrieve a test set by ID.
      * @summary Get test set
      * @param {string} testSetId Test set ID (8-character ID)
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TestSetsApiInterface
@@ -318,6 +329,7 @@ export interface TestSetsApiInterface {
 
     /**
      * Creates request options for listTestSets without sending the request
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {string} [filter] Filter expression syntax. Values may be unquoted or double-quoted. Values containing spaces must be quoted. Example: &#x60;test_set_type&#x3D;SCENARIO&#x60; 
      * @param {number} [pageSize] Maximum number of test sets to return (default 50, max 100)
      * @param {string} [pageToken] Token for retrieving the next page of results
@@ -331,6 +343,7 @@ export interface TestSetsApiInterface {
     /**
      * List test sets for your organization.
      * @summary List test sets
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {string} [filter] Filter expression syntax. Values may be unquoted or double-quoted. Values containing spaces must be quoted. Example: &#x60;test_set_type&#x3D;SCENARIO&#x60; 
      * @param {number} [pageSize] Maximum number of test sets to return (default 50, max 100)
      * @param {string} [pageToken] Token for retrieving the next page of results
@@ -404,6 +417,7 @@ export interface TestSetsApiInterface {
      * Creates request options for updateTestSet without sending the request
      * @param {string} testSetId Test set ID (8-character ID)
      * @param {TestSetsAPIUpdateTestSetRequest} testSetsAPIUpdateTestSetRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof TestSetsApiInterface
      */
@@ -414,6 +428,7 @@ export interface TestSetsApiInterface {
      * @summary Update test set
      * @param {string} testSetId Test set ID (8-character ID)
      * @param {TestSetsAPIUpdateTestSetRequest} testSetsAPIUpdateTestSetRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TestSetsApiInterface
@@ -511,6 +526,10 @@ export class TestSetsApi extends runtime.BaseAPI implements TestSetsApiInterface
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Test_Sets_API_apiKey authentication
         }
@@ -562,6 +581,10 @@ export class TestSetsApi extends runtime.BaseAPI implements TestSetsApiInterface
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Test_Sets_API_apiKey authentication
         }
@@ -579,7 +602,7 @@ export class TestSetsApi extends runtime.BaseAPI implements TestSetsApiInterface
     }
 
     /**
-     * Delete a test set. 
+     * Delete a test set. Test sets referenced by active Templates cannot be deleted. 
      * Delete test set
      */
     async deleteTestSetRaw(requestParameters: DeleteTestSetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
@@ -590,7 +613,7 @@ export class TestSetsApi extends runtime.BaseAPI implements TestSetsApiInterface
     }
 
     /**
-     * Delete a test set. 
+     * Delete a test set. Test sets referenced by active Templates cannot be deleted. 
      * Delete test set
      */
     async deleteTestSet(requestParameters: DeleteTestSetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
@@ -663,6 +686,10 @@ export class TestSetsApi extends runtime.BaseAPI implements TestSetsApiInterface
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Test_Sets_API_apiKey authentication
@@ -881,6 +908,10 @@ export class TestSetsApi extends runtime.BaseAPI implements TestSetsApiInterface
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Test_Sets_API_apiKey authentication
         }
@@ -1057,6 +1088,10 @@ export class TestSetsApi extends runtime.BaseAPI implements TestSetsApiInterface
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Test_Sets_API_apiKey authentication

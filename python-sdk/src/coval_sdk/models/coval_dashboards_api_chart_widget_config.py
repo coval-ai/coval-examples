@@ -22,7 +22,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_dashboards_api_aggregation_type import CovalDashboardsAPIAggregationType
-from coval_sdk.models.coval_dashboards_api_data_source_type import CovalDashboardsAPIDataSourceType
+from coval_sdk.models.coval_dashboards_api_conversation_source import CovalDashboardsAPIConversationSource
 from coval_sdk.models.coval_dashboards_api_filter_config import CovalDashboardsAPIFilterConfig
 from coval_sdk.models.coval_dashboards_api_group_by_type import CovalDashboardsAPIGroupByType
 from coval_sdk.models.coval_dashboards_api_metric_filter import CovalDashboardsAPIMetricFilter
@@ -38,7 +38,7 @@ class CovalDashboardsAPIChartWidgetConfig(BaseModel):
     """ # noqa: E501
     metric_id: Optional[StrictStr] = Field(default=None, description="ID of the metric to visualize", alias="metricId")
     visualization_type: Optional[CovalDashboardsAPIVisualizationType] = Field(default=None, alias="visualizationType")
-    monitoring: Optional[CovalDashboardsAPIDataSourceType] = None
+    conversation_source: Optional[CovalDashboardsAPIConversationSource] = None
     aggregation: Optional[CovalDashboardsAPIAggregationType] = None
     metric_output_type: Optional[CovalDashboardsAPIMetricOutputType] = Field(default=None, alias="metricOutputType")
     bucket_interval: Optional[StrictStr] = Field(default=None, description="Time bucket interval for aggregation", alias="bucketInterval")
@@ -62,7 +62,7 @@ class CovalDashboardsAPIChartWidgetConfig(BaseModel):
     filters: Optional[CovalDashboardsAPIFilterConfig] = None
     metric_filter: Optional[List[CovalDashboardsAPIMetricFilter]] = Field(default=None, description="Metric value filters (max 50)", alias="metricFilter")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["metricId", "visualizationType", "monitoring", "aggregation", "metricOutputType", "bucketInterval", "stacked", "grouped", "showAsPercentage", "groupBy", "groupByMetadataKey", "customColorMap", "xAxisLabel", "yAxisLabel", "customSeriesNames", "hiddenSeries", "precision", "units", "showCount", "showRange", "showStdDev", "showBoxPlot", "showTargetZone", "filters", "metricFilter"]
+    __properties: ClassVar[List[str]] = ["metricId", "visualizationType", "conversation_source", "aggregation", "metricOutputType", "bucketInterval", "stacked", "grouped", "showAsPercentage", "groupBy", "groupByMetadataKey", "customColorMap", "xAxisLabel", "yAxisLabel", "customSeriesNames", "hiddenSeries", "precision", "units", "showCount", "showRange", "showStdDev", "showBoxPlot", "showTargetZone", "filters", "metricFilter"]
 
     @field_validator('bucket_interval')
     def bucket_interval_validate_enum(cls, value):
@@ -130,6 +130,121 @@ class CovalDashboardsAPIChartWidgetConfig(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if metric_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.metric_id is None and "metric_id" in self.model_fields_set:
+            _dict['metricId'] = None
+
+        # set to None if visualization_type (nullable) is None
+        # and model_fields_set contains the field
+        if self.visualization_type is None and "visualization_type" in self.model_fields_set:
+            _dict['visualizationType'] = None
+
+        # set to None if conversation_source (nullable) is None
+        # and model_fields_set contains the field
+        if self.conversation_source is None and "conversation_source" in self.model_fields_set:
+            _dict['conversation_source'] = None
+
+        # set to None if aggregation (nullable) is None
+        # and model_fields_set contains the field
+        if self.aggregation is None and "aggregation" in self.model_fields_set:
+            _dict['aggregation'] = None
+
+        # set to None if metric_output_type (nullable) is None
+        # and model_fields_set contains the field
+        if self.metric_output_type is None and "metric_output_type" in self.model_fields_set:
+            _dict['metricOutputType'] = None
+
+        # set to None if bucket_interval (nullable) is None
+        # and model_fields_set contains the field
+        if self.bucket_interval is None and "bucket_interval" in self.model_fields_set:
+            _dict['bucketInterval'] = None
+
+        # set to None if stacked (nullable) is None
+        # and model_fields_set contains the field
+        if self.stacked is None and "stacked" in self.model_fields_set:
+            _dict['stacked'] = None
+
+        # set to None if grouped (nullable) is None
+        # and model_fields_set contains the field
+        if self.grouped is None and "grouped" in self.model_fields_set:
+            _dict['grouped'] = None
+
+        # set to None if show_as_percentage (nullable) is None
+        # and model_fields_set contains the field
+        if self.show_as_percentage is None and "show_as_percentage" in self.model_fields_set:
+            _dict['showAsPercentage'] = None
+
+        # set to None if group_by (nullable) is None
+        # and model_fields_set contains the field
+        if self.group_by is None and "group_by" in self.model_fields_set:
+            _dict['groupBy'] = None
+
+        # set to None if group_by_metadata_key (nullable) is None
+        # and model_fields_set contains the field
+        if self.group_by_metadata_key is None and "group_by_metadata_key" in self.model_fields_set:
+            _dict['groupByMetadataKey'] = None
+
+        # set to None if x_axis_label (nullable) is None
+        # and model_fields_set contains the field
+        if self.x_axis_label is None and "x_axis_label" in self.model_fields_set:
+            _dict['xAxisLabel'] = None
+
+        # set to None if y_axis_label (nullable) is None
+        # and model_fields_set contains the field
+        if self.y_axis_label is None and "y_axis_label" in self.model_fields_set:
+            _dict['yAxisLabel'] = None
+
+        # set to None if hidden_series (nullable) is None
+        # and model_fields_set contains the field
+        if self.hidden_series is None and "hidden_series" in self.model_fields_set:
+            _dict['hiddenSeries'] = None
+
+        # set to None if precision (nullable) is None
+        # and model_fields_set contains the field
+        if self.precision is None and "precision" in self.model_fields_set:
+            _dict['precision'] = None
+
+        # set to None if units (nullable) is None
+        # and model_fields_set contains the field
+        if self.units is None and "units" in self.model_fields_set:
+            _dict['units'] = None
+
+        # set to None if show_count (nullable) is None
+        # and model_fields_set contains the field
+        if self.show_count is None and "show_count" in self.model_fields_set:
+            _dict['showCount'] = None
+
+        # set to None if show_range (nullable) is None
+        # and model_fields_set contains the field
+        if self.show_range is None and "show_range" in self.model_fields_set:
+            _dict['showRange'] = None
+
+        # set to None if show_std_dev (nullable) is None
+        # and model_fields_set contains the field
+        if self.show_std_dev is None and "show_std_dev" in self.model_fields_set:
+            _dict['showStdDev'] = None
+
+        # set to None if show_box_plot (nullable) is None
+        # and model_fields_set contains the field
+        if self.show_box_plot is None and "show_box_plot" in self.model_fields_set:
+            _dict['showBoxPlot'] = None
+
+        # set to None if show_target_zone (nullable) is None
+        # and model_fields_set contains the field
+        if self.show_target_zone is None and "show_target_zone" in self.model_fields_set:
+            _dict['showTargetZone'] = None
+
+        # set to None if filters (nullable) is None
+        # and model_fields_set contains the field
+        if self.filters is None and "filters" in self.model_fields_set:
+            _dict['filters'] = None
+
+        # set to None if metric_filter (nullable) is None
+        # and model_fields_set contains the field
+        if self.metric_filter is None and "metric_filter" in self.model_fields_set:
+            _dict['metricFilter'] = None
+
         return _dict
 
     @classmethod
@@ -144,7 +259,7 @@ class CovalDashboardsAPIChartWidgetConfig(BaseModel):
         _obj = cls.model_validate({
             "metricId": obj.get("metricId"),
             "visualizationType": obj.get("visualizationType"),
-            "monitoring": obj.get("monitoring"),
+            "conversation_source": obj.get("conversation_source"),
             "aggregation": obj.get("aggregation"),
             "metricOutputType": obj.get("metricOutputType"),
             "bucketInterval": obj.get("bucketInterval"),

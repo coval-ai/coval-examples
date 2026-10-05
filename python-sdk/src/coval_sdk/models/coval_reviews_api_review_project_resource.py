@@ -19,10 +19,11 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from coval_sdk.models.coval_reviews_api_project_rule import CovalReviewsAPIProjectRule
 from coval_sdk.models.coval_reviews_api_project_type import CovalReviewsAPIProjectType
+from coval_sdk.models.coval_reviews_api_resource_attribution import CovalReviewsAPIResourceAttribution
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -31,6 +32,7 @@ class CovalReviewsAPIReviewProjectResource(BaseModel):
     """
     A single review project resource.
     """ # noqa: E501
+    attribution: Optional[CovalReviewsAPIResourceAttribution] = Field(default=None, description="Authoring timestamps and user IDs. Unknown or deleted users are null.")
     name: StrictStr = Field(description="Resource name: review-projects/{id}")
     id: StrictStr = Field(description="Unique project ID (ULID)")
     display_name: StrictStr = Field(description="Human-readable project name")
@@ -44,8 +46,34 @@ class CovalReviewsAPIReviewProjectResource(BaseModel):
     enforced_collaboration: Optional[StrictBool] = Field(default=False, description="Whether collaborative claims and explicit single-author completion are enforced")
     create_time: datetime = Field(description="Creation timestamp (ISO 8601)")
     update_time: datetime = Field(description="Last update timestamp (ISO 8601)")
+    blind_labeling_shown_metric_ids: Optional[List[StrictStr]] = None
+    linked_metric_count: Optional[StrictInt] = 0
+    linked_simulation_count: Optional[StrictInt] = 0
+    review_label_input_mode: Optional[StrictStr] = None
+    review_label_options: Optional[List[StrictStr]] = None
+    review_label_selection_mode: Optional[StrictStr] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "id", "display_name", "description", "assignees", "linked_simulation_ids", "linked_metric_ids", "project_type", "notifications", "project_rules", "enforced_collaboration", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["attribution", "name", "id", "display_name", "description", "assignees", "linked_simulation_ids", "linked_metric_ids", "project_type", "notifications", "project_rules", "enforced_collaboration", "create_time", "update_time", "blind_labeling_shown_metric_ids", "linked_metric_count", "linked_simulation_count", "review_label_input_mode", "review_label_options", "review_label_selection_mode"]
+
+    @field_validator('review_label_input_mode')
+    def review_label_input_mode_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['OPTION_ONLY', 'CUSTOM_ONLY', 'OPTION_OR_CUSTOM']):
+            raise ValueError("must be one of enum values ('OPTION_ONLY', 'CUSTOM_ONLY', 'OPTION_OR_CUSTOM')")
+        return value
+
+    @field_validator('review_label_selection_mode')
+    def review_label_selection_mode_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['SINGLE', 'MULTIPLE']):
+            raise ValueError("must be one of enum values ('SINGLE', 'MULTIPLE')")
+        return value
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -77,9 +105,11 @@ class CovalReviewsAPIReviewProjectResource(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
         * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
+            "attribution",
             "additional_properties",
         ])
 
@@ -88,10 +118,18 @@ class CovalReviewsAPIReviewProjectResource(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of attribution
+        if self.attribution:
+            _dict['attribution'] = self.attribution.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
+
+        # set to None if attribution (nullable) is None
+        # and model_fields_set contains the field
+        if self.attribution is None and "attribution" in self.model_fields_set:
+            _dict['attribution'] = None
 
         # set to None if description (nullable) is None
         # and model_fields_set contains the field
@@ -102,6 +140,21 @@ class CovalReviewsAPIReviewProjectResource(BaseModel):
         # and model_fields_set contains the field
         if self.project_rules is None and "project_rules" in self.model_fields_set:
             _dict['project_rules'] = None
+
+        # set to None if blind_labeling_shown_metric_ids (nullable) is None
+        # and model_fields_set contains the field
+        if self.blind_labeling_shown_metric_ids is None and "blind_labeling_shown_metric_ids" in self.model_fields_set:
+            _dict['blind_labeling_shown_metric_ids'] = None
+
+        # set to None if review_label_input_mode (nullable) is None
+        # and model_fields_set contains the field
+        if self.review_label_input_mode is None and "review_label_input_mode" in self.model_fields_set:
+            _dict['review_label_input_mode'] = None
+
+        # set to None if review_label_selection_mode (nullable) is None
+        # and model_fields_set contains the field
+        if self.review_label_selection_mode is None and "review_label_selection_mode" in self.model_fields_set:
+            _dict['review_label_selection_mode'] = None
 
         return _dict
 
@@ -115,6 +168,7 @@ class CovalReviewsAPIReviewProjectResource(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "attribution": CovalReviewsAPIResourceAttribution.from_dict(obj["attribution"]) if obj.get("attribution") is not None else None,
             "name": obj.get("name"),
             "id": obj.get("id"),
             "display_name": obj.get("display_name"),
@@ -127,7 +181,13 @@ class CovalReviewsAPIReviewProjectResource(BaseModel):
             "project_rules": obj.get("project_rules"),
             "enforced_collaboration": obj.get("enforced_collaboration") if obj.get("enforced_collaboration") is not None else False,
             "create_time": obj.get("create_time"),
-            "update_time": obj.get("update_time")
+            "update_time": obj.get("update_time"),
+            "blind_labeling_shown_metric_ids": obj.get("blind_labeling_shown_metric_ids"),
+            "linked_metric_count": obj.get("linked_metric_count") if obj.get("linked_metric_count") is not None else 0,
+            "linked_simulation_count": obj.get("linked_simulation_count") if obj.get("linked_simulation_count") is not None else 0,
+            "review_label_input_mode": obj.get("review_label_input_mode"),
+            "review_label_options": obj.get("review_label_options"),
+            "review_label_selection_mode": obj.get("review_label_selection_mode")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

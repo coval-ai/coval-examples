@@ -19,7 +19,8 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt
-from typing import Any, ClassVar, Dict, List, Union
+from typing import Any, ClassVar, Dict, List, Optional, Union
+from coval_sdk.models.coval_reviews_api_composite_criteria_agreement_resource import CovalReviewsAPICompositeCriteriaAgreementResource
 from coval_sdk.models.coval_reviews_api_human_agreement_stats_resource import CovalReviewsAPIHumanAgreementStatsResource
 from typing import Optional, Set
 from typing_extensions import Self
@@ -35,8 +36,9 @@ class CovalReviewsAPIGetMetricHealthStatsResponse(BaseModel):
     agreements: StrictInt
     disagreements: StrictInt
     human_agreement: CovalReviewsAPIHumanAgreementStatsResource
+    criteria_agreement: Optional[CovalReviewsAPICompositeCriteriaAgreementResource] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["conversations", "annotations", "agreement_rate", "agreements", "disagreements", "human_agreement"]
+    __properties: ClassVar[List[str]] = ["conversations", "annotations", "agreement_rate", "agreements", "disagreements", "human_agreement", "criteria_agreement"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -82,10 +84,18 @@ class CovalReviewsAPIGetMetricHealthStatsResponse(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of human_agreement
         if self.human_agreement:
             _dict['human_agreement'] = self.human_agreement.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of criteria_agreement
+        if self.criteria_agreement:
+            _dict['criteria_agreement'] = self.criteria_agreement.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
+
+        # set to None if criteria_agreement (nullable) is None
+        # and model_fields_set contains the field
+        if self.criteria_agreement is None and "criteria_agreement" in self.model_fields_set:
+            _dict['criteria_agreement'] = None
 
         return _dict
 
@@ -104,7 +114,8 @@ class CovalReviewsAPIGetMetricHealthStatsResponse(BaseModel):
             "agreement_rate": obj.get("agreement_rate"),
             "agreements": obj.get("agreements"),
             "disagreements": obj.get("disagreements"),
-            "human_agreement": CovalReviewsAPIHumanAgreementStatsResource.from_dict(obj["human_agreement"]) if obj.get("human_agreement") is not None else None
+            "human_agreement": CovalReviewsAPIHumanAgreementStatsResource.from_dict(obj["human_agreement"]) if obj.get("human_agreement") is not None else None,
+            "criteria_agreement": CovalReviewsAPICompositeCriteriaAgreementResource.from_dict(obj["criteria_agreement"]) if obj.get("criteria_agreement") is not None else None
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

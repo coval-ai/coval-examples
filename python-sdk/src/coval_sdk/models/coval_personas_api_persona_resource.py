@@ -23,6 +23,8 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
 from coval_sdk.models.coval_personas_api_audio_degradation_config import CovalPersonasAPIAudioDegradationConfig
+from coval_sdk.models.coval_personas_api_multi_phone_config import CovalPersonasAPIMultiPhoneConfig
+from coval_sdk.models.coval_personas_api_resource_attribution import CovalPersonasAPIResourceAttribution
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -31,6 +33,13 @@ class CovalPersonasAPIPersonaResource(BaseModel):
     """
     Persona resource representation returned by API responses.
     """ # noqa: E501
+    attribution: Optional[CovalPersonasAPIResourceAttribution] = Field(default=None, description="Authoring timestamps and user IDs. Unknown or deleted users are null.")
+    silent_mode: Optional[StrictBool] = Field(default=None, description="Keep the persona silent for the whole simulation. Null clears the override.")
+    multi_phone_config: Optional[CovalPersonasAPIMultiPhoneConfig] = Field(default=None, description="Caller number selection from GET /v1/personas/phone-numbers. Omit to let the simulation select a random available number. Null clears it.")
+    initialization_parameters: Optional[Dict[str, Any]] = Field(default=None, description="Persona-level initialization parameters. Null clears; an empty object replaces existing parameters. String values substitute into the initialization payload as JSON-escaped text (quote the \"{{persona.key}}\" placeholder); all other JSON values substitute as their JSON encoding.")
+    custom_persona_data: Optional[Annotated[str, Field(strict=True, max_length=16383)]] = Field(default=None, description="Additional serialized JSON object sent as the chat request's customPersonaData, overriding the agent-level customPersonaData. Included only when the HTTP text agent does not configure input_template; a template-configured agent shapes its own request and does not receive it. Must parse as a JSON object and stay under 16 KiB. Null clears it.")
+    voice: Optional[StrictStr] = Field(default=None, description="Agent voice override for OpenAI Realtime endpoint simulations. Null clears it.")
+    custom_voice_id: Optional[Annotated[str, Field(min_length=1, strict=True)]] = Field(default=None, description="Server-issued custom voice reference belonging to this organization. Null selects the built-in voice again.")
     resource_name: StrictStr = Field(description="Resource name in format \"personas/{persona_id}\"")
     id: StrictStr = Field(description="Unique persona identifier")
     name: Annotated[str, Field(min_length=1, strict=True, max_length=200)] = Field(description="Human-readable persona name")
@@ -43,6 +52,7 @@ class CovalPersonasAPIPersonaResource(BaseModel):
     voice_speed: Optional[Union[Annotated[float, Field(le=2, strict=True, ge=0.25)], Annotated[int, Field(le=2, strict=True, ge=1)]]] = Field(default=None, description="Voice speed multiplier accepted and stored from 0.25 to 2.0. 1.0 is unchanged. The selected voice may enforce a narrower effective range or ignore speed changes.")
     wait_seconds: Optional[Union[Annotated[float, Field(le=2, strict=True, ge=0.1)], Annotated[int, Field(le=2, strict=True, ge=1)]]] = Field(default=None, description="Response delay in seconds")
     conversation_initiation: Optional[StrictStr] = Field(default=None, description="Who initiates the conversation")
+    interruption_rate: Optional[StrictStr] = Field(default='NONE', description="How often the persona interrupts the agent. While the agent is speaking, the persona forces a new turn once about 90 seconds (LOW), 45 seconds (MEDIUM), or 30 seconds (HIGH) have passed since the call started or since its last interruption. NONE never interrupts. This is a timer, not a semantic barge-in. ")
     multi_language_stt: Optional[StrictBool] = Field(default=None, description="Enable multilingual speech-to-text so callers speaking languages other than the primary language_code are still transcribed accurately. Useful for personas simulating callers in bilingual regions or contact centers that serve diverse populations. ")
     hold_music_timeout_seconds: Optional[Union[Annotated[float, Field(le=300, strict=True, ge=5)], Annotated[int, Field(le=300, strict=True, ge=5)]]] = Field(default=None, description="Disconnect after this many seconds of no speech (5-300). Used for hold music scenarios.")
     situate_speaker: Optional[StrictStr] = Field(default=None, description="Persona placement preset. - speakerphone-easy: User speaking from a distance from the microphone - speakerphone-hard: User speaking from a distance from the microphone in an acoustically challenging environment. ")
@@ -51,7 +61,17 @@ class CovalPersonasAPIPersonaResource(BaseModel):
     create_time: datetime = Field(description="Persona creation timestamp (ISO 8601)")
     update_time: Optional[datetime] = Field(default=None, description="Last update timestamp (ISO 8601)")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["resource_name", "id", "name", "persona_prompt", "voice_name", "language_code", "background_sound", "background_sound_volume", "voice_volume", "voice_speed", "wait_seconds", "conversation_initiation", "multi_language_stt", "hold_music_timeout_seconds", "situate_speaker", "audio_degradation", "tags", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["attribution", "silent_mode", "multi_phone_config", "initialization_parameters", "custom_persona_data", "voice", "custom_voice_id", "resource_name", "id", "name", "persona_prompt", "voice_name", "language_code", "background_sound", "background_sound_volume", "voice_volume", "voice_speed", "wait_seconds", "conversation_initiation", "interruption_rate", "multi_language_stt", "hold_music_timeout_seconds", "situate_speaker", "audio_degradation", "tags", "create_time", "update_time"]
+
+    @field_validator('voice')
+    def voice_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['alloy', 'ash', 'ballad', 'coral', 'echo', 'marin', 'sage', 'shimmer', 'verse']):
+            raise ValueError("must be one of enum values ('alloy', 'ash', 'ballad', 'coral', 'echo', 'marin', 'sage', 'shimmer', 'verse')")
+        return value
 
     @field_validator('background_sound')
     def background_sound_validate_regular_expression(cls, value):
@@ -74,6 +94,16 @@ class CovalPersonasAPIPersonaResource(BaseModel):
 
         if value not in set(['speak_first', 'wait_for_user']):
             raise ValueError("must be one of enum values ('speak_first', 'wait_for_user')")
+        return value
+
+    @field_validator('interruption_rate')
+    def interruption_rate_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['NONE', 'LOW', 'MEDIUM', 'HIGH']):
+            raise ValueError("must be one of enum values ('NONE', 'LOW', 'MEDIUM', 'HIGH')")
         return value
 
     @field_validator('situate_speaker')
@@ -116,9 +146,11 @@ class CovalPersonasAPIPersonaResource(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
         * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
+            "attribution",
             "additional_properties",
         ])
 
@@ -127,6 +159,12 @@ class CovalPersonasAPIPersonaResource(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of attribution
+        if self.attribution:
+            _dict['attribution'] = self.attribution.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of multi_phone_config
+        if self.multi_phone_config:
+            _dict['multi_phone_config'] = self.multi_phone_config.to_dict()
         # override the default output from pydantic by calling `to_dict()` of audio_degradation
         if self.audio_degradation:
             _dict['audio_degradation'] = self.audio_degradation.to_dict()
@@ -134,6 +172,41 @@ class CovalPersonasAPIPersonaResource(BaseModel):
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
+
+        # set to None if attribution (nullable) is None
+        # and model_fields_set contains the field
+        if self.attribution is None and "attribution" in self.model_fields_set:
+            _dict['attribution'] = None
+
+        # set to None if silent_mode (nullable) is None
+        # and model_fields_set contains the field
+        if self.silent_mode is None and "silent_mode" in self.model_fields_set:
+            _dict['silent_mode'] = None
+
+        # set to None if multi_phone_config (nullable) is None
+        # and model_fields_set contains the field
+        if self.multi_phone_config is None and "multi_phone_config" in self.model_fields_set:
+            _dict['multi_phone_config'] = None
+
+        # set to None if initialization_parameters (nullable) is None
+        # and model_fields_set contains the field
+        if self.initialization_parameters is None and "initialization_parameters" in self.model_fields_set:
+            _dict['initialization_parameters'] = None
+
+        # set to None if custom_persona_data (nullable) is None
+        # and model_fields_set contains the field
+        if self.custom_persona_data is None and "custom_persona_data" in self.model_fields_set:
+            _dict['custom_persona_data'] = None
+
+        # set to None if voice (nullable) is None
+        # and model_fields_set contains the field
+        if self.voice is None and "voice" in self.model_fields_set:
+            _dict['voice'] = None
+
+        # set to None if custom_voice_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.custom_voice_id is None and "custom_voice_id" in self.model_fields_set:
+            _dict['custom_voice_id'] = None
 
         # set to None if persona_prompt (nullable) is None
         # and model_fields_set contains the field
@@ -217,6 +290,13 @@ class CovalPersonasAPIPersonaResource(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "attribution": CovalPersonasAPIResourceAttribution.from_dict(obj["attribution"]) if obj.get("attribution") is not None else None,
+            "silent_mode": obj.get("silent_mode"),
+            "multi_phone_config": CovalPersonasAPIMultiPhoneConfig.from_dict(obj["multi_phone_config"]) if obj.get("multi_phone_config") is not None else None,
+            "initialization_parameters": obj.get("initialization_parameters"),
+            "custom_persona_data": obj.get("custom_persona_data"),
+            "voice": obj.get("voice"),
+            "custom_voice_id": obj.get("custom_voice_id"),
             "resource_name": obj.get("resource_name"),
             "id": obj.get("id"),
             "name": obj.get("name"),
@@ -229,6 +309,7 @@ class CovalPersonasAPIPersonaResource(BaseModel):
             "voice_speed": obj.get("voice_speed"),
             "wait_seconds": obj.get("wait_seconds"),
             "conversation_initiation": obj.get("conversation_initiation"),
+            "interruption_rate": obj.get("interruption_rate") if obj.get("interruption_rate") is not None else 'NONE',
             "multi_language_stt": obj.get("multi_language_stt"),
             "hold_music_timeout_seconds": obj.get("hold_music_timeout_seconds"),
             "situate_speaker": obj.get("situate_speaker"),

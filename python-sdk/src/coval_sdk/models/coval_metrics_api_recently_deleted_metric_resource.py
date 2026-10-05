@@ -27,16 +27,15 @@ from pydantic_core import to_jsonable_python
 
 class CovalMetricsAPIRecentlyDeletedMetricResource(BaseModel):
     """
-    A soft-deleted metric in the Recently Deleted list, with its purge countdown.
+    A soft-deleted metric in the Recently Deleted list, with deletion metadata.
     """ # noqa: E501
     name: StrictStr = Field(description="Resource name")
     id: StrictStr = Field(description="Metric ID (22-char ShortUUID)")
     metric_name: StrictStr = Field(description="User-facing metric name")
     delete_time: Optional[datetime] = Field(default=None, description="When the metric was deleted")
     deleted_by: Optional[StrictStr] = Field(default=None, description="Who deleted the metric (email address)")
-    purge_time: Optional[datetime] = Field(default=None, description="When the metric will be permanently purged (delete_time + retention window)")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "id", "metric_name", "delete_time", "deleted_by", "purge_time"]
+    __properties: ClassVar[List[str]] = ["name", "id", "metric_name", "delete_time", "deleted_by"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -94,11 +93,6 @@ class CovalMetricsAPIRecentlyDeletedMetricResource(BaseModel):
         if self.deleted_by is None and "deleted_by" in self.model_fields_set:
             _dict['deleted_by'] = None
 
-        # set to None if purge_time (nullable) is None
-        # and model_fields_set contains the field
-        if self.purge_time is None and "purge_time" in self.model_fields_set:
-            _dict['purge_time'] = None
-
         return _dict
 
     @classmethod
@@ -115,8 +109,7 @@ class CovalMetricsAPIRecentlyDeletedMetricResource(BaseModel):
             "id": obj.get("id"),
             "metric_name": obj.get("metric_name"),
             "delete_time": obj.get("delete_time"),
-            "deleted_by": obj.get("deleted_by"),
-            "purge_time": obj.get("purge_time")
+            "deleted_by": obj.get("deleted_by")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

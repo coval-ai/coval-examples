@@ -21,7 +21,10 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
+from coval_sdk.models.coval_metrics_api_agent_judge_tool import CovalMetricsAPIAgentJudgeTool
 from coval_sdk.models.coval_metrics_api_create_metric_request_expected_body import CovalMetricsAPICreateMetricRequestExpectedBody
+from coval_sdk.models.coval_metrics_api_ivr_flow import CovalMetricsAPIIvrFlow
+from coval_sdk.models.coval_metrics_api_judge_mode import CovalMetricsAPIJudgeMode
 from coval_sdk.models.coval_metrics_api_metadata_field_type import CovalMetricsAPIMetadataFieldType
 from coval_sdk.models.coval_metrics_api_metric_runtime_config import CovalMetricsAPIMetricRuntimeConfig
 from coval_sdk.models.coval_metrics_api_metric_type import CovalMetricsAPIMetricType
@@ -37,7 +40,9 @@ class CovalMetricsAPIUpdateMetricRequest(BaseModel):
     metric_name: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=200)]] = None
     description: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=1000)]] = None
     metric_type: Optional[CovalMetricsAPIMetricType] = None
+    judge_mode: Optional[CovalMetricsAPIJudgeMode] = Field(default=None, description="LLM Judge execution mode. Omit to preserve the existing mode.")
     prompt: Optional[StrictStr] = None
+    enabled_tools: Optional[List[CovalMetricsAPIAgentJudgeTool]] = Field(default=None, description="Agentic LLM Judge tools. Omit to preserve the current/default selection; pass [] to disable all tools.")
     categories: Optional[Annotated[List[StrictStr], Field(min_length=2, max_length=50)]] = None
     min_value: Optional[Union[StrictFloat, StrictInt]] = None
     max_value: Optional[Union[StrictFloat, StrictInt]] = None
@@ -59,7 +64,10 @@ class CovalMetricsAPIUpdateMetricRequest(BaseModel):
     min_volume_change_for_pitch_misalignment: Optional[Union[Annotated[float, Field(strict=True, gt=0)], Annotated[int, Field(strict=True, gt=0)]]] = None
     threshold: Optional[Annotated[int, Field(strict=True, ge=0)]] = None
     operator: Optional[StrictStr] = None
-    sql_query: Optional[Annotated[str, Field(strict=True, max_length=50000)]] = Field(default=None, description="SQL query that defines the metric (for METRIC_SQL_FLOAT).")
+    ivr_flow: Optional[CovalMetricsAPIIvrFlow] = Field(default=None, description="IVR flow definition (for METRIC_IVR_FLOW_ADHERENCE). Explicit null clears it.")
+    sql_query: Optional[Annotated[str, Field(strict=True, max_length=50000)]] = Field(default=None, description="SQL query that defines the metric (for METRIC_SQL_FLOAT). SQL `unit` values must use supported result-unit identifiers such as `s`, `ms`, or `count`. An omitted unit preserves the current value; null or an empty string clears it. ")
+    aggregation_method: Optional[StrictStr] = Field(default=None, description="Aggregation method for custom trace values, or SUM, AVERAGE, MIN, MAX, or COUNT for METRIC_SQL_FLOAT. Omit to preserve the current method; null resets a SQL metric to AVERAGE.")
+    unit: Optional[Annotated[str, Field(strict=True, max_length=32)]] = Field(default=None, description="Optional display unit. For METRIC_SQL_FLOAT, use a result-unit identifier such as s, ms, count, or percent. Omit to preserve the current unit; null or an empty string clears it.")
     criteria_source: Optional[StrictStr] = Field(default=None, description="Where a METRIC_COMPOSITE_EVALUATION metric reads its criteria from.")
     criteria_path: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="Path to the criteria on the source, when `criteria_source` is `test_case` or `test_case_attribute`. ")
     criteria: Optional[List[StrictStr]] = Field(default=None, description="Literal list of criteria, when `criteria_source` is `metric_metadata`.")
@@ -69,8 +77,27 @@ class CovalMetricsAPIUpdateMetricRequest(BaseModel):
     runtime_config: Optional[CovalMetricsAPIMetricRuntimeConfig] = Field(default=None, description="Override the LLM model used for metric evaluation. Set to `null` to revert to the platform default. Use `GET /v1/models/metric` to list available models. Not supported for audio metric types (`METRIC_AUDIO_LLM_BINARY`, `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`), which always use the platform-default audio model. ")
     target_condition: Optional[CovalMetricsAPITargetCondition] = Field(default=None, description="Target condition for metric evaluation")
     tags: Optional[List[StrictStr]] = Field(default=None, description="Tags to associate with this metric. Null or omitted leaves tags unchanged. Pass [] to clear all tags.")
+    case_insensitive: Optional[StrictBool] = Field(default=None, description="Apply case-insensitive matching")
+    detection_preset: Optional[StrictStr] = Field(default=None, description="METRIC_ABRUPT_PITCH_CHANGES / METRIC_NON_EXPRESSIVE_PAUSES / METRIC_VOCAL_FRY preset: 'strict', 'normal', or 'lenient'.")
+    harmonics_to_noise_ratio_threshold_offset_db: Optional[Union[Annotated[float, Field(lt=0, strict=True, ge=-25)], Annotated[int, Field(lt=0, strict=True, ge=-25)]]] = Field(default=None, description="Advanced (dB): offset below baseline HNR under which a frame is fry (less negative flags more).")
+    jitter_threshold_multiplier: Optional[Union[Annotated[float, Field(strict=True, gt=1)], Annotated[int, Field(strict=True, gt=1)]]] = Field(default=None, description="Advanced: multiple of baseline jitter above which a frame is fry (lower flags more).")
+    loud_threshold_db: Optional[Union[Annotated[float, Field(le=0, strict=True, ge=-60)], Annotated[int, Field(le=0, strict=True, ge=-60)]]] = Field(default=None, description="Advanced (dBFS): level at/above which audio is flagged loud. Must exceed soft_threshold_db.")
+    low_pitch_threshold_multiplier: Optional[Union[Annotated[float, Field(lt=1, strict=True, gt=0)], Annotated[int, Field(lt=1, strict=True, gt=0)]]] = Field(default=None, description="Advanced: pitch fraction of baseline below which a frame is fry (higher flags more).")
+    mad_z_score_threshold: Optional[Union[Annotated[float, Field(strict=True, gt=0)], Annotated[int, Field(strict=True, gt=0)]]] = Field(default=None, description="Advanced: override the preset's MAD modified z-score threshold.")
+    match_mode: Optional[StrictStr] = Field(default=None, description="Match mode: 'presence' or 'absence'")
+    metric_attribute: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="Span attribute key to measure")
+    metric_metadata: Optional[Dict[str, Any]] = Field(default=None, description="Derived metric config (replaces existing config on update)")
+    min_fry_segment_seconds: Optional[Union[Annotated[float, Field(le=1, strict=True, ge=0)], Annotated[int, Field(le=1, strict=True, ge=0)]]] = Field(default=None, description="Advanced (s): minimum kept fry-run duration (lower flags more).")
+    pause_detection_preset: Optional[StrictStr] = Field(default=None, description="Anomaly detection preset (recommended). 'strict' / 'normal' / 'lenient' control MAD threshold and minimum pause count. Most callers should set this instead of the fields below.")
+    pitch_change_threshold_hz: Optional[Union[Annotated[float, Field(strict=True, gt=0)], Annotated[int, Field(strict=True, gt=0)]]] = Field(default=None, description="Advanced (Hz): pitch movement near a pause above which the pause counts as expressive.")
+    position: Optional[StrictStr] = Field(default=None, description="Position constraint: 'any', 'first', or 'last'")
+    significant_changes_threshold_hz: Optional[Union[Annotated[float, Field(strict=True, gt=0)], Annotated[int, Field(strict=True, gt=0)]]] = Field(default=None, description="Advanced (Hz): pitch jump above which a change counts as abrupt (lower flags more).")
+    soft_threshold_db: Optional[Union[Annotated[float, Field(le=0, strict=True, ge=-60)], Annotated[int, Field(le=0, strict=True, ge=-60)]]] = Field(default=None, description="Advanced (dBFS): level at/below which audio is flagged soft.")
+    span_name: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="OTel span name to query")
+    threshold_preset: Optional[StrictStr] = Field(default=None, description="METRIC_VOLUME threshold preset: 'strict', 'normal', or 'lenient'.")
+    value_source: Optional[StrictStr] = Field(default=None, description="Source of the aggregated value for METRIC_CUSTOM_TRACE: 'attribute' reads the configured span attribute; 'duration' aggregates the span's own duration in seconds. None leaves it unchanged.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["metric_name", "description", "metric_type", "prompt", "categories", "min_value", "max_value", "metadata_field_type", "metadata_field_key", "regex_pattern", "role", "min_pause_duration_seconds", "max_silence_duration_seconds", "min_silence_gap_seconds", "frequency_threshold", "direction", "success_sentiments", "percent_above", "success_end_reasons", "observation_name", "expected_body", "match_path", "min_volume_change_for_pitch_misalignment", "threshold", "operator", "sql_query", "criteria_source", "criteria_path", "criteria", "reporting_method", "base_prompt_template", "include_traces", "runtime_config", "target_condition", "tags"]
+    __properties: ClassVar[List[str]] = ["metric_name", "description", "metric_type", "judge_mode", "prompt", "enabled_tools", "categories", "min_value", "max_value", "metadata_field_type", "metadata_field_key", "regex_pattern", "role", "min_pause_duration_seconds", "max_silence_duration_seconds", "min_silence_gap_seconds", "frequency_threshold", "direction", "success_sentiments", "percent_above", "success_end_reasons", "observation_name", "expected_body", "match_path", "min_volume_change_for_pitch_misalignment", "threshold", "operator", "ivr_flow", "sql_query", "aggregation_method", "unit", "criteria_source", "criteria_path", "criteria", "reporting_method", "base_prompt_template", "include_traces", "runtime_config", "target_condition", "tags", "case_insensitive", "detection_preset", "harmonics_to_noise_ratio_threshold_offset_db", "jitter_threshold_multiplier", "loud_threshold_db", "low_pitch_threshold_multiplier", "mad_z_score_threshold", "match_mode", "metric_attribute", "metric_metadata", "min_fry_segment_seconds", "pause_detection_preset", "pitch_change_threshold_hz", "position", "significant_changes_threshold_hz", "soft_threshold_db", "span_name", "threshold_preset", "value_source"]
 
     @field_validator('role')
     def role_validate_enum(cls, value):
@@ -110,8 +137,8 @@ class CovalMetricsAPIUpdateMetricRequest(BaseModel):
             return value
 
         for i in value:
-            if i not in set(['UNKNOWN', 'IDLE_TIMEOUT', 'PERSONA_DISCONNECTED', 'AGENT_DISCONNECTED', 'PIPELINE_ERROR', 'REPETITION_LOOP', 'AUDIO_UPLOAD_PLAYBACK_COMPLETED', 'SCRIPT_COMPLETED', 'SCRIPT_DIVERGED']):
-                raise ValueError("each list item must be one of ('UNKNOWN', 'IDLE_TIMEOUT', 'PERSONA_DISCONNECTED', 'AGENT_DISCONNECTED', 'PIPELINE_ERROR', 'REPETITION_LOOP', 'AUDIO_UPLOAD_PLAYBACK_COMPLETED', 'SCRIPT_COMPLETED', 'SCRIPT_DIVERGED')")
+            if i not in set(['UNKNOWN', 'IDLE_TIMEOUT', 'DURATION_LIMIT', 'PERSONA_DISCONNECTED', 'AGENT_DISCONNECTED', 'PIPELINE_ERROR', 'REPETITION_LOOP', 'AUDIO_UPLOAD_PLAYBACK_COMPLETED', 'SCRIPT_COMPLETED', 'SCRIPT_DIVERGED']):
+                raise ValueError("each list item must be one of ('UNKNOWN', 'IDLE_TIMEOUT', 'DURATION_LIMIT', 'PERSONA_DISCONNECTED', 'AGENT_DISCONNECTED', 'PIPELINE_ERROR', 'REPETITION_LOOP', 'AUDIO_UPLOAD_PLAYBACK_COMPLETED', 'SCRIPT_COMPLETED', 'SCRIPT_DIVERGED')")
         return value
 
     @field_validator('operator')
@@ -142,6 +169,56 @@ class CovalMetricsAPIUpdateMetricRequest(BaseModel):
 
         if value not in set(['percentage_of_criteria_met', 'count_of_criteria_met', 'all_criteria_met']):
             raise ValueError("must be one of enum values ('percentage_of_criteria_met', 'count_of_criteria_met', 'all_criteria_met')")
+        return value
+
+    @field_validator('detection_preset')
+    def detection_preset_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['strict', 'normal', 'lenient']):
+            raise ValueError("must be one of enum values ('strict', 'normal', 'lenient')")
+        return value
+
+    @field_validator('match_mode')
+    def match_mode_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['presence', 'absence']):
+            raise ValueError("must be one of enum values ('presence', 'absence')")
+        return value
+
+    @field_validator('pause_detection_preset')
+    def pause_detection_preset_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['strict', 'normal', 'lenient']):
+            raise ValueError("must be one of enum values ('strict', 'normal', 'lenient')")
+        return value
+
+    @field_validator('position')
+    def position_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['any', 'first', 'last']):
+            raise ValueError("must be one of enum values ('any', 'first', 'last')")
+        return value
+
+    @field_validator('threshold_preset')
+    def threshold_preset_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['strict', 'normal', 'lenient']):
+            raise ValueError("must be one of enum values ('strict', 'normal', 'lenient')")
         return value
 
     model_config = ConfigDict(
@@ -188,6 +265,9 @@ class CovalMetricsAPIUpdateMetricRequest(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of expected_body
         if self.expected_body:
             _dict['expected_body'] = self.expected_body.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of ivr_flow
+        if self.ivr_flow:
+            _dict['ivr_flow'] = self.ivr_flow.to_dict()
         # override the default output from pydantic by calling `to_dict()` of runtime_config
         if self.runtime_config:
             _dict['runtime_config'] = self.runtime_config.to_dict()
@@ -198,6 +278,26 @@ class CovalMetricsAPIUpdateMetricRequest(BaseModel):
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
+
+        # set to None if judge_mode (nullable) is None
+        # and model_fields_set contains the field
+        if self.judge_mode is None and "judge_mode" in self.model_fields_set:
+            _dict['judge_mode'] = None
+
+        # set to None if enabled_tools (nullable) is None
+        # and model_fields_set contains the field
+        if self.enabled_tools is None and "enabled_tools" in self.model_fields_set:
+            _dict['enabled_tools'] = None
+
+        # set to None if aggregation_method (nullable) is None
+        # and model_fields_set contains the field
+        if self.aggregation_method is None and "aggregation_method" in self.model_fields_set:
+            _dict['aggregation_method'] = None
+
+        # set to None if unit (nullable) is None
+        # and model_fields_set contains the field
+        if self.unit is None and "unit" in self.model_fields_set:
+            _dict['unit'] = None
 
         # set to None if include_traces (nullable) is None
         # and model_fields_set contains the field
@@ -219,6 +319,101 @@ class CovalMetricsAPIUpdateMetricRequest(BaseModel):
         if self.tags is None and "tags" in self.model_fields_set:
             _dict['tags'] = None
 
+        # set to None if case_insensitive (nullable) is None
+        # and model_fields_set contains the field
+        if self.case_insensitive is None and "case_insensitive" in self.model_fields_set:
+            _dict['case_insensitive'] = None
+
+        # set to None if detection_preset (nullable) is None
+        # and model_fields_set contains the field
+        if self.detection_preset is None and "detection_preset" in self.model_fields_set:
+            _dict['detection_preset'] = None
+
+        # set to None if harmonics_to_noise_ratio_threshold_offset_db (nullable) is None
+        # and model_fields_set contains the field
+        if self.harmonics_to_noise_ratio_threshold_offset_db is None and "harmonics_to_noise_ratio_threshold_offset_db" in self.model_fields_set:
+            _dict['harmonics_to_noise_ratio_threshold_offset_db'] = None
+
+        # set to None if jitter_threshold_multiplier (nullable) is None
+        # and model_fields_set contains the field
+        if self.jitter_threshold_multiplier is None and "jitter_threshold_multiplier" in self.model_fields_set:
+            _dict['jitter_threshold_multiplier'] = None
+
+        # set to None if loud_threshold_db (nullable) is None
+        # and model_fields_set contains the field
+        if self.loud_threshold_db is None and "loud_threshold_db" in self.model_fields_set:
+            _dict['loud_threshold_db'] = None
+
+        # set to None if low_pitch_threshold_multiplier (nullable) is None
+        # and model_fields_set contains the field
+        if self.low_pitch_threshold_multiplier is None and "low_pitch_threshold_multiplier" in self.model_fields_set:
+            _dict['low_pitch_threshold_multiplier'] = None
+
+        # set to None if mad_z_score_threshold (nullable) is None
+        # and model_fields_set contains the field
+        if self.mad_z_score_threshold is None and "mad_z_score_threshold" in self.model_fields_set:
+            _dict['mad_z_score_threshold'] = None
+
+        # set to None if match_mode (nullable) is None
+        # and model_fields_set contains the field
+        if self.match_mode is None and "match_mode" in self.model_fields_set:
+            _dict['match_mode'] = None
+
+        # set to None if metric_attribute (nullable) is None
+        # and model_fields_set contains the field
+        if self.metric_attribute is None and "metric_attribute" in self.model_fields_set:
+            _dict['metric_attribute'] = None
+
+        # set to None if metric_metadata (nullable) is None
+        # and model_fields_set contains the field
+        if self.metric_metadata is None and "metric_metadata" in self.model_fields_set:
+            _dict['metric_metadata'] = None
+
+        # set to None if min_fry_segment_seconds (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_fry_segment_seconds is None and "min_fry_segment_seconds" in self.model_fields_set:
+            _dict['min_fry_segment_seconds'] = None
+
+        # set to None if pause_detection_preset (nullable) is None
+        # and model_fields_set contains the field
+        if self.pause_detection_preset is None and "pause_detection_preset" in self.model_fields_set:
+            _dict['pause_detection_preset'] = None
+
+        # set to None if pitch_change_threshold_hz (nullable) is None
+        # and model_fields_set contains the field
+        if self.pitch_change_threshold_hz is None and "pitch_change_threshold_hz" in self.model_fields_set:
+            _dict['pitch_change_threshold_hz'] = None
+
+        # set to None if position (nullable) is None
+        # and model_fields_set contains the field
+        if self.position is None and "position" in self.model_fields_set:
+            _dict['position'] = None
+
+        # set to None if significant_changes_threshold_hz (nullable) is None
+        # and model_fields_set contains the field
+        if self.significant_changes_threshold_hz is None and "significant_changes_threshold_hz" in self.model_fields_set:
+            _dict['significant_changes_threshold_hz'] = None
+
+        # set to None if soft_threshold_db (nullable) is None
+        # and model_fields_set contains the field
+        if self.soft_threshold_db is None and "soft_threshold_db" in self.model_fields_set:
+            _dict['soft_threshold_db'] = None
+
+        # set to None if span_name (nullable) is None
+        # and model_fields_set contains the field
+        if self.span_name is None and "span_name" in self.model_fields_set:
+            _dict['span_name'] = None
+
+        # set to None if threshold_preset (nullable) is None
+        # and model_fields_set contains the field
+        if self.threshold_preset is None and "threshold_preset" in self.model_fields_set:
+            _dict['threshold_preset'] = None
+
+        # set to None if value_source (nullable) is None
+        # and model_fields_set contains the field
+        if self.value_source is None and "value_source" in self.model_fields_set:
+            _dict['value_source'] = None
+
         return _dict
 
     @classmethod
@@ -234,7 +429,9 @@ class CovalMetricsAPIUpdateMetricRequest(BaseModel):
             "metric_name": obj.get("metric_name"),
             "description": obj.get("description"),
             "metric_type": obj.get("metric_type"),
+            "judge_mode": obj.get("judge_mode"),
             "prompt": obj.get("prompt"),
+            "enabled_tools": obj.get("enabled_tools"),
             "categories": obj.get("categories"),
             "min_value": obj.get("min_value"),
             "max_value": obj.get("max_value"),
@@ -256,7 +453,10 @@ class CovalMetricsAPIUpdateMetricRequest(BaseModel):
             "min_volume_change_for_pitch_misalignment": obj.get("min_volume_change_for_pitch_misalignment"),
             "threshold": obj.get("threshold"),
             "operator": obj.get("operator"),
+            "ivr_flow": CovalMetricsAPIIvrFlow.from_dict(obj["ivr_flow"]) if obj.get("ivr_flow") is not None else None,
             "sql_query": obj.get("sql_query"),
+            "aggregation_method": obj.get("aggregation_method"),
+            "unit": obj.get("unit"),
             "criteria_source": obj.get("criteria_source"),
             "criteria_path": obj.get("criteria_path"),
             "criteria": obj.get("criteria"),
@@ -265,7 +465,26 @@ class CovalMetricsAPIUpdateMetricRequest(BaseModel):
             "include_traces": obj.get("include_traces"),
             "runtime_config": CovalMetricsAPIMetricRuntimeConfig.from_dict(obj["runtime_config"]) if obj.get("runtime_config") is not None else None,
             "target_condition": CovalMetricsAPITargetCondition.from_dict(obj["target_condition"]) if obj.get("target_condition") is not None else None,
-            "tags": obj.get("tags")
+            "tags": obj.get("tags"),
+            "case_insensitive": obj.get("case_insensitive"),
+            "detection_preset": obj.get("detection_preset"),
+            "harmonics_to_noise_ratio_threshold_offset_db": obj.get("harmonics_to_noise_ratio_threshold_offset_db"),
+            "jitter_threshold_multiplier": obj.get("jitter_threshold_multiplier"),
+            "loud_threshold_db": obj.get("loud_threshold_db"),
+            "low_pitch_threshold_multiplier": obj.get("low_pitch_threshold_multiplier"),
+            "mad_z_score_threshold": obj.get("mad_z_score_threshold"),
+            "match_mode": obj.get("match_mode"),
+            "metric_attribute": obj.get("metric_attribute"),
+            "metric_metadata": obj.get("metric_metadata"),
+            "min_fry_segment_seconds": obj.get("min_fry_segment_seconds"),
+            "pause_detection_preset": obj.get("pause_detection_preset"),
+            "pitch_change_threshold_hz": obj.get("pitch_change_threshold_hz"),
+            "position": obj.get("position"),
+            "significant_changes_threshold_hz": obj.get("significant_changes_threshold_hz"),
+            "soft_threshold_db": obj.get("soft_threshold_db"),
+            "span_name": obj.get("span_name"),
+            "threshold_preset": obj.get("threshold_preset"),
+            "value_source": obj.get("value_source")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

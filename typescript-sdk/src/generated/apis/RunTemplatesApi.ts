@@ -51,17 +51,21 @@ import {
 
 export interface CreateRunTemplateRequest {
     covalRunTemplatesAPICreateRunTemplateRequest: CovalRunTemplatesAPICreateRunTemplateRequest;
+    xCovalWorkspaceId?: string;
 }
 
 export interface DeleteRunTemplateRequest {
     runTemplateId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface GetRunTemplateRequest {
     runTemplateId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface ListRunTemplatesRequest {
+    xCovalWorkspaceId?: string;
     pageSize?: number;
     pageToken?: string;
     tagFilters?: Array<string>;
@@ -70,6 +74,7 @@ export interface ListRunTemplatesRequest {
 export interface UpdateRunTemplateRequest {
     runTemplateId: string;
     covalRunTemplatesAPIUpdateRunTemplateRequest: CovalRunTemplatesAPIUpdateRunTemplateRequest;
+    xCovalWorkspaceId?: string;
 }
 
 /**
@@ -82,6 +87,7 @@ export interface RunTemplatesApiInterface {
     /**
      * Creates request options for createRunTemplate without sending the request
      * @param {CovalRunTemplatesAPICreateRunTemplateRequest} covalRunTemplatesAPICreateRunTemplateRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof RunTemplatesApiInterface
      */
@@ -91,6 +97,7 @@ export interface RunTemplatesApiInterface {
      * Create a new run template with a reusable run configuration.  Templates capture all parameters needed to launch a run: the agent to test, persona to simulate, test set to use, and optional metrics and execution settings. 
      * @summary Create run template
      * @param {CovalRunTemplatesAPICreateRunTemplateRequest} covalRunTemplatesAPICreateRunTemplateRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RunTemplatesApiInterface
@@ -106,6 +113,7 @@ export interface RunTemplatesApiInterface {
     /**
      * Creates request options for deleteRunTemplate without sending the request
      * @param {string} runTemplateId Run template resource ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof RunTemplatesApiInterface
      */
@@ -115,6 +123,7 @@ export interface RunTemplatesApiInterface {
      * Delete a run template.  Templates with active scheduled runs cannot be deleted. Disable or delete associated scheduled runs first. 
      * @summary Delete run template
      * @param {string} runTemplateId Run template resource ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RunTemplatesApiInterface
@@ -130,6 +139,7 @@ export interface RunTemplatesApiInterface {
     /**
      * Creates request options for getRunTemplate without sending the request
      * @param {string} runTemplateId Run template resource ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof RunTemplatesApiInterface
      */
@@ -139,6 +149,7 @@ export interface RunTemplatesApiInterface {
      * Retrieve a specific run template by ID.
      * @summary Get run template
      * @param {string} runTemplateId Run template resource ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RunTemplatesApiInterface
@@ -153,6 +164,7 @@ export interface RunTemplatesApiInterface {
 
     /**
      * Creates request options for listRunTemplates without sending the request
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response
      * @param {Array<string>} [tagFilters] Filter run templates by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., &#x60;?tag_filters&#x3D;nightly&amp;tag_filters&#x3D;voice&#x60;). 
@@ -164,6 +176,7 @@ export interface RunTemplatesApiInterface {
     /**
      * Retrieve a paginated list of run templates.
      * @summary List run templates
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response
      * @param {Array<string>} [tagFilters] Filter run templates by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., &#x60;?tag_filters&#x3D;nightly&amp;tag_filters&#x3D;voice&#x60;). 
@@ -183,6 +196,7 @@ export interface RunTemplatesApiInterface {
      * Creates request options for updateRunTemplate without sending the request
      * @param {string} runTemplateId Run template resource ID
      * @param {CovalRunTemplatesAPIUpdateRunTemplateRequest} covalRunTemplatesAPIUpdateRunTemplateRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof RunTemplatesApiInterface
      */
@@ -193,6 +207,7 @@ export interface RunTemplatesApiInterface {
      * @summary Update run template
      * @param {string} runTemplateId Run template resource ID
      * @param {CovalRunTemplatesAPIUpdateRunTemplateRequest} covalRunTemplatesAPIUpdateRunTemplateRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RunTemplatesApiInterface
@@ -228,6 +243,10 @@ export class RunTemplatesApi extends runtime.BaseAPI implements RunTemplatesApiI
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Run_Templates_API_ApiKeyAuth authentication
@@ -280,6 +299,10 @@ export class RunTemplatesApi extends runtime.BaseAPI implements RunTemplatesApiI
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Run_Templates_API_ApiKeyAuth authentication
         }
@@ -329,6 +352,10 @@ export class RunTemplatesApi extends runtime.BaseAPI implements RunTemplatesApiI
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Run_Templates_API_ApiKeyAuth authentication
@@ -385,6 +412,10 @@ export class RunTemplatesApi extends runtime.BaseAPI implements RunTemplatesApiI
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Run_Templates_API_ApiKeyAuth authentication
@@ -444,6 +475,10 @@ export class RunTemplatesApi extends runtime.BaseAPI implements RunTemplatesApiI
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Run_Templates_API_ApiKeyAuth authentication

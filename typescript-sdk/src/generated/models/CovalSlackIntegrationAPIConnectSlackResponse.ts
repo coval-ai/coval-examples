@@ -31,6 +31,24 @@ export interface CovalSlackIntegrationAPIConnectSlackResponse {
      * @memberof CovalSlackIntegrationAPIConnectSlackResponse
      */
     connected: boolean;
+    /**
+     * Slack Enterprise Grid ID, or null for a non-Grid workspace.
+     * @type {string}
+     * @memberof CovalSlackIntegrationAPIConnectSlackResponse
+     */
+    enterprise_id: string | null;
+    /**
+     * Slack workspace/team ID.
+     * @type {string}
+     * @memberof CovalSlackIntegrationAPIConnectSlackResponse
+     */
+    team_id: string;
+    /**
+     * Opaque backend-authoritative generation for safely binding Sofia.
+     * @type {string}
+     * @memberof CovalSlackIntegrationAPIConnectSlackResponse
+     */
+    installation_generation: string;
 }
 
 /**
@@ -39,6 +57,9 @@ export interface CovalSlackIntegrationAPIConnectSlackResponse {
 export function instanceOfCovalSlackIntegrationAPIConnectSlackResponse(value: object): value is CovalSlackIntegrationAPIConnectSlackResponse {
     if (!('team_name' in value) || value['team_name'] === undefined) return false;
     if (!('connected' in value) || value['connected'] === undefined) return false;
+    if (!('enterprise_id' in value) || value['enterprise_id'] === undefined) return false;
+    if (!('team_id' in value) || value['team_id'] === undefined) return false;
+    if (!('installation_generation' in value) || value['installation_generation'] === undefined) return false;
     return true;
 }
 
@@ -54,6 +75,9 @@ export function CovalSlackIntegrationAPIConnectSlackResponseFromJSONTyped(json: 
         
         'team_name': json['team_name'],
         'connected': json['connected'],
+        'enterprise_id': json['enterprise_id'],
+        'team_id': json['team_id'],
+        'installation_generation': json['installation_generation'],
     };
 }
 
@@ -70,6 +94,9 @@ export function CovalSlackIntegrationAPIConnectSlackResponseToJSONTyped(value?: 
         
         'team_name': value['team_name'],
         'connected': value['connected'],
+        'enterprise_id': value['enterprise_id'],
+        'team_id': value['team_id'],
+        'installation_generation': value['installation_generation'],
     };
 }
 

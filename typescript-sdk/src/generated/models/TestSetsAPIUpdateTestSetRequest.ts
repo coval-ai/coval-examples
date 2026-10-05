@@ -26,7 +26,7 @@ export interface TestSetsAPIUpdateTestSetRequest {
      */
     display_name?: string;
     /**
-     * URL-friendly identifier
+     * URL-friendly identifier containing only lowercase letters, numbers, dashes, and underscores
      * @type {string}
      * @memberof TestSetsAPIUpdateTestSetRequest
      */

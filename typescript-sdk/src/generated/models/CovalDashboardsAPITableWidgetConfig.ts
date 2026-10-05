@@ -13,13 +13,6 @@
  */
 
 import { mapValues } from '../runtime.js';
-import type { CovalDashboardsAPIDataSourceType } from './CovalDashboardsAPIDataSourceType.js';
-import {
-    CovalDashboardsAPIDataSourceTypeFromJSON,
-    CovalDashboardsAPIDataSourceTypeFromJSONTyped,
-    CovalDashboardsAPIDataSourceTypeToJSON,
-    CovalDashboardsAPIDataSourceTypeToJSONTyped,
-} from './CovalDashboardsAPIDataSourceType.js';
 import type { CovalDashboardsAPIMetricFilter } from './CovalDashboardsAPIMetricFilter.js';
 import {
     CovalDashboardsAPIMetricFilterFromJSON,
@@ -34,6 +27,13 @@ import {
     CovalDashboardsAPIAggregationTypeToJSON,
     CovalDashboardsAPIAggregationTypeToJSONTyped,
 } from './CovalDashboardsAPIAggregationType.js';
+import type { CovalDashboardsAPIConversationSource } from './CovalDashboardsAPIConversationSource.js';
+import {
+    CovalDashboardsAPIConversationSourceFromJSON,
+    CovalDashboardsAPIConversationSourceFromJSONTyped,
+    CovalDashboardsAPIConversationSourceToJSON,
+    CovalDashboardsAPIConversationSourceToJSONTyped,
+} from './CovalDashboardsAPIConversationSource.js';
 import type { CovalDashboardsAPIFilterConfig } from './CovalDashboardsAPIFilterConfig.js';
 import {
     CovalDashboardsAPIFilterConfigFromJSON,
@@ -63,40 +63,40 @@ export interface CovalDashboardsAPITableWidgetConfig {
     metricIds?: Array<string>;
     /**
      * 
-     * @type {CovalDashboardsAPIDataSourceType}
+     * @type {CovalDashboardsAPIConversationSource}
      * @memberof CovalDashboardsAPITableWidgetConfig
      */
-    monitoring?: CovalDashboardsAPIDataSourceType;
+    conversation_source?: CovalDashboardsAPIConversationSource | null;
     /**
      * 
      * @type {CovalDashboardsAPIAggregationType}
      * @memberof CovalDashboardsAPITableWidgetConfig
      */
-    aggregation?: CovalDashboardsAPIAggregationType;
+    aggregation?: CovalDashboardsAPIAggregationType | null;
     /**
      * 
      * @type {CovalDashboardsAPIGroupByType}
      * @memberof CovalDashboardsAPITableWidgetConfig
      */
-    groupBy?: CovalDashboardsAPIGroupByType;
+    groupBy?: CovalDashboardsAPIGroupByType | null;
     /**
      * Customer metadata key to group by; mutually exclusive with groupBy. Rows fall into one of three groups: the 20 most common values are separate groups, remaining values are combined as a synthetic Other group distinct from a literal customer value named Other, and rows that do not carry the key at all form their own group with a null value, which clients render as Unknown. That last group never occupies one of the 20 slots.
      * @type {string}
      * @memberof CovalDashboardsAPITableWidgetConfig
      */
-    groupByMetadataKey?: string;
+    groupByMetadataKey?: string | null;
     /**
      * 
      * @type {CovalDashboardsAPIFilterConfig}
      * @memberof CovalDashboardsAPITableWidgetConfig
      */
-    filters?: CovalDashboardsAPIFilterConfig;
+    filters?: CovalDashboardsAPIFilterConfig | null;
     /**
      * Metric value filters (max 50)
      * @type {Array<CovalDashboardsAPIMetricFilter>}
      * @memberof CovalDashboardsAPITableWidgetConfig
      */
-    metricFilter?: Array<CovalDashboardsAPIMetricFilter>;
+    metricFilter?: Array<CovalDashboardsAPIMetricFilter> | null;
 }
 
 
@@ -119,7 +119,7 @@ export function CovalDashboardsAPITableWidgetConfigFromJSONTyped(json: any, igno
     return {
         
         'metricIds': json['metricIds'] == null ? undefined : json['metricIds'],
-        'monitoring': json['monitoring'] == null ? undefined : CovalDashboardsAPIDataSourceTypeFromJSON(json['monitoring']),
+        'conversation_source': json['conversation_source'] == null ? undefined : CovalDashboardsAPIConversationSourceFromJSON(json['conversation_source']),
         'aggregation': json['aggregation'] == null ? undefined : CovalDashboardsAPIAggregationTypeFromJSON(json['aggregation']),
         'groupBy': json['groupBy'] == null ? undefined : CovalDashboardsAPIGroupByTypeFromJSON(json['groupBy']),
         'groupByMetadataKey': json['groupByMetadataKey'] == null ? undefined : json['groupByMetadataKey'],
@@ -140,7 +140,7 @@ export function CovalDashboardsAPITableWidgetConfigToJSONTyped(value?: CovalDash
     return {
         
         'metricIds': value['metricIds'],
-        'monitoring': CovalDashboardsAPIDataSourceTypeToJSON(value['monitoring']),
+        'conversation_source': CovalDashboardsAPIConversationSourceToJSON(value['conversation_source']),
         'aggregation': CovalDashboardsAPIAggregationTypeToJSON(value['aggregation']),
         'groupBy': CovalDashboardsAPIGroupByTypeToJSON(value['groupBy']),
         'groupByMetadataKey': value['groupByMetadataKey'],

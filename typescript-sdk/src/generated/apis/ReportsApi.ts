@@ -61,14 +61,17 @@ import {
 
 export interface CreateReportRequest {
     covalReportsAPICreateReportRequest: CovalReportsAPICreateReportRequest;
+    xCovalWorkspaceId?: string;
 }
 
 export interface DeleteReportRequest {
     reportId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface GetReportRequest {
     reportId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface ListReportRowsRequest {
@@ -80,6 +83,7 @@ export interface ListReportRowsRequest {
 }
 
 export interface ListReportsRequest {
+    xCovalWorkspaceId?: string;
     cursor?: string;
     limit?: number;
 }
@@ -87,6 +91,7 @@ export interface ListReportsRequest {
 export interface UpdateReportRequest {
     reportId: string;
     covalReportsAPIUpdateReportRequest: CovalReportsAPIUpdateReportRequest;
+    xCovalWorkspaceId?: string;
     ifMatch?: string;
 }
 
@@ -100,6 +105,7 @@ export interface ReportsApiInterface {
     /**
      * Creates request options for createReport without sending the request
      * @param {CovalReportsAPICreateReportRequest} covalReportsAPICreateReportRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof ReportsApiInterface
      */
@@ -109,6 +115,7 @@ export interface ReportsApiInterface {
      * Create a saved report from existing run IDs. All runs must belong to the authenticated organization. Public reports are shareable without login and mark their included runs public. 
      * @summary Create report
      * @param {CovalReportsAPICreateReportRequest} covalReportsAPICreateReportRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ReportsApiInterface
@@ -124,6 +131,7 @@ export interface ReportsApiInterface {
     /**
      * Creates request options for deleteReport without sending the request
      * @param {string} reportId Saved report ULID.
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof ReportsApiInterface
      */
@@ -133,6 +141,7 @@ export interface ReportsApiInterface {
      * Soft-delete a saved report. If the report is public, its run visibility is revoked unless another public report still references the same runs. 
      * @summary Delete report
      * @param {string} reportId Saved report ULID.
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ReportsApiInterface
@@ -148,6 +157,7 @@ export interface ReportsApiInterface {
     /**
      * Creates request options for getReport without sending the request
      * @param {string} reportId Saved report ULID.
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof ReportsApiInterface
      */
@@ -157,6 +167,7 @@ export interface ReportsApiInterface {
      * Retrieve a saved report by ID, including its complete supported view and metric configuration. The response includes a strong `ETag`; send that value in `If-Match` when patching `view_config`. 
      * @summary Get report
      * @param {string} reportId Saved report ULID.
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ReportsApiInterface
@@ -203,6 +214,7 @@ export interface ReportsApiInterface {
 
     /**
      * Creates request options for listReports without sending the request
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {string} [cursor] Cursor from the previous page.
      * @param {number} [limit] Maximum number of reports to return.
      * @throws {RequiredError}
@@ -213,6 +225,7 @@ export interface ReportsApiInterface {
     /**
      * Retrieve a paginated list of saved reports for the authenticated organization.
      * @summary List reports
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {string} [cursor] Cursor from the previous page.
      * @param {number} [limit] Maximum number of reports to return.
      * @param {*} [options] Override http request option.
@@ -231,6 +244,7 @@ export interface ReportsApiInterface {
      * Creates request options for updateReport without sending the request
      * @param {string} reportId Saved report ULID.
      * @param {CovalReportsAPIUpdateReportRequest} covalReportsAPIUpdateReportRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {string} [ifMatch] Strong &#x60;ETag&#x60; from &#x60;GET /reports/{report_id}&#x60;. Required when the PATCH body contains &#x60;view_config&#x60;; omit for legacy non-configuration updates. 
      * @throws {RequiredError}
      * @memberof ReportsApiInterface
@@ -242,6 +256,7 @@ export interface ReportsApiInterface {
      * @summary Update report
      * @param {string} reportId Saved report ULID.
      * @param {CovalReportsAPIUpdateReportRequest} covalReportsAPIUpdateReportRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {string} [ifMatch] Strong &#x60;ETag&#x60; from &#x60;GET /reports/{report_id}&#x60;. Required when the PATCH body contains &#x60;view_config&#x60;; omit for legacy non-configuration updates. 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -278,6 +293,10 @@ export class ReportsApi extends runtime.BaseAPI implements ReportsApiInterface {
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Reports_API_ApiKeyAuth authentication
@@ -330,6 +349,10 @@ export class ReportsApi extends runtime.BaseAPI implements ReportsApiInterface {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Reports_API_ApiKeyAuth authentication
         }
@@ -380,6 +403,10 @@ export class ReportsApi extends runtime.BaseAPI implements ReportsApiInterface {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Reports_API_ApiKeyAuth authentication
@@ -500,6 +527,10 @@ export class ReportsApi extends runtime.BaseAPI implements ReportsApiInterface {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Reports_API_ApiKeyAuth authentication
         }
@@ -558,6 +589,10 @@ export class ReportsApi extends runtime.BaseAPI implements ReportsApiInterface {
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (requestParameters['ifMatch'] != null) {
             headerParameters['If-Match'] = String(requestParameters['ifMatch']);

@@ -20,13 +20,13 @@ import {
     CovalReviewsAPIReviewMetricOutputForAnnotationResourceToJSON,
     CovalReviewsAPIReviewMetricOutputForAnnotationResourceToJSONTyped,
 } from './CovalReviewsAPIReviewMetricOutputForAnnotationResource.js';
-import type { CovalReviewsAPIReviewAnnotationResource } from './CovalReviewsAPIReviewAnnotationResource.js';
+import type { CovalReviewsAPIReviewAnnotationWithMetricVersionResource } from './CovalReviewsAPIReviewAnnotationWithMetricVersionResource.js';
 import {
-    CovalReviewsAPIReviewAnnotationResourceFromJSON,
-    CovalReviewsAPIReviewAnnotationResourceFromJSONTyped,
-    CovalReviewsAPIReviewAnnotationResourceToJSON,
-    CovalReviewsAPIReviewAnnotationResourceToJSONTyped,
-} from './CovalReviewsAPIReviewAnnotationResource.js';
+    CovalReviewsAPIReviewAnnotationWithMetricVersionResourceFromJSON,
+    CovalReviewsAPIReviewAnnotationWithMetricVersionResourceFromJSONTyped,
+    CovalReviewsAPIReviewAnnotationWithMetricVersionResourceToJSON,
+    CovalReviewsAPIReviewAnnotationWithMetricVersionResourceToJSONTyped,
+} from './CovalReviewsAPIReviewAnnotationWithMetricVersionResource.js';
 
 /**
  * 
@@ -36,10 +36,10 @@ import {
 export interface CovalReviewsAPIGetAnnotationsWithMetricOutputsResponse {
     /**
      * Annotations keyed by metric ID.
-     * @type {{ [key: string]: Array<CovalReviewsAPIReviewAnnotationResource>; }}
+     * @type {{ [key: string]: Array<CovalReviewsAPIReviewAnnotationWithMetricVersionResource>; }}
      * @memberof CovalReviewsAPIGetAnnotationsWithMetricOutputsResponse
      */
-    annotations: { [key: string]: Array<CovalReviewsAPIReviewAnnotationResource>; };
+    annotations: { [key: string]: Array<CovalReviewsAPIReviewAnnotationWithMetricVersionResource>; };
     /**
      * Latest pipeline metric output keyed by metric ID then simulation output ID.
      * @type {{ [key: string]: { [key: string]: CovalReviewsAPIReviewMetricOutputForAnnotationResource; }; }}

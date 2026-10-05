@@ -46,6 +46,7 @@ class TestCasesApi:
     def create_test_case(
         self,
         test_cases_api_create_test_case_request: TestCasesAPICreateTestCaseRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -65,6 +66,8 @@ class TestCasesApi:
 
         :param test_cases_api_create_test_case_request: (required)
         :type test_cases_api_create_test_case_request: TestCasesAPICreateTestCaseRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -89,6 +92,7 @@ class TestCasesApi:
 
         _param = self._create_test_case_serialize(
             test_cases_api_create_test_case_request=test_cases_api_create_test_case_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -117,6 +121,7 @@ class TestCasesApi:
     def create_test_case_with_http_info(
         self,
         test_cases_api_create_test_case_request: TestCasesAPICreateTestCaseRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -136,6 +141,8 @@ class TestCasesApi:
 
         :param test_cases_api_create_test_case_request: (required)
         :type test_cases_api_create_test_case_request: TestCasesAPICreateTestCaseRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -160,6 +167,7 @@ class TestCasesApi:
 
         _param = self._create_test_case_serialize(
             test_cases_api_create_test_case_request=test_cases_api_create_test_case_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -188,6 +196,7 @@ class TestCasesApi:
     def create_test_case_without_preload_content(
         self,
         test_cases_api_create_test_case_request: TestCasesAPICreateTestCaseRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -207,6 +216,8 @@ class TestCasesApi:
 
         :param test_cases_api_create_test_case_request: (required)
         :type test_cases_api_create_test_case_request: TestCasesAPICreateTestCaseRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -231,6 +242,7 @@ class TestCasesApi:
 
         _param = self._create_test_case_serialize(
             test_cases_api_create_test_case_request=test_cases_api_create_test_case_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -254,6 +266,7 @@ class TestCasesApi:
     def _create_test_case_serialize(
         self,
         test_cases_api_create_test_case_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -277,6 +290,8 @@ class TestCasesApi:
         # process the path parameters
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if test_cases_api_create_test_case_request is not None:
@@ -332,6 +347,7 @@ class TestCasesApi:
     def delete_test_case(
         self,
         test_case_id: Annotated[str, Field(min_length=22, strict=True, max_length=22, description="Test case ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -351,6 +367,8 @@ class TestCasesApi:
 
         :param test_case_id: Test case ID (required)
         :type test_case_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -375,6 +393,7 @@ class TestCasesApi:
 
         _param = self._delete_test_case_serialize(
             test_case_id=test_case_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -402,6 +421,7 @@ class TestCasesApi:
     def delete_test_case_with_http_info(
         self,
         test_case_id: Annotated[str, Field(min_length=22, strict=True, max_length=22, description="Test case ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -421,6 +441,8 @@ class TestCasesApi:
 
         :param test_case_id: Test case ID (required)
         :type test_case_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -445,6 +467,7 @@ class TestCasesApi:
 
         _param = self._delete_test_case_serialize(
             test_case_id=test_case_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -472,6 +495,7 @@ class TestCasesApi:
     def delete_test_case_without_preload_content(
         self,
         test_case_id: Annotated[str, Field(min_length=22, strict=True, max_length=22, description="Test case ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -491,6 +515,8 @@ class TestCasesApi:
 
         :param test_case_id: Test case ID (required)
         :type test_case_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -515,6 +541,7 @@ class TestCasesApi:
 
         _param = self._delete_test_case_serialize(
             test_case_id=test_case_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -537,6 +564,7 @@ class TestCasesApi:
     def _delete_test_case_serialize(
         self,
         test_case_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -562,6 +590,8 @@ class TestCasesApi:
             _path_params['test_case_id'] = test_case_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -602,6 +632,7 @@ class TestCasesApi:
     def get_test_case(
         self,
         test_case_id: Annotated[str, Field(min_length=22, strict=True, max_length=22, description="Test case ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -621,6 +652,8 @@ class TestCasesApi:
 
         :param test_case_id: Test case ID (required)
         :type test_case_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -645,6 +678,7 @@ class TestCasesApi:
 
         _param = self._get_test_case_serialize(
             test_case_id=test_case_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -672,6 +706,7 @@ class TestCasesApi:
     def get_test_case_with_http_info(
         self,
         test_case_id: Annotated[str, Field(min_length=22, strict=True, max_length=22, description="Test case ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -691,6 +726,8 @@ class TestCasesApi:
 
         :param test_case_id: Test case ID (required)
         :type test_case_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -715,6 +752,7 @@ class TestCasesApi:
 
         _param = self._get_test_case_serialize(
             test_case_id=test_case_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -742,6 +780,7 @@ class TestCasesApi:
     def get_test_case_without_preload_content(
         self,
         test_case_id: Annotated[str, Field(min_length=22, strict=True, max_length=22, description="Test case ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -761,6 +800,8 @@ class TestCasesApi:
 
         :param test_case_id: Test case ID (required)
         :type test_case_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -785,6 +826,7 @@ class TestCasesApi:
 
         _param = self._get_test_case_serialize(
             test_case_id=test_case_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -807,6 +849,7 @@ class TestCasesApi:
     def _get_test_case_serialize(
         self,
         test_case_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -832,6 +875,8 @@ class TestCasesApi:
             _path_params['test_case_id'] = test_case_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -871,6 +916,7 @@ class TestCasesApi:
     @validate_call
     def list_test_cases(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax. Values may be unquoted or double-quoted. Values containing spaces must be quoted. Example: `test_set_id=abc12345` ")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True)]], Field(description="Maximum number of test cases to return (default 50, max 100)")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Token for retrieving the next page of results")] = None,
@@ -892,6 +938,8 @@ class TestCasesApi:
 
         List test cases for your organization. 
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param filter: Filter expression syntax. Values may be unquoted or double-quoted. Values containing spaces must be quoted. Example: `test_set_id=abc12345` 
         :type filter: str
         :param page_size: Maximum number of test cases to return (default 50, max 100)
@@ -923,6 +971,7 @@ class TestCasesApi:
         """ # noqa: E501
 
         _param = self._list_test_cases_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             filter=filter,
             page_size=page_size,
             page_token=page_token,
@@ -952,6 +1001,7 @@ class TestCasesApi:
     @validate_call
     def list_test_cases_with_http_info(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax. Values may be unquoted or double-quoted. Values containing spaces must be quoted. Example: `test_set_id=abc12345` ")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True)]], Field(description="Maximum number of test cases to return (default 50, max 100)")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Token for retrieving the next page of results")] = None,
@@ -973,6 +1023,8 @@ class TestCasesApi:
 
         List test cases for your organization. 
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param filter: Filter expression syntax. Values may be unquoted or double-quoted. Values containing spaces must be quoted. Example: `test_set_id=abc12345` 
         :type filter: str
         :param page_size: Maximum number of test cases to return (default 50, max 100)
@@ -1004,6 +1056,7 @@ class TestCasesApi:
         """ # noqa: E501
 
         _param = self._list_test_cases_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             filter=filter,
             page_size=page_size,
             page_token=page_token,
@@ -1033,6 +1086,7 @@ class TestCasesApi:
     @validate_call
     def list_test_cases_without_preload_content(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax. Values may be unquoted or double-quoted. Values containing spaces must be quoted. Example: `test_set_id=abc12345` ")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True)]], Field(description="Maximum number of test cases to return (default 50, max 100)")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Token for retrieving the next page of results")] = None,
@@ -1054,6 +1108,8 @@ class TestCasesApi:
 
         List test cases for your organization. 
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param filter: Filter expression syntax. Values may be unquoted or double-quoted. Values containing spaces must be quoted. Example: `test_set_id=abc12345` 
         :type filter: str
         :param page_size: Maximum number of test cases to return (default 50, max 100)
@@ -1085,6 +1141,7 @@ class TestCasesApi:
         """ # noqa: E501
 
         _param = self._list_test_cases_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             filter=filter,
             page_size=page_size,
             page_token=page_token,
@@ -1109,6 +1166,7 @@ class TestCasesApi:
 
     def _list_test_cases_serialize(
         self,
+        x_coval_workspace_id,
         filter,
         page_size,
         page_token,
@@ -1152,6 +1210,8 @@ class TestCasesApi:
             _query_params.append(('order_by', order_by))
             
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -1193,6 +1253,7 @@ class TestCasesApi:
         self,
         test_case_id: Annotated[str, Field(min_length=22, strict=True, max_length=22, description="Test case ID")],
         test_cases_api_update_test_case_request: TestCasesAPIUpdateTestCaseRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1214,6 +1275,8 @@ class TestCasesApi:
         :type test_case_id: str
         :param test_cases_api_update_test_case_request: (required)
         :type test_cases_api_update_test_case_request: TestCasesAPIUpdateTestCaseRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1239,6 +1302,7 @@ class TestCasesApi:
         _param = self._update_test_case_serialize(
             test_case_id=test_case_id,
             test_cases_api_update_test_case_request=test_cases_api_update_test_case_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1268,6 +1332,7 @@ class TestCasesApi:
         self,
         test_case_id: Annotated[str, Field(min_length=22, strict=True, max_length=22, description="Test case ID")],
         test_cases_api_update_test_case_request: TestCasesAPIUpdateTestCaseRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1289,6 +1354,8 @@ class TestCasesApi:
         :type test_case_id: str
         :param test_cases_api_update_test_case_request: (required)
         :type test_cases_api_update_test_case_request: TestCasesAPIUpdateTestCaseRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1314,6 +1381,7 @@ class TestCasesApi:
         _param = self._update_test_case_serialize(
             test_case_id=test_case_id,
             test_cases_api_update_test_case_request=test_cases_api_update_test_case_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1343,6 +1411,7 @@ class TestCasesApi:
         self,
         test_case_id: Annotated[str, Field(min_length=22, strict=True, max_length=22, description="Test case ID")],
         test_cases_api_update_test_case_request: TestCasesAPIUpdateTestCaseRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1364,6 +1433,8 @@ class TestCasesApi:
         :type test_case_id: str
         :param test_cases_api_update_test_case_request: (required)
         :type test_cases_api_update_test_case_request: TestCasesAPIUpdateTestCaseRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1389,6 +1460,7 @@ class TestCasesApi:
         _param = self._update_test_case_serialize(
             test_case_id=test_case_id,
             test_cases_api_update_test_case_request=test_cases_api_update_test_case_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1413,6 +1485,7 @@ class TestCasesApi:
         self,
         test_case_id,
         test_cases_api_update_test_case_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -1438,6 +1511,8 @@ class TestCasesApi:
             _path_params['test_case_id'] = test_case_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if test_cases_api_update_test_case_request is not None:

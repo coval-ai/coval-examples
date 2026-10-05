@@ -14,143 +14,137 @@
 
 
 from __future__ import annotations
+from inspect import getfullargspec
+import json
 import pprint
 import re  # noqa: F401
-import json
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
+from typing import Optional
+from coval_sdk.models.non_script_test_case import NonSCRIPTTestCase
+from coval_sdk.models.script_test_case_with_legacy_nested_turns import SCRIPTTestCaseWithLegacyNestedTurns
+from coval_sdk.models.script_test_case_with_top_level_turns import SCRIPTTestCaseWithTopLevelTurns
+from typing import Union, Any, List, Set, TYPE_CHECKING, Optional, Dict
+from typing_extensions import Literal, Self
+from pydantic import Field
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
-from typing_extensions import Annotated
-from typing import Optional, Set
-from typing_extensions import Self
-from pydantic_core import to_jsonable_python
+TESTCASESAPICREATETESTCASEREQUEST_ANY_OF_SCHEMAS = ["NonSCRIPTTestCase", "SCRIPTTestCaseWithLegacyNestedTurns", "SCRIPTTestCaseWithTopLevelTurns"]
 
 class TestCasesAPICreateTestCaseRequest(BaseModel):
     """
     Request body for creating a test case
-    """ # noqa: E501
-    input_str: Annotated[str, Field(min_length=1, strict=True)] = Field(description="Input for the test case")
-    test_set_id: Annotated[str, Field(min_length=8, strict=True, max_length=8)] = Field(description="Test set ID (REQUIRED in body, not URL)")
-    expected_behaviors: Optional[List[StrictStr]] = Field(default=None, description="Expected behaviors (list of strings). This is the preferred field.")
-    expected_output_str: Optional[StrictStr] = Field(default=None, description="DEPRECATED: Use expected_behaviors instead. If provided and expected_behaviors is not, this value will be wrapped in a list and used as expected_behaviors. ")
-    expected_output_json: Optional[Dict[str, Any]] = Field(default=None, description="Expected output as JSON object")
-    description: Optional[StrictStr] = Field(default=None, description="Human-readable description")
-    input_type: Optional[StrictStr] = Field(default='SCENARIO', description="Type of input for the test case. Defaults to SCENARIO. When set to SCRIPT, the simulation_metadata_input should contain a script_turns field with ordered persona turn texts. ")
-    simulation_metadata_input: Optional[Dict[str, Any]] = Field(default=None, description="Metadata for simulation. Contents vary by input_type. When input_type is SCRIPT, include a script_turns field (array of strings) with the ordered lines for the persona to deliver. ")
-    metric_input: Optional[Dict[str, Any]] = Field(default=None, description="Input for metrics")
-    user_notes: Optional[StrictStr] = Field(default=None, description="User notes")
-    additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["input_str", "test_set_id", "expected_behaviors", "expected_output_str", "expected_output_json", "description", "input_type", "simulation_metadata_input", "metric_input", "user_notes"]
+    """
 
-    @field_validator('input_type')
-    def input_type_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
+    # data type: NonSCRIPTTestCase
+    anyof_schema_1_validator: Optional[NonSCRIPTTestCase] = None
+    # data type: SCRIPTTestCaseWithTopLevelTurns
+    anyof_schema_2_validator: Optional[SCRIPTTestCaseWithTopLevelTurns] = None
+    # data type: SCRIPTTestCaseWithLegacyNestedTurns
+    anyof_schema_3_validator: Optional[SCRIPTTestCaseWithLegacyNestedTurns] = None
+    if TYPE_CHECKING:
+        actual_instance: Optional[Union[NonSCRIPTTestCase, SCRIPTTestCaseWithLegacyNestedTurns, SCRIPTTestCaseWithTopLevelTurns]] = None
+    else:
+        actual_instance: Any = None
+    any_of_schemas: Set[str] = { "NonSCRIPTTestCase", "SCRIPTTestCaseWithLegacyNestedTurns", "SCRIPTTestCaseWithTopLevelTurns" }
 
-        if value not in set(['SCENARIO', 'TRANSCRIPT', 'IVR', 'AUDIO', 'MANUAL', 'SCRIPT']):
-            raise ValueError("must be one of enum values ('SCENARIO', 'TRANSCRIPT', 'IVR', 'AUDIO', 'MANUAL', 'SCRIPT')")
-        return value
+    model_config = {
+        "validate_assignment": True,
+        "protected_namespaces": (),
+    }
 
-    model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    def __init__(self, *args, **kwargs) -> None:
+        if args:
+            if len(args) > 1:
+                raise ValueError("If a position argument is used, only 1 is allowed to set `actual_instance`")
+            if kwargs:
+                raise ValueError("If a position argument is used, keyword arguments cannot be used.")
+            super().__init__(actual_instance=args[0])
+        else:
+            super().__init__(**kwargs)
 
+    @field_validator('actual_instance')
+    def actual_instance_must_validate_anyof(cls, v):
+        instance = TestCasesAPICreateTestCaseRequest.model_construct()
+        error_messages = []
+        # validate data type: NonSCRIPTTestCase
+        if not isinstance(v, NonSCRIPTTestCase):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `NonSCRIPTTestCase`")
+        else:
+            return v
 
-    def to_str(self) -> str:
-        """Returns the string representation of the model using alias"""
-        return pprint.pformat(self.model_dump(by_alias=True))
+        # validate data type: SCRIPTTestCaseWithTopLevelTurns
+        if not isinstance(v, SCRIPTTestCaseWithTopLevelTurns):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `SCRIPTTestCaseWithTopLevelTurns`")
+        else:
+            return v
+
+        # validate data type: SCRIPTTestCaseWithLegacyNestedTurns
+        if not isinstance(v, SCRIPTTestCaseWithLegacyNestedTurns):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `SCRIPTTestCaseWithLegacyNestedTurns`")
+        else:
+            return v
+
+        if error_messages:
+            # no match
+            raise ValueError("No match found when setting the actual_instance in TestCasesAPICreateTestCaseRequest with anyOf schemas: NonSCRIPTTestCase, SCRIPTTestCaseWithLegacyNestedTurns, SCRIPTTestCaseWithTopLevelTurns. Details: " + ", ".join(error_messages))
+        else:
+            return v
+
+    @classmethod
+    def from_dict(cls, obj: Dict[str, Any]) -> Self:
+        return cls.from_json(json.dumps(obj))
+
+    @classmethod
+    def from_json(cls, json_str: str) -> Self:
+        """Returns the object represented by the json string"""
+        instance = cls.model_construct()
+        error_messages = []
+        # anyof_schema_1_validator: Optional[NonSCRIPTTestCase] = None
+        try:
+            instance.actual_instance = NonSCRIPTTestCase.from_json(json_str)
+            return instance
+        except (ValidationError, ValueError) as e:
+             error_messages.append(str(e))
+        # anyof_schema_2_validator: Optional[SCRIPTTestCaseWithTopLevelTurns] = None
+        try:
+            instance.actual_instance = SCRIPTTestCaseWithTopLevelTurns.from_json(json_str)
+            return instance
+        except (ValidationError, ValueError) as e:
+             error_messages.append(str(e))
+        # anyof_schema_3_validator: Optional[SCRIPTTestCaseWithLegacyNestedTurns] = None
+        try:
+            instance.actual_instance = SCRIPTTestCaseWithLegacyNestedTurns.from_json(json_str)
+            return instance
+        except (ValidationError, ValueError) as e:
+             error_messages.append(str(e))
+
+        if error_messages:
+            # no match
+            raise ValueError("No match found when deserializing the JSON string into TestCasesAPICreateTestCaseRequest with anyOf schemas: NonSCRIPTTestCase, SCRIPTTestCaseWithLegacyNestedTurns, SCRIPTTestCaseWithTopLevelTurns. Details: " + ", ".join(error_messages))
+        else:
+            return instance
 
     def to_json(self) -> str:
-        """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        """Returns the JSON representation of the actual instance"""
+        if self.actual_instance is None:
+            return "null"
 
-    @classmethod
-    def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of TestCasesAPICreateTestCaseRequest from a JSON string"""
-        return cls.from_dict(json.loads(json_str))
+        if hasattr(self.actual_instance, "to_json") and callable(self.actual_instance.to_json):
+            return self.actual_instance.to_json()
+        else:
+            return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Dict[str, Any]:
-        """Return the dictionary representation of the model using alias.
-
-        This has the following differences from calling pydantic's
-        `self.model_dump(by_alias=True)`:
-
-        * `None` is only added to the output dict for nullable fields that
-          were set at model initialization. Other fields with value `None`
-          are ignored.
-        * Fields in `self.additional_properties` are added to the output dict.
-        """
-        excluded_fields: Set[str] = set([
-            "additional_properties",
-        ])
-
-        _dict = self.model_dump(
-            by_alias=True,
-            exclude=excluded_fields,
-            exclude_none=True,
-        )
-        # puts key-value pairs in additional_properties in the top level
-        if self.additional_properties is not None:
-            for _key, _value in self.additional_properties.items():
-                _dict[_key] = _value
-
-        # set to None if expected_behaviors (nullable) is None
-        # and model_fields_set contains the field
-        if self.expected_behaviors is None and "expected_behaviors" in self.model_fields_set:
-            _dict['expected_behaviors'] = None
-
-        # set to None if expected_output_str (nullable) is None
-        # and model_fields_set contains the field
-        if self.expected_output_str is None and "expected_output_str" in self.model_fields_set:
-            _dict['expected_output_str'] = None
-
-        # set to None if description (nullable) is None
-        # and model_fields_set contains the field
-        if self.description is None and "description" in self.model_fields_set:
-            _dict['description'] = None
-
-        # set to None if input_type (nullable) is None
-        # and model_fields_set contains the field
-        if self.input_type is None and "input_type" in self.model_fields_set:
-            _dict['input_type'] = None
-
-        # set to None if user_notes (nullable) is None
-        # and model_fields_set contains the field
-        if self.user_notes is None and "user_notes" in self.model_fields_set:
-            _dict['user_notes'] = None
-
-        return _dict
-
-    @classmethod
-    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of TestCasesAPICreateTestCaseRequest from a dict"""
-        if obj is None:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], NonSCRIPTTestCase, SCRIPTTestCaseWithLegacyNestedTurns, SCRIPTTestCaseWithTopLevelTurns]]:
+        """Returns the dict representation of the actual instance"""
+        if self.actual_instance is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        if hasattr(self.actual_instance, "to_dict") and callable(self.actual_instance.to_dict):
+            return self.actual_instance.to_dict()
+        else:
+            return self.actual_instance
 
-        _obj = cls.model_validate({
-            "input_str": obj.get("input_str"),
-            "test_set_id": obj.get("test_set_id"),
-            "expected_behaviors": obj.get("expected_behaviors"),
-            "expected_output_str": obj.get("expected_output_str"),
-            "expected_output_json": obj.get("expected_output_json"),
-            "description": obj.get("description"),
-            "input_type": obj.get("input_type") if obj.get("input_type") is not None else 'SCENARIO',
-            "simulation_metadata_input": obj.get("simulation_metadata_input"),
-            "metric_input": obj.get("metric_input"),
-            "user_notes": obj.get("user_notes")
-        })
-        # store additional fields in additional_properties
-        for _key in obj.keys():
-            if _key not in cls.__properties:
-                _obj.additional_properties[_key] = obj.get(_key)
-
-        return _obj
+    def to_str(self) -> str:
+        """Returns the string representation of the actual instance"""
+        return pprint.pformat(self.model_dump())
 
 

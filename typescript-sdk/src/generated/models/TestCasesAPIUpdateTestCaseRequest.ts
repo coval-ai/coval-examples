@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime.js';
+import type { TestCasesAPITestCaseResourceScriptTurnsInner } from './TestCasesAPITestCaseResourceScriptTurnsInner.js';
+import {
+    TestCasesAPITestCaseResourceScriptTurnsInnerFromJSON,
+    TestCasesAPITestCaseResourceScriptTurnsInnerFromJSONTyped,
+    TestCasesAPITestCaseResourceScriptTurnsInnerToJSON,
+    TestCasesAPITestCaseResourceScriptTurnsInnerToJSONTyped,
+} from './TestCasesAPITestCaseResourceScriptTurnsInner.js';
+
 /**
  * Update request. Only provided fields will be updated.
  * @export
@@ -59,18 +67,23 @@ export interface TestCasesAPIUpdateTestCaseRequest {
      */
     description?: string | null;
     /**
-     * Type of input for the test case. When set to SCRIPT, the
-     * simulation_metadata_input should contain a script_turns field
-     * with ordered persona turn texts.
+     * Type of input for the test case. SCRIPT requires non-empty script_turns.
+     * Changing input_type from SCRIPT to another value clears script_turns.
+     * IVR_CRAWL is crawler-managed and cannot be selected through this API.
      * 
      * @type {TestCasesAPIUpdateTestCaseRequestInputTypeEnum}
      * @memberof TestCasesAPIUpdateTestCaseRequest
      */
     input_type?: TestCasesAPIUpdateTestCaseRequestInputTypeEnum | null;
     /**
-     * Metadata for simulation. Contents vary by input_type. When
-     * input_type is SCRIPT, include a script_turns field (array of
-     * strings) with the ordered lines for the persona to deliver.
+     * Ordered persona turns. For new integrations, provide a non-empty top-level array when input_type is SCRIPT and omit it otherwise. Changing input_type away from SCRIPT clears this field. Each entry is either a bare string (spoken text), {"type": "text", "text": ...} (spoken text, explicit form), {"type": "dtmf", "digits": ...} (keypad presses; digits 0-9, *, #, and phone punctuation), or {"type": "skip"} (the persona stays silent for one turn).
+     * @type {Array<TestCasesAPITestCaseResourceScriptTurnsInner>}
+     * @memberof TestCasesAPIUpdateTestCaseRequest
+     */
+    script_turns?: Array<TestCasesAPITestCaseResourceScriptTurnsInner> | null;
+    /**
+     * Legacy simulation metadata. For SCRIPT cases, use the top-level script_turns field.
+     * A nested script_turns input remains accepted for backward compatibility but is deprecated.
      * 
      * @type {{ [key: string]: any; }}
      * @memberof TestCasesAPIUpdateTestCaseRequest
@@ -129,6 +142,7 @@ export function TestCasesAPIUpdateTestCaseRequestFromJSONTyped(json: any, ignore
         'expected_output_json': json['expected_output_json'] == null ? undefined : json['expected_output_json'],
         'description': json['description'] == null ? undefined : json['description'],
         'input_type': json['input_type'] == null ? undefined : json['input_type'],
+        'script_turns': json['script_turns'] == null ? undefined : ((json['script_turns'] as Array<any>).map(TestCasesAPITestCaseResourceScriptTurnsInnerFromJSON)),
         'simulation_metadata_input': json['simulation_metadata_input'] == null ? undefined : json['simulation_metadata_input'],
         'metric_input': json['metric_input'] == null ? undefined : json['metric_input'],
         'user_notes': json['user_notes'] == null ? undefined : json['user_notes'],
@@ -153,6 +167,7 @@ export function TestCasesAPIUpdateTestCaseRequestToJSONTyped(value?: TestCasesAP
         'expected_output_json': value['expected_output_json'],
         'description': value['description'],
         'input_type': value['input_type'],
+        'script_turns': value['script_turns'] == null ? undefined : ((value['script_turns'] as Array<any>).map(TestCasesAPITestCaseResourceScriptTurnsInnerToJSON)),
         'simulation_metadata_input': value['simulation_metadata_input'],
         'metric_input': value['metric_input'],
         'user_notes': value['user_notes'],

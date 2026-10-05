@@ -90,7 +90,7 @@ class MetricsApi:
     ) -> CovalMetricsAPIMetricOutputCollection:
         """Batch-get metric outputs by ULID
 
-        Resolve up to 100 metric-output ULIDs to their full metric-output resources. Use this to read the results of `POST /v1/metrics/{metric_id}/test` — which returns a `metric_output_ulid` — without having to know the parent simulation. Org-scoped and best-effort: ULIDs that do not exist or belong to another organization are omitted from the response rather than erroring, so the returned list may be shorter than the request (and empty if none match). Returns the same `SimpleMetricOutput` shape as `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}`. 
+        Resolve up to 100 metric-output ULIDs to their full metric-output resources. Use this to read the results of `POST /v1/metrics/{metric_id}/test` — which returns a `metric_output_ulid` — without having to know the parent simulation. Org-scoped and best-effort: ULIDs that do not exist or belong to another organization are omitted from the response rather than erroring, so the returned list may be shorter than the request (and empty if none match). Returns the same `SimpleMetricOutput` shape as `GET /v1/conversations/simulated/{simulation_id}/metrics/{metric_output_id}`. 
 
         :param coval_metrics_api_batch_get_metric_outputs_request: (required)
         :type coval_metrics_api_batch_get_metric_outputs_request: CovalMetricsAPIBatchGetMetricOutputsRequest
@@ -162,7 +162,7 @@ class MetricsApi:
     ) -> ApiResponse[CovalMetricsAPIMetricOutputCollection]:
         """Batch-get metric outputs by ULID
 
-        Resolve up to 100 metric-output ULIDs to their full metric-output resources. Use this to read the results of `POST /v1/metrics/{metric_id}/test` — which returns a `metric_output_ulid` — without having to know the parent simulation. Org-scoped and best-effort: ULIDs that do not exist or belong to another organization are omitted from the response rather than erroring, so the returned list may be shorter than the request (and empty if none match). Returns the same `SimpleMetricOutput` shape as `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}`. 
+        Resolve up to 100 metric-output ULIDs to their full metric-output resources. Use this to read the results of `POST /v1/metrics/{metric_id}/test` — which returns a `metric_output_ulid` — without having to know the parent simulation. Org-scoped and best-effort: ULIDs that do not exist or belong to another organization are omitted from the response rather than erroring, so the returned list may be shorter than the request (and empty if none match). Returns the same `SimpleMetricOutput` shape as `GET /v1/conversations/simulated/{simulation_id}/metrics/{metric_output_id}`. 
 
         :param coval_metrics_api_batch_get_metric_outputs_request: (required)
         :type coval_metrics_api_batch_get_metric_outputs_request: CovalMetricsAPIBatchGetMetricOutputsRequest
@@ -234,7 +234,7 @@ class MetricsApi:
     ) -> RESTResponseType:
         """Batch-get metric outputs by ULID
 
-        Resolve up to 100 metric-output ULIDs to their full metric-output resources. Use this to read the results of `POST /v1/metrics/{metric_id}/test` — which returns a `metric_output_ulid` — without having to know the parent simulation. Org-scoped and best-effort: ULIDs that do not exist or belong to another organization are omitted from the response rather than erroring, so the returned list may be shorter than the request (and empty if none match). Returns the same `SimpleMetricOutput` shape as `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}`. 
+        Resolve up to 100 metric-output ULIDs to their full metric-output resources. Use this to read the results of `POST /v1/metrics/{metric_id}/test` — which returns a `metric_output_ulid` — without having to know the parent simulation. Org-scoped and best-effort: ULIDs that do not exist or belong to another organization are omitted from the response rather than erroring, so the returned list may be shorter than the request (and empty if none match). Returns the same `SimpleMetricOutput` shape as `GET /v1/conversations/simulated/{simulation_id}/metrics/{metric_output_id}`. 
 
         :param coval_metrics_api_batch_get_metric_outputs_request: (required)
         :type coval_metrics_api_batch_get_metric_outputs_request: CovalMetricsAPIBatchGetMetricOutputsRequest
@@ -364,6 +364,7 @@ class MetricsApi:
     def create_metric(
         self,
         coval_metrics_api_create_metric_request: CovalMetricsAPICreateMetricRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -379,10 +380,12 @@ class MetricsApi:
     ) -> CovalMetricsAPIGetMetricResponse:
         """Create metric
 
-        Create a new custom evaluation metric.  **Required fields vary by metric type:**  | Metric Type | Required Fields | |-------------|-----------------| | METRIC_LLM_BINARY | prompt | | METRIC_CATEGORICAL | prompt, categories | | METRIC_NUMERICAL_LLM_JUDGE | prompt, min_value, max_value | | METRIC_AUDIO_LLM_BINARY | prompt | | METRIC_AUDIO_LLM_CATEGORICAL | prompt, categories | | METRIC_AUDIO_LLM_NUMERICAL | prompt, min_value, max_value | | METRIC_TOOLCALL | prompt | | METRIC_METADATA_FIELD | metadata_field_type, metadata_field_key | | METRIC_TRANSCRIPT_REGEX | regex_pattern | | METRIC_PAUSE_ANALYSIS | min_pause_duration_seconds | 
+        Create a new custom evaluation metric.  **Required fields vary by metric type:**  | Metric Type | Required Fields | |-------------|-----------------| | METRIC_AGENT_JUDGE | prompt | | METRIC_AGENT_JUDGE_CATEGORICAL | prompt, categories | | METRIC_AGENT_JUDGE_NUMERICAL | prompt, min_value, max_value | | METRIC_LLM_BINARY | prompt | | METRIC_CATEGORICAL | prompt, categories | | METRIC_NUMERICAL_LLM_JUDGE | prompt, min_value, max_value | | METRIC_AUDIO_LLM_BINARY | prompt | | METRIC_AUDIO_LLM_CATEGORICAL | prompt, categories | | METRIC_AUDIO_LLM_NUMERICAL | prompt, min_value, max_value | | METRIC_TOOLCALL | prompt | | METRIC_METADATA_FIELD | metadata_field_type, metadata_field_key | | METRIC_TRANSCRIPT_REGEX | regex_pattern | | METRIC_PAUSE_ANALYSIS | min_pause_duration_seconds | 
 
         :param coval_metrics_api_create_metric_request: (required)
         :type coval_metrics_api_create_metric_request: CovalMetricsAPICreateMetricRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -407,6 +410,7 @@ class MetricsApi:
 
         _param = self._create_metric_serialize(
             coval_metrics_api_create_metric_request=coval_metrics_api_create_metric_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -435,6 +439,7 @@ class MetricsApi:
     def create_metric_with_http_info(
         self,
         coval_metrics_api_create_metric_request: CovalMetricsAPICreateMetricRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -450,10 +455,12 @@ class MetricsApi:
     ) -> ApiResponse[CovalMetricsAPIGetMetricResponse]:
         """Create metric
 
-        Create a new custom evaluation metric.  **Required fields vary by metric type:**  | Metric Type | Required Fields | |-------------|-----------------| | METRIC_LLM_BINARY | prompt | | METRIC_CATEGORICAL | prompt, categories | | METRIC_NUMERICAL_LLM_JUDGE | prompt, min_value, max_value | | METRIC_AUDIO_LLM_BINARY | prompt | | METRIC_AUDIO_LLM_CATEGORICAL | prompt, categories | | METRIC_AUDIO_LLM_NUMERICAL | prompt, min_value, max_value | | METRIC_TOOLCALL | prompt | | METRIC_METADATA_FIELD | metadata_field_type, metadata_field_key | | METRIC_TRANSCRIPT_REGEX | regex_pattern | | METRIC_PAUSE_ANALYSIS | min_pause_duration_seconds | 
+        Create a new custom evaluation metric.  **Required fields vary by metric type:**  | Metric Type | Required Fields | |-------------|-----------------| | METRIC_AGENT_JUDGE | prompt | | METRIC_AGENT_JUDGE_CATEGORICAL | prompt, categories | | METRIC_AGENT_JUDGE_NUMERICAL | prompt, min_value, max_value | | METRIC_LLM_BINARY | prompt | | METRIC_CATEGORICAL | prompt, categories | | METRIC_NUMERICAL_LLM_JUDGE | prompt, min_value, max_value | | METRIC_AUDIO_LLM_BINARY | prompt | | METRIC_AUDIO_LLM_CATEGORICAL | prompt, categories | | METRIC_AUDIO_LLM_NUMERICAL | prompt, min_value, max_value | | METRIC_TOOLCALL | prompt | | METRIC_METADATA_FIELD | metadata_field_type, metadata_field_key | | METRIC_TRANSCRIPT_REGEX | regex_pattern | | METRIC_PAUSE_ANALYSIS | min_pause_duration_seconds | 
 
         :param coval_metrics_api_create_metric_request: (required)
         :type coval_metrics_api_create_metric_request: CovalMetricsAPICreateMetricRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -478,6 +485,7 @@ class MetricsApi:
 
         _param = self._create_metric_serialize(
             coval_metrics_api_create_metric_request=coval_metrics_api_create_metric_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -506,6 +514,7 @@ class MetricsApi:
     def create_metric_without_preload_content(
         self,
         coval_metrics_api_create_metric_request: CovalMetricsAPICreateMetricRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -521,10 +530,12 @@ class MetricsApi:
     ) -> RESTResponseType:
         """Create metric
 
-        Create a new custom evaluation metric.  **Required fields vary by metric type:**  | Metric Type | Required Fields | |-------------|-----------------| | METRIC_LLM_BINARY | prompt | | METRIC_CATEGORICAL | prompt, categories | | METRIC_NUMERICAL_LLM_JUDGE | prompt, min_value, max_value | | METRIC_AUDIO_LLM_BINARY | prompt | | METRIC_AUDIO_LLM_CATEGORICAL | prompt, categories | | METRIC_AUDIO_LLM_NUMERICAL | prompt, min_value, max_value | | METRIC_TOOLCALL | prompt | | METRIC_METADATA_FIELD | metadata_field_type, metadata_field_key | | METRIC_TRANSCRIPT_REGEX | regex_pattern | | METRIC_PAUSE_ANALYSIS | min_pause_duration_seconds | 
+        Create a new custom evaluation metric.  **Required fields vary by metric type:**  | Metric Type | Required Fields | |-------------|-----------------| | METRIC_AGENT_JUDGE | prompt | | METRIC_AGENT_JUDGE_CATEGORICAL | prompt, categories | | METRIC_AGENT_JUDGE_NUMERICAL | prompt, min_value, max_value | | METRIC_LLM_BINARY | prompt | | METRIC_CATEGORICAL | prompt, categories | | METRIC_NUMERICAL_LLM_JUDGE | prompt, min_value, max_value | | METRIC_AUDIO_LLM_BINARY | prompt | | METRIC_AUDIO_LLM_CATEGORICAL | prompt, categories | | METRIC_AUDIO_LLM_NUMERICAL | prompt, min_value, max_value | | METRIC_TOOLCALL | prompt | | METRIC_METADATA_FIELD | metadata_field_type, metadata_field_key | | METRIC_TRANSCRIPT_REGEX | regex_pattern | | METRIC_PAUSE_ANALYSIS | min_pause_duration_seconds | 
 
         :param coval_metrics_api_create_metric_request: (required)
         :type coval_metrics_api_create_metric_request: CovalMetricsAPICreateMetricRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -549,6 +560,7 @@ class MetricsApi:
 
         _param = self._create_metric_serialize(
             coval_metrics_api_create_metric_request=coval_metrics_api_create_metric_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -572,6 +584,7 @@ class MetricsApi:
     def _create_metric_serialize(
         self,
         coval_metrics_api_create_metric_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -595,6 +608,8 @@ class MetricsApi:
         # process the path parameters
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_metrics_api_create_metric_request is not None:
@@ -1547,6 +1562,7 @@ class MetricsApi:
     def delete_metric(
         self,
         metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1562,10 +1578,12 @@ class MetricsApi:
     ) -> object:
         """Delete metric
 
-        Soft-delete a metric in the active workspace. The default workspace can also delete organization-owned legacy metrics whose workspace is unset. Metrics outside that scope are left unchanged and return the same idempotent success response as an unknown or already-deleted metric. When no workspace resolves, only an organization-owned metric whose workspace is unset can be deleted.
+        Soft-delete a metric in the active workspace. The default workspace can also delete organization-owned legacy metrics whose workspace is unset. Metrics outside that scope are left unchanged and return the same idempotent success response as an unknown or already-deleted metric. When no workspace resolves, only an organization-owned metric whose workspace is unset can be deleted. Metrics referenced by active Templates cannot be deleted.
 
         :param metric_id: 22-character metric ID (required)
         :type metric_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1590,6 +1608,7 @@ class MetricsApi:
 
         _param = self._delete_metric_serialize(
             metric_id=metric_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1599,6 +1618,7 @@ class MetricsApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
             '401': "CovalMetricsAPIErrorResponse",
+            '409': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -1616,6 +1636,7 @@ class MetricsApi:
     def delete_metric_with_http_info(
         self,
         metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1631,10 +1652,12 @@ class MetricsApi:
     ) -> ApiResponse[object]:
         """Delete metric
 
-        Soft-delete a metric in the active workspace. The default workspace can also delete organization-owned legacy metrics whose workspace is unset. Metrics outside that scope are left unchanged and return the same idempotent success response as an unknown or already-deleted metric. When no workspace resolves, only an organization-owned metric whose workspace is unset can be deleted.
+        Soft-delete a metric in the active workspace. The default workspace can also delete organization-owned legacy metrics whose workspace is unset. Metrics outside that scope are left unchanged and return the same idempotent success response as an unknown or already-deleted metric. When no workspace resolves, only an organization-owned metric whose workspace is unset can be deleted. Metrics referenced by active Templates cannot be deleted.
 
         :param metric_id: 22-character metric ID (required)
         :type metric_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1659,6 +1682,7 @@ class MetricsApi:
 
         _param = self._delete_metric_serialize(
             metric_id=metric_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1668,6 +1692,7 @@ class MetricsApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
             '401': "CovalMetricsAPIErrorResponse",
+            '409': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -1685,6 +1710,7 @@ class MetricsApi:
     def delete_metric_without_preload_content(
         self,
         metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1700,10 +1726,12 @@ class MetricsApi:
     ) -> RESTResponseType:
         """Delete metric
 
-        Soft-delete a metric in the active workspace. The default workspace can also delete organization-owned legacy metrics whose workspace is unset. Metrics outside that scope are left unchanged and return the same idempotent success response as an unknown or already-deleted metric. When no workspace resolves, only an organization-owned metric whose workspace is unset can be deleted.
+        Soft-delete a metric in the active workspace. The default workspace can also delete organization-owned legacy metrics whose workspace is unset. Metrics outside that scope are left unchanged and return the same idempotent success response as an unknown or already-deleted metric. When no workspace resolves, only an organization-owned metric whose workspace is unset can be deleted. Metrics referenced by active Templates cannot be deleted.
 
         :param metric_id: 22-character metric ID (required)
         :type metric_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1728,6 +1756,7 @@ class MetricsApi:
 
         _param = self._delete_metric_serialize(
             metric_id=metric_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1737,6 +1766,7 @@ class MetricsApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
             '401': "CovalMetricsAPIErrorResponse",
+            '409': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -1749,6 +1779,7 @@ class MetricsApi:
     def _delete_metric_serialize(
         self,
         metric_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -1774,6 +1805,8 @@ class MetricsApi:
             _path_params['metric_id'] = metric_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -2930,6 +2963,7 @@ class MetricsApi:
     def get_metric(
         self,
         metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2949,6 +2983,8 @@ class MetricsApi:
 
         :param metric_id: 22-character metric ID (required)
         :type metric_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2973,6 +3009,7 @@ class MetricsApi:
 
         _param = self._get_metric_serialize(
             metric_id=metric_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3000,6 +3037,7 @@ class MetricsApi:
     def get_metric_with_http_info(
         self,
         metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3019,6 +3057,8 @@ class MetricsApi:
 
         :param metric_id: 22-character metric ID (required)
         :type metric_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3043,6 +3083,7 @@ class MetricsApi:
 
         _param = self._get_metric_serialize(
             metric_id=metric_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3070,6 +3111,7 @@ class MetricsApi:
     def get_metric_without_preload_content(
         self,
         metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3089,6 +3131,8 @@ class MetricsApi:
 
         :param metric_id: 22-character metric ID (required)
         :type metric_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3113,6 +3157,7 @@ class MetricsApi:
 
         _param = self._get_metric_serialize(
             metric_id=metric_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3135,6 +3180,7 @@ class MetricsApi:
     def _get_metric_serialize(
         self,
         metric_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -3160,6 +3206,8 @@ class MetricsApi:
             _path_params['metric_id'] = metric_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -4164,7 +4212,7 @@ class MetricsApi:
     ) -> CovalMetricsAPISimulationDataFramesSchemaResponse:
         """Get the SQL metric schema
 
-        Return the materialized frame tables, their columns, and the sample rows a draft SQL metric query (`POST /v1/metrics/sql:test`) runs against. The schema is derived from the global frame materializers, so it is org-agnostic and identical for every caller. 
+        Return the SQL data-frame tables, their columns, and illustrative sample rows for authoring a draft SQL metric query. The schema is derived from the global frame-table registry, so it is org-agnostic and identical for every caller. 
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -4231,7 +4279,7 @@ class MetricsApi:
     ) -> ApiResponse[CovalMetricsAPISimulationDataFramesSchemaResponse]:
         """Get the SQL metric schema
 
-        Return the materialized frame tables, their columns, and the sample rows a draft SQL metric query (`POST /v1/metrics/sql:test`) runs against. The schema is derived from the global frame materializers, so it is org-agnostic and identical for every caller. 
+        Return the SQL data-frame tables, their columns, and illustrative sample rows for authoring a draft SQL metric query. The schema is derived from the global frame-table registry, so it is org-agnostic and identical for every caller. 
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -4298,7 +4346,7 @@ class MetricsApi:
     ) -> RESTResponseType:
         """Get the SQL metric schema
 
-        Return the materialized frame tables, their columns, and the sample rows a draft SQL metric query (`POST /v1/metrics/sql:test`) runs against. The schema is derived from the global frame materializers, so it is org-agnostic and identical for every caller. 
+        Return the SQL data-frame tables, their columns, and illustrative sample rows for authoring a draft SQL metric query. The schema is derived from the global frame-table registry, so it is org-agnostic and identical for every caller. 
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -5410,7 +5458,7 @@ class MetricsApi:
     ) -> CovalMetricsAPIListMetricTagsResponse:
         """List metric tag values
 
-        Distinct, active tag values used on this organization's metrics, so callers can discover the valid values for the `tag=` filter on `GET /v1/metrics`. `color` is not exposed via the public API (always null). 
+        The default workspace includes legacy unscoped records. Distinct, active tag values used on the authenticated workspace’s live metrics, so callers can discover the valid values for the `tag=` filter on `GET /v1/metrics`. `color` is not exposed via the public API (always null). 
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -5477,7 +5525,7 @@ class MetricsApi:
     ) -> ApiResponse[CovalMetricsAPIListMetricTagsResponse]:
         """List metric tag values
 
-        Distinct, active tag values used on this organization's metrics, so callers can discover the valid values for the `tag=` filter on `GET /v1/metrics`. `color` is not exposed via the public API (always null). 
+        The default workspace includes legacy unscoped records. Distinct, active tag values used on the authenticated workspace’s live metrics, so callers can discover the valid values for the `tag=` filter on `GET /v1/metrics`. `color` is not exposed via the public API (always null). 
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -5544,7 +5592,7 @@ class MetricsApi:
     ) -> RESTResponseType:
         """List metric tag values
 
-        Distinct, active tag values used on this organization's metrics, so callers can discover the valid values for the `tag=` filter on `GET /v1/metrics`. `color` is not exposed via the public API (always null). 
+        The default workspace includes legacy unscoped records. Distinct, active tag values used on the authenticated workspace’s live metrics, so callers can discover the valid values for the `tag=` filter on `GET /v1/metrics`. `color` is not exposed via the public API (always null). 
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -6479,6 +6527,7 @@ class MetricsApi:
     @validate_call
     def list_metrics(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from previous response")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort order (e.g., `create_time desc`, `metric_name asc`)")] = None,
@@ -6502,6 +6551,8 @@ class MetricsApi:
 
         Retrieve a paginated list of evaluation metrics.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum results per page
         :type page_size: int
         :param page_token: Pagination token from previous response
@@ -6537,6 +6588,7 @@ class MetricsApi:
         """ # noqa: E501
 
         _param = self._list_metrics_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             order_by=order_by,
@@ -6568,6 +6620,7 @@ class MetricsApi:
     @validate_call
     def list_metrics_with_http_info(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from previous response")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort order (e.g., `create_time desc`, `metric_name asc`)")] = None,
@@ -6591,6 +6644,8 @@ class MetricsApi:
 
         Retrieve a paginated list of evaluation metrics.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum results per page
         :type page_size: int
         :param page_token: Pagination token from previous response
@@ -6626,6 +6681,7 @@ class MetricsApi:
         """ # noqa: E501
 
         _param = self._list_metrics_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             order_by=order_by,
@@ -6657,6 +6713,7 @@ class MetricsApi:
     @validate_call
     def list_metrics_without_preload_content(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Pagination token from previous response")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort order (e.g., `create_time desc`, `metric_name asc`)")] = None,
@@ -6680,6 +6737,8 @@ class MetricsApi:
 
         Retrieve a paginated list of evaluation metrics.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum results per page
         :type page_size: int
         :param page_token: Pagination token from previous response
@@ -6715,6 +6774,7 @@ class MetricsApi:
         """ # noqa: E501
 
         _param = self._list_metrics_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             order_by=order_by,
@@ -6741,6 +6801,7 @@ class MetricsApi:
 
     def _list_metrics_serialize(
         self,
+        x_coval_workspace_id,
         page_size,
         page_token,
         order_by,
@@ -6795,6 +6856,8 @@ class MetricsApi:
             _query_params.append(('tag_filters', tag_filters))
             
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -6849,7 +6912,7 @@ class MetricsApi:
     ) -> CovalMetricsAPIListRecentlyDeletedMetricsResponse:
         """List recently-deleted metrics
 
-        List the current workspace's soft-deleted metrics still within the recovery window, newest first. The default workspace also includes organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, the list is empty. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
+        List the current workspace's soft-deleted metrics with no age cutoff, newest first. The default workspace also includes organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, the list is empty. Each entry carries who deleted it and when. Built-in metrics are non-deletable and never appear.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -6914,7 +6977,7 @@ class MetricsApi:
     ) -> ApiResponse[CovalMetricsAPIListRecentlyDeletedMetricsResponse]:
         """List recently-deleted metrics
 
-        List the current workspace's soft-deleted metrics still within the recovery window, newest first. The default workspace also includes organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, the list is empty. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
+        List the current workspace's soft-deleted metrics with no age cutoff, newest first. The default workspace also includes organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, the list is empty. Each entry carries who deleted it and when. Built-in metrics are non-deletable and never appear.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -6979,7 +7042,7 @@ class MetricsApi:
     ) -> RESTResponseType:
         """List recently-deleted metrics
 
-        List the current workspace's soft-deleted metrics still within the recovery window, newest first. The default workspace also includes organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, the list is empty. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
+        List the current workspace's soft-deleted metrics with no age cutoff, newest first. The default workspace also includes organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, the list is empty. Each entry carries who deleted it and when. Built-in metrics are non-deletable and never appear.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -7102,7 +7165,7 @@ class MetricsApi:
     ) -> CovalMetricsAPIGetMetricResponse:
         """Restore a recently-deleted metric
 
-        Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged or is outside the current workspace returns 404. The default workspace can restore organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, restore returns 404.
+        Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that is missing, otherwise not restorable, or outside the current workspace returns 404. The default workspace can restore organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, restore returns 404.
 
         :param metric_id: 22-character metric ID (required)
         :type metric_id: str
@@ -7172,7 +7235,7 @@ class MetricsApi:
     ) -> ApiResponse[CovalMetricsAPIGetMetricResponse]:
         """Restore a recently-deleted metric
 
-        Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged or is outside the current workspace returns 404. The default workspace can restore organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, restore returns 404.
+        Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that is missing, otherwise not restorable, or outside the current workspace returns 404. The default workspace can restore organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, restore returns 404.
 
         :param metric_id: 22-character metric ID (required)
         :type metric_id: str
@@ -7242,7 +7305,7 @@ class MetricsApi:
     ) -> RESTResponseType:
         """Restore a recently-deleted metric
 
-        Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged or is outside the current workspace returns 404. The default workspace can restore organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, restore returns 404.
+        Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that is missing, otherwise not restorable, or outside the current workspace returns 404. The default workspace can restore organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, restore returns 404.
 
         :param metric_id: 22-character metric ID (required)
         :type metric_id: str
@@ -7661,7 +7724,7 @@ class MetricsApi:
     ) -> CovalMetricsAPITestMetricResponse:
         """Trigger test metric execution
 
-        Trigger execution of a metric against one or more simulation outputs for testing purposes. This is an asynchronous operation that returns immediately.  Provide exactly one of `simulation_output_id` (single, deprecated) or `simulation_output_ids` (batch, up to 100 IDs per call). Batch requests are best-effort: individual simulation outputs that cannot be queued are reported in `results` with a non-`QUEUED` status instead of failing the whole call.  The response contains one entry per requested simulation output in `results`, each with its own `status` and, when queued, a `metric_output_ulid`.  **Retrieving results:** for each queued entry, poll `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` using the entry's `simulation_output_id` as `simulation_id` and its 26-char `metric_output_ulid` as `metric_output_id`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
+        Trigger execution of a metric against one or more simulation outputs for testing purposes. This is an asynchronous operation that returns immediately.  Provide exactly one of `simulation_output_id` (single, deprecated) or `simulation_output_ids` (batch, up to 100 IDs per call). Batch requests are best-effort: individual simulation outputs that cannot be queued are reported in `results` with a non-`QUEUED` status instead of failing the whole call.  The response contains one entry per requested simulation output in `results`, each with its own `status` and, when queued, a `metric_output_ulid`.  **Retrieving results:** for each queued entry, poll `GET /v1/conversations/simulated/{simulation_id}/metrics/{metric_output_id}` using the entry's `simulation_output_id` as `simulation_id` and its 26-char `metric_output_ulid` as `metric_output_id`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
 
         :param metric_id: The metric ID (22-character ShortUUID) (required)
         :type metric_id: str
@@ -7739,7 +7802,7 @@ class MetricsApi:
     ) -> ApiResponse[CovalMetricsAPITestMetricResponse]:
         """Trigger test metric execution
 
-        Trigger execution of a metric against one or more simulation outputs for testing purposes. This is an asynchronous operation that returns immediately.  Provide exactly one of `simulation_output_id` (single, deprecated) or `simulation_output_ids` (batch, up to 100 IDs per call). Batch requests are best-effort: individual simulation outputs that cannot be queued are reported in `results` with a non-`QUEUED` status instead of failing the whole call.  The response contains one entry per requested simulation output in `results`, each with its own `status` and, when queued, a `metric_output_ulid`.  **Retrieving results:** for each queued entry, poll `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` using the entry's `simulation_output_id` as `simulation_id` and its 26-char `metric_output_ulid` as `metric_output_id`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
+        Trigger execution of a metric against one or more simulation outputs for testing purposes. This is an asynchronous operation that returns immediately.  Provide exactly one of `simulation_output_id` (single, deprecated) or `simulation_output_ids` (batch, up to 100 IDs per call). Batch requests are best-effort: individual simulation outputs that cannot be queued are reported in `results` with a non-`QUEUED` status instead of failing the whole call.  The response contains one entry per requested simulation output in `results`, each with its own `status` and, when queued, a `metric_output_ulid`.  **Retrieving results:** for each queued entry, poll `GET /v1/conversations/simulated/{simulation_id}/metrics/{metric_output_id}` using the entry's `simulation_output_id` as `simulation_id` and its 26-char `metric_output_ulid` as `metric_output_id`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
 
         :param metric_id: The metric ID (22-character ShortUUID) (required)
         :type metric_id: str
@@ -7817,7 +7880,7 @@ class MetricsApi:
     ) -> RESTResponseType:
         """Trigger test metric execution
 
-        Trigger execution of a metric against one or more simulation outputs for testing purposes. This is an asynchronous operation that returns immediately.  Provide exactly one of `simulation_output_id` (single, deprecated) or `simulation_output_ids` (batch, up to 100 IDs per call). Batch requests are best-effort: individual simulation outputs that cannot be queued are reported in `results` with a non-`QUEUED` status instead of failing the whole call.  The response contains one entry per requested simulation output in `results`, each with its own `status` and, when queued, a `metric_output_ulid`.  **Retrieving results:** for each queued entry, poll `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` using the entry's `simulation_output_id` as `simulation_id` and its 26-char `metric_output_ulid` as `metric_output_id`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
+        Trigger execution of a metric against one or more simulation outputs for testing purposes. This is an asynchronous operation that returns immediately.  Provide exactly one of `simulation_output_id` (single, deprecated) or `simulation_output_ids` (batch, up to 100 IDs per call). Batch requests are best-effort: individual simulation outputs that cannot be queued are reported in `results` with a non-`QUEUED` status instead of failing the whole call.  The response contains one entry per requested simulation output in `results`, each with its own `status` and, when queued, a `metric_output_ulid`.  **Retrieving results:** for each queued entry, poll `GET /v1/conversations/simulated/{simulation_id}/metrics/{metric_output_id}` using the entry's `simulation_output_id` as `simulation_id` and its 26-char `metric_output_ulid` as `metric_output_id`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
 
         :param metric_id: The metric ID (22-character ShortUUID) (required)
         :type metric_id: str
@@ -7970,7 +8033,7 @@ class MetricsApi:
     ) -> CovalMetricsAPITestSqlMetricResponse:
         """Test a draft SQL metric query
 
-        Run a draft SQL Float metric query against a fixed sample `SimulationDataFrames` artifact and return the value it would produce. This is org-agnostic pure compute — it never touches your organization's data — so it needs no metric to exist yet and makes no changes.  Use `GET /v1/metrics/sql-schema` to discover the tables, columns, and sample rows your query runs against. The query must return the columns `start_offset_milliseconds` and `value`.  Routine authoring failures (invalid SQL, no matching rows) return `200` with a populated `error` field rather than an HTTP error; only a malformed request body is a `400`. 
+        Run a draft SQL Float metric query against simulation data from the authenticated workspace. By default, the endpoint tests up to ten recent simulations; provide `simulation_output_id` to test exactly one simulation. No metric needs to exist yet and the request makes no changes.  Use `GET /v1/metrics/sql-schema` to discover the available tables and columns. The query must return the columns `start_offset_milliseconds` and `value`.  Routine authoring failures (invalid SQL, no matching rows) return `200` with a populated `error` field rather than an HTTP error; only a malformed request body is a `400`. 
 
         :param coval_metrics_api_test_sql_metric_request: (required)
         :type coval_metrics_api_test_sql_metric_request: CovalMetricsAPITestSqlMetricRequest
@@ -8009,6 +8072,7 @@ class MetricsApi:
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
             '503': "CovalMetricsAPIErrorResponse",
         }
@@ -8042,7 +8106,7 @@ class MetricsApi:
     ) -> ApiResponse[CovalMetricsAPITestSqlMetricResponse]:
         """Test a draft SQL metric query
 
-        Run a draft SQL Float metric query against a fixed sample `SimulationDataFrames` artifact and return the value it would produce. This is org-agnostic pure compute — it never touches your organization's data — so it needs no metric to exist yet and makes no changes.  Use `GET /v1/metrics/sql-schema` to discover the tables, columns, and sample rows your query runs against. The query must return the columns `start_offset_milliseconds` and `value`.  Routine authoring failures (invalid SQL, no matching rows) return `200` with a populated `error` field rather than an HTTP error; only a malformed request body is a `400`. 
+        Run a draft SQL Float metric query against simulation data from the authenticated workspace. By default, the endpoint tests up to ten recent simulations; provide `simulation_output_id` to test exactly one simulation. No metric needs to exist yet and the request makes no changes.  Use `GET /v1/metrics/sql-schema` to discover the available tables and columns. The query must return the columns `start_offset_milliseconds` and `value`.  Routine authoring failures (invalid SQL, no matching rows) return `200` with a populated `error` field rather than an HTTP error; only a malformed request body is a `400`. 
 
         :param coval_metrics_api_test_sql_metric_request: (required)
         :type coval_metrics_api_test_sql_metric_request: CovalMetricsAPITestSqlMetricRequest
@@ -8081,6 +8145,7 @@ class MetricsApi:
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
             '503': "CovalMetricsAPIErrorResponse",
         }
@@ -8114,7 +8179,7 @@ class MetricsApi:
     ) -> RESTResponseType:
         """Test a draft SQL metric query
 
-        Run a draft SQL Float metric query against a fixed sample `SimulationDataFrames` artifact and return the value it would produce. This is org-agnostic pure compute — it never touches your organization's data — so it needs no metric to exist yet and makes no changes.  Use `GET /v1/metrics/sql-schema` to discover the tables, columns, and sample rows your query runs against. The query must return the columns `start_offset_milliseconds` and `value`.  Routine authoring failures (invalid SQL, no matching rows) return `200` with a populated `error` field rather than an HTTP error; only a malformed request body is a `400`. 
+        Run a draft SQL Float metric query against simulation data from the authenticated workspace. By default, the endpoint tests up to ten recent simulations; provide `simulation_output_id` to test exactly one simulation. No metric needs to exist yet and the request makes no changes.  Use `GET /v1/metrics/sql-schema` to discover the available tables and columns. The query must return the columns `start_offset_milliseconds` and `value`.  Routine authoring failures (invalid SQL, no matching rows) return `200` with a populated `error` field rather than an HTTP error; only a malformed request body is a `400`. 
 
         :param coval_metrics_api_test_sql_metric_request: (required)
         :type coval_metrics_api_test_sql_metric_request: CovalMetricsAPITestSqlMetricRequest
@@ -8153,6 +8218,7 @@ class MetricsApi:
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",
+            '404': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
             '503': "CovalMetricsAPIErrorResponse",
         }
@@ -8245,6 +8311,7 @@ class MetricsApi:
         self,
         metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
         coval_metrics_api_update_metric_request: CovalMetricsAPIUpdateMetricRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -8266,6 +8333,8 @@ class MetricsApi:
         :type metric_id: str
         :param coval_metrics_api_update_metric_request: (required)
         :type coval_metrics_api_update_metric_request: CovalMetricsAPIUpdateMetricRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -8291,6 +8360,7 @@ class MetricsApi:
         _param = self._update_metric_serialize(
             metric_id=metric_id,
             coval_metrics_api_update_metric_request=coval_metrics_api_update_metric_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -8321,6 +8391,7 @@ class MetricsApi:
         self,
         metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
         coval_metrics_api_update_metric_request: CovalMetricsAPIUpdateMetricRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -8342,6 +8413,8 @@ class MetricsApi:
         :type metric_id: str
         :param coval_metrics_api_update_metric_request: (required)
         :type coval_metrics_api_update_metric_request: CovalMetricsAPIUpdateMetricRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -8367,6 +8440,7 @@ class MetricsApi:
         _param = self._update_metric_serialize(
             metric_id=metric_id,
             coval_metrics_api_update_metric_request=coval_metrics_api_update_metric_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -8397,6 +8471,7 @@ class MetricsApi:
         self,
         metric_id: Annotated[str, Field(strict=True, description="22-character metric ID")],
         coval_metrics_api_update_metric_request: CovalMetricsAPIUpdateMetricRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -8418,6 +8493,8 @@ class MetricsApi:
         :type metric_id: str
         :param coval_metrics_api_update_metric_request: (required)
         :type coval_metrics_api_update_metric_request: CovalMetricsAPIUpdateMetricRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -8443,6 +8520,7 @@ class MetricsApi:
         _param = self._update_metric_serialize(
             metric_id=metric_id,
             coval_metrics_api_update_metric_request=coval_metrics_api_update_metric_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -8468,6 +8546,7 @@ class MetricsApi:
         self,
         metric_id,
         coval_metrics_api_update_metric_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -8493,6 +8572,8 @@ class MetricsApi:
             _path_params['metric_id'] = metric_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_metrics_api_update_metric_request is not None:

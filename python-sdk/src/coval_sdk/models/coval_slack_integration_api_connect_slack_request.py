@@ -19,7 +19,8 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
+from coval_sdk.models.coval_slack_integration_api_slack_authorization_intent import CovalSlackIntegrationAPISlackAuthorizationIntent
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -30,8 +31,9 @@ class CovalSlackIntegrationAPIConnectSlackRequest(BaseModel):
     """ # noqa: E501
     code: StrictStr = Field(description="Slack OAuth authorization code to exchange.")
     redirect_uri: StrictStr = Field(description="The redirect URI registered with the Slack OAuth app.")
+    authorization_intent: Optional[CovalSlackIntegrationAPISlackAuthorizationIntent] = Field(default=None, description="Optional only during the backend-first compatibility rollout; omission means guarded new connect. Reauthorization must be explicit and may replace only the exact routed installation captured before OAuth.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["code", "redirect_uri"]
+    __properties: ClassVar[List[str]] = ["code", "redirect_uri", "authorization_intent"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -92,7 +94,8 @@ class CovalSlackIntegrationAPIConnectSlackRequest(BaseModel):
 
         _obj = cls.model_validate({
             "code": obj.get("code"),
-            "redirect_uri": obj.get("redirect_uri")
+            "redirect_uri": obj.get("redirect_uri"),
+            "authorization_intent": obj.get("authorization_intent")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

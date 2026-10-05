@@ -20,6 +20,8 @@ from datetime import datetime
 from pydantic import Field, StrictStr, field_validator
 from typing import Any, Dict, Optional
 from typing_extensions import Annotated
+from coval_sdk.models.coval_reviews_api_complete_review_conversation_request import CovalReviewsAPICompleteReviewConversationRequest
+from coval_sdk.models.coval_reviews_api_complete_review_conversation_response import CovalReviewsAPICompleteReviewConversationResponse
 from coval_sdk.models.coval_reviews_api_create_review_project_request import CovalReviewsAPICreateReviewProjectRequest
 from coval_sdk.models.coval_reviews_api_create_review_project_response import CovalReviewsAPICreateReviewProjectResponse
 from coval_sdk.models.coval_reviews_api_get_human_review_project_insights_response import CovalReviewsAPIGetHumanReviewProjectInsightsResponse
@@ -51,9 +53,335 @@ class ReviewProjectsApi:
 
 
     @validate_call
+    def complete_review_conversation(
+        self,
+        project_id: Annotated[StrictStr, Field(description="Review project ID (ULID).")],
+        coval_reviews_api_complete_review_conversation_request: CovalReviewsAPICompleteReviewConversationRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> CovalReviewsAPICompleteReviewConversationResponse:
+        """Complete a review-project conversation
+
+        Validate the conversation's required review values and mark it complete for the acting reviewer. A successful response can still report blockers when completion requirements have not been satisfied.
+
+        :param project_id: Review project ID (ULID). (required)
+        :type project_id: str
+        :param coval_reviews_api_complete_review_conversation_request: (required)
+        :type coval_reviews_api_complete_review_conversation_request: CovalReviewsAPICompleteReviewConversationRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._complete_review_conversation_serialize(
+            project_id=project_id,
+            coval_reviews_api_complete_review_conversation_request=coval_reviews_api_complete_review_conversation_request,
+            x_coval_workspace_id=x_coval_workspace_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalReviewsAPICompleteReviewConversationResponse",
+            '400': "CovalReviewsAPIErrorResponse",
+            '401': "CovalReviewsAPIErrorResponse",
+            '403': "CovalReviewsAPIErrorResponse",
+            '404': "CovalReviewsAPIErrorResponse",
+            '409': "CovalReviewsAPIErrorResponse",
+            '500': "CovalReviewsAPIErrorResponse",
+            '503': "CovalReviewsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def complete_review_conversation_with_http_info(
+        self,
+        project_id: Annotated[StrictStr, Field(description="Review project ID (ULID).")],
+        coval_reviews_api_complete_review_conversation_request: CovalReviewsAPICompleteReviewConversationRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[CovalReviewsAPICompleteReviewConversationResponse]:
+        """Complete a review-project conversation
+
+        Validate the conversation's required review values and mark it complete for the acting reviewer. A successful response can still report blockers when completion requirements have not been satisfied.
+
+        :param project_id: Review project ID (ULID). (required)
+        :type project_id: str
+        :param coval_reviews_api_complete_review_conversation_request: (required)
+        :type coval_reviews_api_complete_review_conversation_request: CovalReviewsAPICompleteReviewConversationRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._complete_review_conversation_serialize(
+            project_id=project_id,
+            coval_reviews_api_complete_review_conversation_request=coval_reviews_api_complete_review_conversation_request,
+            x_coval_workspace_id=x_coval_workspace_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalReviewsAPICompleteReviewConversationResponse",
+            '400': "CovalReviewsAPIErrorResponse",
+            '401': "CovalReviewsAPIErrorResponse",
+            '403': "CovalReviewsAPIErrorResponse",
+            '404': "CovalReviewsAPIErrorResponse",
+            '409': "CovalReviewsAPIErrorResponse",
+            '500': "CovalReviewsAPIErrorResponse",
+            '503': "CovalReviewsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def complete_review_conversation_without_preload_content(
+        self,
+        project_id: Annotated[StrictStr, Field(description="Review project ID (ULID).")],
+        coval_reviews_api_complete_review_conversation_request: CovalReviewsAPICompleteReviewConversationRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Complete a review-project conversation
+
+        Validate the conversation's required review values and mark it complete for the acting reviewer. A successful response can still report blockers when completion requirements have not been satisfied.
+
+        :param project_id: Review project ID (ULID). (required)
+        :type project_id: str
+        :param coval_reviews_api_complete_review_conversation_request: (required)
+        :type coval_reviews_api_complete_review_conversation_request: CovalReviewsAPICompleteReviewConversationRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._complete_review_conversation_serialize(
+            project_id=project_id,
+            coval_reviews_api_complete_review_conversation_request=coval_reviews_api_complete_review_conversation_request,
+            x_coval_workspace_id=x_coval_workspace_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalReviewsAPICompleteReviewConversationResponse",
+            '400': "CovalReviewsAPIErrorResponse",
+            '401': "CovalReviewsAPIErrorResponse",
+            '403': "CovalReviewsAPIErrorResponse",
+            '404': "CovalReviewsAPIErrorResponse",
+            '409': "CovalReviewsAPIErrorResponse",
+            '500': "CovalReviewsAPIErrorResponse",
+            '503': "CovalReviewsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _complete_review_conversation_serialize(
+        self,
+        project_id,
+        coval_reviews_api_complete_review_conversation_request,
+        x_coval_workspace_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if project_id is not None:
+            _path_params['project_id'] = project_id
+        # process the query parameters
+        # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
+        # process the form parameters
+        # process the body parameter
+        if coval_reviews_api_complete_review_conversation_request is not None:
+            _body_params = coval_reviews_api_complete_review_conversation_request
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'Coval_Reviews_API_ApiKeyAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/review-projects/{project_id}/complete-conversation',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
     def create_review_project(
         self,
         coval_reviews_api_create_review_project_request: CovalReviewsAPICreateReviewProjectRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -73,6 +401,8 @@ class ReviewProjectsApi:
 
         :param coval_reviews_api_create_review_project_request: (required)
         :type coval_reviews_api_create_review_project_request: CovalReviewsAPICreateReviewProjectRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -97,6 +427,7 @@ class ReviewProjectsApi:
 
         _param = self._create_review_project_serialize(
             coval_reviews_api_create_review_project_request=coval_reviews_api_create_review_project_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -124,6 +455,7 @@ class ReviewProjectsApi:
     def create_review_project_with_http_info(
         self,
         coval_reviews_api_create_review_project_request: CovalReviewsAPICreateReviewProjectRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -143,6 +475,8 @@ class ReviewProjectsApi:
 
         :param coval_reviews_api_create_review_project_request: (required)
         :type coval_reviews_api_create_review_project_request: CovalReviewsAPICreateReviewProjectRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -167,6 +501,7 @@ class ReviewProjectsApi:
 
         _param = self._create_review_project_serialize(
             coval_reviews_api_create_review_project_request=coval_reviews_api_create_review_project_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -194,6 +529,7 @@ class ReviewProjectsApi:
     def create_review_project_without_preload_content(
         self,
         coval_reviews_api_create_review_project_request: CovalReviewsAPICreateReviewProjectRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -213,6 +549,8 @@ class ReviewProjectsApi:
 
         :param coval_reviews_api_create_review_project_request: (required)
         :type coval_reviews_api_create_review_project_request: CovalReviewsAPICreateReviewProjectRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -237,6 +575,7 @@ class ReviewProjectsApi:
 
         _param = self._create_review_project_serialize(
             coval_reviews_api_create_review_project_request=coval_reviews_api_create_review_project_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -259,6 +598,7 @@ class ReviewProjectsApi:
     def _create_review_project_serialize(
         self,
         coval_reviews_api_create_review_project_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -282,6 +622,8 @@ class ReviewProjectsApi:
         # process the path parameters
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_reviews_api_create_review_project_request is not None:
@@ -337,6 +679,7 @@ class ReviewProjectsApi:
     def delete_review_project(
         self,
         project_id: Annotated[StrictStr, Field(description="The project ID (ULID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -356,6 +699,8 @@ class ReviewProjectsApi:
 
         :param project_id: The project ID (ULID) (required)
         :type project_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -380,6 +725,7 @@ class ReviewProjectsApi:
 
         _param = self._delete_review_project_serialize(
             project_id=project_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -407,6 +753,7 @@ class ReviewProjectsApi:
     def delete_review_project_with_http_info(
         self,
         project_id: Annotated[StrictStr, Field(description="The project ID (ULID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -426,6 +773,8 @@ class ReviewProjectsApi:
 
         :param project_id: The project ID (ULID) (required)
         :type project_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -450,6 +799,7 @@ class ReviewProjectsApi:
 
         _param = self._delete_review_project_serialize(
             project_id=project_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -477,6 +827,7 @@ class ReviewProjectsApi:
     def delete_review_project_without_preload_content(
         self,
         project_id: Annotated[StrictStr, Field(description="The project ID (ULID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -496,6 +847,8 @@ class ReviewProjectsApi:
 
         :param project_id: The project ID (ULID) (required)
         :type project_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -520,6 +873,7 @@ class ReviewProjectsApi:
 
         _param = self._delete_review_project_serialize(
             project_id=project_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -542,6 +896,7 @@ class ReviewProjectsApi:
     def _delete_review_project_serialize(
         self,
         project_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -567,6 +922,8 @@ class ReviewProjectsApi:
             _path_params['project_id'] = project_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -896,6 +1253,7 @@ class ReviewProjectsApi:
     def get_review_project(
         self,
         project_id: Annotated[StrictStr, Field(description="The project ID (ULID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -915,6 +1273,8 @@ class ReviewProjectsApi:
 
         :param project_id: The project ID (ULID) (required)
         :type project_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -939,6 +1299,7 @@ class ReviewProjectsApi:
 
         _param = self._get_review_project_serialize(
             project_id=project_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -966,6 +1327,7 @@ class ReviewProjectsApi:
     def get_review_project_with_http_info(
         self,
         project_id: Annotated[StrictStr, Field(description="The project ID (ULID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -985,6 +1347,8 @@ class ReviewProjectsApi:
 
         :param project_id: The project ID (ULID) (required)
         :type project_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1009,6 +1373,7 @@ class ReviewProjectsApi:
 
         _param = self._get_review_project_serialize(
             project_id=project_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1036,6 +1401,7 @@ class ReviewProjectsApi:
     def get_review_project_without_preload_content(
         self,
         project_id: Annotated[StrictStr, Field(description="The project ID (ULID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1055,6 +1421,8 @@ class ReviewProjectsApi:
 
         :param project_id: The project ID (ULID) (required)
         :type project_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1079,6 +1447,7 @@ class ReviewProjectsApi:
 
         _param = self._get_review_project_serialize(
             project_id=project_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1101,6 +1470,7 @@ class ReviewProjectsApi:
     def _get_review_project_serialize(
         self,
         project_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -1126,6 +1496,8 @@ class ReviewProjectsApi:
             _path_params['project_id'] = project_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -1169,6 +1541,7 @@ class ReviewProjectsApi:
         start_date: Annotated[datetime, Field(description="Start of the insights window (ISO-8601).")],
         end_date: Annotated[datetime, Field(description="End of the insights window (ISO-8601); must be after start_date.")],
         label_triage_time_basis: Annotated[Optional[StrictStr], Field(description="Whether label triage timing is anchored to the simulation or the label.")] = None,
+        criteria_view_mode: Annotated[Optional[StrictStr], Field(description="Include Composite Evaluation criterion-pair agreement alongside aggregate-score insights.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1194,6 +1567,8 @@ class ReviewProjectsApi:
         :type end_date: datetime
         :param label_triage_time_basis: Whether label triage timing is anchored to the simulation or the label.
         :type label_triage_time_basis: str
+        :param criteria_view_mode: Include Composite Evaluation criterion-pair agreement alongside aggregate-score insights.
+        :type criteria_view_mode: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1221,6 +1596,7 @@ class ReviewProjectsApi:
             start_date=start_date,
             end_date=end_date,
             label_triage_time_basis=label_triage_time_basis,
+            criteria_view_mode=criteria_view_mode,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1254,6 +1630,7 @@ class ReviewProjectsApi:
         start_date: Annotated[datetime, Field(description="Start of the insights window (ISO-8601).")],
         end_date: Annotated[datetime, Field(description="End of the insights window (ISO-8601); must be after start_date.")],
         label_triage_time_basis: Annotated[Optional[StrictStr], Field(description="Whether label triage timing is anchored to the simulation or the label.")] = None,
+        criteria_view_mode: Annotated[Optional[StrictStr], Field(description="Include Composite Evaluation criterion-pair agreement alongside aggregate-score insights.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1279,6 +1656,8 @@ class ReviewProjectsApi:
         :type end_date: datetime
         :param label_triage_time_basis: Whether label triage timing is anchored to the simulation or the label.
         :type label_triage_time_basis: str
+        :param criteria_view_mode: Include Composite Evaluation criterion-pair agreement alongside aggregate-score insights.
+        :type criteria_view_mode: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1306,6 +1685,7 @@ class ReviewProjectsApi:
             start_date=start_date,
             end_date=end_date,
             label_triage_time_basis=label_triage_time_basis,
+            criteria_view_mode=criteria_view_mode,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1339,6 +1719,7 @@ class ReviewProjectsApi:
         start_date: Annotated[datetime, Field(description="Start of the insights window (ISO-8601).")],
         end_date: Annotated[datetime, Field(description="End of the insights window (ISO-8601); must be after start_date.")],
         label_triage_time_basis: Annotated[Optional[StrictStr], Field(description="Whether label triage timing is anchored to the simulation or the label.")] = None,
+        criteria_view_mode: Annotated[Optional[StrictStr], Field(description="Include Composite Evaluation criterion-pair agreement alongside aggregate-score insights.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1364,6 +1745,8 @@ class ReviewProjectsApi:
         :type end_date: datetime
         :param label_triage_time_basis: Whether label triage timing is anchored to the simulation or the label.
         :type label_triage_time_basis: str
+        :param criteria_view_mode: Include Composite Evaluation criterion-pair agreement alongside aggregate-score insights.
+        :type criteria_view_mode: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1391,6 +1774,7 @@ class ReviewProjectsApi:
             start_date=start_date,
             end_date=end_date,
             label_triage_time_basis=label_triage_time_basis,
+            criteria_view_mode=criteria_view_mode,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1419,6 +1803,7 @@ class ReviewProjectsApi:
         start_date,
         end_date,
         label_triage_time_basis,
+        criteria_view_mode,
         _request_auth,
         _content_type,
         _headers,
@@ -1473,6 +1858,10 @@ class ReviewProjectsApi:
             
             _query_params.append(('label_triage_time_basis', label_triage_time_basis))
             
+        if criteria_view_mode is not None:
+            
+            _query_params.append(('criteria_view_mode', criteria_view_mode))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -1514,6 +1903,7 @@ class ReviewProjectsApi:
     def get_review_project_metric_agreement(
         self,
         project_id: Annotated[StrictStr, Field(description="The project ID (ULID)")],
+        criteria_view_mode: Annotated[Optional[StrictStr], Field(description="Compare Composite Evaluation criteria instead of aggregate scores.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1533,6 +1923,8 @@ class ReviewProjectsApi:
 
         :param project_id: The project ID (ULID) (required)
         :type project_id: str
+        :param criteria_view_mode: Compare Composite Evaluation criteria instead of aggregate scores.
+        :type criteria_view_mode: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1557,6 +1949,7 @@ class ReviewProjectsApi:
 
         _param = self._get_review_project_metric_agreement_serialize(
             project_id=project_id,
+            criteria_view_mode=criteria_view_mode,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1586,6 +1979,7 @@ class ReviewProjectsApi:
     def get_review_project_metric_agreement_with_http_info(
         self,
         project_id: Annotated[StrictStr, Field(description="The project ID (ULID)")],
+        criteria_view_mode: Annotated[Optional[StrictStr], Field(description="Compare Composite Evaluation criteria instead of aggregate scores.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1605,6 +1999,8 @@ class ReviewProjectsApi:
 
         :param project_id: The project ID (ULID) (required)
         :type project_id: str
+        :param criteria_view_mode: Compare Composite Evaluation criteria instead of aggregate scores.
+        :type criteria_view_mode: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1629,6 +2025,7 @@ class ReviewProjectsApi:
 
         _param = self._get_review_project_metric_agreement_serialize(
             project_id=project_id,
+            criteria_view_mode=criteria_view_mode,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1658,6 +2055,7 @@ class ReviewProjectsApi:
     def get_review_project_metric_agreement_without_preload_content(
         self,
         project_id: Annotated[StrictStr, Field(description="The project ID (ULID)")],
+        criteria_view_mode: Annotated[Optional[StrictStr], Field(description="Compare Composite Evaluation criteria instead of aggregate scores.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1677,6 +2075,8 @@ class ReviewProjectsApi:
 
         :param project_id: The project ID (ULID) (required)
         :type project_id: str
+        :param criteria_view_mode: Compare Composite Evaluation criteria instead of aggregate scores.
+        :type criteria_view_mode: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1701,6 +2101,7 @@ class ReviewProjectsApi:
 
         _param = self._get_review_project_metric_agreement_serialize(
             project_id=project_id,
+            criteria_view_mode=criteria_view_mode,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1725,6 +2126,7 @@ class ReviewProjectsApi:
     def _get_review_project_metric_agreement_serialize(
         self,
         project_id,
+        criteria_view_mode,
         _request_auth,
         _content_type,
         _headers,
@@ -1749,6 +2151,10 @@ class ReviewProjectsApi:
         if project_id is not None:
             _path_params['project_id'] = project_id
         # process the query parameters
+        if criteria_view_mode is not None:
+            
+            _query_params.append(('criteria_view_mode', criteria_view_mode))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -2068,6 +2474,7 @@ class ReviewProjectsApi:
     @validate_call
     def list_review_projects(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort field and direction. Prefix with `-` for descending. Valid fields: `create_time`, `update_time`, `display_name`. ")] = None,
@@ -2088,6 +2495,8 @@ class ReviewProjectsApi:
 
         List review projects for your organization with pagination.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of results per page
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
@@ -2117,6 +2526,7 @@ class ReviewProjectsApi:
         """ # noqa: E501
 
         _param = self._list_review_projects_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             order_by=order_by,
@@ -2146,6 +2556,7 @@ class ReviewProjectsApi:
     @validate_call
     def list_review_projects_with_http_info(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort field and direction. Prefix with `-` for descending. Valid fields: `create_time`, `update_time`, `display_name`. ")] = None,
@@ -2166,6 +2577,8 @@ class ReviewProjectsApi:
 
         List review projects for your organization with pagination.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of results per page
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
@@ -2195,6 +2608,7 @@ class ReviewProjectsApi:
         """ # noqa: E501
 
         _param = self._list_review_projects_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             order_by=order_by,
@@ -2224,6 +2638,7 @@ class ReviewProjectsApi:
     @validate_call
     def list_review_projects_without_preload_content(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Sort field and direction. Prefix with `-` for descending. Valid fields: `create_time`, `update_time`, `display_name`. ")] = None,
@@ -2244,6 +2659,8 @@ class ReviewProjectsApi:
 
         List review projects for your organization with pagination.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of results per page
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
@@ -2273,6 +2690,7 @@ class ReviewProjectsApi:
         """ # noqa: E501
 
         _param = self._list_review_projects_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             order_by=order_by,
@@ -2297,6 +2715,7 @@ class ReviewProjectsApi:
 
     def _list_review_projects_serialize(
         self,
+        x_coval_workspace_id,
         page_size,
         page_token,
         order_by,
@@ -2335,6 +2754,8 @@ class ReviewProjectsApi:
             _query_params.append(('order_by', order_by))
             
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -2376,6 +2797,7 @@ class ReviewProjectsApi:
         self,
         project_id: Annotated[StrictStr, Field(description="The project ID (ULID)")],
         coval_reviews_api_update_review_project_request: CovalReviewsAPIUpdateReviewProjectRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2397,6 +2819,8 @@ class ReviewProjectsApi:
         :type project_id: str
         :param coval_reviews_api_update_review_project_request: (required)
         :type coval_reviews_api_update_review_project_request: CovalReviewsAPIUpdateReviewProjectRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2422,6 +2846,7 @@ class ReviewProjectsApi:
         _param = self._update_review_project_serialize(
             project_id=project_id,
             coval_reviews_api_update_review_project_request=coval_reviews_api_update_review_project_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2451,6 +2876,7 @@ class ReviewProjectsApi:
         self,
         project_id: Annotated[StrictStr, Field(description="The project ID (ULID)")],
         coval_reviews_api_update_review_project_request: CovalReviewsAPIUpdateReviewProjectRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2472,6 +2898,8 @@ class ReviewProjectsApi:
         :type project_id: str
         :param coval_reviews_api_update_review_project_request: (required)
         :type coval_reviews_api_update_review_project_request: CovalReviewsAPIUpdateReviewProjectRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2497,6 +2925,7 @@ class ReviewProjectsApi:
         _param = self._update_review_project_serialize(
             project_id=project_id,
             coval_reviews_api_update_review_project_request=coval_reviews_api_update_review_project_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2526,6 +2955,7 @@ class ReviewProjectsApi:
         self,
         project_id: Annotated[StrictStr, Field(description="The project ID (ULID)")],
         coval_reviews_api_update_review_project_request: CovalReviewsAPIUpdateReviewProjectRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2547,6 +2977,8 @@ class ReviewProjectsApi:
         :type project_id: str
         :param coval_reviews_api_update_review_project_request: (required)
         :type coval_reviews_api_update_review_project_request: CovalReviewsAPIUpdateReviewProjectRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2572,6 +3004,7 @@ class ReviewProjectsApi:
         _param = self._update_review_project_serialize(
             project_id=project_id,
             coval_reviews_api_update_review_project_request=coval_reviews_api_update_review_project_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2596,6 +3029,7 @@ class ReviewProjectsApi:
         self,
         project_id,
         coval_reviews_api_update_review_project_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -2621,6 +3055,8 @@ class ReviewProjectsApi:
             _path_params['project_id'] = project_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_reviews_api_update_review_project_request is not None:

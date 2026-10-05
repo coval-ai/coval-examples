@@ -78,14 +78,6 @@ export interface CovalRunsAPILaunchRunRequest {
      */
     mutation_ids?: Array<string>;
     /**
-     * List of metric names that should evaluate the persona instead of the agent.
-     * Each entry should be the base metric name (e.g., 'latency', not 'persona:latency').
-     * 
-     * @type {Array<string>}
-     * @memberof CovalRunsAPILaunchRunRequest
-     */
-    persona_metrics?: Array<string>;
-    /**
      * 
      * @type {CovalRunsAPILaunchOptions}
      * @memberof CovalRunsAPILaunchRunRequest
@@ -97,6 +89,15 @@ export interface CovalRunsAPILaunchRunRequest {
      * @memberof CovalRunsAPILaunchRunRequest
      */
     metadata?: CovalRunsAPILaunchMetadata;
+    /**
+     * Launch-specific simulator configuration. Values override stored Agent
+     * configuration except for protected resource identity and connection
+     * fields. The Agent's stored model type remains authoritative.
+     * 
+     * @type {{ [key: string]: any; }}
+     * @memberof CovalRunsAPILaunchRunRequest
+     */
+    config_overrides?: { [key: string]: any; } | null;
 }
 
 /**
@@ -125,9 +126,9 @@ export function CovalRunsAPILaunchRunRequestFromJSONTyped(json: any, ignoreDiscr
         'metric_ids': json['metric_ids'] == null ? undefined : json['metric_ids'],
         'mutation_id': json['mutation_id'] == null ? undefined : json['mutation_id'],
         'mutation_ids': json['mutation_ids'] == null ? undefined : json['mutation_ids'],
-        'persona_metrics': json['persona_metrics'] == null ? undefined : json['persona_metrics'],
         'options': json['options'] == null ? undefined : CovalRunsAPILaunchOptionsFromJSON(json['options']),
         'metadata': json['metadata'] == null ? undefined : CovalRunsAPILaunchMetadataFromJSON(json['metadata']),
+        'config_overrides': json['config_overrides'] == null ? undefined : json['config_overrides'],
     };
 }
 
@@ -148,9 +149,9 @@ export function CovalRunsAPILaunchRunRequestToJSONTyped(value?: CovalRunsAPILaun
         'metric_ids': value['metric_ids'],
         'mutation_id': value['mutation_id'],
         'mutation_ids': value['mutation_ids'],
-        'persona_metrics': value['persona_metrics'],
         'options': CovalRunsAPILaunchOptionsToJSON(value['options']),
         'metadata': CovalRunsAPILaunchMetadataToJSON(value['metadata']),
+        'config_overrides': value['config_overrides'],
     };
 }
 

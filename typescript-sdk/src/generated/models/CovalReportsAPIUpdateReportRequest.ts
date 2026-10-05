@@ -42,7 +42,7 @@ import {
  */
 export interface CovalReportsAPIUpdateReportRequest {
     /**
-     * Display name for the saved report.
+     * Report name, trimmed to 1–200 characters. Whitespace-only names are rejected. Omit to preserve the name; null is rejected.
      * @type {string}
      * @memberof CovalReportsAPIUpdateReportRequest
      */

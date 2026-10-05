@@ -16,7 +16,7 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictStr
+from pydantic import Field, StrictBool, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_tags_api_create_tag_request import CovalTagsAPICreateTagRequest
@@ -49,6 +49,7 @@ class TagsApi:
     def create_tag(
         self,
         coval_tags_api_create_tag_request: CovalTagsAPICreateTagRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -64,10 +65,12 @@ class TagsApi:
     ) -> CovalTagsAPICreateTagResponse:
         """Create tag
 
-        Create a new tag. Tag names are normalized to lowercase before persistence. Returns 409 if a tag with the same name already exists and is active. 
+        Create a new tag. Tag names are normalized to lowercase before persistence. Returns 409 if a tag with the same name already exists and is active. Reusing a deleted name reactivates the same tag without restoring prior assignments. 
 
         :param coval_tags_api_create_tag_request: (required)
         :type coval_tags_api_create_tag_request: CovalTagsAPICreateTagRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -92,6 +95,7 @@ class TagsApi:
 
         _param = self._create_tag_serialize(
             coval_tags_api_create_tag_request=coval_tags_api_create_tag_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -121,6 +125,7 @@ class TagsApi:
     def create_tag_with_http_info(
         self,
         coval_tags_api_create_tag_request: CovalTagsAPICreateTagRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -136,10 +141,12 @@ class TagsApi:
     ) -> ApiResponse[CovalTagsAPICreateTagResponse]:
         """Create tag
 
-        Create a new tag. Tag names are normalized to lowercase before persistence. Returns 409 if a tag with the same name already exists and is active. 
+        Create a new tag. Tag names are normalized to lowercase before persistence. Returns 409 if a tag with the same name already exists and is active. Reusing a deleted name reactivates the same tag without restoring prior assignments. 
 
         :param coval_tags_api_create_tag_request: (required)
         :type coval_tags_api_create_tag_request: CovalTagsAPICreateTagRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -164,6 +171,7 @@ class TagsApi:
 
         _param = self._create_tag_serialize(
             coval_tags_api_create_tag_request=coval_tags_api_create_tag_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -193,6 +201,7 @@ class TagsApi:
     def create_tag_without_preload_content(
         self,
         coval_tags_api_create_tag_request: CovalTagsAPICreateTagRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -208,10 +217,12 @@ class TagsApi:
     ) -> RESTResponseType:
         """Create tag
 
-        Create a new tag. Tag names are normalized to lowercase before persistence. Returns 409 if a tag with the same name already exists and is active. 
+        Create a new tag. Tag names are normalized to lowercase before persistence. Returns 409 if a tag with the same name already exists and is active. Reusing a deleted name reactivates the same tag without restoring prior assignments. 
 
         :param coval_tags_api_create_tag_request: (required)
         :type coval_tags_api_create_tag_request: CovalTagsAPICreateTagRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -236,6 +247,7 @@ class TagsApi:
 
         _param = self._create_tag_serialize(
             coval_tags_api_create_tag_request=coval_tags_api_create_tag_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -260,6 +272,7 @@ class TagsApi:
     def _create_tag_serialize(
         self,
         coval_tags_api_create_tag_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -283,6 +296,8 @@ class TagsApi:
         # process the path parameters
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_tags_api_create_tag_request is not None:
@@ -338,6 +353,7 @@ class TagsApi:
     def delete_tag(
         self,
         tag_id: Annotated[StrictStr, Field(description="Tag resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -353,10 +369,12 @@ class TagsApi:
     ) -> CovalTagsAPIDeleteTagResponse:
         """Delete tag
 
-        Delete a tag. The tag is soft-deleted (status='DELETED') and removed from all associated resources. Creating a new tag with the same name will reactivate this record. 
+        Delete a tag. The tag is soft-deleted (status='DELETED') and removed from all associated resources. Creating a new tag with the same name will reactivate this record without restoring prior assignments. Inactive resources are also unassigned; the resources themselves remain. 
 
         :param tag_id: Tag resource ID (required)
         :type tag_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -381,6 +399,7 @@ class TagsApi:
 
         _param = self._delete_tag_serialize(
             tag_id=tag_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -409,6 +428,7 @@ class TagsApi:
     def delete_tag_with_http_info(
         self,
         tag_id: Annotated[StrictStr, Field(description="Tag resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -424,10 +444,12 @@ class TagsApi:
     ) -> ApiResponse[CovalTagsAPIDeleteTagResponse]:
         """Delete tag
 
-        Delete a tag. The tag is soft-deleted (status='DELETED') and removed from all associated resources. Creating a new tag with the same name will reactivate this record. 
+        Delete a tag. The tag is soft-deleted (status='DELETED') and removed from all associated resources. Creating a new tag with the same name will reactivate this record without restoring prior assignments. Inactive resources are also unassigned; the resources themselves remain. 
 
         :param tag_id: Tag resource ID (required)
         :type tag_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -452,6 +474,7 @@ class TagsApi:
 
         _param = self._delete_tag_serialize(
             tag_id=tag_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -480,6 +503,7 @@ class TagsApi:
     def delete_tag_without_preload_content(
         self,
         tag_id: Annotated[StrictStr, Field(description="Tag resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -495,10 +519,12 @@ class TagsApi:
     ) -> RESTResponseType:
         """Delete tag
 
-        Delete a tag. The tag is soft-deleted (status='DELETED') and removed from all associated resources. Creating a new tag with the same name will reactivate this record. 
+        Delete a tag. The tag is soft-deleted (status='DELETED') and removed from all associated resources. Creating a new tag with the same name will reactivate this record without restoring prior assignments. Inactive resources are also unassigned; the resources themselves remain. 
 
         :param tag_id: Tag resource ID (required)
         :type tag_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -523,6 +549,7 @@ class TagsApi:
 
         _param = self._delete_tag_serialize(
             tag_id=tag_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -546,6 +573,7 @@ class TagsApi:
     def _delete_tag_serialize(
         self,
         tag_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -571,6 +599,8 @@ class TagsApi:
             _path_params['tag_id'] = tag_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -611,6 +641,7 @@ class TagsApi:
     def get_tag(
         self,
         tag_id: Annotated[StrictStr, Field(description="Tag resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -630,6 +661,8 @@ class TagsApi:
 
         :param tag_id: Tag resource ID (required)
         :type tag_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -654,6 +687,7 @@ class TagsApi:
 
         _param = self._get_tag_serialize(
             tag_id=tag_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -681,6 +715,7 @@ class TagsApi:
     def get_tag_with_http_info(
         self,
         tag_id: Annotated[StrictStr, Field(description="Tag resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -700,6 +735,8 @@ class TagsApi:
 
         :param tag_id: Tag resource ID (required)
         :type tag_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -724,6 +761,7 @@ class TagsApi:
 
         _param = self._get_tag_serialize(
             tag_id=tag_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -751,6 +789,7 @@ class TagsApi:
     def get_tag_without_preload_content(
         self,
         tag_id: Annotated[StrictStr, Field(description="Tag resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -770,6 +809,8 @@ class TagsApi:
 
         :param tag_id: Tag resource ID (required)
         :type tag_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -794,6 +835,7 @@ class TagsApi:
 
         _param = self._get_tag_serialize(
             tag_id=tag_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -816,6 +858,7 @@ class TagsApi:
     def _get_tag_serialize(
         self,
         tag_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -841,6 +884,8 @@ class TagsApi:
             _path_params['tag_id'] = tag_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -880,8 +925,13 @@ class TagsApi:
     @validate_call
     def list_tags(
         self,
-        page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
+        page_size: Annotated[Optional[Annotated[int, Field(le=200, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
+        search: Annotated[Optional[Annotated[str, Field(strict=True, max_length=200)]], Field(description="Case-insensitive substring of the tag name.")] = None,
+        unused_only: Annotated[Optional[StrictBool], Field(description="Only tags with no live resource assignments in the workspace.")] = None,
+        tag_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=128)]], Field(description="Filter by exact tag ID within the workspace. Cannot be combined with page_token.")] = None,
+        include_usage: Annotated[Optional[StrictBool], Field(description="Include counts of live resource assignments by type.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -897,12 +947,22 @@ class TagsApi:
     ) -> CovalTagsAPIListTagsResponse:
         """List tags
 
-        Retrieve all active tags for your organization.
+        Retrieve active tags in the authenticated workspace. Follow next_page_token until null to browse the complete catalog.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of results per page
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
         :type page_token: str
+        :param search: Case-insensitive substring of the tag name.
+        :type search: str
+        :param unused_only: Only tags with no live resource assignments in the workspace.
+        :type unused_only: bool
+        :param tag_id: Filter by exact tag ID within the workspace. Cannot be combined with page_token.
+        :type tag_id: str
+        :param include_usage: Include counts of live resource assignments by type.
+        :type include_usage: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -926,8 +986,13 @@ class TagsApi:
         """ # noqa: E501
 
         _param = self._list_tags_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
+            search=search,
+            unused_only=unused_only,
+            tag_id=tag_id,
+            include_usage=include_usage,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -936,6 +1001,7 @@ class TagsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CovalTagsAPIListTagsResponse",
+            '400': "CovalTagsAPIErrorResponse",
             '401': "CovalTagsAPIErrorResponse",
             '500': "CovalTagsAPIErrorResponse",
         }
@@ -953,8 +1019,13 @@ class TagsApi:
     @validate_call
     def list_tags_with_http_info(
         self,
-        page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
+        page_size: Annotated[Optional[Annotated[int, Field(le=200, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
+        search: Annotated[Optional[Annotated[str, Field(strict=True, max_length=200)]], Field(description="Case-insensitive substring of the tag name.")] = None,
+        unused_only: Annotated[Optional[StrictBool], Field(description="Only tags with no live resource assignments in the workspace.")] = None,
+        tag_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=128)]], Field(description="Filter by exact tag ID within the workspace. Cannot be combined with page_token.")] = None,
+        include_usage: Annotated[Optional[StrictBool], Field(description="Include counts of live resource assignments by type.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -970,12 +1041,22 @@ class TagsApi:
     ) -> ApiResponse[CovalTagsAPIListTagsResponse]:
         """List tags
 
-        Retrieve all active tags for your organization.
+        Retrieve active tags in the authenticated workspace. Follow next_page_token until null to browse the complete catalog.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of results per page
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
         :type page_token: str
+        :param search: Case-insensitive substring of the tag name.
+        :type search: str
+        :param unused_only: Only tags with no live resource assignments in the workspace.
+        :type unused_only: bool
+        :param tag_id: Filter by exact tag ID within the workspace. Cannot be combined with page_token.
+        :type tag_id: str
+        :param include_usage: Include counts of live resource assignments by type.
+        :type include_usage: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -999,8 +1080,13 @@ class TagsApi:
         """ # noqa: E501
 
         _param = self._list_tags_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
+            search=search,
+            unused_only=unused_only,
+            tag_id=tag_id,
+            include_usage=include_usage,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1009,6 +1095,7 @@ class TagsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CovalTagsAPIListTagsResponse",
+            '400': "CovalTagsAPIErrorResponse",
             '401': "CovalTagsAPIErrorResponse",
             '500': "CovalTagsAPIErrorResponse",
         }
@@ -1026,8 +1113,13 @@ class TagsApi:
     @validate_call
     def list_tags_without_preload_content(
         self,
-        page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
+        page_size: Annotated[Optional[Annotated[int, Field(le=200, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
+        search: Annotated[Optional[Annotated[str, Field(strict=True, max_length=200)]], Field(description="Case-insensitive substring of the tag name.")] = None,
+        unused_only: Annotated[Optional[StrictBool], Field(description="Only tags with no live resource assignments in the workspace.")] = None,
+        tag_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=128)]], Field(description="Filter by exact tag ID within the workspace. Cannot be combined with page_token.")] = None,
+        include_usage: Annotated[Optional[StrictBool], Field(description="Include counts of live resource assignments by type.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1043,12 +1135,22 @@ class TagsApi:
     ) -> RESTResponseType:
         """List tags
 
-        Retrieve all active tags for your organization.
+        Retrieve active tags in the authenticated workspace. Follow next_page_token until null to browse the complete catalog.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of results per page
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
         :type page_token: str
+        :param search: Case-insensitive substring of the tag name.
+        :type search: str
+        :param unused_only: Only tags with no live resource assignments in the workspace.
+        :type unused_only: bool
+        :param tag_id: Filter by exact tag ID within the workspace. Cannot be combined with page_token.
+        :type tag_id: str
+        :param include_usage: Include counts of live resource assignments by type.
+        :type include_usage: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1072,8 +1174,13 @@ class TagsApi:
         """ # noqa: E501
 
         _param = self._list_tags_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
+            search=search,
+            unused_only=unused_only,
+            tag_id=tag_id,
+            include_usage=include_usage,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1082,6 +1189,7 @@ class TagsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CovalTagsAPIListTagsResponse",
+            '400': "CovalTagsAPIErrorResponse",
             '401': "CovalTagsAPIErrorResponse",
             '500': "CovalTagsAPIErrorResponse",
         }
@@ -1094,8 +1202,13 @@ class TagsApi:
 
     def _list_tags_serialize(
         self,
+        x_coval_workspace_id,
         page_size,
         page_token,
+        search,
+        unused_only,
+        tag_id,
+        include_usage,
         _request_auth,
         _content_type,
         _headers,
@@ -1126,7 +1239,25 @@ class TagsApi:
             
             _query_params.append(('page_token', page_token))
             
+        if search is not None:
+            
+            _query_params.append(('search', search))
+            
+        if unused_only is not None:
+            
+            _query_params.append(('unused_only', unused_only))
+            
+        if tag_id is not None:
+            
+            _query_params.append(('tag_id', tag_id))
+            
+        if include_usage is not None:
+            
+            _query_params.append(('include_usage', include_usage))
+            
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -1168,6 +1299,7 @@ class TagsApi:
         self,
         tag_id: Annotated[StrictStr, Field(description="Tag resource ID")],
         coval_tags_api_update_tag_request: CovalTagsAPIUpdateTagRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1189,6 +1321,8 @@ class TagsApi:
         :type tag_id: str
         :param coval_tags_api_update_tag_request: (required)
         :type coval_tags_api_update_tag_request: CovalTagsAPIUpdateTagRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1214,6 +1348,7 @@ class TagsApi:
         _param = self._update_tag_serialize(
             tag_id=tag_id,
             coval_tags_api_update_tag_request=coval_tags_api_update_tag_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1245,6 +1380,7 @@ class TagsApi:
         self,
         tag_id: Annotated[StrictStr, Field(description="Tag resource ID")],
         coval_tags_api_update_tag_request: CovalTagsAPIUpdateTagRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1266,6 +1402,8 @@ class TagsApi:
         :type tag_id: str
         :param coval_tags_api_update_tag_request: (required)
         :type coval_tags_api_update_tag_request: CovalTagsAPIUpdateTagRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1291,6 +1429,7 @@ class TagsApi:
         _param = self._update_tag_serialize(
             tag_id=tag_id,
             coval_tags_api_update_tag_request=coval_tags_api_update_tag_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1322,6 +1461,7 @@ class TagsApi:
         self,
         tag_id: Annotated[StrictStr, Field(description="Tag resource ID")],
         coval_tags_api_update_tag_request: CovalTagsAPIUpdateTagRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1343,6 +1483,8 @@ class TagsApi:
         :type tag_id: str
         :param coval_tags_api_update_tag_request: (required)
         :type coval_tags_api_update_tag_request: CovalTagsAPIUpdateTagRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1368,6 +1510,7 @@ class TagsApi:
         _param = self._update_tag_serialize(
             tag_id=tag_id,
             coval_tags_api_update_tag_request=coval_tags_api_update_tag_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1394,6 +1537,7 @@ class TagsApi:
         self,
         tag_id,
         coval_tags_api_update_tag_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -1419,6 +1563,8 @@ class TagsApi:
             _path_params['tag_id'] = tag_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_tags_api_update_tag_request is not None:

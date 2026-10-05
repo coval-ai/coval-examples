@@ -30,6 +30,8 @@ class CovalDashboardsAPIWidgetType(str, Enum):
     CHART = 'chart'
     TABLE = 'table'
     TEXT = 'text'
+    ASSIGNEE_CALL_VOLUME = 'assignee_call_volume'
+    ASSIGNEE_CALL_HISTORY = 'assignee_call_history'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

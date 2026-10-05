@@ -22,6 +22,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
+from coval_sdk.models.coval_run_templates_api_resource_attribution import CovalRunTemplatesAPIResourceAttribution
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -30,26 +31,28 @@ class CovalRunTemplatesAPIRunTemplateResource(BaseModel):
     """
     Run template configuration resource.
     """ # noqa: E501
+    attribution: Optional[CovalRunTemplatesAPIResourceAttribution] = Field(default=None, description="Authoring timestamps and user IDs. Unknown or deleted users are null.")
     name: StrictStr = Field(description="Resource name: \"run-templates/{id}\"")
     id: Annotated[str, Field(strict=True)] = Field(description="Run template resource ID")
     display_name: Annotated[str, Field(strict=True, max_length=200)] = Field(description="Human-readable template name")
-    description: Optional[StrictStr] = Field(default=None, description="Optional description of the template")
-    agent_id: Annotated[str, Field(strict=True)] = Field(description="Agent to test")
-    persona_id: Annotated[str, Field(strict=True)] = Field(description="Simulated persona to use")
-    test_set_id: Annotated[str, Field(strict=True)] = Field(description="Test set containing test cases")
+    description: StrictStr = Field(description="Optional description of the template")
+    agent_ids: Optional[Annotated[List[Annotated[str, Field(strict=True)]], Field(min_length=1)]] = Field(default=None, description="Agents to test")
+    persona_ids: Optional[Annotated[List[Annotated[str, Field(strict=True)]], Field(min_length=1)]] = Field(default=None, description="Simulated personas to use")
+    test_set_ids: Optional[Annotated[List[Annotated[str, Field(strict=True)]], Field(min_length=1)]] = Field(default=None, description="Test sets containing test cases")
     metric_ids: Optional[List[Annotated[str, Field(strict=True)]]] = Field(default=None, description="Metrics to evaluate (uses agent defaults if empty)")
     mutation_ids: Optional[List[Annotated[str, Field(strict=True)]]] = Field(default=None, description="Mutations for A/B testing (optional)")
     iteration_count: Optional[Annotated[int, Field(le=100, strict=True, ge=1)]] = Field(default=1, description="Number of times to run each test case")
     concurrency: Optional[Annotated[int, Field(le=50, strict=True, ge=1)]] = Field(default=1, description="Number of simulations to run concurrently")
     sub_sample_size: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=0, description="Number of test cases to randomly sample (0 = use all)")
     sub_sample_seed: Optional[StrictInt] = Field(default=None, description="Random seed for reproducible sub-sampling")
+    test_case_ids: Optional[Annotated[List[StrictStr], Field(min_length=1, max_length=100)]] = Field(default=None, description="Optional test cases to run from the selected test sets")
     metadata: Optional[Dict[str, Any]] = Field(default=None, description="Custom metadata for tracking")
     tags: Optional[List[StrictStr]] = Field(default=None, description="Tags associated with this run template")
     create_time: datetime = Field(description="Creation timestamp (ISO 8601)")
     update_time: Optional[datetime] = Field(default=None, description="Last update timestamp (ISO 8601)")
     created_by_user_id: Optional[StrictStr] = Field(default=None, description="ULID of the user who created the template")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "id", "display_name", "description", "agent_id", "persona_id", "test_set_id", "metric_ids", "mutation_ids", "iteration_count", "concurrency", "sub_sample_size", "sub_sample_seed", "metadata", "tags", "create_time", "update_time", "created_by_user_id"]
+    __properties: ClassVar[List[str]] = ["attribution", "name", "id", "display_name", "description", "agent_ids", "persona_ids", "test_set_ids", "metric_ids", "mutation_ids", "iteration_count", "concurrency", "sub_sample_size", "sub_sample_seed", "test_case_ids", "metadata", "tags", "create_time", "update_time", "created_by_user_id"]
 
     @field_validator('id')
     def id_validate_regular_expression(cls, value):
@@ -59,36 +62,6 @@ class CovalRunTemplatesAPIRunTemplateResource(BaseModel):
 
         if not re.match(r"^[A-Za-z0-9]{22}$", value):
             raise ValueError(r"must validate the regular expression /^[A-Za-z0-9]{22}$/")
-        return value
-
-    @field_validator('agent_id')
-    def agent_id_validate_regular_expression(cls, value):
-        """Validates the regular expression"""
-        if not isinstance(value, str):
-            value = str(value)
-
-        if not re.match(r"^[A-Za-z0-9]{22}$", value):
-            raise ValueError(r"must validate the regular expression /^[A-Za-z0-9]{22}$/")
-        return value
-
-    @field_validator('persona_id')
-    def persona_id_validate_regular_expression(cls, value):
-        """Validates the regular expression"""
-        if not isinstance(value, str):
-            value = str(value)
-
-        if not re.match(r"^[A-Za-z0-9]{22}$", value):
-            raise ValueError(r"must validate the regular expression /^[A-Za-z0-9]{22}$/")
-        return value
-
-    @field_validator('test_set_id')
-    def test_set_id_validate_regular_expression(cls, value):
-        """Validates the regular expression"""
-        if not isinstance(value, str):
-            value = str(value)
-
-        if not re.match(r"^[A-Za-z0-9]{8}$", value):
-            raise ValueError(r"must validate the regular expression /^[A-Za-z0-9]{8}$/")
         return value
 
     model_config = ConfigDict(
@@ -121,9 +94,11 @@ class CovalRunTemplatesAPIRunTemplateResource(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
         * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
+            "attribution",
             "additional_properties",
         ])
 
@@ -132,15 +107,28 @@ class CovalRunTemplatesAPIRunTemplateResource(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of attribution
+        if self.attribution:
+            _dict['attribution'] = self.attribution.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if attribution (nullable) is None
+        # and model_fields_set contains the field
+        if self.attribution is None and "attribution" in self.model_fields_set:
+            _dict['attribution'] = None
+
         # set to None if sub_sample_seed (nullable) is None
         # and model_fields_set contains the field
         if self.sub_sample_seed is None and "sub_sample_seed" in self.model_fields_set:
             _dict['sub_sample_seed'] = None
+
+        # set to None if test_case_ids (nullable) is None
+        # and model_fields_set contains the field
+        if self.test_case_ids is None and "test_case_ids" in self.model_fields_set:
+            _dict['test_case_ids'] = None
 
         # set to None if update_time (nullable) is None
         # and model_fields_set contains the field
@@ -164,19 +152,21 @@ class CovalRunTemplatesAPIRunTemplateResource(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "attribution": CovalRunTemplatesAPIResourceAttribution.from_dict(obj["attribution"]) if obj.get("attribution") is not None else None,
             "name": obj.get("name"),
             "id": obj.get("id"),
             "display_name": obj.get("display_name"),
             "description": obj.get("description"),
-            "agent_id": obj.get("agent_id"),
-            "persona_id": obj.get("persona_id"),
-            "test_set_id": obj.get("test_set_id"),
+            "agent_ids": obj.get("agent_ids"),
+            "persona_ids": obj.get("persona_ids"),
+            "test_set_ids": obj.get("test_set_ids"),
             "metric_ids": obj.get("metric_ids"),
             "mutation_ids": obj.get("mutation_ids"),
             "iteration_count": obj.get("iteration_count") if obj.get("iteration_count") is not None else 1,
             "concurrency": obj.get("concurrency") if obj.get("concurrency") is not None else 1,
             "sub_sample_size": obj.get("sub_sample_size") if obj.get("sub_sample_size") is not None else 0,
             "sub_sample_seed": obj.get("sub_sample_seed"),
+            "test_case_ids": obj.get("test_case_ids"),
             "metadata": obj.get("metadata"),
             "tags": obj.get("tags"),
             "create_time": obj.get("create_time"),

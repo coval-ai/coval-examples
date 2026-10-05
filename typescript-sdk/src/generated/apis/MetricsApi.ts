@@ -185,6 +185,7 @@ export interface BatchGetMetricOutputsRequest {
 
 export interface CreateMetricRequest {
     covalMetricsAPICreateMetricRequest: CovalMetricsAPICreateMetricRequest;
+    xCovalWorkspaceId?: string;
 }
 
 export interface CreateMetricBaselineRequest {
@@ -203,6 +204,7 @@ export interface CreateMetricThresholdRequest {
 
 export interface DeleteMetricRequest {
     metricId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface DeleteMetricBaselineRequest {
@@ -225,6 +227,7 @@ export interface DuplicateMetricRequest {
 
 export interface GetMetricRequest {
     metricId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface GetMetricBaselineRequest {
@@ -276,6 +279,7 @@ export interface ListMetricVersionsRequest {
 }
 
 export interface ListMetricsRequest {
+    xCovalWorkspaceId?: string;
     pageSize?: number;
     pageToken?: string;
     orderBy?: string;
@@ -305,6 +309,7 @@ export interface TestSqlMetricRequest {
 export interface UpdateMetricRequest {
     metricId: string;
     covalMetricsAPIUpdateMetricRequest: CovalMetricsAPIUpdateMetricRequest;
+    xCovalWorkspaceId?: string;
 }
 
 export interface UpdateMetricBaselineRequest {
@@ -339,7 +344,7 @@ export interface MetricsApiInterface {
     batchGetMetricOutputsRequestOpts(requestParameters: BatchGetMetricOutputsRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Resolve up to 100 metric-output ULIDs to their full metric-output resources. Use this to read the results of `POST /v1/metrics/{metric_id}/test` — which returns a `metric_output_ulid` — without having to know the parent simulation. Org-scoped and best-effort: ULIDs that do not exist or belong to another organization are omitted from the response rather than erroring, so the returned list may be shorter than the request (and empty if none match). Returns the same `SimpleMetricOutput` shape as `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}`. 
+     * Resolve up to 100 metric-output ULIDs to their full metric-output resources. Use this to read the results of `POST /v1/metrics/{metric_id}/test` — which returns a `metric_output_ulid` — without having to know the parent simulation. Org-scoped and best-effort: ULIDs that do not exist or belong to another organization are omitted from the response rather than erroring, so the returned list may be shorter than the request (and empty if none match). Returns the same `SimpleMetricOutput` shape as `GET /v1/conversations/simulated/{simulation_id}/metrics/{metric_output_id}`. 
      * @summary Batch-get metric outputs by ULID
      * @param {CovalMetricsAPIBatchGetMetricOutputsRequest} covalMetricsAPIBatchGetMetricOutputsRequest 
      * @param {*} [options] Override http request option.
@@ -349,7 +354,7 @@ export interface MetricsApiInterface {
     batchGetMetricOutputsRaw(requestParameters: BatchGetMetricOutputsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIMetricOutputCollection>>;
 
     /**
-     * Resolve up to 100 metric-output ULIDs to their full metric-output resources. Use this to read the results of `POST /v1/metrics/{metric_id}/test` — which returns a `metric_output_ulid` — without having to know the parent simulation. Org-scoped and best-effort: ULIDs that do not exist or belong to another organization are omitted from the response rather than erroring, so the returned list may be shorter than the request (and empty if none match). Returns the same `SimpleMetricOutput` shape as `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}`. 
+     * Resolve up to 100 metric-output ULIDs to their full metric-output resources. Use this to read the results of `POST /v1/metrics/{metric_id}/test` — which returns a `metric_output_ulid` — without having to know the parent simulation. Org-scoped and best-effort: ULIDs that do not exist or belong to another organization are omitted from the response rather than erroring, so the returned list may be shorter than the request (and empty if none match). Returns the same `SimpleMetricOutput` shape as `GET /v1/conversations/simulated/{simulation_id}/metrics/{metric_output_id}`. 
      * Batch-get metric outputs by ULID
      */
     batchGetMetricOutputs(requestParameters: BatchGetMetricOutputsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIMetricOutputCollection>;
@@ -357,15 +362,17 @@ export interface MetricsApiInterface {
     /**
      * Creates request options for createMetric without sending the request
      * @param {CovalMetricsAPICreateMetricRequest} covalMetricsAPICreateMetricRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof MetricsApiInterface
      */
     createMetricRequestOpts(requestParameters: CreateMetricRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Create a new custom evaluation metric.  **Required fields vary by metric type:**  | Metric Type | Required Fields | |-------------|-----------------| | METRIC_LLM_BINARY | prompt | | METRIC_CATEGORICAL | prompt, categories | | METRIC_NUMERICAL_LLM_JUDGE | prompt, min_value, max_value | | METRIC_AUDIO_LLM_BINARY | prompt | | METRIC_AUDIO_LLM_CATEGORICAL | prompt, categories | | METRIC_AUDIO_LLM_NUMERICAL | prompt, min_value, max_value | | METRIC_TOOLCALL | prompt | | METRIC_METADATA_FIELD | metadata_field_type, metadata_field_key | | METRIC_TRANSCRIPT_REGEX | regex_pattern | | METRIC_PAUSE_ANALYSIS | min_pause_duration_seconds | 
+     * Create a new custom evaluation metric.  **Required fields vary by metric type:**  | Metric Type | Required Fields | |-------------|-----------------| | METRIC_AGENT_JUDGE | prompt | | METRIC_AGENT_JUDGE_CATEGORICAL | prompt, categories | | METRIC_AGENT_JUDGE_NUMERICAL | prompt, min_value, max_value | | METRIC_LLM_BINARY | prompt | | METRIC_CATEGORICAL | prompt, categories | | METRIC_NUMERICAL_LLM_JUDGE | prompt, min_value, max_value | | METRIC_AUDIO_LLM_BINARY | prompt | | METRIC_AUDIO_LLM_CATEGORICAL | prompt, categories | | METRIC_AUDIO_LLM_NUMERICAL | prompt, min_value, max_value | | METRIC_TOOLCALL | prompt | | METRIC_METADATA_FIELD | metadata_field_type, metadata_field_key | | METRIC_TRANSCRIPT_REGEX | regex_pattern | | METRIC_PAUSE_ANALYSIS | min_pause_duration_seconds | 
      * @summary Create metric
      * @param {CovalMetricsAPICreateMetricRequest} covalMetricsAPICreateMetricRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MetricsApiInterface
@@ -373,7 +380,7 @@ export interface MetricsApiInterface {
     createMetricRaw(requestParameters: CreateMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIGetMetricResponse>>;
 
     /**
-     * Create a new custom evaluation metric.  **Required fields vary by metric type:**  | Metric Type | Required Fields | |-------------|-----------------| | METRIC_LLM_BINARY | prompt | | METRIC_CATEGORICAL | prompt, categories | | METRIC_NUMERICAL_LLM_JUDGE | prompt, min_value, max_value | | METRIC_AUDIO_LLM_BINARY | prompt | | METRIC_AUDIO_LLM_CATEGORICAL | prompt, categories | | METRIC_AUDIO_LLM_NUMERICAL | prompt, min_value, max_value | | METRIC_TOOLCALL | prompt | | METRIC_METADATA_FIELD | metadata_field_type, metadata_field_key | | METRIC_TRANSCRIPT_REGEX | regex_pattern | | METRIC_PAUSE_ANALYSIS | min_pause_duration_seconds | 
+     * Create a new custom evaluation metric.  **Required fields vary by metric type:**  | Metric Type | Required Fields | |-------------|-----------------| | METRIC_AGENT_JUDGE | prompt | | METRIC_AGENT_JUDGE_CATEGORICAL | prompt, categories | | METRIC_AGENT_JUDGE_NUMERICAL | prompt, min_value, max_value | | METRIC_LLM_BINARY | prompt | | METRIC_CATEGORICAL | prompt, categories | | METRIC_NUMERICAL_LLM_JUDGE | prompt, min_value, max_value | | METRIC_AUDIO_LLM_BINARY | prompt | | METRIC_AUDIO_LLM_CATEGORICAL | prompt, categories | | METRIC_AUDIO_LLM_NUMERICAL | prompt, min_value, max_value | | METRIC_TOOLCALL | prompt | | METRIC_METADATA_FIELD | metadata_field_type, metadata_field_key | | METRIC_TRANSCRIPT_REGEX | regex_pattern | | METRIC_PAUSE_ANALYSIS | min_pause_duration_seconds | 
      * Create metric
      */
     createMetric(requestParameters: CreateMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetMetricResponse>;
@@ -457,15 +464,17 @@ export interface MetricsApiInterface {
     /**
      * Creates request options for deleteMetric without sending the request
      * @param {string} metricId 22-character metric ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof MetricsApiInterface
      */
     deleteMetricRequestOpts(requestParameters: DeleteMetricRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Soft-delete a metric in the active workspace. The default workspace can also delete organization-owned legacy metrics whose workspace is unset. Metrics outside that scope are left unchanged and return the same idempotent success response as an unknown or already-deleted metric. When no workspace resolves, only an organization-owned metric whose workspace is unset can be deleted.
+     * Soft-delete a metric in the active workspace. The default workspace can also delete organization-owned legacy metrics whose workspace is unset. Metrics outside that scope are left unchanged and return the same idempotent success response as an unknown or already-deleted metric. When no workspace resolves, only an organization-owned metric whose workspace is unset can be deleted. Metrics referenced by active Templates cannot be deleted.
      * @summary Delete metric
      * @param {string} metricId 22-character metric ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MetricsApiInterface
@@ -473,7 +482,7 @@ export interface MetricsApiInterface {
     deleteMetricRaw(requestParameters: DeleteMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>>;
 
     /**
-     * Soft-delete a metric in the active workspace. The default workspace can also delete organization-owned legacy metrics whose workspace is unset. Metrics outside that scope are left unchanged and return the same idempotent success response as an unknown or already-deleted metric. When no workspace resolves, only an organization-owned metric whose workspace is unset can be deleted.
+     * Soft-delete a metric in the active workspace. The default workspace can also delete organization-owned legacy metrics whose workspace is unset. Metrics outside that scope are left unchanged and return the same idempotent success response as an unknown or already-deleted metric. When no workspace resolves, only an organization-owned metric whose workspace is unset can be deleted. Metrics referenced by active Templates cannot be deleted.
      * Delete metric
      */
     deleteMetric(requestParameters: DeleteMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object>;
@@ -581,6 +590,7 @@ export interface MetricsApiInterface {
     /**
      * Creates request options for getMetric without sending the request
      * @param {string} metricId 22-character metric ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof MetricsApiInterface
      */
@@ -590,6 +600,7 @@ export interface MetricsApiInterface {
      * Retrieve a specific metric by ID.
      * @summary Get metric
      * @param {string} metricId 22-character metric ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MetricsApiInterface
@@ -696,7 +707,7 @@ export interface MetricsApiInterface {
     getSqlMetricSchemaRequestOpts(): Promise<runtime.RequestOpts>;
 
     /**
-     * Return the materialized frame tables, their columns, and the sample rows a draft SQL metric query (`POST /v1/metrics/sql:test`) runs against. The schema is derived from the global frame materializers, so it is org-agnostic and identical for every caller. 
+     * Return the SQL data-frame tables, their columns, and illustrative sample rows for authoring a draft SQL metric query. The schema is derived from the global frame-table registry, so it is org-agnostic and identical for every caller. 
      * @summary Get the SQL metric schema
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -705,7 +716,7 @@ export interface MetricsApiInterface {
     getSqlMetricSchemaRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPISimulationDataFramesSchemaResponse>>;
 
     /**
-     * Return the materialized frame tables, their columns, and the sample rows a draft SQL metric query (`POST /v1/metrics/sql:test`) runs against. The schema is derived from the global frame materializers, so it is org-agnostic and identical for every caller. 
+     * Return the SQL data-frame tables, their columns, and illustrative sample rows for authoring a draft SQL metric query. The schema is derived from the global frame-table registry, so it is org-agnostic and identical for every caller. 
      * Get the SQL metric schema
      */
     getSqlMetricSchema(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPISimulationDataFramesSchemaResponse>;
@@ -810,7 +821,7 @@ export interface MetricsApiInterface {
     listMetricTagsRequestOpts(): Promise<runtime.RequestOpts>;
 
     /**
-     * Distinct, active tag values used on this organization\'s metrics, so callers can discover the valid values for the `tag=` filter on `GET /v1/metrics`. `color` is not exposed via the public API (always null). 
+     * The default workspace includes legacy unscoped records. Distinct, active tag values used on the authenticated workspace’s live metrics, so callers can discover the valid values for the `tag=` filter on `GET /v1/metrics`. `color` is not exposed via the public API (always null). 
      * @summary List metric tag values
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -819,7 +830,7 @@ export interface MetricsApiInterface {
     listMetricTagsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIListMetricTagsResponse>>;
 
     /**
-     * Distinct, active tag values used on this organization\'s metrics, so callers can discover the valid values for the `tag=` filter on `GET /v1/metrics`. `color` is not exposed via the public API (always null). 
+     * The default workspace includes legacy unscoped records. Distinct, active tag values used on the authenticated workspace’s live metrics, so callers can discover the valid values for the `tag=` filter on `GET /v1/metrics`. `color` is not exposed via the public API (always null). 
      * List metric tag values
      */
     listMetricTags(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListMetricTagsResponse>;
@@ -900,6 +911,7 @@ export interface MetricsApiInterface {
 
     /**
      * Creates request options for listMetrics without sending the request
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {number} [pageSize] Maximum results per page
      * @param {string} [pageToken] Pagination token from previous response
      * @param {string} [orderBy] Sort order (e.g., &#x60;create_time desc&#x60;, &#x60;metric_name asc&#x60;)
@@ -914,6 +926,7 @@ export interface MetricsApiInterface {
     /**
      * Retrieve a paginated list of evaluation metrics.
      * @summary List metrics
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {number} [pageSize] Maximum results per page
      * @param {string} [pageToken] Pagination token from previous response
      * @param {string} [orderBy] Sort order (e.g., &#x60;create_time desc&#x60;, &#x60;metric_name asc&#x60;)
@@ -940,7 +953,7 @@ export interface MetricsApiInterface {
     listRecentlyDeletedMetricsRequestOpts(): Promise<runtime.RequestOpts>;
 
     /**
-     * List the current workspace\'s soft-deleted metrics still within the recovery window, newest first. The default workspace also includes organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, the list is empty. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
+     * List the current workspace\'s soft-deleted metrics with no age cutoff, newest first. The default workspace also includes organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, the list is empty. Each entry carries who deleted it and when. Built-in metrics are non-deletable and never appear.
      * @summary List recently-deleted metrics
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -949,7 +962,7 @@ export interface MetricsApiInterface {
     listRecentlyDeletedMetricsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIListRecentlyDeletedMetricsResponse>>;
 
     /**
-     * List the current workspace\'s soft-deleted metrics still within the recovery window, newest first. The default workspace also includes organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, the list is empty. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
+     * List the current workspace\'s soft-deleted metrics with no age cutoff, newest first. The default workspace also includes organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, the list is empty. Each entry carries who deleted it and when. Built-in metrics are non-deletable and never appear.
      * List recently-deleted metrics
      */
     listRecentlyDeletedMetrics(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListRecentlyDeletedMetricsResponse>;
@@ -963,7 +976,7 @@ export interface MetricsApiInterface {
     restoreMetricRequestOpts(requestParameters: RestoreMetricRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged or is outside the current workspace returns 404. The default workspace can restore organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, restore returns 404.
+     * Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that is missing, otherwise not restorable, or outside the current workspace returns 404. The default workspace can restore organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, restore returns 404.
      * @summary Restore a recently-deleted metric
      * @param {string} metricId 22-character metric ID
      * @param {*} [options] Override http request option.
@@ -973,7 +986,7 @@ export interface MetricsApiInterface {
     restoreMetricRaw(requestParameters: RestoreMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIGetMetricResponse>>;
 
     /**
-     * Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged or is outside the current workspace returns 404. The default workspace can restore organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, restore returns 404.
+     * Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that is missing, otherwise not restorable, or outside the current workspace returns 404. The default workspace can restore organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, restore returns 404.
      * Restore a recently-deleted metric
      */
     restoreMetric(requestParameters: RestoreMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetMetricResponse>;
@@ -1014,7 +1027,7 @@ export interface MetricsApiInterface {
     testMetricRequestOpts(requestParameters: TestMetricRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Trigger execution of a metric against one or more simulation outputs for testing purposes. This is an asynchronous operation that returns immediately.  Provide exactly one of `simulation_output_id` (single, deprecated) or `simulation_output_ids` (batch, up to 100 IDs per call). Batch requests are best-effort: individual simulation outputs that cannot be queued are reported in `results` with a non-`QUEUED` status instead of failing the whole call.  The response contains one entry per requested simulation output in `results`, each with its own `status` and, when queued, a `metric_output_ulid`.  **Retrieving results:** for each queued entry, poll `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` using the entry\'s `simulation_output_id` as `simulation_id` and its 26-char `metric_output_ulid` as `metric_output_id`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
+     * Trigger execution of a metric against one or more simulation outputs for testing purposes. This is an asynchronous operation that returns immediately.  Provide exactly one of `simulation_output_id` (single, deprecated) or `simulation_output_ids` (batch, up to 100 IDs per call). Batch requests are best-effort: individual simulation outputs that cannot be queued are reported in `results` with a non-`QUEUED` status instead of failing the whole call.  The response contains one entry per requested simulation output in `results`, each with its own `status` and, when queued, a `metric_output_ulid`.  **Retrieving results:** for each queued entry, poll `GET /v1/conversations/simulated/{simulation_id}/metrics/{metric_output_id}` using the entry\'s `simulation_output_id` as `simulation_id` and its 26-char `metric_output_ulid` as `metric_output_id`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
      * @summary Trigger test metric execution
      * @param {string} metricId The metric ID (22-character ShortUUID)
      * @param {CovalMetricsAPITestMetricRequest} covalMetricsAPITestMetricRequest 
@@ -1025,7 +1038,7 @@ export interface MetricsApiInterface {
     testMetricRaw(requestParameters: TestMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPITestMetricResponse>>;
 
     /**
-     * Trigger execution of a metric against one or more simulation outputs for testing purposes. This is an asynchronous operation that returns immediately.  Provide exactly one of `simulation_output_id` (single, deprecated) or `simulation_output_ids` (batch, up to 100 IDs per call). Batch requests are best-effort: individual simulation outputs that cannot be queued are reported in `results` with a non-`QUEUED` status instead of failing the whole call.  The response contains one entry per requested simulation output in `results`, each with its own `status` and, when queued, a `metric_output_ulid`.  **Retrieving results:** for each queued entry, poll `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` using the entry\'s `simulation_output_id` as `simulation_id` and its 26-char `metric_output_ulid` as `metric_output_id`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
+     * Trigger execution of a metric against one or more simulation outputs for testing purposes. This is an asynchronous operation that returns immediately.  Provide exactly one of `simulation_output_id` (single, deprecated) or `simulation_output_ids` (batch, up to 100 IDs per call). Batch requests are best-effort: individual simulation outputs that cannot be queued are reported in `results` with a non-`QUEUED` status instead of failing the whole call.  The response contains one entry per requested simulation output in `results`, each with its own `status` and, when queued, a `metric_output_ulid`.  **Retrieving results:** for each queued entry, poll `GET /v1/conversations/simulated/{simulation_id}/metrics/{metric_output_id}` using the entry\'s `simulation_output_id` as `simulation_id` and its 26-char `metric_output_ulid` as `metric_output_id`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
      * Trigger test metric execution
      */
     testMetric(requestParameters: TestMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPITestMetricResponse>;
@@ -1039,7 +1052,7 @@ export interface MetricsApiInterface {
     testSqlMetricRequestOpts(requestParameters: TestSqlMetricRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Run a draft SQL Float metric query against a fixed sample `SimulationDataFrames` artifact and return the value it would produce. This is org-agnostic pure compute — it never touches your organization\'s data — so it needs no metric to exist yet and makes no changes.  Use `GET /v1/metrics/sql-schema` to discover the tables, columns, and sample rows your query runs against. The query must return the columns `start_offset_milliseconds` and `value`.  Routine authoring failures (invalid SQL, no matching rows) return `200` with a populated `error` field rather than an HTTP error; only a malformed request body is a `400`. 
+     * Run a draft SQL Float metric query against simulation data from the authenticated workspace. By default, the endpoint tests up to ten recent simulations; provide `simulation_output_id` to test exactly one simulation. No metric needs to exist yet and the request makes no changes.  Use `GET /v1/metrics/sql-schema` to discover the available tables and columns. The query must return the columns `start_offset_milliseconds` and `value`.  Routine authoring failures (invalid SQL, no matching rows) return `200` with a populated `error` field rather than an HTTP error; only a malformed request body is a `400`. 
      * @summary Test a draft SQL metric query
      * @param {CovalMetricsAPITestSqlMetricRequest} covalMetricsAPITestSqlMetricRequest 
      * @param {*} [options] Override http request option.
@@ -1049,7 +1062,7 @@ export interface MetricsApiInterface {
     testSqlMetricRaw(requestParameters: TestSqlMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPITestSqlMetricResponse>>;
 
     /**
-     * Run a draft SQL Float metric query against a fixed sample `SimulationDataFrames` artifact and return the value it would produce. This is org-agnostic pure compute — it never touches your organization\'s data — so it needs no metric to exist yet and makes no changes.  Use `GET /v1/metrics/sql-schema` to discover the tables, columns, and sample rows your query runs against. The query must return the columns `start_offset_milliseconds` and `value`.  Routine authoring failures (invalid SQL, no matching rows) return `200` with a populated `error` field rather than an HTTP error; only a malformed request body is a `400`. 
+     * Run a draft SQL Float metric query against simulation data from the authenticated workspace. By default, the endpoint tests up to ten recent simulations; provide `simulation_output_id` to test exactly one simulation. No metric needs to exist yet and the request makes no changes.  Use `GET /v1/metrics/sql-schema` to discover the available tables and columns. The query must return the columns `start_offset_milliseconds` and `value`.  Routine authoring failures (invalid SQL, no matching rows) return `200` with a populated `error` field rather than an HTTP error; only a malformed request body is a `400`. 
      * Test a draft SQL metric query
      */
     testSqlMetric(requestParameters: TestSqlMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPITestSqlMetricResponse>;
@@ -1058,6 +1071,7 @@ export interface MetricsApiInterface {
      * Creates request options for updateMetric without sending the request
      * @param {string} metricId 22-character metric ID
      * @param {CovalMetricsAPIUpdateMetricRequest} covalMetricsAPIUpdateMetricRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof MetricsApiInterface
      */
@@ -1068,6 +1082,7 @@ export interface MetricsApiInterface {
      * @summary Update metric
      * @param {string} metricId 22-character metric ID
      * @param {CovalMetricsAPIUpdateMetricRequest} covalMetricsAPIUpdateMetricRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MetricsApiInterface
@@ -1201,7 +1216,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Resolve up to 100 metric-output ULIDs to their full metric-output resources. Use this to read the results of `POST /v1/metrics/{metric_id}/test` — which returns a `metric_output_ulid` — without having to know the parent simulation. Org-scoped and best-effort: ULIDs that do not exist or belong to another organization are omitted from the response rather than erroring, so the returned list may be shorter than the request (and empty if none match). Returns the same `SimpleMetricOutput` shape as `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}`. 
+     * Resolve up to 100 metric-output ULIDs to their full metric-output resources. Use this to read the results of `POST /v1/metrics/{metric_id}/test` — which returns a `metric_output_ulid` — without having to know the parent simulation. Org-scoped and best-effort: ULIDs that do not exist or belong to another organization are omitted from the response rather than erroring, so the returned list may be shorter than the request (and empty if none match). Returns the same `SimpleMetricOutput` shape as `GET /v1/conversations/simulated/{simulation_id}/metrics/{metric_output_id}`. 
      * Batch-get metric outputs by ULID
      */
     async batchGetMetricOutputsRaw(requestParameters: BatchGetMetricOutputsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIMetricOutputCollection>> {
@@ -1212,7 +1227,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Resolve up to 100 metric-output ULIDs to their full metric-output resources. Use this to read the results of `POST /v1/metrics/{metric_id}/test` — which returns a `metric_output_ulid` — without having to know the parent simulation. Org-scoped and best-effort: ULIDs that do not exist or belong to another organization are omitted from the response rather than erroring, so the returned list may be shorter than the request (and empty if none match). Returns the same `SimpleMetricOutput` shape as `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}`. 
+     * Resolve up to 100 metric-output ULIDs to their full metric-output resources. Use this to read the results of `POST /v1/metrics/{metric_id}/test` — which returns a `metric_output_ulid` — without having to know the parent simulation. Org-scoped and best-effort: ULIDs that do not exist or belong to another organization are omitted from the response rather than erroring, so the returned list may be shorter than the request (and empty if none match). Returns the same `SimpleMetricOutput` shape as `GET /v1/conversations/simulated/{simulation_id}/metrics/{metric_output_id}`. 
      * Batch-get metric outputs by ULID
      */
     async batchGetMetricOutputs(requestParameters: BatchGetMetricOutputsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIMetricOutputCollection> {
@@ -1237,6 +1252,10 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
         }
@@ -1254,7 +1273,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Create a new custom evaluation metric.  **Required fields vary by metric type:**  | Metric Type | Required Fields | |-------------|-----------------| | METRIC_LLM_BINARY | prompt | | METRIC_CATEGORICAL | prompt, categories | | METRIC_NUMERICAL_LLM_JUDGE | prompt, min_value, max_value | | METRIC_AUDIO_LLM_BINARY | prompt | | METRIC_AUDIO_LLM_CATEGORICAL | prompt, categories | | METRIC_AUDIO_LLM_NUMERICAL | prompt, min_value, max_value | | METRIC_TOOLCALL | prompt | | METRIC_METADATA_FIELD | metadata_field_type, metadata_field_key | | METRIC_TRANSCRIPT_REGEX | regex_pattern | | METRIC_PAUSE_ANALYSIS | min_pause_duration_seconds | 
+     * Create a new custom evaluation metric.  **Required fields vary by metric type:**  | Metric Type | Required Fields | |-------------|-----------------| | METRIC_AGENT_JUDGE | prompt | | METRIC_AGENT_JUDGE_CATEGORICAL | prompt, categories | | METRIC_AGENT_JUDGE_NUMERICAL | prompt, min_value, max_value | | METRIC_LLM_BINARY | prompt | | METRIC_CATEGORICAL | prompt, categories | | METRIC_NUMERICAL_LLM_JUDGE | prompt, min_value, max_value | | METRIC_AUDIO_LLM_BINARY | prompt | | METRIC_AUDIO_LLM_CATEGORICAL | prompt, categories | | METRIC_AUDIO_LLM_NUMERICAL | prompt, min_value, max_value | | METRIC_TOOLCALL | prompt | | METRIC_METADATA_FIELD | metadata_field_type, metadata_field_key | | METRIC_TRANSCRIPT_REGEX | regex_pattern | | METRIC_PAUSE_ANALYSIS | min_pause_duration_seconds | 
      * Create metric
      */
     async createMetricRaw(requestParameters: CreateMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIGetMetricResponse>> {
@@ -1265,7 +1284,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Create a new custom evaluation metric.  **Required fields vary by metric type:**  | Metric Type | Required Fields | |-------------|-----------------| | METRIC_LLM_BINARY | prompt | | METRIC_CATEGORICAL | prompt, categories | | METRIC_NUMERICAL_LLM_JUDGE | prompt, min_value, max_value | | METRIC_AUDIO_LLM_BINARY | prompt | | METRIC_AUDIO_LLM_CATEGORICAL | prompt, categories | | METRIC_AUDIO_LLM_NUMERICAL | prompt, min_value, max_value | | METRIC_TOOLCALL | prompt | | METRIC_METADATA_FIELD | metadata_field_type, metadata_field_key | | METRIC_TRANSCRIPT_REGEX | regex_pattern | | METRIC_PAUSE_ANALYSIS | min_pause_duration_seconds | 
+     * Create a new custom evaluation metric.  **Required fields vary by metric type:**  | Metric Type | Required Fields | |-------------|-----------------| | METRIC_AGENT_JUDGE | prompt | | METRIC_AGENT_JUDGE_CATEGORICAL | prompt, categories | | METRIC_AGENT_JUDGE_NUMERICAL | prompt, min_value, max_value | | METRIC_LLM_BINARY | prompt | | METRIC_CATEGORICAL | prompt, categories | | METRIC_NUMERICAL_LLM_JUDGE | prompt, min_value, max_value | | METRIC_AUDIO_LLM_BINARY | prompt | | METRIC_AUDIO_LLM_CATEGORICAL | prompt, categories | | METRIC_AUDIO_LLM_NUMERICAL | prompt, min_value, max_value | | METRIC_TOOLCALL | prompt | | METRIC_METADATA_FIELD | metadata_field_type, metadata_field_key | | METRIC_TRANSCRIPT_REGEX | regex_pattern | | METRIC_PAUSE_ANALYSIS | min_pause_duration_seconds | 
      * Create metric
      */
     async createMetric(requestParameters: CreateMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetMetricResponse> {
@@ -1463,6 +1482,10 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
         }
@@ -1480,7 +1503,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Soft-delete a metric in the active workspace. The default workspace can also delete organization-owned legacy metrics whose workspace is unset. Metrics outside that scope are left unchanged and return the same idempotent success response as an unknown or already-deleted metric. When no workspace resolves, only an organization-owned metric whose workspace is unset can be deleted.
+     * Soft-delete a metric in the active workspace. The default workspace can also delete organization-owned legacy metrics whose workspace is unset. Metrics outside that scope are left unchanged and return the same idempotent success response as an unknown or already-deleted metric. When no workspace resolves, only an organization-owned metric whose workspace is unset can be deleted. Metrics referenced by active Templates cannot be deleted.
      * Delete metric
      */
     async deleteMetricRaw(requestParameters: DeleteMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
@@ -1491,7 +1514,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Soft-delete a metric in the active workspace. The default workspace can also delete organization-owned legacy metrics whose workspace is unset. Metrics outside that scope are left unchanged and return the same idempotent success response as an unknown or already-deleted metric. When no workspace resolves, only an organization-owned metric whose workspace is unset can be deleted.
+     * Soft-delete a metric in the active workspace. The default workspace can also delete organization-owned legacy metrics whose workspace is unset. Metrics outside that scope are left unchanged and return the same idempotent success response as an unknown or already-deleted metric. When no workspace resolves, only an organization-owned metric whose workspace is unset can be deleted. Metrics referenced by active Templates cannot be deleted.
      * Delete metric
      */
     async deleteMetric(requestParameters: DeleteMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
@@ -1732,6 +1755,10 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
@@ -1982,7 +2009,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Return the materialized frame tables, their columns, and the sample rows a draft SQL metric query (`POST /v1/metrics/sql:test`) runs against. The schema is derived from the global frame materializers, so it is org-agnostic and identical for every caller. 
+     * Return the SQL data-frame tables, their columns, and illustrative sample rows for authoring a draft SQL metric query. The schema is derived from the global frame-table registry, so it is org-agnostic and identical for every caller. 
      * Get the SQL metric schema
      */
     async getSqlMetricSchemaRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPISimulationDataFramesSchemaResponse>> {
@@ -1993,7 +2020,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Return the materialized frame tables, their columns, and the sample rows a draft SQL metric query (`POST /v1/metrics/sql:test`) runs against. The schema is derived from the global frame materializers, so it is org-agnostic and identical for every caller. 
+     * Return the SQL data-frame tables, their columns, and illustrative sample rows for authoring a draft SQL metric query. The schema is derived from the global frame-table registry, so it is org-agnostic and identical for every caller. 
      * Get the SQL metric schema
      */
     async getSqlMetricSchema(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPISimulationDataFramesSchemaResponse> {
@@ -2210,7 +2237,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Distinct, active tag values used on this organization\'s metrics, so callers can discover the valid values for the `tag=` filter on `GET /v1/metrics`. `color` is not exposed via the public API (always null). 
+     * The default workspace includes legacy unscoped records. Distinct, active tag values used on the authenticated workspace’s live metrics, so callers can discover the valid values for the `tag=` filter on `GET /v1/metrics`. `color` is not exposed via the public API (always null). 
      * List metric tag values
      */
     async listMetricTagsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIListMetricTagsResponse>> {
@@ -2221,7 +2248,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Distinct, active tag values used on this organization\'s metrics, so callers can discover the valid values for the `tag=` filter on `GET /v1/metrics`. `color` is not exposed via the public API (always null). 
+     * The default workspace includes legacy unscoped records. Distinct, active tag values used on the authenticated workspace’s live metrics, so callers can discover the valid values for the `tag=` filter on `GET /v1/metrics`. `color` is not exposed via the public API (always null). 
      * List metric tag values
      */
     async listMetricTags(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListMetricTagsResponse> {
@@ -2414,6 +2441,10 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication
         }
@@ -2473,7 +2504,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * List the current workspace\'s soft-deleted metrics still within the recovery window, newest first. The default workspace also includes organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, the list is empty. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
+     * List the current workspace\'s soft-deleted metrics with no age cutoff, newest first. The default workspace also includes organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, the list is empty. Each entry carries who deleted it and when. Built-in metrics are non-deletable and never appear.
      * List recently-deleted metrics
      */
     async listRecentlyDeletedMetricsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIListRecentlyDeletedMetricsResponse>> {
@@ -2484,7 +2515,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * List the current workspace\'s soft-deleted metrics still within the recovery window, newest first. The default workspace also includes organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, the list is empty. Each entry carries who deleted it, when, and when it will be permanently purged. Built-in metrics are non-deletable and never appear.
+     * List the current workspace\'s soft-deleted metrics with no age cutoff, newest first. The default workspace also includes organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, the list is empty. Each entry carries who deleted it and when. Built-in metrics are non-deletable and never appear.
      * List recently-deleted metrics
      */
     async listRecentlyDeletedMetrics(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIListRecentlyDeletedMetricsResponse> {
@@ -2524,7 +2555,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged or is outside the current workspace returns 404. The default workspace can restore organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, restore returns 404.
+     * Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that is missing, otherwise not restorable, or outside the current workspace returns 404. The default workspace can restore organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, restore returns 404.
      * Restore a recently-deleted metric
      */
     async restoreMetricRaw(requestParameters: RestoreMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIGetMetricResponse>> {
@@ -2535,7 +2566,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that has been permanently purged or is outside the current workspace returns 404. The default workspace can restore organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, restore returns 404.
+     * Restore a soft-deleted metric to active, returning it to the state it held at deletion time (its version history and current version are unchanged). Restoring an already-active metric is a no-op. A metric that is missing, otherwise not restorable, or outside the current workspace returns 404. The default workspace can restore organization-owned legacy metrics whose workspace is unset. If authentication does not resolve a workspace, restore returns 404.
      * Restore a recently-deleted metric
      */
     async restoreMetric(requestParameters: RestoreMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetMetricResponse> {
@@ -2644,7 +2675,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Trigger execution of a metric against one or more simulation outputs for testing purposes. This is an asynchronous operation that returns immediately.  Provide exactly one of `simulation_output_id` (single, deprecated) or `simulation_output_ids` (batch, up to 100 IDs per call). Batch requests are best-effort: individual simulation outputs that cannot be queued are reported in `results` with a non-`QUEUED` status instead of failing the whole call.  The response contains one entry per requested simulation output in `results`, each with its own `status` and, when queued, a `metric_output_ulid`.  **Retrieving results:** for each queued entry, poll `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` using the entry\'s `simulation_output_id` as `simulation_id` and its 26-char `metric_output_ulid` as `metric_output_id`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
+     * Trigger execution of a metric against one or more simulation outputs for testing purposes. This is an asynchronous operation that returns immediately.  Provide exactly one of `simulation_output_id` (single, deprecated) or `simulation_output_ids` (batch, up to 100 IDs per call). Batch requests are best-effort: individual simulation outputs that cannot be queued are reported in `results` with a non-`QUEUED` status instead of failing the whole call.  The response contains one entry per requested simulation output in `results`, each with its own `status` and, when queued, a `metric_output_ulid`.  **Retrieving results:** for each queued entry, poll `GET /v1/conversations/simulated/{simulation_id}/metrics/{metric_output_id}` using the entry\'s `simulation_output_id` as `simulation_id` and its 26-char `metric_output_ulid` as `metric_output_id`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
      * Trigger test metric execution
      */
     async testMetricRaw(requestParameters: TestMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPITestMetricResponse>> {
@@ -2655,7 +2686,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Trigger execution of a metric against one or more simulation outputs for testing purposes. This is an asynchronous operation that returns immediately.  Provide exactly one of `simulation_output_id` (single, deprecated) or `simulation_output_ids` (batch, up to 100 IDs per call). Batch requests are best-effort: individual simulation outputs that cannot be queued are reported in `results` with a non-`QUEUED` status instead of failing the whole call.  The response contains one entry per requested simulation output in `results`, each with its own `status` and, when queued, a `metric_output_ulid`.  **Retrieving results:** for each queued entry, poll `GET /v1/simulations/{simulation_id}/metrics/{metric_output_id}` using the entry\'s `simulation_output_id` as `simulation_id` and its 26-char `metric_output_ulid` as `metric_output_id`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
+     * Trigger execution of a metric against one or more simulation outputs for testing purposes. This is an asynchronous operation that returns immediately.  Provide exactly one of `simulation_output_id` (single, deprecated) or `simulation_output_ids` (batch, up to 100 IDs per call). Batch requests are best-effort: individual simulation outputs that cannot be queued are reported in `results` with a non-`QUEUED` status instead of failing the whole call.  The response contains one entry per requested simulation output in `results`, each with its own `status` and, when queued, a `metric_output_ulid`.  **Retrieving results:** for each queued entry, poll `GET /v1/conversations/simulated/{simulation_id}/metrics/{metric_output_id}` using the entry\'s `simulation_output_id` as `simulation_id` and its 26-char `metric_output_ulid` as `metric_output_id`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test results belong to the simulation they ran against, so they are not available on the conversations endpoint. 
      * Trigger test metric execution
      */
     async testMetric(requestParameters: TestMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPITestMetricResponse> {
@@ -2697,7 +2728,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Run a draft SQL Float metric query against a fixed sample `SimulationDataFrames` artifact and return the value it would produce. This is org-agnostic pure compute — it never touches your organization\'s data — so it needs no metric to exist yet and makes no changes.  Use `GET /v1/metrics/sql-schema` to discover the tables, columns, and sample rows your query runs against. The query must return the columns `start_offset_milliseconds` and `value`.  Routine authoring failures (invalid SQL, no matching rows) return `200` with a populated `error` field rather than an HTTP error; only a malformed request body is a `400`. 
+     * Run a draft SQL Float metric query against simulation data from the authenticated workspace. By default, the endpoint tests up to ten recent simulations; provide `simulation_output_id` to test exactly one simulation. No metric needs to exist yet and the request makes no changes.  Use `GET /v1/metrics/sql-schema` to discover the available tables and columns. The query must return the columns `start_offset_milliseconds` and `value`.  Routine authoring failures (invalid SQL, no matching rows) return `200` with a populated `error` field rather than an HTTP error; only a malformed request body is a `400`. 
      * Test a draft SQL metric query
      */
     async testSqlMetricRaw(requestParameters: TestSqlMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPITestSqlMetricResponse>> {
@@ -2708,7 +2739,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Run a draft SQL Float metric query against a fixed sample `SimulationDataFrames` artifact and return the value it would produce. This is org-agnostic pure compute — it never touches your organization\'s data — so it needs no metric to exist yet and makes no changes.  Use `GET /v1/metrics/sql-schema` to discover the tables, columns, and sample rows your query runs against. The query must return the columns `start_offset_milliseconds` and `value`.  Routine authoring failures (invalid SQL, no matching rows) return `200` with a populated `error` field rather than an HTTP error; only a malformed request body is a `400`. 
+     * Run a draft SQL Float metric query against simulation data from the authenticated workspace. By default, the endpoint tests up to ten recent simulations; provide `simulation_output_id` to test exactly one simulation. No metric needs to exist yet and the request makes no changes.  Use `GET /v1/metrics/sql-schema` to discover the available tables and columns. The query must return the columns `start_offset_milliseconds` and `value`.  Routine authoring failures (invalid SQL, no matching rows) return `200` with a populated `error` field rather than an HTTP error; only a malformed request body is a `400`. 
      * Test a draft SQL metric query
      */
     async testSqlMetric(requestParameters: TestSqlMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPITestSqlMetricResponse> {
@@ -2739,6 +2770,10 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Metrics_API_ApiKeyAuth authentication

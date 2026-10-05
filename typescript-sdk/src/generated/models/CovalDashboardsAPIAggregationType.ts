@@ -24,6 +24,7 @@ export const CovalDashboardsAPIAggregationType = {
     Max: 'max',
     Min: 'min',
     Success: 'success',
+    P50: 'p50',
     P90: 'p90',
     P95: 'p95',
     P99: 'p99'

@@ -26,9 +26,10 @@ export interface CovalWorkspacesAPIWorkspaceResource {
      */
     id: string;
     /**
-     * 
+     * Deprecated compatibility identifier. Use id to identify a workspace.
      * @type {string}
      * @memberof CovalWorkspacesAPIWorkspaceResource
+     * @deprecated
      */
     slug: string;
     /**

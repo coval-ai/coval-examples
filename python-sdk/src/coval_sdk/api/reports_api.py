@@ -50,6 +50,7 @@ class ReportsApi:
     def create_report(
         self,
         coval_reports_api_create_report_request: CovalReportsAPICreateReportRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -69,6 +70,8 @@ class ReportsApi:
 
         :param coval_reports_api_create_report_request: (required)
         :type coval_reports_api_create_report_request: CovalReportsAPICreateReportRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -93,6 +96,7 @@ class ReportsApi:
 
         _param = self._create_report_serialize(
             coval_reports_api_create_report_request=coval_reports_api_create_report_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -122,6 +126,7 @@ class ReportsApi:
     def create_report_with_http_info(
         self,
         coval_reports_api_create_report_request: CovalReportsAPICreateReportRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -141,6 +146,8 @@ class ReportsApi:
 
         :param coval_reports_api_create_report_request: (required)
         :type coval_reports_api_create_report_request: CovalReportsAPICreateReportRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -165,6 +172,7 @@ class ReportsApi:
 
         _param = self._create_report_serialize(
             coval_reports_api_create_report_request=coval_reports_api_create_report_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -194,6 +202,7 @@ class ReportsApi:
     def create_report_without_preload_content(
         self,
         coval_reports_api_create_report_request: CovalReportsAPICreateReportRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -213,6 +222,8 @@ class ReportsApi:
 
         :param coval_reports_api_create_report_request: (required)
         :type coval_reports_api_create_report_request: CovalReportsAPICreateReportRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -237,6 +248,7 @@ class ReportsApi:
 
         _param = self._create_report_serialize(
             coval_reports_api_create_report_request=coval_reports_api_create_report_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -261,6 +273,7 @@ class ReportsApi:
     def _create_report_serialize(
         self,
         coval_reports_api_create_report_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -284,6 +297,8 @@ class ReportsApi:
         # process the path parameters
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_reports_api_create_report_request is not None:
@@ -339,6 +354,7 @@ class ReportsApi:
     def delete_report(
         self,
         report_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="Saved report ULID.")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -358,6 +374,8 @@ class ReportsApi:
 
         :param report_id: Saved report ULID. (required)
         :type report_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -382,6 +400,7 @@ class ReportsApi:
 
         _param = self._delete_report_serialize(
             report_id=report_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -411,6 +430,7 @@ class ReportsApi:
     def delete_report_with_http_info(
         self,
         report_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="Saved report ULID.")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -430,6 +450,8 @@ class ReportsApi:
 
         :param report_id: Saved report ULID. (required)
         :type report_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -454,6 +476,7 @@ class ReportsApi:
 
         _param = self._delete_report_serialize(
             report_id=report_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -483,6 +506,7 @@ class ReportsApi:
     def delete_report_without_preload_content(
         self,
         report_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="Saved report ULID.")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -502,6 +526,8 @@ class ReportsApi:
 
         :param report_id: Saved report ULID. (required)
         :type report_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -526,6 +552,7 @@ class ReportsApi:
 
         _param = self._delete_report_serialize(
             report_id=report_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -550,6 +577,7 @@ class ReportsApi:
     def _delete_report_serialize(
         self,
         report_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -575,6 +603,8 @@ class ReportsApi:
             _path_params['report_id'] = report_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -615,6 +645,7 @@ class ReportsApi:
     def get_report(
         self,
         report_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="Saved report ULID.")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -634,6 +665,8 @@ class ReportsApi:
 
         :param report_id: Saved report ULID. (required)
         :type report_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -658,6 +691,7 @@ class ReportsApi:
 
         _param = self._get_report_serialize(
             report_id=report_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -687,6 +721,7 @@ class ReportsApi:
     def get_report_with_http_info(
         self,
         report_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="Saved report ULID.")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -706,6 +741,8 @@ class ReportsApi:
 
         :param report_id: Saved report ULID. (required)
         :type report_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -730,6 +767,7 @@ class ReportsApi:
 
         _param = self._get_report_serialize(
             report_id=report_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -759,6 +797,7 @@ class ReportsApi:
     def get_report_without_preload_content(
         self,
         report_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="Saved report ULID.")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -778,6 +817,8 @@ class ReportsApi:
 
         :param report_id: Saved report ULID. (required)
         :type report_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -802,6 +843,7 @@ class ReportsApi:
 
         _param = self._get_report_serialize(
             report_id=report_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -826,6 +868,7 @@ class ReportsApi:
     def _get_report_serialize(
         self,
         report_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -851,6 +894,8 @@ class ReportsApi:
             _path_params['report_id'] = report_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -1237,6 +1282,7 @@ class ReportsApi:
     @validate_call
     def list_reports(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         cursor: Annotated[Optional[Annotated[str, Field(strict=True)]], Field(description="Cursor from the previous page.")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of reports to return.")] = None,
         _request_timeout: Union[
@@ -1256,6 +1302,8 @@ class ReportsApi:
 
         Retrieve a paginated list of saved reports for the authenticated organization.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param cursor: Cursor from the previous page.
         :type cursor: str
         :param limit: Maximum number of reports to return.
@@ -1283,6 +1331,7 @@ class ReportsApi:
         """ # noqa: E501
 
         _param = self._list_reports_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             cursor=cursor,
             limit=limit,
             _request_auth=_request_auth,
@@ -1313,6 +1362,7 @@ class ReportsApi:
     @validate_call
     def list_reports_with_http_info(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         cursor: Annotated[Optional[Annotated[str, Field(strict=True)]], Field(description="Cursor from the previous page.")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of reports to return.")] = None,
         _request_timeout: Union[
@@ -1332,6 +1382,8 @@ class ReportsApi:
 
         Retrieve a paginated list of saved reports for the authenticated organization.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param cursor: Cursor from the previous page.
         :type cursor: str
         :param limit: Maximum number of reports to return.
@@ -1359,6 +1411,7 @@ class ReportsApi:
         """ # noqa: E501
 
         _param = self._list_reports_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             cursor=cursor,
             limit=limit,
             _request_auth=_request_auth,
@@ -1389,6 +1442,7 @@ class ReportsApi:
     @validate_call
     def list_reports_without_preload_content(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         cursor: Annotated[Optional[Annotated[str, Field(strict=True)]], Field(description="Cursor from the previous page.")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of reports to return.")] = None,
         _request_timeout: Union[
@@ -1408,6 +1462,8 @@ class ReportsApi:
 
         Retrieve a paginated list of saved reports for the authenticated organization.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param cursor: Cursor from the previous page.
         :type cursor: str
         :param limit: Maximum number of reports to return.
@@ -1435,6 +1491,7 @@ class ReportsApi:
         """ # noqa: E501
 
         _param = self._list_reports_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             cursor=cursor,
             limit=limit,
             _request_auth=_request_auth,
@@ -1460,6 +1517,7 @@ class ReportsApi:
 
     def _list_reports_serialize(
         self,
+        x_coval_workspace_id,
         cursor,
         limit,
         _request_auth,
@@ -1493,6 +1551,8 @@ class ReportsApi:
             _query_params.append(('limit', limit))
             
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -1534,6 +1594,7 @@ class ReportsApi:
         self,
         report_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="Saved report ULID.")],
         coval_reports_api_update_report_request: CovalReportsAPIUpdateReportRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         if_match: Annotated[Optional[StrictStr], Field(description="Strong `ETag` from `GET /reports/{report_id}`. Required when the PATCH body contains `view_config`; omit for legacy non-configuration updates. ")] = None,
         _request_timeout: Union[
             None,
@@ -1556,6 +1617,8 @@ class ReportsApi:
         :type report_id: str
         :param coval_reports_api_update_report_request: (required)
         :type coval_reports_api_update_report_request: CovalReportsAPIUpdateReportRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param if_match: Strong `ETag` from `GET /reports/{report_id}`. Required when the PATCH body contains `view_config`; omit for legacy non-configuration updates. 
         :type if_match: str
         :param _request_timeout: timeout setting for this request. If one
@@ -1583,6 +1646,7 @@ class ReportsApi:
         _param = self._update_report_serialize(
             report_id=report_id,
             coval_reports_api_update_report_request=coval_reports_api_update_report_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             if_match=if_match,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1616,6 +1680,7 @@ class ReportsApi:
         self,
         report_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="Saved report ULID.")],
         coval_reports_api_update_report_request: CovalReportsAPIUpdateReportRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         if_match: Annotated[Optional[StrictStr], Field(description="Strong `ETag` from `GET /reports/{report_id}`. Required when the PATCH body contains `view_config`; omit for legacy non-configuration updates. ")] = None,
         _request_timeout: Union[
             None,
@@ -1638,6 +1703,8 @@ class ReportsApi:
         :type report_id: str
         :param coval_reports_api_update_report_request: (required)
         :type coval_reports_api_update_report_request: CovalReportsAPIUpdateReportRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param if_match: Strong `ETag` from `GET /reports/{report_id}`. Required when the PATCH body contains `view_config`; omit for legacy non-configuration updates. 
         :type if_match: str
         :param _request_timeout: timeout setting for this request. If one
@@ -1665,6 +1732,7 @@ class ReportsApi:
         _param = self._update_report_serialize(
             report_id=report_id,
             coval_reports_api_update_report_request=coval_reports_api_update_report_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             if_match=if_match,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1698,6 +1766,7 @@ class ReportsApi:
         self,
         report_id: Annotated[str, Field(min_length=26, strict=True, max_length=26, description="Saved report ULID.")],
         coval_reports_api_update_report_request: CovalReportsAPIUpdateReportRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         if_match: Annotated[Optional[StrictStr], Field(description="Strong `ETag` from `GET /reports/{report_id}`. Required when the PATCH body contains `view_config`; omit for legacy non-configuration updates. ")] = None,
         _request_timeout: Union[
             None,
@@ -1720,6 +1789,8 @@ class ReportsApi:
         :type report_id: str
         :param coval_reports_api_update_report_request: (required)
         :type coval_reports_api_update_report_request: CovalReportsAPIUpdateReportRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param if_match: Strong `ETag` from `GET /reports/{report_id}`. Required when the PATCH body contains `view_config`; omit for legacy non-configuration updates. 
         :type if_match: str
         :param _request_timeout: timeout setting for this request. If one
@@ -1747,6 +1818,7 @@ class ReportsApi:
         _param = self._update_report_serialize(
             report_id=report_id,
             coval_reports_api_update_report_request=coval_reports_api_update_report_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             if_match=if_match,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1775,6 +1847,7 @@ class ReportsApi:
         self,
         report_id,
         coval_reports_api_update_report_request,
+        x_coval_workspace_id,
         if_match,
         _request_auth,
         _content_type,
@@ -1801,6 +1874,8 @@ class ReportsApi:
             _path_params['report_id'] = report_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         if if_match is not None:
             _header_params['If-Match'] = if_match
         # process the form parameters

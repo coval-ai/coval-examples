@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime.js';
+import type { CovalMetricsAPIJudgeMode } from './CovalMetricsAPIJudgeMode.js';
+import {
+    CovalMetricsAPIJudgeModeFromJSON,
+    CovalMetricsAPIJudgeModeFromJSONTyped,
+    CovalMetricsAPIJudgeModeToJSON,
+    CovalMetricsAPIJudgeModeToJSONTyped,
+} from './CovalMetricsAPIJudgeMode.js';
 import type { CovalMetricsAPIMetricType } from './CovalMetricsAPIMetricType.js';
 import {
     CovalMetricsAPIMetricTypeFromJSON,
@@ -64,6 +71,12 @@ export interface CovalMetricsAPIMetricVersionResource {
      * @memberof CovalMetricsAPIMetricVersionResource
      */
     metric_type: CovalMetricsAPIMetricType;
+    /**
+     * 
+     * @type {CovalMetricsAPIJudgeMode}
+     * @memberof CovalMetricsAPIMetricVersionResource
+     */
+    judge_mode?: CovalMetricsAPIJudgeMode;
     /**
      * Verbatim scoring-config snapshot for this version
      * @type {{ [key: string]: any; }}
@@ -120,6 +133,7 @@ export function CovalMetricsAPIMetricVersionResourceFromJSONTyped(json: any, ign
         'version_number': json['version_number'],
         'change_type': CovalMetricsAPIMetricVersionChangeTypeFromJSON(json['change_type']),
         'metric_type': CovalMetricsAPIMetricTypeFromJSON(json['metric_type']),
+        'judge_mode': json['judge_mode'] == null ? undefined : CovalMetricsAPIJudgeModeFromJSON(json['judge_mode']),
         'metric_metadata': json['metric_metadata'] == null ? undefined : json['metric_metadata'],
         'label': json['label'] == null ? undefined : json['label'],
         'created_by': json['created_by'],
@@ -143,6 +157,7 @@ export function CovalMetricsAPIMetricVersionResourceToJSONTyped(value?: CovalMet
         'version_number': value['version_number'],
         'change_type': CovalMetricsAPIMetricVersionChangeTypeToJSON(value['change_type']),
         'metric_type': CovalMetricsAPIMetricTypeToJSON(value['metric_type']),
+        'judge_mode': CovalMetricsAPIJudgeModeToJSON(value['judge_mode']),
         'metric_metadata': value['metric_metadata'],
         'label': value['label'],
         'created_by': value['created_by'],

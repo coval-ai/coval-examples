@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime.js';
+import type { TestSetsAPIResourceAttribution } from './TestSetsAPIResourceAttribution.js';
+import {
+    TestSetsAPIResourceAttributionFromJSON,
+    TestSetsAPIResourceAttributionFromJSONTyped,
+    TestSetsAPIResourceAttributionToJSON,
+    TestSetsAPIResourceAttributionToJSONTyped,
+} from './TestSetsAPIResourceAttribution.js';
+
 /**
  * Test set resource representation.
  * 
@@ -21,29 +29,35 @@ import { mapValues } from '../runtime.js';
  */
 export interface TestSetsAPITestSetResource {
     /**
+     * Authoring timestamps and user IDs. Unknown or deleted users are null.
+     * @type {TestSetsAPIResourceAttribution}
+     * @memberof TestSetsAPITestSetResource
+     */
+    readonly attribution?: TestSetsAPIResourceAttribution | null;
+    /**
      * Resource name in format `test-sets/{id}`
      * @type {string}
      * @memberof TestSetsAPITestSetResource
      */
-    name?: string;
+    name: string;
     /**
      * Test set ID (8-character ID)
      * @type {string}
      * @memberof TestSetsAPITestSetResource
      */
-    id?: string;
+    id: string;
     /**
-     * URL-friendly identifier (unique per organization)
+     * URL-friendly identifier containing only lowercase letters, numbers, dashes, and underscores (unique per organization)
      * @type {string}
      * @memberof TestSetsAPITestSetResource
      */
-    slug?: string;
+    slug: string;
     /**
      * Human-readable test set name
      * @type {string}
      * @memberof TestSetsAPITestSetResource
      */
-    display_name?: string;
+    display_name: string;
     /**
      * Test set description
      * @type {string}
@@ -73,7 +87,7 @@ export interface TestSetsAPITestSetResource {
      * @type {number}
      * @memberof TestSetsAPITestSetResource
      */
-    test_case_count?: number;
+    test_case_count?: number | null;
     /**
      * Tags associated with this test set
      * @type {Array<string>}
@@ -85,7 +99,7 @@ export interface TestSetsAPITestSetResource {
      * @type {Date}
      * @memberof TestSetsAPITestSetResource
      */
-    create_time?: Date;
+    create_time: Date;
     /**
      * Timestamp when test set was last updated
      * @type {Date}
@@ -98,6 +112,11 @@ export interface TestSetsAPITestSetResource {
  * Check if a given object implements the TestSetsAPITestSetResource interface.
  */
 export function instanceOfTestSetsAPITestSetResource(value: object): value is TestSetsAPITestSetResource {
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('id' in value) || value['id'] === undefined) return false;
+    if (!('slug' in value) || value['slug'] === undefined) return false;
+    if (!('display_name' in value) || value['display_name'] === undefined) return false;
+    if (!('create_time' in value) || value['create_time'] === undefined) return false;
     return true;
 }
 
@@ -111,17 +130,18 @@ export function TestSetsAPITestSetResourceFromJSONTyped(json: any, ignoreDiscrim
     }
     return {
         
-        'name': json['name'] == null ? undefined : json['name'],
-        'id': json['id'] == null ? undefined : json['id'],
-        'slug': json['slug'] == null ? undefined : json['slug'],
-        'display_name': json['display_name'] == null ? undefined : json['display_name'],
+        'attribution': json['attribution'] == null ? undefined : TestSetsAPIResourceAttributionFromJSON(json['attribution']),
+        'name': json['name'],
+        'id': json['id'],
+        'slug': json['slug'],
+        'display_name': json['display_name'],
         'description': json['description'] == null ? undefined : json['description'],
         'test_set_type': json['test_set_type'] == null ? undefined : json['test_set_type'],
         'test_set_metadata': json['test_set_metadata'] == null ? undefined : json['test_set_metadata'],
         'parameters': json['parameters'] == null ? undefined : json['parameters'],
         'test_case_count': json['test_case_count'] == null ? undefined : json['test_case_count'],
         'tags': json['tags'] == null ? undefined : json['tags'],
-        'create_time': json['create_time'] == null ? undefined : (new Date(json['create_time'])),
+        'create_time': (new Date(json['create_time'])),
         'update_time': json['update_time'] == null ? undefined : (new Date(json['update_time'])),
     };
 }
@@ -130,7 +150,7 @@ export function TestSetsAPITestSetResourceToJSON(json: any): TestSetsAPITestSetR
     return TestSetsAPITestSetResourceToJSONTyped(json, false);
 }
 
-export function TestSetsAPITestSetResourceToJSONTyped(value?: TestSetsAPITestSetResource | null, ignoreDiscriminator: boolean = false): any {
+export function TestSetsAPITestSetResourceToJSONTyped(value?: Omit<TestSetsAPITestSetResource, 'attribution'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -147,7 +167,7 @@ export function TestSetsAPITestSetResourceToJSONTyped(value?: TestSetsAPITestSet
         'parameters': value['parameters'],
         'test_case_count': value['test_case_count'],
         'tags': value['tags'],
-        'create_time': value['create_time'] == null ? value['create_time'] : value['create_time'].toISOString(),
+        'create_time': value['create_time'].toISOString(),
         'update_time': value['update_time'] == null ? value['update_time'] : value['update_time'].toISOString(),
     };
 }

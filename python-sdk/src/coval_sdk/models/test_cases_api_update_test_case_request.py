@@ -21,6 +21,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
+from coval_sdk.models.test_cases_api_test_case_resource_script_turns_inner import TestCasesAPITestCaseResourceScriptTurnsInner
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -35,12 +36,13 @@ class TestCasesAPIUpdateTestCaseRequest(BaseModel):
     expected_output_str: Optional[StrictStr] = Field(default=None, description="DEPRECATED: Use expected_behaviors instead. If provided and expected_behaviors is not, this value will be wrapped in a list and used as expected_behaviors. ")
     expected_output_json: Optional[Dict[str, Any]] = Field(default=None, description="Expected output as JSON object")
     description: Optional[StrictStr] = Field(default=None, description="Human-readable description")
-    input_type: Optional[StrictStr] = Field(default=None, description="Type of input for the test case. When set to SCRIPT, the simulation_metadata_input should contain a script_turns field with ordered persona turn texts. ")
-    simulation_metadata_input: Optional[Dict[str, Any]] = Field(default=None, description="Metadata for simulation. Contents vary by input_type. When input_type is SCRIPT, include a script_turns field (array of strings) with the ordered lines for the persona to deliver. ")
+    input_type: Optional[StrictStr] = Field(default=None, description="Type of input for the test case. SCRIPT requires non-empty script_turns. Changing input_type from SCRIPT to another value clears script_turns. IVR_CRAWL is crawler-managed and cannot be selected through this API. ")
+    script_turns: Optional[List[TestCasesAPITestCaseResourceScriptTurnsInner]] = Field(default=None, description="Ordered persona turns. For new integrations, provide a non-empty top-level array when input_type is SCRIPT and omit it otherwise. Changing input_type away from SCRIPT clears this field. Each entry is either a bare string (spoken text), {\"type\": \"text\", \"text\": ...} (spoken text, explicit form), {\"type\": \"dtmf\", \"digits\": ...} (keypad presses; digits 0-9, *, #, and phone punctuation), or {\"type\": \"skip\"} (the persona stays silent for one turn).")
+    simulation_metadata_input: Optional[Dict[str, Any]] = Field(default=None, description="Legacy simulation metadata. For SCRIPT cases, use the top-level script_turns field. A nested script_turns input remains accepted for backward compatibility but is deprecated. ")
     metric_input: Optional[Dict[str, Any]] = Field(default=None, description="Input for metrics")
     user_notes: Optional[StrictStr] = Field(default=None, description="User notes")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["input_str", "test_set_id", "expected_behaviors", "expected_output_str", "expected_output_json", "description", "input_type", "simulation_metadata_input", "metric_input", "user_notes"]
+    __properties: ClassVar[List[str]] = ["input_str", "test_set_id", "expected_behaviors", "expected_output_str", "expected_output_json", "description", "input_type", "script_turns", "simulation_metadata_input", "metric_input", "user_notes"]
 
     @field_validator('input_type')
     def input_type_validate_enum(cls, value):
@@ -93,6 +95,13 @@ class TestCasesAPIUpdateTestCaseRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in script_turns (list)
+        _items = []
+        if self.script_turns:
+            for _item_script_turns in self.script_turns:
+                if _item_script_turns:
+                    _items.append(_item_script_turns.to_dict())
+            _dict['script_turns'] = _items
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -118,6 +127,11 @@ class TestCasesAPIUpdateTestCaseRequest(BaseModel):
         if self.input_type is None and "input_type" in self.model_fields_set:
             _dict['input_type'] = None
 
+        # set to None if script_turns (nullable) is None
+        # and model_fields_set contains the field
+        if self.script_turns is None and "script_turns" in self.model_fields_set:
+            _dict['script_turns'] = None
+
         # set to None if user_notes (nullable) is None
         # and model_fields_set contains the field
         if self.user_notes is None and "user_notes" in self.model_fields_set:
@@ -142,6 +156,7 @@ class TestCasesAPIUpdateTestCaseRequest(BaseModel):
             "expected_output_json": obj.get("expected_output_json"),
             "description": obj.get("description"),
             "input_type": obj.get("input_type"),
+            "script_turns": [TestCasesAPITestCaseResourceScriptTurnsInner.from_dict(_item) for _item in obj["script_turns"]] if obj.get("script_turns") is not None else None,
             "simulation_metadata_input": obj.get("simulation_metadata_input"),
             "metric_input": obj.get("metric_input"),
             "user_notes": obj.get("user_notes")

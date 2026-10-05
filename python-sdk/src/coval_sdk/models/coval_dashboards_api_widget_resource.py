@@ -22,6 +22,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
+from coval_sdk.models.coval_dashboards_api_resource_attribution import CovalDashboardsAPIResourceAttribution
 from coval_sdk.models.coval_dashboards_api_widget_config import CovalDashboardsAPIWidgetConfig
 from coval_sdk.models.coval_dashboards_api_widget_type import CovalDashboardsAPIWidgetType
 from typing import Optional, Set
@@ -32,6 +33,7 @@ class CovalDashboardsAPIWidgetResource(BaseModel):
     """
     Widget resource
     """ # noqa: E501
+    attribution: Optional[CovalDashboardsAPIResourceAttribution] = Field(default=None, description="Authoring timestamps and user IDs. Unknown or deleted users are null.")
     name: StrictStr = Field(description="Resource name in format `dashboards/{dashboard_id}/widgets/{id}`")
     display_name: Optional[Annotated[str, Field(strict=True, max_length=255)]] = Field(default=None, description="Human-readable widget name")
     type: CovalDashboardsAPIWidgetType = Field(description="Widget type.")
@@ -43,7 +45,7 @@ class CovalDashboardsAPIWidgetResource(BaseModel):
     create_time: datetime = Field(description="Creation timestamp (ISO 8601)")
     update_time: datetime = Field(description="Last update timestamp (ISO 8601)")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "display_name", "type", "grid_x", "grid_y", "grid_w", "grid_h", "config", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["attribution", "name", "display_name", "type", "grid_x", "grid_y", "grid_w", "grid_h", "config", "create_time", "update_time"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -75,9 +77,11 @@ class CovalDashboardsAPIWidgetResource(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
         * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
+            "attribution",
             "additional_properties",
         ])
 
@@ -86,6 +90,9 @@ class CovalDashboardsAPIWidgetResource(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of attribution
+        if self.attribution:
+            _dict['attribution'] = self.attribution.to_dict()
         # override the default output from pydantic by calling `to_dict()` of config
         if self.config:
             _dict['config'] = self.config.to_dict()
@@ -93,6 +100,11 @@ class CovalDashboardsAPIWidgetResource(BaseModel):
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
+
+        # set to None if attribution (nullable) is None
+        # and model_fields_set contains the field
+        if self.attribution is None and "attribution" in self.model_fields_set:
+            _dict['attribution'] = None
 
         # set to None if display_name (nullable) is None
         # and model_fields_set contains the field
@@ -131,6 +143,7 @@ class CovalDashboardsAPIWidgetResource(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "attribution": CovalDashboardsAPIResourceAttribution.from_dict(obj["attribution"]) if obj.get("attribution") is not None else None,
             "name": obj.get("name"),
             "display_name": obj.get("display_name"),
             "type": obj.get("type"),

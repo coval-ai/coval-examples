@@ -32,9 +32,10 @@ class CovalRunsAPILaunchMetadata(BaseModel):
     customer: Optional[Dict[str, Any]] = Field(default=None, description="Custom customer metadata for tracking and organization")
     created_by: Optional[StrictStr] = Field(default=None, description="Identifier for who/what created this simulation")
     display_name: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="Human-readable name for the run. If not provided, a timestamp-based name is auto-generated (e.g., \"Simulation Run 2025-10-14 12:00\"). ")
+    template_name: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="Name of the frontend template used to configure the run, when applicable.")
     tags: Optional[Annotated[List[Annotated[str, Field(strict=True, max_length=200)]], Field(max_length=20)]] = Field(default=None, description="Tags for categorizing and filtering runs. Each tag max 200 characters, max 20 tags. Duplicate tags are automatically removed. Leading/trailing whitespace is stripped. ")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["customer", "created_by", "display_name", "tags"]
+    __properties: ClassVar[List[str]] = ["customer", "created_by", "display_name", "template_name", "tags"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -82,6 +83,21 @@ class CovalRunsAPILaunchMetadata(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if created_by (nullable) is None
+        # and model_fields_set contains the field
+        if self.created_by is None and "created_by" in self.model_fields_set:
+            _dict['created_by'] = None
+
+        # set to None if display_name (nullable) is None
+        # and model_fields_set contains the field
+        if self.display_name is None and "display_name" in self.model_fields_set:
+            _dict['display_name'] = None
+
+        # set to None if template_name (nullable) is None
+        # and model_fields_set contains the field
+        if self.template_name is None and "template_name" in self.model_fields_set:
+            _dict['template_name'] = None
+
         # set to None if tags (nullable) is None
         # and model_fields_set contains the field
         if self.tags is None and "tags" in self.model_fields_set:
@@ -102,6 +118,7 @@ class CovalRunsAPILaunchMetadata(BaseModel):
             "customer": obj.get("customer"),
             "created_by": obj.get("created_by"),
             "display_name": obj.get("display_name"),
+            "template_name": obj.get("template_name"),
             "tags": obj.get("tags")
         })
         # store additional fields in additional_properties

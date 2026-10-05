@@ -21,7 +21,7 @@ from typing_extensions import Self
 
 class CovalAlertsAPIConditionAggregation(str, Enum):
     """
-    Aggregation mode for a condition. - SINGLE: Per-simulation value (average across sim outputs) - RUN_AVERAGE: Average from pre-computed run aggregate - RUN_FRACTION: Fraction matching a string value in the run 
+    Aggregation mode for a condition. - SINGLE: Per-simulation value (average across sim outputs) - RUN_AVERAGE: Average from pre-computed run aggregate - RUN_FRACTION: Fraction matching a string value in the run - JOB_SUCCESS: Whether the run completed successfully - BASELINE_DEVIATION: Fraction of values that deviate from a metric baseline 
     """
 
     """
@@ -30,6 +30,8 @@ class CovalAlertsAPIConditionAggregation(str, Enum):
     SINGLE = 'SINGLE'
     RUN_AVERAGE = 'RUN_AVERAGE'
     RUN_FRACTION = 'RUN_FRACTION'
+    JOB_SUCCESS = 'JOB_SUCCESS'
+    BASELINE_DEVIATION = 'BASELINE_DEVIATION'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

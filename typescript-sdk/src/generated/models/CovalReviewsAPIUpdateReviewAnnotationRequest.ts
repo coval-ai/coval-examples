@@ -63,6 +63,24 @@ export interface CovalReviewsAPIUpdateReviewAnnotationRequest {
      * @memberof CovalReviewsAPIUpdateReviewAnnotationRequest
      */
     assignee?: string | null;
+    /**
+     * 
+     * @type {any}
+     * @memberof CovalReviewsAPIUpdateReviewAnnotationRequest
+     */
+    annotations?: any | null;
+    /**
+     * 
+     * @type {any}
+     * @memberof CovalReviewsAPIUpdateReviewAnnotationRequest
+     */
+    ground_truth_json?: any | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CovalReviewsAPIUpdateReviewAnnotationRequest
+     */
+    ground_truth_set_value?: Array<string> | null;
 }
 
 
@@ -90,6 +108,9 @@ export function CovalReviewsAPIUpdateReviewAnnotationRequestFromJSONTyped(json: 
         'reviewer_notes': json['reviewer_notes'] == null ? undefined : json['reviewer_notes'],
         'priority': json['priority'] == null ? undefined : CovalReviewsAPIAnnotationPriorityFromJSON(json['priority']),
         'assignee': json['assignee'] == null ? undefined : json['assignee'],
+        'annotations': json['annotations'] == null ? undefined : json['annotations'],
+        'ground_truth_json': json['ground_truth_json'] == null ? undefined : json['ground_truth_json'],
+        'ground_truth_set_value': json['ground_truth_set_value'] == null ? undefined : json['ground_truth_set_value'],
     };
 }
 
@@ -110,6 +131,9 @@ export function CovalReviewsAPIUpdateReviewAnnotationRequestToJSONTyped(value?: 
         'reviewer_notes': value['reviewer_notes'],
         'priority': CovalReviewsAPIAnnotationPriorityToJSON(value['priority']),
         'assignee': value['assignee'],
+        'annotations': value['annotations'],
+        'ground_truth_json': value['ground_truth_json'],
+        'ground_truth_set_value': value['ground_truth_set_value'],
     };
 }
 

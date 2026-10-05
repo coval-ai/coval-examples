@@ -46,8 +46,13 @@ class CovalReviewsAPIReviewAnnotationResource(BaseModel):
     priority: CovalReviewsAPIAnnotationPriority
     create_time: datetime = Field(description="Creation timestamp (ISO 8601)")
     update_time: datetime = Field(description="Last update timestamp (ISO 8601)")
+    annotations: Optional[Any] = None
+    canonical_annotation_id: Optional[StrictStr] = None
+    ground_truth_json: Optional[Any] = None
+    ground_truth_set_value: Optional[List[StrictStr]] = None
+    project_annotation_id: Optional[StrictStr] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "id", "simulation_output_id", "metric_id", "assignee", "ground_truth_float_value", "ground_truth_string_value", "ground_truth_subvalues_by_timestamp", "reviewer_notes", "status", "completion_status", "priority", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["name", "id", "simulation_output_id", "metric_id", "assignee", "ground_truth_float_value", "ground_truth_string_value", "ground_truth_subvalues_by_timestamp", "reviewer_notes", "status", "completion_status", "priority", "create_time", "update_time", "annotations", "canonical_annotation_id", "ground_truth_json", "ground_truth_set_value", "project_annotation_id"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -115,6 +120,31 @@ class CovalReviewsAPIReviewAnnotationResource(BaseModel):
         if self.reviewer_notes is None and "reviewer_notes" in self.model_fields_set:
             _dict['reviewer_notes'] = None
 
+        # set to None if annotations (nullable) is None
+        # and model_fields_set contains the field
+        if self.annotations is None and "annotations" in self.model_fields_set:
+            _dict['annotations'] = None
+
+        # set to None if canonical_annotation_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.canonical_annotation_id is None and "canonical_annotation_id" in self.model_fields_set:
+            _dict['canonical_annotation_id'] = None
+
+        # set to None if ground_truth_json (nullable) is None
+        # and model_fields_set contains the field
+        if self.ground_truth_json is None and "ground_truth_json" in self.model_fields_set:
+            _dict['ground_truth_json'] = None
+
+        # set to None if ground_truth_set_value (nullable) is None
+        # and model_fields_set contains the field
+        if self.ground_truth_set_value is None and "ground_truth_set_value" in self.model_fields_set:
+            _dict['ground_truth_set_value'] = None
+
+        # set to None if project_annotation_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.project_annotation_id is None and "project_annotation_id" in self.model_fields_set:
+            _dict['project_annotation_id'] = None
+
         return _dict
 
     @classmethod
@@ -140,7 +170,12 @@ class CovalReviewsAPIReviewAnnotationResource(BaseModel):
             "completion_status": obj.get("completion_status"),
             "priority": obj.get("priority") if obj.get("priority") is not None else CovalReviewsAPIAnnotationPriority.PRIORITY_STANDARD,
             "create_time": obj.get("create_time"),
-            "update_time": obj.get("update_time")
+            "update_time": obj.get("update_time"),
+            "annotations": obj.get("annotations"),
+            "canonical_annotation_id": obj.get("canonical_annotation_id"),
+            "ground_truth_json": obj.get("ground_truth_json"),
+            "ground_truth_set_value": obj.get("ground_truth_set_value"),
+            "project_annotation_id": obj.get("project_annotation_id")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

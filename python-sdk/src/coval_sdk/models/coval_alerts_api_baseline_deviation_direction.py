@@ -19,21 +19,21 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class CovalAlertsAPIAlertScope(str, Enum):
+class CovalAlertsAPIBaselineDeviationDirection(str, Enum):
     """
-    Which runs the alert applies to
+    Which direction of deviation counts as anomalous
     """
 
     """
     allowed enum values
     """
-    ALL = 'ALL'
-    MONITORING = 'MONITORING'
-    SIMULATION = 'SIMULATION'
+    ABOVE = 'above'
+    BELOW = 'below'
+    BOTH = 'both'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of CovalAlertsAPIAlertScope from a JSON string"""
+        """Create an instance of CovalAlertsAPIBaselineDeviationDirection from a JSON string"""
         return cls(json.loads(json_str))
 
 

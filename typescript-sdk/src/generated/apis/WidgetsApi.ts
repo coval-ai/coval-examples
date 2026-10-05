@@ -52,20 +52,24 @@ import {
 export interface CreateWidgetRequest {
     dashboardId: string;
     covalDashboardsAPICreateWidgetRequest: CovalDashboardsAPICreateWidgetRequest;
+    xCovalWorkspaceId?: string;
 }
 
 export interface DeleteWidgetRequest {
     dashboardId: string;
     widgetId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface GetWidgetRequest {
     dashboardId: string;
     widgetId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface ListWidgetsRequest {
     dashboardId: string;
+    xCovalWorkspaceId?: string;
     pageSize?: number;
     pageToken?: string;
 }
@@ -74,6 +78,7 @@ export interface UpdateWidgetRequest {
     dashboardId: string;
     widgetId: string;
     covalDashboardsAPIUpdateWidgetRequest: CovalDashboardsAPIUpdateWidgetRequest;
+    xCovalWorkspaceId?: string;
 }
 
 /**
@@ -87,6 +92,7 @@ export interface WidgetsApiInterface {
      * Creates request options for createWidget without sending the request
      * @param {string} dashboardId Dashboard resource ID (22-character ShortUUID)
      * @param {CovalDashboardsAPICreateWidgetRequest} covalDashboardsAPICreateWidgetRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof WidgetsApiInterface
      */
@@ -97,6 +103,7 @@ export interface WidgetsApiInterface {
      * @summary Create widget
      * @param {string} dashboardId Dashboard resource ID (22-character ShortUUID)
      * @param {CovalDashboardsAPICreateWidgetRequest} covalDashboardsAPICreateWidgetRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof WidgetsApiInterface
@@ -113,6 +120,7 @@ export interface WidgetsApiInterface {
      * Creates request options for deleteWidget without sending the request
      * @param {string} dashboardId Dashboard resource ID (22-character ShortUUID)
      * @param {string} widgetId Widget resource ID (22-character ShortUUID)
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof WidgetsApiInterface
      */
@@ -123,6 +131,7 @@ export interface WidgetsApiInterface {
      * @summary Delete widget
      * @param {string} dashboardId Dashboard resource ID (22-character ShortUUID)
      * @param {string} widgetId Widget resource ID (22-character ShortUUID)
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof WidgetsApiInterface
@@ -139,6 +148,7 @@ export interface WidgetsApiInterface {
      * Creates request options for getWidget without sending the request
      * @param {string} dashboardId Dashboard resource ID (22-character ShortUUID)
      * @param {string} widgetId Widget resource ID (22-character ShortUUID)
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof WidgetsApiInterface
      */
@@ -149,6 +159,7 @@ export interface WidgetsApiInterface {
      * @summary Get widget
      * @param {string} dashboardId Dashboard resource ID (22-character ShortUUID)
      * @param {string} widgetId Widget resource ID (22-character ShortUUID)
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof WidgetsApiInterface
@@ -164,6 +175,7 @@ export interface WidgetsApiInterface {
     /**
      * Creates request options for listWidgets without sending the request
      * @param {string} dashboardId Dashboard resource ID (22-character ShortUUID)
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response
      * @throws {RequiredError}
@@ -175,6 +187,7 @@ export interface WidgetsApiInterface {
      * List widgets for a dashboard.
      * @summary List widgets
      * @param {string} dashboardId Dashboard resource ID (22-character ShortUUID)
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response
      * @param {*} [options] Override http request option.
@@ -194,6 +207,7 @@ export interface WidgetsApiInterface {
      * @param {string} dashboardId Dashboard resource ID (22-character ShortUUID)
      * @param {string} widgetId Widget resource ID (22-character ShortUUID)
      * @param {CovalDashboardsAPIUpdateWidgetRequest} covalDashboardsAPIUpdateWidgetRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof WidgetsApiInterface
      */
@@ -205,6 +219,7 @@ export interface WidgetsApiInterface {
      * @param {string} dashboardId Dashboard resource ID (22-character ShortUUID)
      * @param {string} widgetId Widget resource ID (22-character ShortUUID)
      * @param {CovalDashboardsAPIUpdateWidgetRequest} covalDashboardsAPIUpdateWidgetRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof WidgetsApiInterface
@@ -247,6 +262,10 @@ export class WidgetsApi extends runtime.BaseAPI implements WidgetsApiInterface {
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Dashboards_API_ApiKeyAuth authentication
@@ -307,6 +326,10 @@ export class WidgetsApi extends runtime.BaseAPI implements WidgetsApiInterface {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Dashboards_API_ApiKeyAuth authentication
         }
@@ -365,6 +388,10 @@ export class WidgetsApi extends runtime.BaseAPI implements WidgetsApiInterface {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Dashboards_API_ApiKeyAuth authentication
@@ -425,6 +452,10 @@ export class WidgetsApi extends runtime.BaseAPI implements WidgetsApiInterface {
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Dashboards_API_ApiKeyAuth authentication
@@ -492,6 +523,10 @@ export class WidgetsApi extends runtime.BaseAPI implements WidgetsApiInterface {
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Dashboards_API_ApiKeyAuth authentication

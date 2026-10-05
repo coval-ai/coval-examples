@@ -115,10 +115,9 @@ AuthSettings = TypedDict(
         "Coval_Agents_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_Alerts_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_API_Keys_API_ApiKeyAuth": APIKeyAuthSetting,
-        "Coval_Conversations_API_ApiKeyAuth": APIKeyAuthSetting,
+        "Coval_Uploaded_Conversations_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_Dashboards_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_Metrics_API_ApiKeyAuth": APIKeyAuthSetting,
-        "Coval_Monitors_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_Agent_Mutations_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_Organization_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_Personas_API_ApiKeyAuth": APIKeyAuthSetting,
@@ -127,14 +126,19 @@ AuthSettings = TypedDict(
         "Coval_Run_Templates_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_Runs_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_Scheduled_Runs_API_ApiKeyAuth": APIKeyAuthSetting,
-        "Coval_Simulations_API_ApiKeyAuth": APIKeyAuthSetting,
+        "Coval_Simulated_Conversations_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_Slack_Integration_API_ApiKeyAuth": APIKeyAuthSetting,
+        "Coval_Sofia_API_ApiKeyAuth": APIKeyAuthSetting,
+        "Coval_Sofia_API_ClerkSessionAuth": BearerFormatAuthSetting,
         "Coval_Tags_API_ApiKeyAuth": APIKeyAuthSetting,
         "Test_Cases_API_apiKey": APIKeyAuthSetting,
         "Test_Sets_API_apiKey": APIKeyAuthSetting,
         "Traces_API_apiKey": APIKeyAuthSetting,
         "Coval_Webhooks_API_ApiKeyAuth": APIKeyAuthSetting,
         "Coval_Workspaces_API_ApiKeyAuth": APIKeyAuthSetting,
+        "Coval_Conversations_API_ApiKeyAuth": APIKeyAuthSetting,
+        "Coval_Monitors_API_ApiKeyAuth": APIKeyAuthSetting,
+        "Coval_Simulations_API_ApiKeyAuth": APIKeyAuthSetting,
     },
     total=False,
 )
@@ -584,13 +588,13 @@ conf = coval_sdk.Configuration(
                     'Coval_API_Keys_API_ApiKeyAuth',
                 ),
             }
-        if 'Coval_Conversations_API_ApiKeyAuth' in self.api_key:
-            auth['Coval_Conversations_API_ApiKeyAuth'] = {
+        if 'Coval_Uploaded_Conversations_API_ApiKeyAuth' in self.api_key:
+            auth['Coval_Uploaded_Conversations_API_ApiKeyAuth'] = {
                 'type': 'api_key',
                 'in': 'header',
                 'key': 'X-API-Key',
                 'value': self.get_api_key_with_prefix(
-                    'Coval_Conversations_API_ApiKeyAuth',
+                    'Coval_Uploaded_Conversations_API_ApiKeyAuth',
                 ),
             }
         if 'Coval_Dashboards_API_ApiKeyAuth' in self.api_key:
@@ -609,15 +613,6 @@ conf = coval_sdk.Configuration(
                 'key': 'X-API-Key',
                 'value': self.get_api_key_with_prefix(
                     'Coval_Metrics_API_ApiKeyAuth',
-                ),
-            }
-        if 'Coval_Monitors_API_ApiKeyAuth' in self.api_key:
-            auth['Coval_Monitors_API_ApiKeyAuth'] = {
-                'type': 'api_key',
-                'in': 'header',
-                'key': 'X-API-Key',
-                'value': self.get_api_key_with_prefix(
-                    'Coval_Monitors_API_ApiKeyAuth',
                 ),
             }
         if 'Coval_Agent_Mutations_API_ApiKeyAuth' in self.api_key:
@@ -692,13 +687,13 @@ conf = coval_sdk.Configuration(
                     'Coval_Scheduled_Runs_API_ApiKeyAuth',
                 ),
             }
-        if 'Coval_Simulations_API_ApiKeyAuth' in self.api_key:
-            auth['Coval_Simulations_API_ApiKeyAuth'] = {
+        if 'Coval_Simulated_Conversations_API_ApiKeyAuth' in self.api_key:
+            auth['Coval_Simulated_Conversations_API_ApiKeyAuth'] = {
                 'type': 'api_key',
                 'in': 'header',
                 'key': 'X-API-Key',
                 'value': self.get_api_key_with_prefix(
-                    'Coval_Simulations_API_ApiKeyAuth',
+                    'Coval_Simulated_Conversations_API_ApiKeyAuth',
                 ),
             }
         if 'Coval_Slack_Integration_API_ApiKeyAuth' in self.api_key:
@@ -709,6 +704,23 @@ conf = coval_sdk.Configuration(
                 'value': self.get_api_key_with_prefix(
                     'Coval_Slack_Integration_API_ApiKeyAuth',
                 ),
+            }
+        if 'Coval_Sofia_API_ApiKeyAuth' in self.api_key:
+            auth['Coval_Sofia_API_ApiKeyAuth'] = {
+                'type': 'api_key',
+                'in': 'header',
+                'key': 'X-API-Key',
+                'value': self.get_api_key_with_prefix(
+                    'Coval_Sofia_API_ApiKeyAuth',
+                ),
+            }
+        if self.access_token is not None:
+            auth['Coval_Sofia_API_ClerkSessionAuth'] = {
+                'type': 'bearer',
+                'in': 'header',
+                'format': 'JWT',
+                'key': 'Authorization',
+                'value': 'Bearer ' + self.access_token
             }
         if 'Coval_Tags_API_ApiKeyAuth' in self.api_key:
             auth['Coval_Tags_API_ApiKeyAuth'] = {
@@ -764,6 +776,33 @@ conf = coval_sdk.Configuration(
                     'Coval_Workspaces_API_ApiKeyAuth',
                 ),
             }
+        if 'Coval_Conversations_API_ApiKeyAuth' in self.api_key:
+            auth['Coval_Conversations_API_ApiKeyAuth'] = {
+                'type': 'api_key',
+                'in': 'header',
+                'key': 'X-API-Key',
+                'value': self.get_api_key_with_prefix(
+                    'Coval_Conversations_API_ApiKeyAuth',
+                ),
+            }
+        if 'Coval_Monitors_API_ApiKeyAuth' in self.api_key:
+            auth['Coval_Monitors_API_ApiKeyAuth'] = {
+                'type': 'api_key',
+                'in': 'header',
+                'key': 'X-API-Key',
+                'value': self.get_api_key_with_prefix(
+                    'Coval_Monitors_API_ApiKeyAuth',
+                ),
+            }
+        if 'Coval_Simulations_API_ApiKeyAuth' in self.api_key:
+            auth['Coval_Simulations_API_ApiKeyAuth'] = {
+                'type': 'api_key',
+                'in': 'header',
+                'key': 'X-API-Key',
+                'value': self.get_api_key_with_prefix(
+                    'Coval_Simulations_API_ApiKeyAuth',
+                ),
+            }
         return auth
 
     def to_debug_report(self) -> str:
@@ -775,7 +814,7 @@ conf = coval_sdk.Configuration(
                "OS: {env}\n"\
                "Python Version: {pyversion}\n"\
                "Version of the API: 1.0.0\n"\
-               "SDK Package Version: 0.7.0".\
+               "SDK Package Version: 0.8.0".\
                format(env=sys.platform, pyversion=sys.version)
 
     def get_host_settings(self) -> List[HostSetting]:

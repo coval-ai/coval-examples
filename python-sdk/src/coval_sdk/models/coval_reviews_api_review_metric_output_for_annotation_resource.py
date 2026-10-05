@@ -36,12 +36,13 @@ class CovalReviewsAPIReviewMetricOutputForAnnotationResource(BaseModel):
     error_status: Optional[StrictStr] = None
     created_at: datetime
     explanation: Optional[StrictStr] = None
+    result: Optional[Any] = None
     result_json: Optional[Any] = None
     subvalues_by_timestamp: Optional[Any] = None
     metric_version_number: Optional[StrictInt] = None
     metric_version_ulid: Optional[StrictStr] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["output_type", "float_value", "string_value", "set_value", "error_status", "created_at", "explanation", "result_json", "subvalues_by_timestamp", "metric_version_number", "metric_version_ulid"]
+    __properties: ClassVar[List[str]] = ["output_type", "float_value", "string_value", "set_value", "error_status", "created_at", "explanation", "result", "result_json", "subvalues_by_timestamp", "metric_version_number", "metric_version_ulid"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -119,6 +120,11 @@ class CovalReviewsAPIReviewMetricOutputForAnnotationResource(BaseModel):
         if self.explanation is None and "explanation" in self.model_fields_set:
             _dict['explanation'] = None
 
+        # set to None if result (nullable) is None
+        # and model_fields_set contains the field
+        if self.result is None and "result" in self.model_fields_set:
+            _dict['result'] = None
+
         # set to None if result_json (nullable) is None
         # and model_fields_set contains the field
         if self.result_json is None and "result_json" in self.model_fields_set:
@@ -158,6 +164,7 @@ class CovalReviewsAPIReviewMetricOutputForAnnotationResource(BaseModel):
             "error_status": obj.get("error_status"),
             "created_at": obj.get("created_at"),
             "explanation": obj.get("explanation"),
+            "result": obj.get("result"),
             "result_json": obj.get("result_json"),
             "subvalues_by_timestamp": obj.get("subvalues_by_timestamp"),
             "metric_version_number": obj.get("metric_version_number"),

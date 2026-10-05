@@ -79,6 +79,11 @@ class CovalMetricsAPIMetricRuntimeConfig(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if model_version (nullable) is None
+        # and model_fields_set contains the field
+        if self.model_version is None and "model_version" in self.model_fields_set:
+            _dict['model_version'] = None
+
         # set to None if thinking_enabled (nullable) is None
         # and model_fields_set contains the field
         if self.thinking_enabled is None and "thinking_enabled" in self.model_fields_set:

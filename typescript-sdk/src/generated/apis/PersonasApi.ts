@@ -109,10 +109,12 @@ export interface CreateBackgroundSoundRequest {
 
 export interface CreatePersonaRequest {
     covalPersonasAPICreatePersonaRequest: CovalPersonasAPICreatePersonaRequest;
+    xCovalWorkspaceId?: string;
 }
 
 export interface DeletePersonaRequest {
     personaId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface DuplicatePersonaRequest {
@@ -121,6 +123,7 @@ export interface DuplicatePersonaRequest {
 
 export interface GetPersonaRequest {
     personaId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface ListBackgroundSoundsRequest {
@@ -132,6 +135,7 @@ export interface ListPersonaVersionsRequest {
 }
 
 export interface ListPersonasRequest {
+    xCovalWorkspaceId?: string;
     pageSize?: number;
     pageToken?: string;
     filter?: string;
@@ -152,6 +156,7 @@ export interface UpdateBackgroundSoundRequest {
 export interface UpdatePersonaRequest {
     personaId: string;
     covalPersonasAPIUpdatePersonaRequest: CovalPersonasAPIUpdatePersonaRequest;
+    xCovalWorkspaceId?: string;
 }
 
 /**
@@ -212,6 +217,7 @@ export interface PersonasApiInterface {
     /**
      * Creates request options for createPersona without sending the request
      * @param {CovalPersonasAPICreatePersonaRequest} covalPersonasAPICreatePersonaRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof PersonasApiInterface
      */
@@ -221,6 +227,7 @@ export interface PersonasApiInterface {
      * Create a new simulated persona with specified voice characteristics and behavior configuration.
      * @summary Create persona
      * @param {CovalPersonasAPICreatePersonaRequest} covalPersonasAPICreatePersonaRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PersonasApiInterface
@@ -236,15 +243,17 @@ export interface PersonasApiInterface {
     /**
      * Creates request options for deletePersona without sending the request
      * @param {string} personaId Persona resource ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof PersonasApiInterface
      */
     deletePersonaRequestOpts(requestParameters: DeletePersonaRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Delete a persona
+     * Delete a persona. Personas referenced by active Templates cannot be deleted.
      * @summary Delete persona
      * @param {string} personaId Persona resource ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PersonasApiInterface
@@ -252,7 +261,7 @@ export interface PersonasApiInterface {
     deletePersonaRaw(requestParameters: DeletePersonaRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>>;
 
     /**
-     * Delete a persona
+     * Delete a persona. Personas referenced by active Templates cannot be deleted.
      * Delete persona
      */
     deletePersona(requestParameters: DeletePersonaRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object>;
@@ -284,6 +293,7 @@ export interface PersonasApiInterface {
     /**
      * Creates request options for getPersona without sending the request
      * @param {string} personaId Persona resource ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof PersonasApiInterface
      */
@@ -293,6 +303,7 @@ export interface PersonasApiInterface {
      * Retrieve a specific persona by its unique identifier.
      * @summary Get persona
      * @param {string} personaId Persona resource ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PersonasApiInterface
@@ -337,7 +348,7 @@ export interface PersonasApiInterface {
     listPersonaTagsRequestOpts(): Promise<runtime.RequestOpts>;
 
     /**
-     * Distinct, active tag values used on this organization\'s personas, so callers can discover the valid values for the `tag=` filter on `GET /v1/personas`. `color` is not exposed via the public API (always null). 
+     * The default workspace includes legacy unscoped records. Distinct, active tag values used on the authenticated workspace’s live personas, so callers can discover the valid values for the `tag=` filter on `GET /v1/personas`. `color` is not exposed via the public API (always null). 
      * @summary List persona tag values
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -346,7 +357,7 @@ export interface PersonasApiInterface {
     listPersonaTagsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalPersonasAPIListPersonaTagsResponse>>;
 
     /**
-     * Distinct, active tag values used on this organization\'s personas, so callers can discover the valid values for the `tag=` filter on `GET /v1/personas`. `color` is not exposed via the public API (always null). 
+     * The default workspace includes legacy unscoped records. Distinct, active tag values used on the authenticated workspace’s live personas, so callers can discover the valid values for the `tag=` filter on `GET /v1/personas`. `color` is not exposed via the public API (always null). 
      * List persona tag values
      */
     listPersonaTags(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalPersonasAPIListPersonaTagsResponse>;
@@ -377,6 +388,7 @@ export interface PersonasApiInterface {
 
     /**
      * Creates request options for listPersonas without sending the request
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {number} [pageSize] Maximum number of personas to return (1-100)
      * @param {string} [pageToken] Token for retrieving the next page of results
      * @param {string} [filter] Filter expression syntax.  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  Supported fields: - &#x60;name&#x60;: Filter by persona name (e.g., &#x60;name&#x3D;Customer&#x60; or &#x60;name&#x3D;\&quot;Customer Support\&quot;&#x60;) - &#x60;create_time&#x60;: Filter by creation time (e.g., &#x60;create_time&gt;\&quot;2025-01-01T00:00:00Z\&quot;&#x60;) - &#x60;update_time&#x60;: Filter by update time  Examples: - &#x60;name&#x3D;\&quot;Customer Support\&quot;&#x60; (quoted - contains space) - &#x60;create_time&gt;\&quot;2025-01-01T00:00:00Z\&quot;&#x60; 
@@ -390,6 +402,7 @@ export interface PersonasApiInterface {
     /**
      * Retrieve a paginated list of simulated personas with optional filtering and sorting.
      * @summary List personas
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {number} [pageSize] Maximum number of personas to return (1-100)
      * @param {string} [pageToken] Token for retrieving the next page of results
      * @param {string} [filter] Filter expression syntax.  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  Supported fields: - &#x60;name&#x60;: Filter by persona name (e.g., &#x60;name&#x3D;Customer&#x60; or &#x60;name&#x3D;\&quot;Customer Support\&quot;&#x60;) - &#x60;create_time&#x60;: Filter by creation time (e.g., &#x60;create_time&gt;\&quot;2025-01-01T00:00:00Z\&quot;&#x60;) - &#x60;update_time&#x60;: Filter by update time  Examples: - &#x60;name&#x3D;\&quot;Customer Support\&quot;&#x60; (quoted - contains space) - &#x60;create_time&gt;\&quot;2025-01-01T00:00:00Z\&quot;&#x60; 
@@ -507,6 +520,7 @@ export interface PersonasApiInterface {
      * Creates request options for updatePersona without sending the request
      * @param {string} personaId Persona resource ID
      * @param {CovalPersonasAPIUpdatePersonaRequest} covalPersonasAPIUpdatePersonaRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof PersonasApiInterface
      */
@@ -517,6 +531,7 @@ export interface PersonasApiInterface {
      * @summary Update persona
      * @param {string} personaId Persona resource ID
      * @param {CovalPersonasAPIUpdatePersonaRequest} covalPersonasAPIUpdatePersonaRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PersonasApiInterface
@@ -657,6 +672,10 @@ export class PersonasApi extends runtime.BaseAPI implements PersonasApiInterface
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Personas_API_ApiKeyAuth authentication
         }
@@ -708,6 +727,10 @@ export class PersonasApi extends runtime.BaseAPI implements PersonasApiInterface
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Personas_API_ApiKeyAuth authentication
         }
@@ -725,7 +748,7 @@ export class PersonasApi extends runtime.BaseAPI implements PersonasApiInterface
     }
 
     /**
-     * Delete a persona
+     * Delete a persona. Personas referenced by active Templates cannot be deleted.
      * Delete persona
      */
     async deletePersonaRaw(requestParameters: DeletePersonaRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
@@ -736,7 +759,7 @@ export class PersonasApi extends runtime.BaseAPI implements PersonasApiInterface
     }
 
     /**
-     * Delete a persona
+     * Delete a persona. Personas referenced by active Templates cannot be deleted.
      * Delete persona
      */
     async deletePersona(requestParameters: DeletePersonaRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
@@ -809,6 +832,10 @@ export class PersonasApi extends runtime.BaseAPI implements PersonasApiInterface
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Personas_API_ApiKeyAuth authentication
@@ -917,7 +944,7 @@ export class PersonasApi extends runtime.BaseAPI implements PersonasApiInterface
     }
 
     /**
-     * Distinct, active tag values used on this organization\'s personas, so callers can discover the valid values for the `tag=` filter on `GET /v1/personas`. `color` is not exposed via the public API (always null). 
+     * The default workspace includes legacy unscoped records. Distinct, active tag values used on the authenticated workspace’s live personas, so callers can discover the valid values for the `tag=` filter on `GET /v1/personas`. `color` is not exposed via the public API (always null). 
      * List persona tag values
      */
     async listPersonaTagsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalPersonasAPIListPersonaTagsResponse>> {
@@ -928,7 +955,7 @@ export class PersonasApi extends runtime.BaseAPI implements PersonasApiInterface
     }
 
     /**
-     * Distinct, active tag values used on this organization\'s personas, so callers can discover the valid values for the `tag=` filter on `GET /v1/personas`. `color` is not exposed via the public API (always null). 
+     * The default workspace includes legacy unscoped records. Distinct, active tag values used on the authenticated workspace’s live personas, so callers can discover the valid values for the `tag=` filter on `GET /v1/personas`. `color` is not exposed via the public API (always null). 
      * List persona tag values
      */
     async listPersonaTags(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalPersonasAPIListPersonaTagsResponse> {
@@ -1014,6 +1041,10 @@ export class PersonasApi extends runtime.BaseAPI implements PersonasApiInterface
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Personas_API_ApiKeyAuth authentication
@@ -1279,6 +1310,10 @@ export class PersonasApi extends runtime.BaseAPI implements PersonasApiInterface
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Personas_API_ApiKeyAuth authentication

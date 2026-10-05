@@ -34,7 +34,7 @@ export interface CovalMetricsAPISchemaColumnResource {
      */
     name: string;
     /**
-     * 
+     * SQL column type, such as `String`, `LowCardinality(String)`, or `Int64`.
      * @type {string}
      * @memberof CovalMetricsAPISchemaColumnResource
      */

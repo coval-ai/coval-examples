@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime.js';
+import type { CovalReviewsAPIHumanReviewProjectMetricInsightResource } from './CovalReviewsAPIHumanReviewProjectMetricInsightResource.js';
+import {
+    CovalReviewsAPIHumanReviewProjectMetricInsightResourceFromJSON,
+    CovalReviewsAPIHumanReviewProjectMetricInsightResourceFromJSONTyped,
+    CovalReviewsAPIHumanReviewProjectMetricInsightResourceToJSON,
+    CovalReviewsAPIHumanReviewProjectMetricInsightResourceToJSONTyped,
+} from './CovalReviewsAPIHumanReviewProjectMetricInsightResource.js';
 import type { CovalReviewsAPIGetHumanReviewProjectInsightsResponseProject } from './CovalReviewsAPIGetHumanReviewProjectInsightsResponseProject.js';
 import {
     CovalReviewsAPIGetHumanReviewProjectInsightsResponseProjectFromJSON,
@@ -47,10 +54,10 @@ export interface CovalReviewsAPIGetHumanReviewProjectInsightsResponse {
     label_stats: Array<object>;
     /**
      * Per-metric insight rows (counts, agreement rate, simulation output ids).
-     * @type {Array<object>}
+     * @type {Array<CovalReviewsAPIHumanReviewProjectMetricInsightResource>}
      * @memberof CovalReviewsAPIGetHumanReviewProjectInsightsResponse
      */
-    metric_stats: Array<object>;
+    metric_stats: Array<CovalReviewsAPIHumanReviewProjectMetricInsightResource>;
 }
 
 /**
@@ -77,7 +84,7 @@ export function CovalReviewsAPIGetHumanReviewProjectInsightsResponseFromJSONType
         'project': CovalReviewsAPIGetHumanReviewProjectInsightsResponseProjectFromJSON(json['project']),
         'label_overview': json['label_overview'],
         'label_stats': json['label_stats'],
-        'metric_stats': json['metric_stats'],
+        'metric_stats': ((json['metric_stats'] as Array<any>).map(CovalReviewsAPIHumanReviewProjectMetricInsightResourceFromJSON)),
     };
 }
 
@@ -95,7 +102,7 @@ export function CovalReviewsAPIGetHumanReviewProjectInsightsResponseToJSONTyped(
         'project': CovalReviewsAPIGetHumanReviewProjectInsightsResponseProjectToJSON(value['project']),
         'label_overview': value['label_overview'],
         'label_stats': value['label_stats'],
-        'metric_stats': value['metric_stats'],
+        'metric_stats': ((value['metric_stats'] as Array<any>).map(CovalReviewsAPIHumanReviewProjectMetricInsightResourceToJSON)),
     };
 }
 

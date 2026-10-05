@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime.js';
+import type { CovalReviewsAPICompositeCriteriaAgreementResource } from './CovalReviewsAPICompositeCriteriaAgreementResource.js';
+import {
+    CovalReviewsAPICompositeCriteriaAgreementResourceFromJSON,
+    CovalReviewsAPICompositeCriteriaAgreementResourceFromJSONTyped,
+    CovalReviewsAPICompositeCriteriaAgreementResourceToJSON,
+    CovalReviewsAPICompositeCriteriaAgreementResourceToJSONTyped,
+} from './CovalReviewsAPICompositeCriteriaAgreementResource.js';
 import type { CovalReviewsAPIHumanAgreementStatsResource } from './CovalReviewsAPIHumanAgreementStatsResource.js';
 import {
     CovalReviewsAPIHumanAgreementStatsResourceFromJSON,
@@ -63,6 +70,12 @@ export interface CovalReviewsAPIGetMetricHealthStatsResponse {
      * @memberof CovalReviewsAPIGetMetricHealthStatsResponse
      */
     human_agreement: CovalReviewsAPIHumanAgreementStatsResource;
+    /**
+     * 
+     * @type {CovalReviewsAPICompositeCriteriaAgreementResource}
+     * @memberof CovalReviewsAPIGetMetricHealthStatsResponse
+     */
+    criteria_agreement?: CovalReviewsAPICompositeCriteriaAgreementResource | null;
 }
 
 /**
@@ -94,6 +107,7 @@ export function CovalReviewsAPIGetMetricHealthStatsResponseFromJSONTyped(json: a
         'agreements': json['agreements'],
         'disagreements': json['disagreements'],
         'human_agreement': CovalReviewsAPIHumanAgreementStatsResourceFromJSON(json['human_agreement']),
+        'criteria_agreement': json['criteria_agreement'] == null ? undefined : CovalReviewsAPICompositeCriteriaAgreementResourceFromJSON(json['criteria_agreement']),
     };
 }
 
@@ -114,6 +128,7 @@ export function CovalReviewsAPIGetMetricHealthStatsResponseToJSONTyped(value?: C
         'agreements': value['agreements'],
         'disagreements': value['disagreements'],
         'human_agreement': CovalReviewsAPIHumanAgreementStatsResourceToJSON(value['human_agreement']),
+        'criteria_agreement': CovalReviewsAPICompositeCriteriaAgreementResourceToJSON(value['criteria_agreement']),
     };
 }
 

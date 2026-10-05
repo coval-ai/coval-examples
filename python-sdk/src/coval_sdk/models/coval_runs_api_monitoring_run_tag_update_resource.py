@@ -19,7 +19,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
@@ -31,7 +31,7 @@ class CovalRunsAPIMonitoringRunTagUpdateResource(BaseModel):
     """ # noqa: E501
     name: StrictStr = Field(description="Resource name in format \"runs/{run_id}\"")
     run_id: Annotated[str, Field(min_length=22, strict=True, max_length=26)] = Field(description="Unique identifier for the monitored conversation's run")
-    tags: List[StrictStr] = Field(description="Tags now set on the run")
+    tags: Optional[List[StrictStr]] = Field(default=None, description="Tags now set on the run")
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["name", "run_id", "tags"]
 

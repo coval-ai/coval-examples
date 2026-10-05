@@ -346,7 +346,7 @@ class TracesApi:
         self,
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="OTLP `ExportTraceServiceRequest` payload — protobuf or JSON. ")],
         x_simulation_id: Annotated[Optional[StrictStr], Field(description="Simulation output ID to associate the spans with. Use for simulation-based flows. Mutually exclusive with `X-Conversation-Id`. ")] = None,
-        x_conversation_id: Annotated[Optional[StrictStr], Field(description="Conversation (Run) ID returned by `POST /v1/conversations:submit`. Use for monitoring flows. Mutually exclusive with `X-Simulation-Id`. ")] = None,
+        x_conversation_id: Annotated[Optional[StrictStr], Field(description="Conversation ID returned by `POST /v1/conversations/uploaded:submit`. Use for uploaded conversation flows. Mutually exclusive with `X-Simulation-Id`. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -362,13 +362,13 @@ class TracesApi:
     ) -> IngestTraces200Response:
         """Ingest OTLP traces
 
-        Ingest OpenTelemetry trace data and associate it with a simulation output or a monitoring conversation.  The request body must be a standard OTLP `ExportTraceServiceRequest`, in protobuf binary (`application/x-protobuf`, the default for stock OTLP HTTP exporters) or JSON (`application/json`) format. See the [OTLP/HTTP specification](https://opentelemetry.io/docs/specs/otlp/#otlphttp) and [opentelemetry-proto](https://github.com/open-telemetry/opentelemetry-proto) for the wire format.  Identify the target by providing exactly one of `X-Simulation-Id` or `X-Conversation-Id` (not both). 
+        Ingest OpenTelemetry trace data and associate it with a simulation output or an uploaded conversation.  The request body must be a standard OTLP `ExportTraceServiceRequest`, in protobuf binary (`application/x-protobuf`, the default for stock OTLP HTTP exporters) or JSON (`application/json`) format. See the [OTLP/HTTP specification](https://opentelemetry.io/docs/specs/otlp/#otlphttp) and [opentelemetry-proto](https://github.com/open-telemetry/opentelemetry-proto) for the wire format.  Identify the target by providing exactly one of `X-Simulation-Id` or `X-Conversation-Id` (not both). 
 
         :param body: OTLP `ExportTraceServiceRequest` payload — protobuf or JSON.  (required)
         :type body: bytes
         :param x_simulation_id: Simulation output ID to associate the spans with. Use for simulation-based flows. Mutually exclusive with `X-Conversation-Id`. 
         :type x_simulation_id: str
-        :param x_conversation_id: Conversation (Run) ID returned by `POST /v1/conversations:submit`. Use for monitoring flows. Mutually exclusive with `X-Simulation-Id`. 
+        :param x_conversation_id: Conversation ID returned by `POST /v1/conversations/uploaded:submit`. Use for uploaded conversation flows. Mutually exclusive with `X-Simulation-Id`. 
         :type x_conversation_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -427,7 +427,7 @@ class TracesApi:
         self,
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="OTLP `ExportTraceServiceRequest` payload — protobuf or JSON. ")],
         x_simulation_id: Annotated[Optional[StrictStr], Field(description="Simulation output ID to associate the spans with. Use for simulation-based flows. Mutually exclusive with `X-Conversation-Id`. ")] = None,
-        x_conversation_id: Annotated[Optional[StrictStr], Field(description="Conversation (Run) ID returned by `POST /v1/conversations:submit`. Use for monitoring flows. Mutually exclusive with `X-Simulation-Id`. ")] = None,
+        x_conversation_id: Annotated[Optional[StrictStr], Field(description="Conversation ID returned by `POST /v1/conversations/uploaded:submit`. Use for uploaded conversation flows. Mutually exclusive with `X-Simulation-Id`. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -443,13 +443,13 @@ class TracesApi:
     ) -> ApiResponse[IngestTraces200Response]:
         """Ingest OTLP traces
 
-        Ingest OpenTelemetry trace data and associate it with a simulation output or a monitoring conversation.  The request body must be a standard OTLP `ExportTraceServiceRequest`, in protobuf binary (`application/x-protobuf`, the default for stock OTLP HTTP exporters) or JSON (`application/json`) format. See the [OTLP/HTTP specification](https://opentelemetry.io/docs/specs/otlp/#otlphttp) and [opentelemetry-proto](https://github.com/open-telemetry/opentelemetry-proto) for the wire format.  Identify the target by providing exactly one of `X-Simulation-Id` or `X-Conversation-Id` (not both). 
+        Ingest OpenTelemetry trace data and associate it with a simulation output or an uploaded conversation.  The request body must be a standard OTLP `ExportTraceServiceRequest`, in protobuf binary (`application/x-protobuf`, the default for stock OTLP HTTP exporters) or JSON (`application/json`) format. See the [OTLP/HTTP specification](https://opentelemetry.io/docs/specs/otlp/#otlphttp) and [opentelemetry-proto](https://github.com/open-telemetry/opentelemetry-proto) for the wire format.  Identify the target by providing exactly one of `X-Simulation-Id` or `X-Conversation-Id` (not both). 
 
         :param body: OTLP `ExportTraceServiceRequest` payload — protobuf or JSON.  (required)
         :type body: bytes
         :param x_simulation_id: Simulation output ID to associate the spans with. Use for simulation-based flows. Mutually exclusive with `X-Conversation-Id`. 
         :type x_simulation_id: str
-        :param x_conversation_id: Conversation (Run) ID returned by `POST /v1/conversations:submit`. Use for monitoring flows. Mutually exclusive with `X-Simulation-Id`. 
+        :param x_conversation_id: Conversation ID returned by `POST /v1/conversations/uploaded:submit`. Use for uploaded conversation flows. Mutually exclusive with `X-Simulation-Id`. 
         :type x_conversation_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -508,7 +508,7 @@ class TracesApi:
         self,
         body: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="OTLP `ExportTraceServiceRequest` payload — protobuf or JSON. ")],
         x_simulation_id: Annotated[Optional[StrictStr], Field(description="Simulation output ID to associate the spans with. Use for simulation-based flows. Mutually exclusive with `X-Conversation-Id`. ")] = None,
-        x_conversation_id: Annotated[Optional[StrictStr], Field(description="Conversation (Run) ID returned by `POST /v1/conversations:submit`. Use for monitoring flows. Mutually exclusive with `X-Simulation-Id`. ")] = None,
+        x_conversation_id: Annotated[Optional[StrictStr], Field(description="Conversation ID returned by `POST /v1/conversations/uploaded:submit`. Use for uploaded conversation flows. Mutually exclusive with `X-Simulation-Id`. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -524,13 +524,13 @@ class TracesApi:
     ) -> RESTResponseType:
         """Ingest OTLP traces
 
-        Ingest OpenTelemetry trace data and associate it with a simulation output or a monitoring conversation.  The request body must be a standard OTLP `ExportTraceServiceRequest`, in protobuf binary (`application/x-protobuf`, the default for stock OTLP HTTP exporters) or JSON (`application/json`) format. See the [OTLP/HTTP specification](https://opentelemetry.io/docs/specs/otlp/#otlphttp) and [opentelemetry-proto](https://github.com/open-telemetry/opentelemetry-proto) for the wire format.  Identify the target by providing exactly one of `X-Simulation-Id` or `X-Conversation-Id` (not both). 
+        Ingest OpenTelemetry trace data and associate it with a simulation output or an uploaded conversation.  The request body must be a standard OTLP `ExportTraceServiceRequest`, in protobuf binary (`application/x-protobuf`, the default for stock OTLP HTTP exporters) or JSON (`application/json`) format. See the [OTLP/HTTP specification](https://opentelemetry.io/docs/specs/otlp/#otlphttp) and [opentelemetry-proto](https://github.com/open-telemetry/opentelemetry-proto) for the wire format.  Identify the target by providing exactly one of `X-Simulation-Id` or `X-Conversation-Id` (not both). 
 
         :param body: OTLP `ExportTraceServiceRequest` payload — protobuf or JSON.  (required)
         :type body: bytes
         :param x_simulation_id: Simulation output ID to associate the spans with. Use for simulation-based flows. Mutually exclusive with `X-Conversation-Id`. 
         :type x_simulation_id: str
-        :param x_conversation_id: Conversation (Run) ID returned by `POST /v1/conversations:submit`. Use for monitoring flows. Mutually exclusive with `X-Simulation-Id`. 
+        :param x_conversation_id: Conversation ID returned by `POST /v1/conversations/uploaded:submit`. Use for uploaded conversation flows. Mutually exclusive with `X-Simulation-Id`. 
         :type x_conversation_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request

@@ -339,7 +339,7 @@ class WorkspacesApi:
     ) -> CovalWorkspacesAPIWorkspaceResponse:
         """Create workspace
 
-        Create a custom workspace for your organization. The slug must be unique within the organization.
+        Create a custom workspace for your organization. Callers provide a display name and use the returned stable workspace ID for references.
 
         :param coval_workspaces_api_create_workspace_request: (required)
         :type coval_workspaces_api_create_workspace_request: CovalWorkspacesAPICreateWorkspaceRequest
@@ -412,7 +412,7 @@ class WorkspacesApi:
     ) -> ApiResponse[CovalWorkspacesAPIWorkspaceResponse]:
         """Create workspace
 
-        Create a custom workspace for your organization. The slug must be unique within the organization.
+        Create a custom workspace for your organization. Callers provide a display name and use the returned stable workspace ID for references.
 
         :param coval_workspaces_api_create_workspace_request: (required)
         :type coval_workspaces_api_create_workspace_request: CovalWorkspacesAPICreateWorkspaceRequest
@@ -485,7 +485,7 @@ class WorkspacesApi:
     ) -> RESTResponseType:
         """Create workspace
 
-        Create a custom workspace for your organization. The slug must be unique within the organization.
+        Create a custom workspace for your organization. Callers provide a display name and use the returned stable workspace ID for references.
 
         :param coval_workspaces_api_create_workspace_request: (required)
         :type coval_workspaces_api_create_workspace_request: CovalWorkspacesAPICreateWorkspaceRequest

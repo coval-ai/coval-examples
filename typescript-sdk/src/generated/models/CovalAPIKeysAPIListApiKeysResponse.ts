@@ -44,7 +44,7 @@ export interface CovalAPIKeysAPIListApiKeysResponse {
      * @type {number}
      * @memberof CovalAPIKeysAPIListApiKeysResponse
      */
-    total_count: number;
+    total_count?: number;
 }
 
 /**
@@ -52,7 +52,6 @@ export interface CovalAPIKeysAPIListApiKeysResponse {
  */
 export function instanceOfCovalAPIKeysAPIListApiKeysResponse(value: object): value is CovalAPIKeysAPIListApiKeysResponse {
     if (!('api_keys' in value) || value['api_keys'] === undefined) return false;
-    if (!('total_count' in value) || value['total_count'] === undefined) return false;
     return true;
 }
 
@@ -68,7 +67,7 @@ export function CovalAPIKeysAPIListApiKeysResponseFromJSONTyped(json: any, ignor
         
         'api_keys': ((json['api_keys'] as Array<any>).map(CovalAPIKeysAPIApiKeyResourceFromJSON)),
         'next_page_token': json['next_page_token'] == null ? undefined : json['next_page_token'],
-        'total_count': json['total_count'],
+        'total_count': json['total_count'] == null ? undefined : json['total_count'],
     };
 }
 

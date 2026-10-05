@@ -14,6 +14,16 @@
 
 import * as runtime from '../runtime.js';
 import {
+    type CovalSimulatedConversationsAPIErrorResponse,
+    CovalSimulatedConversationsAPIErrorResponseFromJSON,
+    CovalSimulatedConversationsAPIErrorResponseToJSON,
+} from '../models/CovalSimulatedConversationsAPIErrorResponse.js';
+import {
+    type CovalSimulatedConversationsAPIListSimulatedConversationMetricsResponse,
+    CovalSimulatedConversationsAPIListSimulatedConversationMetricsResponseFromJSON,
+    CovalSimulatedConversationsAPIListSimulatedConversationMetricsResponseToJSON,
+} from '../models/CovalSimulatedConversationsAPIListSimulatedConversationMetricsResponse.js';
+import {
     type CovalSimulationsAPIErrorResponse,
     CovalSimulationsAPIErrorResponseFromJSON,
     CovalSimulationsAPIErrorResponseToJSON,
@@ -24,10 +34,30 @@ import {
     CovalSimulationsAPIListMetricsResponseToJSON,
 } from '../models/CovalSimulationsAPIListMetricsResponse.js';
 import {
+    type GetSimulatedConversationMetric200Response,
+    GetSimulatedConversationMetric200ResponseFromJSON,
+    GetSimulatedConversationMetric200ResponseToJSON,
+} from '../models/GetSimulatedConversationMetric200Response.js';
+import {
     type SimulationsGetMetric200Response,
     SimulationsGetMetric200ResponseFromJSON,
     SimulationsGetMetric200ResponseToJSON,
 } from '../models/SimulationsGetMetric200Response.js';
+
+export interface GetSimulatedConversationMetricRequest {
+    simulationId: string;
+    metricOutputId: string;
+}
+
+export interface ListSimulatedConversationMetricsRequest {
+    simulationId: string;
+    filter?: string;
+    pageSize?: number;
+    pageToken?: string;
+    view?: ListSimulatedConversationMetricsViewEnum;
+    includeSuperseded?: boolean;
+    orderBy?: string;
+}
 
 export interface SimulationsGetMetricRequest {
     simulationId: string;
@@ -50,6 +80,68 @@ export interface SimulationsListMetricsRequest {
  * @interface MetricOutputsApiInterface
  */
 export interface MetricOutputsApiInterface {
+    /**
+     * Creates request options for getSimulatedConversationMetric without sending the request
+     * @param {string} simulationId The simulation ID
+     * @param {string} metricOutputId Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type. 
+     * @throws {RequiredError}
+     * @memberof MetricOutputsApiInterface
+     */
+    getSimulatedConversationMetricRequestOpts(requestParameters: GetSimulatedConversationMetricRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed.  **Retrieving test-metric results:** after calling `POST /v1/metrics/{metric_id}/test`, poll this endpoint using the same simulation output ID you tested against as `simulation_id`, plus the returned 26-char `metric_output_ulid`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test-metric outputs belong to the simulation they ran against, so they are retrieved here, not via the conversations endpoint. 
+     * @summary Get simulation metric output(s)
+     * @param {string} simulationId The simulation ID
+     * @param {string} metricOutputId Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type. 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricOutputsApiInterface
+     */
+    getSimulatedConversationMetricRaw(requestParameters: GetSimulatedConversationMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetSimulatedConversationMetric200Response>>;
+
+    /**
+     * Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed.  **Retrieving test-metric results:** after calling `POST /v1/metrics/{metric_id}/test`, poll this endpoint using the same simulation output ID you tested against as `simulation_id`, plus the returned 26-char `metric_output_ulid`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test-metric outputs belong to the simulation they ran against, so they are retrieved here, not via the conversations endpoint. 
+     * Get simulation metric output(s)
+     */
+    getSimulatedConversationMetric(requestParameters: GetSimulatedConversationMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetSimulatedConversationMetric200Response>;
+
+    /**
+     * Creates request options for listSimulatedConversationMetrics without sending the request
+     * @param {string} simulationId The simulation ID
+     * @param {string} [filter] Filter expression syntax.  Supported fields: &#x60;status&#x60;, &#x60;metric_id&#x60;, &#x60;metric_name&#x60;, &#x60;value&#x60;, &#x60;create_time&#x60;, &#x60;start_time&#x60;, &#x60;end_time&#x60;  Operators: &#x60;&#x3D;&#x60;, &#x60;!&#x3D;&#x60;, &#x60;&gt;&#x60;, &#x60;&lt;&#x60;, &#x60;&gt;&#x3D;&#x60;, &#x60;&lt;&#x3D;&#x60;, &#x60;AND&#x60;, &#x60;OR&#x60;  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., &#x60;status&#x3D;\&quot;IN PROGRESS\&quot;&#x60;). 
+     * @param {number} [pageSize] Maximum number of results per page
+     * @param {string} [pageToken] Opaque pagination token from previous response
+     * @param {'BASIC' | 'FULL'} [view] Response detail level. &#x60;FULL&#x60; preserves the historical response including structured &#x60;result&#x60; and &#x60;runtime_metadata&#x60;; &#x60;BASIC&#x60; omits those heavy fields while retaining value, status, explanation, and bounded subvalues. 
+     * @param {boolean} [includeSuperseded] Include outputs that a later re-score of the same metric has superseded.  When &#x60;false&#x60; (default) each metric contributes only its most recent output. When &#x60;true&#x60; every output is returned, so one metric may appear multiple times; recency is determined by creation time, with the &#x60;metric_output_id&#x60; ULID breaking ties, and the response order still follows &#x60;order_by&#x60;. 
+     * @param {string} [orderBy] Sort order specification.  Format: &#x60;field&#x60; or &#x60;-field&#x60; (descending)  Supported fields: &#x60;metric_name&#x60;, &#x60;create_time&#x60;, &#x60;value&#x60;, &#x60;start_time&#x60;, &#x60;end_time&#x60; 
+     * @throws {RequiredError}
+     * @memberof MetricOutputsApiInterface
+     */
+    listSimulatedConversationMetricsRequestOpts(requestParameters: ListSimulatedConversationMetricsRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * List metric results for a simulation.  Re-scoring a metric on a simulation appends a new output rather than replacing the previous one. By default this endpoint returns only the most recent output for each metric, so a metric appears at most once. Pass `include_superseded=true` to get the full history, including outputs that a later re-score has replaced. 
+     * @summary List metrics
+     * @param {string} simulationId The simulation ID
+     * @param {string} [filter] Filter expression syntax.  Supported fields: &#x60;status&#x60;, &#x60;metric_id&#x60;, &#x60;metric_name&#x60;, &#x60;value&#x60;, &#x60;create_time&#x60;, &#x60;start_time&#x60;, &#x60;end_time&#x60;  Operators: &#x60;&#x3D;&#x60;, &#x60;!&#x3D;&#x60;, &#x60;&gt;&#x60;, &#x60;&lt;&#x60;, &#x60;&gt;&#x3D;&#x60;, &#x60;&lt;&#x3D;&#x60;, &#x60;AND&#x60;, &#x60;OR&#x60;  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., &#x60;status&#x3D;\&quot;IN PROGRESS\&quot;&#x60;). 
+     * @param {number} [pageSize] Maximum number of results per page
+     * @param {string} [pageToken] Opaque pagination token from previous response
+     * @param {'BASIC' | 'FULL'} [view] Response detail level. &#x60;FULL&#x60; preserves the historical response including structured &#x60;result&#x60; and &#x60;runtime_metadata&#x60;; &#x60;BASIC&#x60; omits those heavy fields while retaining value, status, explanation, and bounded subvalues. 
+     * @param {boolean} [includeSuperseded] Include outputs that a later re-score of the same metric has superseded.  When &#x60;false&#x60; (default) each metric contributes only its most recent output. When &#x60;true&#x60; every output is returned, so one metric may appear multiple times; recency is determined by creation time, with the &#x60;metric_output_id&#x60; ULID breaking ties, and the response order still follows &#x60;order_by&#x60;. 
+     * @param {string} [orderBy] Sort order specification.  Format: &#x60;field&#x60; or &#x60;-field&#x60; (descending)  Supported fields: &#x60;metric_name&#x60;, &#x60;create_time&#x60;, &#x60;value&#x60;, &#x60;start_time&#x60;, &#x60;end_time&#x60; 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricOutputsApiInterface
+     */
+    listSimulatedConversationMetricsRaw(requestParameters: ListSimulatedConversationMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalSimulatedConversationsAPIListSimulatedConversationMetricsResponse>>;
+
+    /**
+     * List metric results for a simulation.  Re-scoring a metric on a simulation appends a new output rather than replacing the previous one. By default this endpoint returns only the most recent output for each metric, so a metric appears at most once. Pass `include_superseded=true` to get the full history, including outputs that a later re-score has replaced. 
+     * List metrics
+     */
+    listSimulatedConversationMetrics(requestParameters: ListSimulatedConversationMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalSimulatedConversationsAPIListSimulatedConversationMetricsResponse>;
+
     /**
      * Creates request options for simulationsGetMetric without sending the request
      * @param {string} simulationId The simulation ID
@@ -116,6 +208,140 @@ export interface MetricOutputsApiInterface {
  * 
  */
 export class MetricOutputsApi extends runtime.BaseAPI implements MetricOutputsApiInterface {
+
+    /**
+     * Creates request options for getSimulatedConversationMetric without sending the request
+     */
+    async getSimulatedConversationMetricRequestOpts(requestParameters: GetSimulatedConversationMetricRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['simulationId'] == null) {
+            throw new runtime.RequiredError(
+                'simulationId',
+                'Required parameter "simulationId" was null or undefined when calling getSimulatedConversationMetric().'
+            );
+        }
+
+        if (requestParameters['metricOutputId'] == null) {
+            throw new runtime.RequiredError(
+                'metricOutputId',
+                'Required parameter "metricOutputId" was null or undefined when calling getSimulatedConversationMetric().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Simulated_Conversations_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/conversations/simulated/{simulation_id}/metrics/{metric_output_id}`;
+        urlPath = urlPath.replace('{simulation_id}', encodeURIComponent(String(requestParameters['simulationId'])));
+        urlPath = urlPath.replace('{metric_output_id}', encodeURIComponent(String(requestParameters['metricOutputId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed.  **Retrieving test-metric results:** after calling `POST /v1/metrics/{metric_id}/test`, poll this endpoint using the same simulation output ID you tested against as `simulation_id`, plus the returned 26-char `metric_output_ulid`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test-metric outputs belong to the simulation they ran against, so they are retrieved here, not via the conversations endpoint. 
+     * Get simulation metric output(s)
+     */
+    async getSimulatedConversationMetricRaw(requestParameters: GetSimulatedConversationMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetSimulatedConversationMetric200Response>> {
+        const requestOptions = await this.getSimulatedConversationMetricRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetSimulatedConversationMetric200ResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed.  **Retrieving test-metric results:** after calling `POST /v1/metrics/{metric_id}/test`, poll this endpoint using the same simulation output ID you tested against as `simulation_id`, plus the returned 26-char `metric_output_ulid`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test-metric outputs belong to the simulation they ran against, so they are retrieved here, not via the conversations endpoint. 
+     * Get simulation metric output(s)
+     */
+    async getSimulatedConversationMetric(requestParameters: GetSimulatedConversationMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetSimulatedConversationMetric200Response> {
+        const response = await this.getSimulatedConversationMetricRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for listSimulatedConversationMetrics without sending the request
+     */
+    async listSimulatedConversationMetricsRequestOpts(requestParameters: ListSimulatedConversationMetricsRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['simulationId'] == null) {
+            throw new runtime.RequiredError(
+                'simulationId',
+                'Required parameter "simulationId" was null or undefined when calling listSimulatedConversationMetrics().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['filter'] != null) {
+            queryParameters['filter'] = requestParameters['filter'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['pageToken'] != null) {
+            queryParameters['page_token'] = requestParameters['pageToken'];
+        }
+
+        if (requestParameters['view'] != null) {
+            queryParameters['view'] = requestParameters['view'];
+        }
+
+        if (requestParameters['includeSuperseded'] != null) {
+            queryParameters['include_superseded'] = requestParameters['includeSuperseded'];
+        }
+
+        if (requestParameters['orderBy'] != null) {
+            queryParameters['order_by'] = requestParameters['orderBy'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Simulated_Conversations_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/conversations/simulated/{simulation_id}/metrics`;
+        urlPath = urlPath.replace('{simulation_id}', encodeURIComponent(String(requestParameters['simulationId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * List metric results for a simulation.  Re-scoring a metric on a simulation appends a new output rather than replacing the previous one. By default this endpoint returns only the most recent output for each metric, so a metric appears at most once. Pass `include_superseded=true` to get the full history, including outputs that a later re-score has replaced. 
+     * List metrics
+     */
+    async listSimulatedConversationMetricsRaw(requestParameters: ListSimulatedConversationMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalSimulatedConversationsAPIListSimulatedConversationMetricsResponse>> {
+        const requestOptions = await this.listSimulatedConversationMetricsRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalSimulatedConversationsAPIListSimulatedConversationMetricsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * List metric results for a simulation.  Re-scoring a metric on a simulation appends a new output rather than replacing the previous one. By default this endpoint returns only the most recent output for each metric, so a metric appears at most once. Pass `include_superseded=true` to get the full history, including outputs that a later re-score has replaced. 
+     * List metrics
+     */
+    async listSimulatedConversationMetrics(requestParameters: ListSimulatedConversationMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalSimulatedConversationsAPIListSimulatedConversationMetricsResponse> {
+        const response = await this.listSimulatedConversationMetricsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
 
     /**
      * Creates request options for simulationsGetMetric without sending the request
@@ -249,6 +475,14 @@ export class MetricOutputsApi extends runtime.BaseAPI implements MetricOutputsAp
 
 }
 
+/**
+ * @export
+ */
+export const ListSimulatedConversationMetricsViewEnum = {
+    Basic: 'BASIC',
+    Full: 'FULL'
+} as const;
+export type ListSimulatedConversationMetricsViewEnum = typeof ListSimulatedConversationMetricsViewEnum[keyof typeof ListSimulatedConversationMetricsViewEnum];
 /**
  * @export
  */

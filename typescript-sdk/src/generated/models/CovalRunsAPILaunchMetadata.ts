@@ -30,7 +30,7 @@ export interface CovalRunsAPILaunchMetadata {
      * @type {string}
      * @memberof CovalRunsAPILaunchMetadata
      */
-    created_by?: string;
+    created_by?: string | null;
     /**
      * Human-readable name for the run. If not provided, a timestamp-based
      * name is auto-generated (e.g., "Simulation Run 2025-10-14 12:00").
@@ -38,7 +38,13 @@ export interface CovalRunsAPILaunchMetadata {
      * @type {string}
      * @memberof CovalRunsAPILaunchMetadata
      */
-    display_name?: string;
+    display_name?: string | null;
+    /**
+     * Name of the frontend template used to configure the run, when applicable.
+     * @type {string}
+     * @memberof CovalRunsAPILaunchMetadata
+     */
+    template_name?: string | null;
     /**
      * Tags for categorizing and filtering runs. Each tag max 200 characters,
      * max 20 tags. Duplicate tags are automatically removed. Leading/trailing
@@ -70,6 +76,7 @@ export function CovalRunsAPILaunchMetadataFromJSONTyped(json: any, ignoreDiscrim
         'customer': json['customer'] == null ? undefined : json['customer'],
         'created_by': json['created_by'] == null ? undefined : json['created_by'],
         'display_name': json['display_name'] == null ? undefined : json['display_name'],
+        'template_name': json['template_name'] == null ? undefined : json['template_name'],
         'tags': json['tags'] == null ? undefined : json['tags'],
     };
 }
@@ -88,6 +95,7 @@ export function CovalRunsAPILaunchMetadataToJSONTyped(value?: CovalRunsAPILaunch
         'customer': value['customer'],
         'created_by': value['created_by'],
         'display_name': value['display_name'],
+        'template_name': value['template_name'],
         'tags': value['tags'],
     };
 }

@@ -18,7 +18,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
@@ -28,12 +28,19 @@ class CovalAlertsAPIAlertEventResourceDispatchedChannelsInner(BaseModel):
     """
     CovalAlertsAPIAlertEventResourceDispatchedChannelsInner
     """ # noqa: E501
-    channel_type: Optional[StrictStr] = None
-    channel_summary: Optional[StrictStr] = None
-    success: Optional[StrictBool] = None
+    channel_type: StrictStr
+    channel_summary: StrictStr
+    success: StrictBool
     error: Optional[StrictStr] = None
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["channel_type", "channel_summary", "success", "error"]
+
+    @field_validator('channel_type')
+    def channel_type_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['SLACK', 'EMAIL', 'WEBHOOK', 'HUMAN_REVIEW']):
+            raise ValueError("must be one of enum values ('SLACK', 'EMAIL', 'WEBHOOK', 'HUMAN_REVIEW')")
+        return value
 
     model_config = ConfigDict(
         validate_by_name=True,

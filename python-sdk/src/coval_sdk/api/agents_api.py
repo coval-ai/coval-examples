@@ -50,6 +50,7 @@ class AgentsApi:
     def create_agent(
         self,
         coval_agents_api_create_agent_request: CovalAgentsAPICreateAgentRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -69,6 +70,8 @@ class AgentsApi:
 
         :param coval_agents_api_create_agent_request: (required)
         :type coval_agents_api_create_agent_request: CovalAgentsAPICreateAgentRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -93,6 +96,7 @@ class AgentsApi:
 
         _param = self._create_agent_serialize(
             coval_agents_api_create_agent_request=coval_agents_api_create_agent_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -120,6 +124,7 @@ class AgentsApi:
     def create_agent_with_http_info(
         self,
         coval_agents_api_create_agent_request: CovalAgentsAPICreateAgentRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -139,6 +144,8 @@ class AgentsApi:
 
         :param coval_agents_api_create_agent_request: (required)
         :type coval_agents_api_create_agent_request: CovalAgentsAPICreateAgentRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -163,6 +170,7 @@ class AgentsApi:
 
         _param = self._create_agent_serialize(
             coval_agents_api_create_agent_request=coval_agents_api_create_agent_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -190,6 +198,7 @@ class AgentsApi:
     def create_agent_without_preload_content(
         self,
         coval_agents_api_create_agent_request: CovalAgentsAPICreateAgentRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -209,6 +218,8 @@ class AgentsApi:
 
         :param coval_agents_api_create_agent_request: (required)
         :type coval_agents_api_create_agent_request: CovalAgentsAPICreateAgentRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -233,6 +244,7 @@ class AgentsApi:
 
         _param = self._create_agent_serialize(
             coval_agents_api_create_agent_request=coval_agents_api_create_agent_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -255,6 +267,7 @@ class AgentsApi:
     def _create_agent_serialize(
         self,
         coval_agents_api_create_agent_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -278,6 +291,8 @@ class AgentsApi:
         # process the path parameters
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_agents_api_create_agent_request is not None:
@@ -333,6 +348,7 @@ class AgentsApi:
     def delete_agent(
         self,
         agent_id: Annotated[str, Field(strict=True, description="Agent resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -348,10 +364,12 @@ class AgentsApi:
     ) -> object:
         """Delete agent
 
-        Soft-delete an agent configuration, marking it as inactive while preserving the record.
+        Soft-delete an agent configuration, marking it as inactive while preserving the record. Agents referenced by active Templates cannot be deleted.
 
         :param agent_id: Agent resource ID (required)
         :type agent_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -376,6 +394,7 @@ class AgentsApi:
 
         _param = self._delete_agent_serialize(
             agent_id=agent_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -387,6 +406,7 @@ class AgentsApi:
             '400': "CovalAgentsAPIErrorResponse",
             '401': "CovalAgentsAPIErrorResponse",
             '404': "CovalAgentsAPIErrorResponse",
+            '409': "CovalAgentsAPIErrorResponse",
             '500': "CovalAgentsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -404,6 +424,7 @@ class AgentsApi:
     def delete_agent_with_http_info(
         self,
         agent_id: Annotated[str, Field(strict=True, description="Agent resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -419,10 +440,12 @@ class AgentsApi:
     ) -> ApiResponse[object]:
         """Delete agent
 
-        Soft-delete an agent configuration, marking it as inactive while preserving the record.
+        Soft-delete an agent configuration, marking it as inactive while preserving the record. Agents referenced by active Templates cannot be deleted.
 
         :param agent_id: Agent resource ID (required)
         :type agent_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -447,6 +470,7 @@ class AgentsApi:
 
         _param = self._delete_agent_serialize(
             agent_id=agent_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -458,6 +482,7 @@ class AgentsApi:
             '400': "CovalAgentsAPIErrorResponse",
             '401': "CovalAgentsAPIErrorResponse",
             '404': "CovalAgentsAPIErrorResponse",
+            '409': "CovalAgentsAPIErrorResponse",
             '500': "CovalAgentsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -475,6 +500,7 @@ class AgentsApi:
     def delete_agent_without_preload_content(
         self,
         agent_id: Annotated[str, Field(strict=True, description="Agent resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -490,10 +516,12 @@ class AgentsApi:
     ) -> RESTResponseType:
         """Delete agent
 
-        Soft-delete an agent configuration, marking it as inactive while preserving the record.
+        Soft-delete an agent configuration, marking it as inactive while preserving the record. Agents referenced by active Templates cannot be deleted.
 
         :param agent_id: Agent resource ID (required)
         :type agent_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -518,6 +546,7 @@ class AgentsApi:
 
         _param = self._delete_agent_serialize(
             agent_id=agent_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -529,6 +558,7 @@ class AgentsApi:
             '400': "CovalAgentsAPIErrorResponse",
             '401': "CovalAgentsAPIErrorResponse",
             '404': "CovalAgentsAPIErrorResponse",
+            '409': "CovalAgentsAPIErrorResponse",
             '500': "CovalAgentsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -541,6 +571,7 @@ class AgentsApi:
     def _delete_agent_serialize(
         self,
         agent_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -566,6 +597,8 @@ class AgentsApi:
             _path_params['agent_id'] = agent_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -907,6 +940,7 @@ class AgentsApi:
     def get_agent(
         self,
         agent_id: Annotated[str, Field(strict=True, description="Agent resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -926,6 +960,8 @@ class AgentsApi:
 
         :param agent_id: Agent resource ID (required)
         :type agent_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -950,6 +986,7 @@ class AgentsApi:
 
         _param = self._get_agent_serialize(
             agent_id=agent_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -978,6 +1015,7 @@ class AgentsApi:
     def get_agent_with_http_info(
         self,
         agent_id: Annotated[str, Field(strict=True, description="Agent resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -997,6 +1035,8 @@ class AgentsApi:
 
         :param agent_id: Agent resource ID (required)
         :type agent_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1021,6 +1061,7 @@ class AgentsApi:
 
         _param = self._get_agent_serialize(
             agent_id=agent_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1049,6 +1090,7 @@ class AgentsApi:
     def get_agent_without_preload_content(
         self,
         agent_id: Annotated[str, Field(strict=True, description="Agent resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1068,6 +1110,8 @@ class AgentsApi:
 
         :param agent_id: Agent resource ID (required)
         :type agent_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1092,6 +1136,7 @@ class AgentsApi:
 
         _param = self._get_agent_serialize(
             agent_id=agent_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1115,6 +1160,7 @@ class AgentsApi:
     def _get_agent_serialize(
         self,
         agent_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -1140,6 +1186,8 @@ class AgentsApi:
             _path_params['agent_id'] = agent_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -1449,6 +1497,7 @@ class AgentsApi:
     @validate_call
     def list_agents(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  **Supported fields:** `model_type`, `display_name`, `create_time`, `update_time`  **Operators:** `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `display_name=\"Support Agent\"`).  **Date format:** ISO 8601 (e.g., `2025-10-01T00:00:00Z`) ")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response.  Do not decode or modify this token. ")] = None,
@@ -1471,6 +1520,8 @@ class AgentsApi:
 
         Retrieve a paginated list of agent configurations with optional filtering and sorting.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param filter: Filter expression syntax.  **Supported fields:** `model_type`, `display_name`, `create_time`, `update_time`  **Operators:** `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `display_name=\"Support Agent\"`).  **Date format:** ISO 8601 (e.g., `2025-10-01T00:00:00Z`) 
         :type filter: str
         :param page_size: Maximum number of results per page
@@ -1504,6 +1555,7 @@ class AgentsApi:
         """ # noqa: E501
 
         _param = self._list_agents_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             filter=filter,
             page_size=page_size,
             page_token=page_token,
@@ -1535,6 +1587,7 @@ class AgentsApi:
     @validate_call
     def list_agents_with_http_info(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  **Supported fields:** `model_type`, `display_name`, `create_time`, `update_time`  **Operators:** `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `display_name=\"Support Agent\"`).  **Date format:** ISO 8601 (e.g., `2025-10-01T00:00:00Z`) ")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response.  Do not decode or modify this token. ")] = None,
@@ -1557,6 +1610,8 @@ class AgentsApi:
 
         Retrieve a paginated list of agent configurations with optional filtering and sorting.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param filter: Filter expression syntax.  **Supported fields:** `model_type`, `display_name`, `create_time`, `update_time`  **Operators:** `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `display_name=\"Support Agent\"`).  **Date format:** ISO 8601 (e.g., `2025-10-01T00:00:00Z`) 
         :type filter: str
         :param page_size: Maximum number of results per page
@@ -1590,6 +1645,7 @@ class AgentsApi:
         """ # noqa: E501
 
         _param = self._list_agents_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             filter=filter,
             page_size=page_size,
             page_token=page_token,
@@ -1621,6 +1677,7 @@ class AgentsApi:
     @validate_call
     def list_agents_without_preload_content(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  **Supported fields:** `model_type`, `display_name`, `create_time`, `update_time`  **Operators:** `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `display_name=\"Support Agent\"`).  **Date format:** ISO 8601 (e.g., `2025-10-01T00:00:00Z`) ")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response.  Do not decode or modify this token. ")] = None,
@@ -1643,6 +1700,8 @@ class AgentsApi:
 
         Retrieve a paginated list of agent configurations with optional filtering and sorting.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param filter: Filter expression syntax.  **Supported fields:** `model_type`, `display_name`, `create_time`, `update_time`  **Operators:** `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `display_name=\"Support Agent\"`).  **Date format:** ISO 8601 (e.g., `2025-10-01T00:00:00Z`) 
         :type filter: str
         :param page_size: Maximum number of results per page
@@ -1676,6 +1735,7 @@ class AgentsApi:
         """ # noqa: E501
 
         _param = self._list_agents_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             filter=filter,
             page_size=page_size,
             page_token=page_token,
@@ -1702,6 +1762,7 @@ class AgentsApi:
 
     def _list_agents_serialize(
         self,
+        x_coval_workspace_id,
         filter,
         page_size,
         page_token,
@@ -1751,6 +1812,8 @@ class AgentsApi:
             _query_params.append(('tag_filters', tag_filters))
             
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -2080,6 +2143,7 @@ class AgentsApi:
         self,
         agent_id: Annotated[str, Field(strict=True, description="Agent resource ID")],
         coval_agents_api_update_agent_request: CovalAgentsAPIUpdateAgentRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2101,6 +2165,8 @@ class AgentsApi:
         :type agent_id: str
         :param coval_agents_api_update_agent_request: (required)
         :type coval_agents_api_update_agent_request: CovalAgentsAPIUpdateAgentRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2126,6 +2192,7 @@ class AgentsApi:
         _param = self._update_agent_serialize(
             agent_id=agent_id,
             coval_agents_api_update_agent_request=coval_agents_api_update_agent_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2155,6 +2222,7 @@ class AgentsApi:
         self,
         agent_id: Annotated[str, Field(strict=True, description="Agent resource ID")],
         coval_agents_api_update_agent_request: CovalAgentsAPIUpdateAgentRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2176,6 +2244,8 @@ class AgentsApi:
         :type agent_id: str
         :param coval_agents_api_update_agent_request: (required)
         :type coval_agents_api_update_agent_request: CovalAgentsAPIUpdateAgentRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2201,6 +2271,7 @@ class AgentsApi:
         _param = self._update_agent_serialize(
             agent_id=agent_id,
             coval_agents_api_update_agent_request=coval_agents_api_update_agent_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2230,6 +2301,7 @@ class AgentsApi:
         self,
         agent_id: Annotated[str, Field(strict=True, description="Agent resource ID")],
         coval_agents_api_update_agent_request: CovalAgentsAPIUpdateAgentRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2251,6 +2323,8 @@ class AgentsApi:
         :type agent_id: str
         :param coval_agents_api_update_agent_request: (required)
         :type coval_agents_api_update_agent_request: CovalAgentsAPIUpdateAgentRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2276,6 +2350,7 @@ class AgentsApi:
         _param = self._update_agent_serialize(
             agent_id=agent_id,
             coval_agents_api_update_agent_request=coval_agents_api_update_agent_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2300,6 +2375,7 @@ class AgentsApi:
         self,
         agent_id,
         coval_agents_api_update_agent_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -2325,6 +2401,8 @@ class AgentsApi:
             _path_params['agent_id'] = agent_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_agents_api_update_agent_request is not None:

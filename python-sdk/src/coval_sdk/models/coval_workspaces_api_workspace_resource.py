@@ -31,7 +31,7 @@ class CovalWorkspacesAPIWorkspaceResource(BaseModel):
     CovalWorkspacesAPIWorkspaceResource
     """ # noqa: E501
     id: Annotated[str, Field(min_length=1, strict=True, max_length=26)]
-    slug: StrictStr
+    slug: StrictStr = Field(description="Deprecated compatibility identifier. Use id to identify a workspace.")
     display_name: StrictStr
     status: StrictStr
     workspace_type: StrictStr

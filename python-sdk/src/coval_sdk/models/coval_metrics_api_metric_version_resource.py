@@ -21,6 +21,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from coval_sdk.models.coval_metrics_api_judge_mode import CovalMetricsAPIJudgeMode
 from coval_sdk.models.coval_metrics_api_metric_type import CovalMetricsAPIMetricType
 from coval_sdk.models.coval_metrics_api_metric_version_change_type import CovalMetricsAPIMetricVersionChangeType
 from typing import Optional, Set
@@ -36,12 +37,13 @@ class CovalMetricsAPIMetricVersionResource(BaseModel):
     version_number: StrictInt = Field(description="Per-metric monotonic version number, 1-based")
     change_type: CovalMetricsAPIMetricVersionChangeType
     metric_type: CovalMetricsAPIMetricType
+    judge_mode: Optional[CovalMetricsAPIJudgeMode] = None
     metric_metadata: Optional[Dict[str, Any]] = Field(default=None, description="Verbatim scoring-config snapshot for this version")
     label: Optional[StrictStr] = Field(default=None, description="Optional user-supplied tag")
     created_by: StrictStr = Field(description="Who created this version (email address)")
     create_time: Optional[datetime] = Field(default=None, description="When this version became current")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "ulid", "version_number", "change_type", "metric_type", "metric_metadata", "label", "created_by", "create_time"]
+    __properties: ClassVar[List[str]] = ["name", "ulid", "version_number", "change_type", "metric_type", "judge_mode", "metric_metadata", "label", "created_by", "create_time"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -116,6 +118,7 @@ class CovalMetricsAPIMetricVersionResource(BaseModel):
             "version_number": obj.get("version_number"),
             "change_type": obj.get("change_type"),
             "metric_type": obj.get("metric_type"),
+            "judge_mode": obj.get("judge_mode"),
             "metric_metadata": obj.get("metric_metadata"),
             "label": obj.get("label"),
             "created_by": obj.get("created_by"),

@@ -33,6 +33,7 @@ class CovalDashboardsAPIAggregationType(str, Enum):
     MAX = 'max'
     MIN = 'min'
     SUCCESS = 'success'
+    P50 = 'p50'
     P90 = 'p90'
     P95 = 'p95'
     P99 = 'p99'

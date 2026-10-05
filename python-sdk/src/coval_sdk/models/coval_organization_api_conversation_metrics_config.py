@@ -27,7 +27,7 @@ from pydantic_core import to_jsonable_python
 
 class CovalOrganizationAPIConversationMetricsConfig(BaseModel):
     """
-    The organization's conversation metrics configuration.
+    The resolved conversation metrics configuration for the selected workspace.
     """ # noqa: E501
     default_conversation_metrics: Optional[List[StrictStr]] = Field(default=None, description="Metric IDs run on every conversation.")
     conditional_conversation_metrics: Optional[List[CovalOrganizationAPIConversationMetricRule]] = Field(default=None, description="Rules that add metrics when run metadata matches.")

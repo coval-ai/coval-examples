@@ -32,23 +32,23 @@ export interface CovalRunTemplatesAPICreateRunTemplateRequest {
      */
     description?: string;
     /**
-     * Agent to test (must exist and be accessible)
-     * @type {string}
+     * Agents to test. Every agent must exist and be accessible.
+     * @type {Set<string>}
      * @memberof CovalRunTemplatesAPICreateRunTemplateRequest
      */
-    agent_id: string;
+    agent_ids: Set<string>;
     /**
-     * Simulated persona to use (must exist)
-     * @type {string}
+     * Simulated personas to use. Every persona must exist.
+     * @type {Set<string>}
      * @memberof CovalRunTemplatesAPICreateRunTemplateRequest
      */
-    persona_id: string;
+    persona_ids: Set<string>;
     /**
-     * Test set containing test cases (must exist)
-     * @type {string}
+     * Test sets containing test cases. Every test set must exist.
+     * @type {Set<string>}
      * @memberof CovalRunTemplatesAPICreateRunTemplateRequest
      */
-    test_set_id: string;
+    test_set_ids: Set<string>;
     /**
      * Metrics to evaluate (uses agent defaults if empty)
      * @type {Array<string>}
@@ -86,6 +86,12 @@ export interface CovalRunTemplatesAPICreateRunTemplateRequest {
      */
     sub_sample_seed?: number | null;
     /**
+     * Optional test cases to run from the selected test sets
+     * @type {Array<string>}
+     * @memberof CovalRunTemplatesAPICreateRunTemplateRequest
+     */
+    test_case_ids?: Array<string> | null;
+    /**
      * Custom metadata for tracking
      * @type {{ [key: string]: any; }}
      * @memberof CovalRunTemplatesAPICreateRunTemplateRequest
@@ -104,9 +110,9 @@ export interface CovalRunTemplatesAPICreateRunTemplateRequest {
  */
 export function instanceOfCovalRunTemplatesAPICreateRunTemplateRequest(value: object): value is CovalRunTemplatesAPICreateRunTemplateRequest {
     if (!('display_name' in value) || value['display_name'] === undefined) return false;
-    if (!('agent_id' in value) || value['agent_id'] === undefined) return false;
-    if (!('persona_id' in value) || value['persona_id'] === undefined) return false;
-    if (!('test_set_id' in value) || value['test_set_id'] === undefined) return false;
+    if (!('agent_ids' in value) || value['agent_ids'] === undefined) return false;
+    if (!('persona_ids' in value) || value['persona_ids'] === undefined) return false;
+    if (!('test_set_ids' in value) || value['test_set_ids'] === undefined) return false;
     return true;
 }
 
@@ -122,15 +128,16 @@ export function CovalRunTemplatesAPICreateRunTemplateRequestFromJSONTyped(json: 
         
         'display_name': json['display_name'],
         'description': json['description'] == null ? undefined : json['description'],
-        'agent_id': json['agent_id'],
-        'persona_id': json['persona_id'],
-        'test_set_id': json['test_set_id'],
+        'agent_ids': new Set(json['agent_ids']),
+        'persona_ids': new Set(json['persona_ids']),
+        'test_set_ids': new Set(json['test_set_ids']),
         'metric_ids': json['metric_ids'] == null ? undefined : json['metric_ids'],
         'mutation_ids': json['mutation_ids'] == null ? undefined : json['mutation_ids'],
         'iteration_count': json['iteration_count'] == null ? undefined : json['iteration_count'],
         'concurrency': json['concurrency'] == null ? undefined : json['concurrency'],
         'sub_sample_size': json['sub_sample_size'] == null ? undefined : json['sub_sample_size'],
         'sub_sample_seed': json['sub_sample_seed'] == null ? undefined : json['sub_sample_seed'],
+        'test_case_ids': json['test_case_ids'] == null ? undefined : json['test_case_ids'],
         'metadata': json['metadata'] == null ? undefined : json['metadata'],
         'tags': json['tags'] == null ? undefined : json['tags'],
     };
@@ -149,15 +156,16 @@ export function CovalRunTemplatesAPICreateRunTemplateRequestToJSONTyped(value?: 
         
         'display_name': value['display_name'],
         'description': value['description'],
-        'agent_id': value['agent_id'],
-        'persona_id': value['persona_id'],
-        'test_set_id': value['test_set_id'],
+        'agent_ids': Array.from(value['agent_ids'] as Set<any>),
+        'persona_ids': Array.from(value['persona_ids'] as Set<any>),
+        'test_set_ids': Array.from(value['test_set_ids'] as Set<any>),
         'metric_ids': value['metric_ids'],
         'mutation_ids': value['mutation_ids'],
         'iteration_count': value['iteration_count'],
         'concurrency': value['concurrency'],
         'sub_sample_size': value['sub_sample_size'],
         'sub_sample_seed': value['sub_sample_seed'],
+        'test_case_ids': value['test_case_ids'],
         'metadata': value['metadata'],
         'tags': value['tags'],
     };
