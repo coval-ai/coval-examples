@@ -1,0 +1,1046 @@
+openapi: 3.0.3
+x-visibility: external  # external | internal — only `external` specs are published to the public API/docs
+info:
+  title: Coval Monitors API
+  version: 1.0.0
+  description: |
+    API for managing monitors — metric-based alerting rules that evaluate
+    on run completion and dispatch notifications to configured channels.
+
+    Monitors support:
+    - Per-run metric checks (single value, run average, run fraction)
+    - AND/OR condition logic across multiple metrics
+    - Multi-channel notifications (Slack, email, webhook, human review)
+    - Cooldown/deduplication
+    - Custom message templates
+  contact:
+    name: Coval API Support
+    email: support@coval.dev
+    url: https://docs.coval.ai
+  license:
+    name: Proprietary
+    url: https://coval.dev/terms
+
+servers:
+- url: https://api.coval.dev/v1
+
+tags:
+- name: Monitors
+  description: CRUD operations for monitor definitions
+- name: Monitor Events
+  description: Monitor evaluation event history
+
+security:
+- ApiKeyAuth: []
+
+paths:
+  /monitors:
+    get:
+      operationId: listMonitors
+      summary: List monitors
+      description: |
+        Returns all active monitors for the authenticated organization.
+
+        Supports optional filtering by scope and pagination.
+      tags:
+      - Monitors
+      parameters:
+      - name: scope
+        in: query
+        schema:
+          type: string
+          enum:
+          - ALL
+          - MONITORING
+          - SIMULATION
+        description: Filter monitors by scope
+      - name: page_size
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+        description: Number of results per page
+      - name: page_token
+        in: query
+        schema:
+          type: string
+        description: Token for fetching the next page of results
+      responses:
+        '200':
+          description: List of monitors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMonitorsResponse'
+              examples:
+                success:
+                  $ref: '#/components/examples/ListMonitorsSuccess'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/PermissionDenied'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    post:
+      operationId: createMonitor
+      summary: Create a monitor
+      description: |
+        Creates a new monitor with conditions and notification channels.
+
+        At least one condition is required. Channels are optional — a monitor
+        without channels will still evaluate and log events but won't dispatch
+        notifications.
+      tags:
+      - Monitors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMonitorRequest'
+            examples:
+              simpleThreshold:
+                $ref: '#/components/examples/CreateMonitorSimple'
+      responses:
+        '201':
+          description: Monitor created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitorResource'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/PermissionDenied'
+        '409':
+          description: Monitor name conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error:
+                  code: ALREADY_EXISTS
+                  message: Monitor name conflict
+                  details:
+                  - field: name
+                    description: An active monitor named 'Latency SLA' already exists
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /monitors/{monitor_id}:
+    get:
+      operationId: getMonitor
+      summary: Get a monitor
+      description: Returns a single monitor with its conditions and channels.
+      tags:
+      - Monitors
+      parameters:
+      - $ref: '#/components/parameters/MonitorId'
+      responses:
+        '200':
+          description: Monitor details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitorResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/PermissionDenied'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    patch:
+      operationId: updateMonitor
+      summary: Update a monitor
+      description: |
+        Partially updates a monitor. All fields are optional; omitted fields
+        retain their current values (PATCH semantics).
+
+        When `conditions` or `channels` are provided, they **replace** the
+        existing set atomically (delete old, create new).
+      tags:
+      - Monitors
+      parameters:
+      - $ref: '#/components/parameters/MonitorId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMonitorRequest'
+      responses:
+        '200':
+          description: Monitor updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitorResource'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/PermissionDenied'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: Monitor name conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    delete:
+      operationId: deleteMonitor
+      summary: Delete a monitor
+      description: |
+        Soft-deletes a monitor by setting its status to DELETED.
+        The monitor and its channels are deactivated but retained for audit.
+      tags:
+      - Monitors
+      parameters:
+      - $ref: '#/components/parameters/MonitorId'
+      responses:
+        '204':
+          description: Monitor deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/PermissionDenied'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /monitors/{monitor_id}/events:
+    get:
+      operationId: listMonitorEvents
+      summary: List monitor events
+      description: |
+        Returns evaluation events for a monitor, ordered by most recent first.
+
+        Every run completion that evaluates this monitor produces an event,
+        regardless of outcome (TRIGGERED, NOT_MET, SUPPRESSED, ERROR).
+      tags:
+      - Monitor Events
+      parameters:
+      - $ref: '#/components/parameters/MonitorId'
+      - name: outcome
+        in: query
+        schema:
+          type: string
+          enum:
+          - TRIGGERED
+          - NOT_MET
+          - SUPPRESSED
+          - ERROR
+        description: Filter events by outcome
+      - name: page_size
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+        description: Number of results per page
+      - name: page_token
+        in: query
+        schema:
+          type: string
+        description: Token for fetching the next page of results
+      responses:
+        '200':
+          description: List of monitor events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMonitorEventsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/PermissionDenied'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /monitors/{monitor_id}/test-evaluate:
+    post:
+      operationId: testEvaluateMonitor
+      summary: Test evaluate a monitor
+      description: |
+        Dry-run evaluation of a monitor against a specific run.
+
+        Evaluates all conditions and builds the notification message,
+        but does **not** dispatch notifications or write an event record.
+        Use this to preview what would happen if the monitor evaluated
+        against a given run.
+      tags:
+      - Monitors
+      parameters:
+      - $ref: '#/components/parameters/MonitorId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestEvaluateRequest'
+            example:
+              run_id: hUWu3PxY6G7fTYbLzBAwZm
+      responses:
+        '200':
+          description: Test evaluation results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestEvaluateResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/PermissionDenied'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for authentication
+
+  parameters:
+    MonitorId:
+      name: monitor_id
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: ^[0-9A-Z]{26}$
+      description: Monitor ULID
+      example: 01HZ0EXAMPLE00000000000000
+
+  schemas:
+    # --- Enums ---
+
+    MonitorEvaluationType:
+      type: string
+      enum:
+      - ON_RUN_COMPLETE
+      description: When the monitor evaluates
+
+    MonitorScope:
+      type: string
+      enum:
+      - ALL
+      - MONITORING
+      - SIMULATION
+      description: Which runs the monitor applies to
+
+    MonitorMatchMode:
+      type: string
+      enum:
+      - ALL
+      - ANY
+      description: How multiple conditions are combined (AND vs OR)
+
+    ConditionAggregation:
+      type: string
+      enum:
+      - SINGLE
+      - RUN_AVERAGE
+      - RUN_FRACTION
+      description: |
+        Aggregation mode for a condition.
+        - SINGLE: Per-simulation value (average across sim outputs)
+        - RUN_AVERAGE: Average from pre-computed run aggregate
+        - RUN_FRACTION: Fraction matching a string value in the run
+
+    ConditionOperator:
+      type: string
+      enum:
+      - GT
+      - GTE
+      - LT
+      - LTE
+      - EQ
+      - NEQ
+      description: Comparison operator
+
+    ChannelType:
+      type: string
+      enum:
+      - SLACK
+      - EMAIL
+      - WEBHOOK
+      - HUMAN_REVIEW
+      description: Notification channel type
+
+    MonitorEventOutcome:
+      type: string
+      enum:
+      - TRIGGERED
+      - NOT_MET
+      - SUPPRESSED
+      - ERROR
+      description: Outcome of a monitor evaluation
+
+    # --- Nested Objects ---
+
+    MonitorCondition:
+      type: object
+      required:
+      - ulid
+      - metric_id
+      - aggregation
+      - operator
+      properties:
+        ulid:
+          type: string
+          pattern: ^[0-9A-Z]{26}$
+          description: Condition ULID
+        metric_id:
+          type: string
+          description: ULID of the metric to evaluate
+        aggregation:
+          $ref: '#/components/schemas/ConditionAggregation'
+        operator:
+          $ref: '#/components/schemas/ConditionOperator'
+        threshold_float:
+          type: number
+          nullable: true
+          description: Numeric threshold
+        threshold_string:
+          type: string
+          nullable: true
+          description: String threshold
+        window_size_days:
+          type: integer
+          nullable: true
+          minimum: 1
+          maximum: 365
+          description: Rolling window size in days
+        window_size_runs:
+          type: integer
+          nullable: true
+          minimum: 1
+          maximum: 10000
+          description: Rolling window size in runs
+        match_value:
+          type: string
+          nullable: true
+          description: String match value for fraction conditions
+        match_mode:
+          type: string
+          nullable: true
+          enum:
+          - exact
+          - contains
+          - contains_case_insensitive
+          description: String match mode
+
+    MonitorChannel:
+      type: object
+      required:
+      - ulid
+      - channel_type
+      - config
+      properties:
+        ulid:
+          type: string
+          pattern: ^[0-9A-Z]{26}$
+          description: Channel ULID
+        channel_type:
+          $ref: '#/components/schemas/ChannelType'
+        config:
+          type: object
+          description: |
+            Channel-specific configuration.
+
+            **SLACK**: `{"channel_id": "C0123ABC", "channel_name": "#alerts"}`
+
+            **EMAIL**: `{"recipients": ["team@company.com"]}`
+
+            **WEBHOOK**: `{"url": "https://...", "method": "POST", "auth_token": "..."}`
+
+            **HUMAN_REVIEW**: `{"project_id": "...", "sample_rate": 0.1}`
+
+    # --- Resource ---
+
+    MonitorResource:
+      type: object
+      required:
+      - ulid
+      - name
+      - status
+      - evaluation_type
+      - scope
+      - match_mode
+      - cooldown_seconds
+      - trigger_count
+      - conditions
+      - channels
+      - create_time
+      - update_time
+      properties:
+        ulid:
+          type: string
+          pattern: ^[0-9A-Z]{26}$
+          description: Monitor ULID
+          example: 01HZ0EXAMPLE00000000000000
+        name:
+          type: string
+          maxLength: 200
+          description: Human-readable monitor name
+          example: Latency SLA Monitor
+        description:
+          type: string
+          default: ""
+          description: Optional description
+        status:
+          type: string
+          enum:
+          - ACTIVE
+          - DELETED
+          description: Monitor status
+        evaluation_type:
+          $ref: '#/components/schemas/MonitorEvaluationType'
+        scope:
+          $ref: '#/components/schemas/MonitorScope'
+        match_mode:
+          $ref: '#/components/schemas/MonitorMatchMode'
+        cooldown_seconds:
+          type: integer
+          minimum: 0
+          maximum: 86400
+          description: Minimum seconds between triggers
+        custom_message_template:
+          type: string
+          nullable: true
+          maxLength: 5000
+          description: Custom notification message template
+        agent_ids:
+          type: array
+          nullable: true
+          items:
+            type: string
+          description: Restrict to specific agent IDs
+        required_tags:
+          type: array
+          nullable: true
+          items:
+            type: string
+          description: Restrict to runs with these tags
+        scheduled_run_ids:
+          type: array
+          nullable: true
+          items:
+            type: string
+          description: Restrict to runs originating from these scheduled runs
+        trigger_count:
+          type: integer
+          description: Number of times this monitor has triggered
+        last_triggered_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: Last trigger timestamp
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/MonitorCondition'
+          description: Evaluation conditions
+        channels:
+          type: array
+          items:
+            $ref: '#/components/schemas/MonitorChannel'
+          description: Notification channels
+        create_time:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        update_time:
+          type: string
+          format: date-time
+          description: Last update timestamp
+
+    # --- Request Schemas ---
+
+    ConditionInput:
+      type: object
+      required:
+      - metric_id
+      - aggregation
+      - operator
+      properties:
+        metric_id:
+          type: string
+          description: ULID of the metric to evaluate
+        aggregation:
+          $ref: '#/components/schemas/ConditionAggregation'
+        operator:
+          $ref: '#/components/schemas/ConditionOperator'
+        threshold_float:
+          type: number
+          nullable: true
+        threshold_string:
+          type: string
+          nullable: true
+        window_size_days:
+          type: integer
+          nullable: true
+          minimum: 1
+          maximum: 365
+        window_size_runs:
+          type: integer
+          nullable: true
+          minimum: 1
+          maximum: 10000
+        match_value:
+          type: string
+          nullable: true
+        match_mode:
+          type: string
+          nullable: true
+          enum:
+          - exact
+          - contains
+          - contains_case_insensitive
+
+    ChannelInput:
+      type: object
+      required:
+      - channel_type
+      - config
+      properties:
+        channel_type:
+          $ref: '#/components/schemas/ChannelType'
+        config:
+          type: object
+          description: Channel-specific configuration
+
+    CreateMonitorRequest:
+      type: object
+      required:
+      - name
+      - evaluation_type
+      - conditions
+      properties:
+        name:
+          type: string
+          maxLength: 200
+          description: Human-readable monitor name
+        description:
+          type: string
+          maxLength: 2000
+          default: ""
+        evaluation_type:
+          $ref: '#/components/schemas/MonitorEvaluationType'
+        scope:
+          $ref: '#/components/schemas/MonitorScope'
+        match_mode:
+          $ref: '#/components/schemas/MonitorMatchMode'
+        cooldown_seconds:
+          type: integer
+          minimum: 0
+          maximum: 86400
+          default: 0
+        custom_message_template:
+          type: string
+          nullable: true
+          maxLength: 5000
+        agent_ids:
+          type: array
+          nullable: true
+          items:
+            type: string
+        required_tags:
+          type: array
+          nullable: true
+          items:
+            type: string
+        scheduled_run_ids:
+          type: array
+          nullable: true
+          items:
+            type: string
+        conditions:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ConditionInput'
+        channels:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChannelInput'
+          default: []
+
+    UpdateMonitorRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 2000
+        evaluation_type:
+          $ref: '#/components/schemas/MonitorEvaluationType'
+        scope:
+          $ref: '#/components/schemas/MonitorScope'
+        match_mode:
+          $ref: '#/components/schemas/MonitorMatchMode'
+        cooldown_seconds:
+          type: integer
+          minimum: 0
+          maximum: 86400
+        custom_message_template:
+          type: string
+          nullable: true
+        agent_ids:
+          type: array
+          nullable: true
+          items:
+            type: string
+        required_tags:
+          type: array
+          nullable: true
+          items:
+            type: string
+        scheduled_run_ids:
+          type: array
+          nullable: true
+          items:
+            type: string
+        conditions:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ConditionInput'
+          description: Replaces all existing conditions
+        channels:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChannelInput'
+          description: Replaces all existing channels
+
+    TestEvaluateRequest:
+      type: object
+      required:
+      - run_id
+      properties:
+        run_id:
+          type: string
+          description: Run ID to evaluate the monitor against
+
+    # --- Response Schemas ---
+
+    ListMonitorsResponse:
+      type: object
+      required:
+      - monitors
+      - total_count
+      properties:
+        monitors:
+          type: array
+          items:
+            $ref: '#/components/schemas/MonitorResource'
+        next_page_token:
+          type: string
+          nullable: true
+          description: Token for fetching the next page (null if no more results)
+        total_count:
+          type: integer
+          description: Total count of monitors matching filter
+
+    MonitorEventResource:
+      type: object
+      required:
+      - ulid
+      - monitor_ulid
+      - run_id
+      - outcome
+      - created_at
+      properties:
+        ulid:
+          type: string
+          pattern: ^[0-9A-Z]{26}$
+          description: Event ULID
+        monitor_ulid:
+          type: string
+          description: Monitor ULID that produced this event
+        run_id:
+          type: string
+          description: Run that triggered evaluation
+        outcome:
+          $ref: '#/components/schemas/MonitorEventOutcome'
+        condition_results:
+          type: array
+          items:
+            type: object
+            properties:
+              metric_id:
+                type: string
+              metric_display_name:
+                type: string
+              aggregation:
+                type: string
+              computed_value:
+                oneOf:
+                - type: number
+                - type: string
+                nullable: true
+              threshold:
+                oneOf:
+                - type: number
+                - type: string
+                nullable: true
+              operator:
+                type: string
+              met:
+                type: boolean
+          description: Per-condition evaluation results
+        dispatched_channels:
+          type: array
+          items:
+            type: object
+            properties:
+              channel_type:
+                type: string
+              channel_summary:
+                type: string
+              success:
+                type: boolean
+              error:
+                type: string
+                nullable: true
+          description: Per-channel dispatch results
+        message_sent:
+          type: string
+          nullable: true
+          description: Notification message that was dispatched
+        created_at:
+          type: string
+          format: date-time
+          description: Event creation timestamp
+
+    ListMonitorEventsResponse:
+      type: object
+      required:
+      - events
+      - total_count
+      properties:
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/MonitorEventResource'
+        next_page_token:
+          type: string
+          nullable: true
+        total_count:
+          type: integer
+
+    TestEvaluateResponse:
+      type: object
+      required:
+      - monitor_id
+      - run_id
+      - triggered
+      properties:
+        monitor_id:
+          type: string
+          description: Monitor ULID
+        run_id:
+          type: string
+          description: Run that was evaluated
+        triggered:
+          type: boolean
+          description: Whether the monitor would have triggered
+        suppressed:
+          type: boolean
+          default: false
+          description: Whether cooldown would have suppressed the trigger
+        condition_results:
+          type: array
+          items:
+            type: object
+          description: Per-condition evaluation results
+        dispatch_results:
+          type: array
+          items:
+            type: object
+          description: Empty for dry-run (no dispatching)
+        message:
+          type: string
+          description: Generated notification message
+
+    # --- Error Schemas ---
+
+    ErrorResponse:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          - details
+          properties:
+            code:
+              type: string
+              enum:
+              - INVALID_ARGUMENT
+              - UNAUTHENTICATED
+              - PERMISSION_DENIED
+              - NOT_FOUND
+              - ALREADY_EXISTS
+              - INTERNAL
+            message:
+              type: string
+              description: Human-readable error message
+            details:
+              type: array
+              items:
+                type: object
+                properties:
+                  field:
+                    type: string
+                    nullable: true
+                  description:
+                    type: string
+
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: INVALID_ARGUMENT
+              message: Invalid request body
+              details:
+              - field: conditions
+                description: "Value error, List should have at least 1 item after validation"
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: UNAUTHENTICATED
+              message: Authentication failed
+              details:
+              - field: X-API-Key
+                description: Invalid or missing API key
+
+    PermissionDenied:
+      description: Permission Denied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: PERMISSION_DENIED
+              message: Insufficient permissions
+              details:
+              - field: permissions
+                description: "Required scope: monitors:read"
+
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: NOT_FOUND
+              message: Monitor not found
+              details:
+              - field: monitor_id
+                description: "Monitor '01HZ0EXAMPLE00000000000000' not found"
+
+    InternalError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: INTERNAL
+              message: Internal server error
+              details:
+              - description: An unexpected error occurred
+
+  examples:
+    ListMonitorsSuccess:
+      summary: Successful list response
+      value:
+        monitors:
+        - ulid: 01HZ0EXAMPLE00000000000000
+          name: Latency SLA Monitor
+          description: Alert when average response latency exceeds 500ms
+          status: ACTIVE
+          evaluation_type: ON_RUN_COMPLETE
+          scope: MONITORING
+          match_mode: ALL
+          cooldown_seconds: 3600
+          trigger_count: 5
+          last_triggered_at: "2026-03-01T12:00:00Z"
+          conditions:
+          - ulid: 01HZCOND100000000000000000
+            metric_id: 01HZMETRIC0000000000000000
+            aggregation: RUN_AVERAGE
+            operator: GT
+            threshold_float: 500.0
+          channels:
+          - ulid: 01HZCHAN100000000000000000
+            channel_type: SLACK
+            config:
+              channel_id: C0123ABC
+              channel_name: "#sla-alerts"
+          create_time: "2026-02-15T10:30:00Z"
+          update_time: "2026-02-15T10:30:00Z"
+        next_page_token: null
+        total_count: 1
+
+    CreateMonitorSimple:
+      summary: Simple threshold monitor
+      value:
+        name: Low Resolution Rate Alert
+        evaluation_type: ON_RUN_COMPLETE
+        scope: MONITORING
+        conditions:
+        - metric_id: 01HZMETRIC0000000000000000
+          aggregation: SINGLE
+          operator: LT
+          threshold_float: 0.7
+        channels:
+        - channel_type: SLACK
+          config:
+            channel_id: C12345
+            channel_name: "#alerts"

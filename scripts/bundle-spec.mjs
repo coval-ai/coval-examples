@@ -2,11 +2,18 @@
 // Bundle Coval's per-resource OpenAPI v1 specs into a single combined spec.
 //
 // Source: docs/api-reference/v1/*-v1.yaml in the public docs repo
-//         (override via COVAL_SPECS_DIR).
+//         (override via COVAL_SPECS_DIR), plus the frozen legacy specs in
+//         legacy-specs/ (override via COVAL_LEGACY_SPECS_DIR).
 // Output: dist/coval-openapi.yaml in the SDK repo.
 //
+// Legacy specs describe paths the API still serves but the public catalog no
+// longer publishes (see legacy-specs/README.md). They keep the published SDK
+// surfaces for those paths. Canonical specs win: a legacy path or tag
+// definition that a canonical spec also defines is dropped from the legacy
+// spec. Legacy operations keep their tags, so they stay in the same API classes.
+//
 // Workflow:
-//   1. Read each *-v1.yaml from the specs dir.
+//   1. Read each *-v1.yaml from the specs dir, then each legacy spec.
 //   2. Scan for duplicate operationIds across specs (OpenAPI requires uniqueness).
 //      When duplicates appear, rename the conflicting operations by prefixing
 //      with the spec's slug (e.g. listMetrics in simulations-v1 becomes
@@ -31,6 +38,7 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const repoRoot = resolve(__dirname, '..');
 const SOURCE_DIR =
   process.env.COVAL_SPECS_DIR || resolve(repoRoot, '../coval/docs/api-reference/v1');
+const LEGACY_DIR = process.env.COVAL_LEGACY_SPECS_DIR || resolve(repoRoot, 'legacy-specs');
 const OUT_DIR = resolve(repoRoot, 'dist');
 const OUTPUT = join(OUT_DIR, 'coval-openapi.yaml');
 const CANONICAL_SERVER = 'https://api.coval.dev/v1';
@@ -45,16 +53,42 @@ if (!existsSync(SOURCE_DIR) || !statSync(SOURCE_DIR).isDirectory()) {
   process.exit(1);
 }
 
-const sourceFiles = readdirSync(SOURCE_DIR)
-  .filter((f) => f.endsWith('-v1.yaml'))
-  .sort();
+// A missing legacy dir would silently drop published SDK surfaces, so it is
+// an error rather than an empty list.
+if (!existsSync(LEGACY_DIR) || !statSync(LEGACY_DIR).isDirectory()) {
+  console.error(`✗ Legacy specs directory not found: ${LEGACY_DIR}`);
+  process.exit(1);
+}
 
-if (sourceFiles.length === 0) {
+const listSpecs = (dir) => readdirSync(dir).filter((f) => f.endsWith('-v1.yaml')).sort();
+const canonicalFiles = listSpecs(SOURCE_DIR);
+const legacyFiles = listSpecs(LEGACY_DIR);
+
+if (canonicalFiles.length === 0) {
   console.error(`✗ No *-v1.yaml files found in ${SOURCE_DIR}`);
   process.exit(1);
 }
 
-console.log(`Found ${sourceFiles.length} specs in ${SOURCE_DIR}`);
+console.log(`Found ${canonicalFiles.length} specs in ${SOURCE_DIR}`);
+console.log(`Found ${legacyFiles.length} legacy specs in ${LEGACY_DIR}`);
+
+// Legacy sources keep their docs filename, so the slug used for operationId
+// conflict renames (for example simulations_listMetrics) matches the names the
+// SDKs published before those specs left the catalog.
+const sources = [
+  ...canonicalFiles.map((filename) => ({
+    key: filename,
+    filename,
+    filepath: join(SOURCE_DIR, filename),
+    legacy: false,
+  })),
+  ...legacyFiles.map((filename) => ({
+    key: `legacy/${filename}`,
+    filename,
+    filepath: join(LEGACY_DIR, filename),
+    legacy: true,
+  })),
+];
 
 const HTTP_METHODS = new Set([
   'get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'trace',
@@ -65,13 +99,17 @@ const slugFromFile = (filename) => basename(filename, '.yaml').replace(/-v1$/, '
 const seenOperationIds = new Map();
 const renamed = [];
 const normalizedPaths = [];
+const canonicalPaths = new Set();
+const canonicalTags = new Set();
+const droppedLegacyPaths = [];
+const droppedLegacyTags = [];
+const tmpFiles = [];
 
 const tmpRoot = join(tmpdir(), `coval-sdk-bundle-${process.pid}`);
 rmSync(tmpRoot, { recursive: true, force: true });
 mkdirSync(tmpRoot, { recursive: true });
 
-for (const filename of sourceFiles) {
-  const filepath = join(SOURCE_DIR, filename);
+for (const { key, filename, filepath, legacy } of sources) {
   const doc = parse(readFileSync(filepath, 'utf8'));
   const slug = slugFromFile(filename);
 
@@ -90,16 +128,32 @@ for (const filename of sourceFiles) {
         ? pathKey.slice(3)
         : pathKey;
     if (Object.hasOwn(paths, normalized)) {
-      console.error(`Path collision in ${filename}: ${pathKey} normalizes to ${normalized}`);
+      console.error(`Path collision in ${key}: ${pathKey} normalizes to ${normalized}`);
       process.exit(1);
     }
+    if (legacy && canonicalPaths.has(normalized)) {
+      droppedLegacyPaths.push({ key, path: normalized });
+      continue;
+    }
+    if (!legacy) canonicalPaths.add(normalized);
     paths[normalized] = pathItem;
     if (normalized !== pathKey) {
-      normalizedPaths.push({ filename, from: pathKey, to: normalized });
+      normalizedPaths.push({ key, from: pathKey, to: normalized });
     }
   }
   doc.paths = paths;
   doc.servers = [{ url: CANONICAL_SERVER }];
+
+  const tags = [];
+  for (const tag of doc.tags ?? []) {
+    if (legacy && canonicalTags.has(tag.name)) {
+      droppedLegacyTags.push({ key, tag: tag.name });
+      continue;
+    }
+    if (!legacy) canonicalTags.add(tag.name);
+    tags.push(tag);
+  }
+  if (doc.tags) doc.tags = tags;
 
   for (const [pathKey, pathItem] of Object.entries(doc.paths ?? {})) {
     if (!pathItem || typeof pathItem !== 'object') continue;
@@ -110,38 +164,53 @@ for (const filename of sourceFiles) {
 
       const previous = seenOperationIds.get(opId);
       if (previous === undefined) {
-        seenOperationIds.set(opId, filename);
+        seenOperationIds.set(opId, key);
         continue;
       }
-      if (previous === filename) continue;
+      if (previous === key) continue;
 
       const newId = `${slug}_${opId}`;
       operation.operationId = newId;
-      seenOperationIds.set(newId, filename);
-      renamed.push({ filename, from: opId, to: newId, pathKey, method });
+      seenOperationIds.set(newId, key);
+      renamed.push({ key, from: opId, to: newId, pathKey, method });
     }
   }
 
-  writeFileSync(join(tmpRoot, filename), stringify(doc));
+  const tmpFile = join(tmpRoot, legacy ? `legacy-${filename}` : filename);
+  writeFileSync(tmpFile, stringify(doc));
+  tmpFiles.push(tmpFile);
 }
 
 if (renamed.length > 0) {
   console.log('\nResolved operationId conflicts:');
   for (const r of renamed) {
-    console.log(`  ${r.filename}: ${r.method.toUpperCase()} ${r.pathKey} → ${r.from} → ${r.to}`);
+    console.log(`  ${r.key}: ${r.method.toUpperCase()} ${r.pathKey} → ${r.from} → ${r.to}`);
+  }
+}
+
+if (droppedLegacyPaths.length > 0) {
+  console.log('\nDropped legacy paths that a canonical spec defines:');
+  for (const dropped of droppedLegacyPaths) {
+    console.log(`  ${dropped.key}: ${dropped.path}`);
+  }
+}
+
+if (droppedLegacyTags.length > 0) {
+  console.log('\nDropped legacy tag definitions that a canonical spec defines:');
+  for (const dropped of droppedLegacyTags) {
+    console.log(`  ${dropped.key}: ${dropped.tag}`);
   }
 }
 
 if (normalizedPaths.length > 0) {
   console.log('\nNormalized version-prefixed paths for the canonical /v1 server:');
   for (const path of normalizedPaths) {
-    console.log(`  ${path.filename}: ${path.from} -> ${path.to}`);
+    console.log(`  ${path.key}: ${path.from} -> ${path.to}`);
   }
 }
 
 mkdirSync(OUT_DIR, { recursive: true });
 
-const specPaths = sourceFiles.map((f) => join(tmpRoot, f));
 const quoted = (s) => `"${s.replace(/"/g, '\\"')}"`;
 const redocly = join(repoRoot, 'scripts', 'node_modules', '.bin', 'redocly');
 if (!existsSync(redocly)) {
@@ -151,10 +220,14 @@ if (!existsSync(redocly)) {
 const cmd = [
   quoted(redocly),
   'join',
-  ...specPaths.map(quoted),
+  ...tmpFiles.map(quoted),
   '-o',
   quoted(OUTPUT),
   '--prefix-components-with-info-prop=title',
+  // Legacy specs reuse canonical tag names (Audio, Metric Outputs) so their
+  // operations stay in the same API classes. x-tagGroups cannot hold one tag in
+  // two groups, and openapi-generator ignores them.
+  '--without-x-tag-groups',
 ].join(' ');
 
 try {

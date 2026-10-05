@@ -363,19 +363,38 @@ def patch_update_run_response_compatibility() -> None:
   _patch_oneof_response_compatibility(MODELS / "update_run200_response_run.py", from_dict)
 
 
-def patch_submit_conversation_response_compatibility() -> None:
+def _patch_submit_response_compatibility(
+  filename: str, wrapper: str, filtered_model: str, submitted_model: str
+) -> None:
   from_dict = (
     "    @classmethod\n"
     "    def from_dict(cls, obj: Union[str, Dict[str, Any]]) -> Self:\n"
     "        if isinstance(obj, str):\n"
     "            obj = json.loads(obj)\n"
     "        if not isinstance(obj, dict):\n"
-    "            raise TypeError(\"SubmitConversation200Response must be an object\")\n"
+    f"            raise TypeError(\"{wrapper} must be an object\")\n"
     "        if \"filtered\" in obj:\n"
-    "            return cls(CovalConversationsAPIFilteredSubmitResponse.from_dict(obj))\n"
-    "        return cls(CovalConversationsAPISubmitConversationResponse.from_dict(obj))\n\n"
+    f"            return cls({filtered_model}.from_dict(obj))\n"
+    f"        return cls({submitted_model}.from_dict(obj))\n\n"
   )
-  _patch_oneof_response_compatibility(MODELS / "submit_conversation200_response.py", from_dict)
+  _patch_oneof_response_compatibility(MODELS / filename, from_dict)
+
+
+def patch_submit_conversation_response_compatibility() -> None:
+  # Legacy POST /conversations:submit, generated from legacy-specs/.
+  _patch_submit_response_compatibility(
+    "submit_conversation200_response.py",
+    "SubmitConversation200Response",
+    "CovalConversationsAPIFilteredSubmitResponse",
+    "CovalConversationsAPISubmitConversationResponse",
+  )
+  # Canonical POST /conversations/uploaded:submit.
+  _patch_submit_response_compatibility(
+    "submit_uploaded_conversation200_response.py",
+    "SubmitUploadedConversation200Response",
+    "CovalUploadedConversationsAPIFilteredSubmitResponse",
+    "CovalUploadedConversationsAPISubmitUploadedConversationResponse",
+  )
 
 
 def main() -> None:

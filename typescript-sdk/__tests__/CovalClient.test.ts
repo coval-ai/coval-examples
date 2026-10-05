@@ -52,7 +52,7 @@ describe('apiKeyAuthMiddleware', () => {
     expect(exposedApiNames).toEqual(generatedApiNames);
   });
 
-  it('keeps renamed model serializers as compatibility aliases', () => {
+  it('keeps renamed model serializers exported under their old names', () => {
     const modelExports = new Map(Object.entries(generatedModels));
     const compatibilityPairs = [
       [
@@ -77,9 +77,23 @@ describe('apiKeyAuthMiddleware', () => {
       ],
     ] as const;
 
+    // An old name is either an alias of the new serializer or, once the legacy
+    // spec's schema diverges from the canonical one, its own generated model.
     for (const [oldName, newName] of compatibilityPairs) {
-      expect(modelExports.get(oldName)).toBe(modelExports.get(newName));
+      expect(modelExports.get(oldName)).toBeTypeOf('function');
+      expect(modelExports.get(newName)).toBeTypeOf('function');
     }
+  });
+
+  it('keeps the legacy conversation, simulation, and monitor APIs', () => {
+    const client = new CovalClient({ apiKey: 'test-key' });
+
+    expect(client.conversations).toBeInstanceOf(generatedApis.ConversationsApi);
+    expect(client.simulations).toBeInstanceOf(generatedApis.SimulationsApi);
+    expect(client.monitors).toBeInstanceOf(generatedApis.MonitorsApi);
+    expect(client.monitorEvents).toBeInstanceOf(generatedApis.MonitorEventsApi);
+    expect(client.uploadedConversations).toBeInstanceOf(generatedApis.UploadedConversationsApi);
+    expect(client.simulatedConversations).toBeInstanceOf(generatedApis.SimulatedConversationsApi);
   });
 
   it('deserializes run CallSids by simulation output ID', () => {

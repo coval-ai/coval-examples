@@ -1,0 +1,1228 @@
+openapi: 3.0.3
+x-visibility: external  # external | internal — only `external` specs are published to the public API/docs
+info:
+  title: Coval Simulations API
+  version: 1.0.0
+  description: |
+
+    Launch and manage voice simulations for AI agent testing.
+
+  contact:
+    name: Coval API Support
+    email: support@coval.dev
+    url: https://docs.coval.ai
+  license:
+    name: Proprietary
+    url: https://coval.dev/terms
+servers:
+- url: https://api.coval.dev/v1
+  description: Production API
+tags:
+- name: Simulations
+  description: Launch and manage individual simulation executions
+- name: Metric Outputs
+  description: Retrieve metric computation results for simulations
+security:
+- ApiKeyAuth: []
+paths:
+  /simulations:
+    get:
+      operationId: listSimulations
+      summary: List simulations
+      description: List simulations with optional filtering and sorting.
+      tags:
+      - Simulations
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+        description: |
+          Filter expression syntax.
+
+          Supported fields: `status`, `agent_id`, `persona_id`, `test_set_id`, `test_case_id`, `run_id`, `external_conversation_id`, `mutation_id`, `mutation_name`, `create_time`, `metric.{metric_id}`
+
+          Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`
+
+          A `metric.{metric_id}` predicate (score filtering; number and string metrics, type inferred
+          from the literal) returns only simulations whose metric matches, with each simulation's value
+          per metric embedded inline (`metric_values`). On this path the request is keyset-paginated,
+          ordered newest-first by creation time, and supports only `AND` alongside `create_time`,
+          `agent_id`, `status`, `test_set_id`, and `persona_id`; other fields and any non-default
+          `order_by` are rejected with 400, and `page_size` is capped at 100.
+
+          Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status="IN PROGRESS"`).
+
+          The `external_conversation_id` field is your system's conversation ID for cross-system lookup.
+
+          **Mutation Filtering:** Use `mutation_id` or `mutation_name` to filter simulations by agent mutation variant.
+          Base agent simulations have both `mutation_id` and `mutation_name` = null.
+          To get only base agent results, filter for simulations where `mutation_id` is not set.
+        example: status=COMPLETED AND agent_id=gk3jK9mPq2xRt5vW8yZaBc
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          default: 50
+        description: Maximum number of results per page
+        example: 50
+      - name: page_token
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Opaque pagination token from previous response
+      - name: order_by
+        in: query
+        required: false
+        schema:
+          type: string
+          default: -create_time
+        description: |
+          Sort order specification.
+
+          Format: `field` or `-field` (descending)
+
+          Supported fields: `create_time`, `status`
+        example: -create_time
+      - name: include
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: [metric_values]
+        description: |
+          Set to `metric_values` to embed each simulation's value per metric inline. Served by the
+          keyset engine (newest-first, `page_size` capped at 100).
+      responses:
+        '200':
+          description: List of simulations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListSimulationsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /simulations/{simulation_id}:
+    get:
+      operationId: getSimulation
+      summary: Get simulation
+      description: Get a simulation by ID.
+      tags:
+      - Simulations
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: simulation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 22
+          maxLength: 27
+        description: The simulation ID
+        example: 3zfmuDbVQsi4GaseDtiVcS
+      responses:
+        '200':
+          description: Simulation resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSimulationResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    patch:
+      operationId: updateSimulation
+      summary: Update simulation
+      description: |
+        Update specific fields of a simulation.
+        All fields are optional (PATCH semantics). Only provided fields will be updated.
+      tags:
+      - Simulations
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: simulation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 22
+          maxLength: 27
+        description: The simulation ID
+        example: 3zfmuDbVQsi4GaseDtiVcS
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSimulationRequest'
+            examples:
+              togglePublic:
+                summary: Toggle public visibility
+                value:
+                  is_public: true
+              updateNotes:
+                summary: Update notes
+                value:
+                  notes: Simulation performed well on all metrics.
+      responses:
+        '200':
+          description: Simulation updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateSimulationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    delete:
+      operationId: deleteSimulation
+      summary: Delete or cancel simulation
+      description: Cancel or delete a simulation.
+      tags:
+      - Simulations
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: simulation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 22
+          maxLength: 27
+        description: The simulation ID to delete/cancel
+        example: 4bgnvEcWRtj5HbtfEujWdT
+      responses:
+        '200':
+          description: Simulation deleted or cancelled successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Empty response on success
+                example: {}
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /simulations/{simulation_id}/resimulate:
+    post:
+      operationId: resimulateSimulation
+      summary: Rerun a simulation
+      description: |
+        Requeue a single existing simulation to run again in place.
+        The currently visible result for this simulation will be overwritten when the rerun completes.
+        The rerun executes the agent's current configuration, while the persona prompt and test case parameters recorded on the original run are preserved.
+      tags:
+      - Simulations
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: simulation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 22
+          maxLength: 27
+        description: The simulation ID to rerun
+        example: 4bgnvEcWRtj5HbtfEujWdT
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResimulateSimulationRequest'
+      responses:
+        '200':
+          description: Simulation rerun was accepted and queued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResimulateSimulationResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '412':
+          $ref: '#/components/responses/FailedPrecondition'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  '/simulations:rerunMetrics':
+    post:
+      operationId: rerunMetrics
+      summary: Batch rerun metrics
+      description: |
+        Re-score a set of metrics against a set of existing simulations without re-running the
+        simulations. The same metrics are applied to every simulation (metrics x simulations).
+        Limits: up to 100 simulations, up to 500 metrics, and at most 500 total reruns
+        (simulation_ids x metric_ids) per call. Requests also count against an organization-level
+        hourly limit on simulations queued (default 5000/hour); when exceeded the API returns 429
+        with a Retry-After header. Best-effort per simulation: valid simulations are
+        queued and a per-simulation status is returned. Existing metric results are overwritten
+        when each rerun completes.
+      tags:
+      - Simulations
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RerunMetricsRequest'
+      responses:
+        '202':
+          description: All simulations were queued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RerunMetricsResponse'
+        '207':
+          description: Some simulations could not be queued; see per-simulation statuses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RerunMetricsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /simulations/{simulation_id}/audio:
+    get:
+      operationId: getAudioURL
+      summary: Get audio file URL
+      description: Get a download URL for the simulation audio recording.
+      tags:
+      - Simulations
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: simulation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 22
+          maxLength: 27
+        description: The simulation ID
+        example: 5chowFdXSuk6IcugFvkXeU
+      responses:
+        '200':
+          description: Presigned audio URL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAudioURLResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /simulations/{simulation_id}/metrics:
+    get:
+      operationId: listMetrics
+      summary: List metrics
+      description: List metric results for a simulation.
+      tags:
+      - Metric Outputs
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: simulation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 22
+          maxLength: 27
+        description: The simulation ID
+        example: 6djpxGeYTvl7JdvhGwlYfV
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+        description: |
+          Filter expression syntax.
+
+          Supported fields: `status`, `metric_id`, `metric_name`, `value`, `create_time`, `start_time`, `end_time`
+
+          Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`
+
+          Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status="IN PROGRESS"`).
+        example: status=COMPLETED AND metric_name=accuracy
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          default: 50
+        description: Maximum number of results per page
+        example: 50
+      - name: page_token
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Opaque pagination token from previous response
+      - name: view
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: [BASIC, FULL]
+          default: FULL
+        description: |
+          Response detail level. `FULL` preserves the historical response including
+          structured `result` and `runtime_metadata`; `BASIC` omits those heavy fields
+          while retaining value, status, explanation, and bounded subvalues.
+        example: BASIC
+      - name: order_by
+        in: query
+        required: false
+        schema:
+          type: string
+          default: metric_name
+        description: |
+          Sort order specification.
+
+          Format: `field` or `-field` (descending)
+
+          Supported fields: `metric_name`, `create_time`, `value`, `start_time`, `end_time`
+        example: metric_name
+      responses:
+        '200':
+          description: List of metric outputs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMetricsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /simulations/{simulation_id}/metrics/{metric_output_id}:
+    get:
+      operationId: getMetric
+      summary: Get simulation metric output(s)
+      description: |
+        Retrieve metric output(s) for a simulation by ID. The path segment
+        accepts two ID types and returns different response shapes:
+
+        - **26-char MetricOutput ULID**: returns a single metric output as
+          `{ "metric": {...} }`.
+        - **22-char Metric definition ID**: returns every output for that
+          metric on the simulation as `{ "metric_outputs": [...] }`.
+
+        Clients should branch on the input ID length they passed.
+
+        **Retrieving test-metric results:** after calling
+        `POST /v1/metrics/{metric_id}/test`, poll this endpoint using the same
+        simulation output ID you tested against as `simulation_id`, plus the
+        returned 26-char `metric_output_ulid`. The response includes a `status`
+        field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it
+        is terminal. Test-metric outputs belong to the simulation they ran
+        against, so they are retrieved here, not via the conversations endpoint.
+      tags:
+      - Metric Outputs
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: simulation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 22
+          maxLength: 27
+        description: The simulation ID
+        example: 7ekqyHfZUwm8KewjHxmZgW
+      - name: metric_output_id
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 22
+          maxLength: 26
+        description: |
+          Either a 26-char MetricOutput ULID or a 22-char Metric definition ID.
+          See endpoint description for response shape per ID type.
+        example: 01ARZ3NDEKTSV4RRFFQ69G5FAV
+      responses:
+        '200':
+          description: |
+            Metric output details. Single object when called with a 26-char
+            ULID, collection object when called with a 22-char metric_id.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/GetMetricOutputResponse'
+                - $ref: '#/components/schemas/MetricOutputCollection'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: |
+        API key for authentication.
+
+        
+  schemas:
+    GetSimulationResponse:
+      type: object
+      required:
+      - simulation
+      properties:
+        simulation:
+          $ref: '#/components/schemas/SimulationResourceFull'
+    ListSimulationsResponse:
+      type: object
+      required:
+      - simulations
+      properties:
+        simulations:
+          type: array
+          items:
+            $ref: '#/components/schemas/SimulationResource'
+          description: Array of simulation resources (summary view without results)
+        next_page_token:
+          type: string
+          description: Token for fetching next page of results (if more exist)
+          example: eyJvZmZzZXQiOiA1MH0=
+    PhoneEndpoint:
+      type: object
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          enum:
+          - phone
+          description: Endpoint kind discriminator
+        value:
+          type: string
+          description: Phone number in E.164 format
+          example: '+15551234567'
+    SipEndpoint:
+      type: object
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          enum:
+          - sip
+          description: Endpoint kind discriminator
+        value:
+          type: string
+          description: SIP URI
+          example: sip:agent@voip.example.com
+    WebsocketEndpoint:
+      type: object
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          enum:
+          - websocket
+          description: Endpoint kind discriminator
+        value:
+          type: string
+          description: WebSocket URL
+          example: wss://agent.example.com/stream
+    SimulationResource:
+      type: object
+      required:
+      - name
+      - simulation_id
+      - run_id
+      - status
+      - create_time
+      - has_audio
+      properties:
+        name:
+          type: string
+          description: Resource name in format "simulations/{simulation_id}"
+          example: simulations/abc123xyz789
+        simulation_id:
+          type: string
+          description: The unique identifier for this simulation execution
+          example: abc123xyz789
+        run_id:
+          type: string
+          description: The parent run ID (for grouping simulations)
+          example: abc123xyz789
+        status:
+          type: string
+          enum:
+          - PENDING
+          - IN QUEUE
+          - IN PROGRESS
+          - COMPLETED
+          - FAILED
+          - CANCELLED
+          - DELETED
+          description: Current status of the simulation
+          example: COMPLETED
+        create_time:
+          type: string
+          format: date-time
+          description: Timestamp when the simulation was created (ISO 8601, UTC)
+          example: '2025-10-14T12:00:00Z'
+        agent_id:
+          type: string
+          nullable: true
+          description: Reference to agent resource
+          example: gk3jK9mPq2xRt5vW8yZaBc
+        persona_id:
+          type: string
+          nullable: true
+          description: Reference to persona resource
+          example: hL4kL0nQr3ySt6vX9zAcDd
+        test_set_id:
+          type: string
+          nullable: true
+          description: Reference to test set resource
+          example: aB1cD2eF
+        test_case_id:
+          type: string
+          nullable: true
+          description: Reference to test case that was executed
+          example: test_xyz123
+        has_audio:
+          type: boolean
+          description: Whether audio recording is available for this simulation
+          example: true
+        source:
+          description: The caller/initiating side of the simulation (the persona); null when not addressable
+          type: object
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/PhoneEndpoint'
+          - $ref: '#/components/schemas/SipEndpoint'
+          - $ref: '#/components/schemas/WebsocketEndpoint'
+          discriminator:
+            propertyName: type
+        destination:
+          description: The agent side of the simulation; null when not addressable
+          type: object
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/PhoneEndpoint'
+          - $ref: '#/components/schemas/SipEndpoint'
+          - $ref: '#/components/schemas/WebsocketEndpoint'
+          discriminator:
+            propertyName: type
+        error_message:
+          type: string
+          nullable: true
+          description: Error message if simulation failed or was cancelled
+          example: Simulation failed to run.
+        mutation_id:
+          type: string
+          nullable: true
+          description: ID of the mutation variant used, or null for base agent simulations.
+          example: 01ARZ3NDEKTSV4RRFFQ69G5FAV
+        mutation_name:
+          type: string
+          nullable: true
+          description: Display name of the mutation variant, or null for base agent simulations.
+          example: GPT-4 Fast VAD
+        notes:
+          type: string
+          nullable: true
+          description: Free-text notes attached to the simulation. Settable via PATCH /simulations/{simulation_id}.
+          example: Reviewed – false positive
+        is_public:
+          type: boolean
+          description: Whether the simulation is shared via a public link. Settable via PATCH /simulations/{simulation_id}.
+          example: false
+        metric_values:
+          type: object
+          nullable: true
+          additionalProperties:
+            type: number
+          description: |
+            Numeric value per metric on this simulation, keyed by metric id. Present when the list
+            request sets include=metric_values or filters by metric value (filter=metric.<id> ...);
+            omitted from the default summary view. Only numeric (float) metric values are included —
+            string-metric values are not. On this metric-aware path the simulation is a summary
+            projection: has_audio and is_public are reported false and test_case_id / mutation /
+            endpoint fields are null regardless of the record — fetch GET /v1/simulations/{id} for
+            authoritative values.
+          example:
+            29BlkepvvX19ebbLDB0y6Q: 0.92
+    SimulationResourceFull:
+      allOf:
+      - $ref: '#/components/schemas/SimulationResource'
+      - type: object
+        properties:
+          call_sid:
+            type: string
+            nullable: true
+            description: Twilio-compatible call identifier generated for this WebSocket simulation execution; null for other transports and historical simulations
+            example: CA56c8280db12f52ea578f61636ae21e02
+          transcript:
+            type: array
+            items:
+              $ref: '#/components/schemas/TranscriptMessage'
+            nullable: true
+            description: Full conversation transcript (only included in GET, not LIST)
+    TranscriptMessage:
+      type: object
+      required:
+      - role
+      - content
+      properties:
+        role:
+          type: string
+          description: Message role (user, assistant, system)
+          example: assistant
+        content:
+          description: Message content (can be string or structured object)
+          oneOf:
+          - type: string
+          - type: object
+          example: Hello! How can I help you today?
+        start_timestamp:
+          type: string
+          description: Start timestamp in seconds
+          example: '0.0'
+        end_timestamp:
+          type: string
+          description: End timestamp in seconds
+          example: '2.5'
+        start_offset:
+          type: integer
+          description: Start offset in milliseconds
+          example: 0
+        end_offset:
+          type: integer
+          description: End offset in milliseconds
+          example: 2500
+    GetAudioURLResponse:
+      type: object
+      required:
+      - audio_url
+      - simulation_id
+      - url_expires_in_seconds
+      properties:
+        audio_url:
+          type: string
+          format: uri
+          description: Presigned S3 URL for audio file download (valid for 1 hour)
+          example: https://coval-voice-evals-prod.s3.amazonaws.com/audio/abc123.wav?X-Amz-Signature=...
+        peaks_url:
+          type: string
+          format: uri
+          nullable: true
+          description: |
+            Presigned S3 URL for precomputed waveform peaks JSON (valid for 1 hour).
+            Contains an array of up to 800 [min, max] amplitude pairs for waveform visualization.
+            Null for older recordings without precomputed peaks. May return 404 if peaks
+            were not generated for this recording.
+          example: https://coval-voice-evals-prod.s3.amazonaws.com/audio/abc123.peaks.json?X-Amz-Signature=...
+        simulation_id:
+          type: string
+          description: Simulation identifier
+          example: def456ghi012
+        url_expires_in_seconds:
+          type: integer
+          description: URL expiration time in seconds (3600 = 1 hour)
+          example: 3600
+    UpdateSimulationRequest:
+      type: object
+      description: Partial update request for a simulation (PATCH semantics)
+      properties:
+        is_public:
+          type: boolean
+          nullable: true
+          description: Toggle public visibility of the simulation
+        notes:
+          type: string
+          nullable: true
+          maxLength: 500
+          description: Update notes for the simulation
+    UpdateSimulationResponse:
+      type: object
+      required:
+      - simulation
+      properties:
+        simulation:
+          $ref: '#/components/schemas/SimulationResourceFull'
+    ResimulateSimulationRequest:
+      type: object
+      description: Request body for resimulating a simulation. Currently no user-facing fields; the body may be empty or omitted.
+    ResimulateSimulationResponse:
+      type: object
+      required:
+      - simulation_id
+      - run_id
+      - queued
+      - message
+      properties:
+        simulation_id:
+          type: string
+          description: The simulation that was queued for rerun
+          example: 4bgnvEcWRtj5HbtfEujWdT
+        run_id:
+          type: string
+          description: The parent run that owns the simulation
+          example: 3zfmuDbVQsi4GaseDtiVcS
+        queued:
+          type: boolean
+          description: Whether the resimulation job was queued successfully
+          example: true
+        message:
+          type: string
+          description: Human-readable summary of rerun behavior
+          example: Simulation rerun queued. The latest database-backed versions of the agent, persona, test set, test case, and metrics will be reloaded before execution, and the current simulation result will be overwritten.
+    RerunMetricsRequest:
+      type: object
+      required:
+      - simulation_ids
+      - metric_ids
+      properties:
+        simulation_ids:
+          type: array
+          description: Simulation IDs (22-character ShortUUIDs) to re-score. Up to 100 per call.
+          minItems: 1
+          maxItems: 100
+          items:
+            type: string
+            minLength: 22
+            maxLength: 22
+          example:
+          - 4bgnvEcWRtj5HbtfEujWdT
+        metric_ids:
+          type: array
+          description: Metric IDs (22-character ShortUUIDs) to run against every simulation. Up to 500 per call.
+          minItems: 1
+          maxItems: 500
+          items:
+            type: string
+            minLength: 22
+            maxLength: 22
+          example:
+          - 29BlkepvvX19ebbLDB0y6Q
+    RerunMetricsResultItem:
+      type: object
+      required:
+      - simulation_id
+      - status
+      properties:
+        simulation_id:
+          type: string
+          example: 4bgnvEcWRtj5HbtfEujWdT
+        status:
+          type: string
+          enum:
+          - QUEUED
+          - NOT_FOUND
+          - ENQUEUE_FAILED
+          description: Per-simulation outcome of the rerun request.
+        error:
+          type: string
+          nullable: true
+          description: Human-readable reason the simulation was not queued (null when QUEUED).
+    RerunMetricsResponse:
+      type: object
+      required:
+      - results
+      - queued_count
+      - failed_count
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RerunMetricsResultItem'
+          description: One entry per requested simulation, in request order.
+        queued_count:
+          type: integer
+          description: Number of simulations successfully queued.
+          example: 2
+        failed_count:
+          type: integer
+          description: Number of simulations that could not be queued.
+          example: 0
+    ListMetricsResponse:
+      type: object
+      required:
+      - metrics
+      properties:
+        metrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/SimpleMetricOutput'
+          description: Array of simplified metric outputs
+        next_page_token:
+          type: string
+          description: Token for fetching next page of results (if more exist)
+          example: eyJvZmZzZXQiOiA1MH0=
+    GetMetricOutputResponse:
+      type: object
+      required:
+      - metric
+      description: Single metric output (returned when {metric_output_id} is a 26-char ULID)
+      properties:
+        metric:
+          $ref: '#/components/schemas/SimpleMetricOutput'
+    MetricOutputCollection:
+      type: object
+      required:
+      - metric_outputs
+      description: |
+        All MetricOutput rows for a given Metric on this simulation.
+        Returned when the path {metric_output_id} is a 22-char Metric
+        definition ID.
+      properties:
+        metric_outputs:
+          type: array
+          items:
+            $ref: '#/components/schemas/SimpleMetricOutput'
+    SimpleMetricOutput:
+      type: object
+      required:
+      - metric_output_id
+      - metric_id
+      - status
+      properties:
+        metric_output_id:
+          type: string
+          minLength: 26
+          maxLength: 26
+          description: Unique metric output identifier (26-char ULID)
+          example: 01JCQR8Z9PQSTNVWXY12345678
+        metric_id:
+          type: string
+          description: Metric definition identifier
+          example: abc123xyz789
+        metric_version_ulid:
+          type: string
+          nullable: true
+          minLength: 26
+          maxLength: 26
+          description: >-
+            ULID of the metric version this output was scored against (null for
+            outputs produced before metric versioning landed).
+          example: 01JCQR8Z9PQSTNVWXY12345678
+        value:
+          description: Metric value (float, string, or list of strings). Can be null if not yet computed.
+          example: 0.85
+          oneOf:
+          - type: number
+          - type: string
+          - type: array
+            items:
+              type: string
+        status:
+          type: string
+          enum:
+          - IN QUEUE
+          - IN PROGRESS
+          - COMPLETED
+          - SKIPPED
+          - FAILED
+          - CANCELLED
+          description: Current status of the metric computation
+          example: COMPLETED
+        status_reason:
+          type: string
+          nullable: true
+          description: >-
+            Stored reason for the current status, including the actionable
+            reason a metric was skipped or failed. Null when no reason was
+            recorded.
+          example: No OTel trace spans were found for this simulation.
+        explanation:
+          type: string
+          nullable: true
+          description: >-
+            The LLM judge's reasoning for this metric output, as a flat string.
+            Null for metrics that produce no explanation (non-judge metrics) or
+            when the output is not yet computed. This is a convenience surfacing
+            of the reasoning that otherwise lives nested under
+            result.llm.answer_explanation (or result.explanation); it is
+            populated in both the list and single-output responses so callers do
+            not have to request the full result object to read it.
+          example: The agent never confirmed the caller's address before ending the call.
+        subvalues_by_timestamp:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/SubvalueByTimestamp'
+          description: Time-series metric values anchored to time ranges
+        result:
+          type: object
+          nullable: true
+          additionalProperties: true
+          description: >-
+            Structured metric result. Its keys depend on the metric type — for
+            example llm for LLM-judge metrics, or stats/count for numeric
+            metrics. The llm key is present only for LLM-judge metrics: the
+            judge's reasoning is at result.llm.answer_explanation and the
+            evaluation prompt at result.llm.prompt. Null for metrics that
+            produce no structured result.
+          example:
+            llm:
+              answer_explanation: The agent never confirmed the caller's address before ending the call.
+              prompt: Did the agent confirm the caller's address?
+        runtime_metadata:
+          type: object
+          nullable: true
+          additionalProperties: true
+          description: >-
+            How the metric was computed at runtime, such as model version and
+            trace context. Null when not recorded.
+    SubvalueByTimestamp:
+      type: object
+      required:
+      - start_offset
+      - end_offset
+      - output_type
+      properties:
+        start_offset:
+          type: number
+          description: Start position in seconds
+          example: 0.0
+        end_offset:
+          type: number
+          description: End position in seconds
+          example: 2.5
+        output_type:
+          type: string
+          enum:
+          - float
+          - string
+          - set
+          description: Value type
+          example: float
+        float_value:
+          type: number
+          description: Numeric value (when output_type is float)
+          default: 0.0
+          example: 0.85
+        string_value:
+          type: string
+          description: String value (when output_type is string)
+          default: ''
+          example: ''
+        role:
+          type: string
+          nullable: true
+          description: Speaker role for this interval (e.g. user, assistant)
+          example: assistant
+        message_index:
+          type: integer
+          nullable: true
+          description: 0-based transcript message index
+          example: 3
+    ErrorResponse:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorInfo'
+    ErrorInfo:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          enum:
+          - INVALID_ARGUMENT
+          - UNAUTHENTICATED
+          - PERMISSION_DENIED
+          - NOT_FOUND
+          - FAILED_PRECONDITION
+          - RESOURCE_EXHAUSTED
+          - INTERNAL
+          description: Machine-readable error code
+          example: INVALID_ARGUMENT
+        message:
+          type: string
+          description: Human-readable error message
+          example: Request validation failed
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          description: Detailed information about specific error fields
+    ErrorDetail:
+      type: object
+      required:
+      - description
+      properties:
+        field:
+          type: string
+          description: The field that caused the error (if applicable)
+          example: agent_id
+        description:
+          type: string
+          description: Human-readable description of the error
+          example: Agent not found or not accessible by your organization
+  responses:
+    BadRequest:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: INVALID_ARGUMENT
+              message: Request validation failed
+              details:
+              - field: iteration_count
+                description: Value must be between 1 and 10
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: UNAUTHENTICATED
+              message: Missing API Key
+              details:
+              - field: X-API-Key
+                description: X-API-Key header is required
+    Forbidden:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: PERMISSION_DENIED
+              message: Insufficient permissions
+              details:
+              - field: permissions
+                description: API key does not include required scope
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: NOT_FOUND
+              message: Agent not found
+              details:
+              - field: agent_id
+                description: Agent 'gk3jK9mPq2xRt5vW8yZaBc' does not exist
+    FailedPrecondition:
+      description: Request is valid but the simulation cannot currently be rerun
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: FAILED_PRECONDITION
+              message: Simulation cannot be rerun
+              details:
+              - field: simulation_id
+                description: Simulation '4bgnvEcWRtj5HbtfEujWdT' is currently active with status 'IN PROGRESS' and cannot be rerun
+    TooManyRequests:
+      description: Organization rate limit exceeded; retry after the Retry-After window
+      headers:
+        Retry-After:
+          description: Seconds until the current rate-limit window rolls over
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: RESOURCE_EXHAUSTED
+              message: Rate limit exceeded
+              details:
+              - description: This organization has reached its rerun-metrics limit of 5000 simulations per 1 hour(s). Retry after 1800 seconds or spread requests over time.
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: INTERNAL
+              message: Internal server error
+              details:
+              - description: An unexpected error occurred. Please contact support.
+    ServiceUnavailable:
+      description: Service temporarily unavailable
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: INTERNAL
+              message: Service temporarily unavailable
+              details:
+              - description: Database routing is temporarily unavailable. Please retry.
