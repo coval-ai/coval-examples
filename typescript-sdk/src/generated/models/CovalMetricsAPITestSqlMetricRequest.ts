@@ -39,6 +39,12 @@ export interface CovalMetricsAPITestSqlMetricRequest {
      * @memberof CovalMetricsAPITestSqlMetricRequest
      */
     unit?: string | null;
+    /**
+     * Run against this simulation only; omit or send null to use recent workspace simulations.
+     * @type {string}
+     * @memberof CovalMetricsAPITestSqlMetricRequest
+     */
+    simulation_output_id?: string | null;
 }
 
 /**
@@ -62,6 +68,7 @@ export function CovalMetricsAPITestSqlMetricRequestFromJSONTyped(json: any, igno
         'sql_query': json['sql_query'],
         'aggregation_method': json['aggregation_method'] == null ? undefined : json['aggregation_method'],
         'unit': json['unit'] == null ? undefined : json['unit'],
+        'simulation_output_id': json['simulation_output_id'] == null ? undefined : json['simulation_output_id'],
     };
 }
 
@@ -79,6 +86,7 @@ export function CovalMetricsAPITestSqlMetricRequestToJSONTyped(value?: CovalMetr
         'sql_query': value['sql_query'],
         'aggregation_method': value['aggregation_method'],
         'unit': value['unit'],
+        'simulation_output_id': value['simulation_output_id'],
     };
 }
 

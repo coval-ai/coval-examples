@@ -18,7 +18,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_api_keys_api_key_type import CovalAPIKeysAPIKeyType
@@ -35,8 +35,19 @@ class CovalAPIKeysAPICreateApiKeyRequest(BaseModel):
     description: Optional[Annotated[str, Field(strict=True, max_length=2000)]] = Field(default=None, description="Detailed description of the API key purpose")
     key_type: Optional[CovalAPIKeysAPIKeyType] = None
     permissions: Optional[List[CovalAPIKeysAPIPermissionScope]] = Field(default=None, description="Permission scopes to grant. Empty array (default) grants full access.")
+    environment: Optional[StrictStr] = Field(default='PRODUCTION', description="Target environment")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "description", "key_type", "permissions"]
+    __properties: ClassVar[List[str]] = ["name", "description", "key_type", "permissions", "environment"]
+
+    @field_validator('environment')
+    def environment_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['PRODUCTION', 'STAGING', 'DEVELOPMENT']):
+            raise ValueError("must be one of enum values ('PRODUCTION', 'STAGING', 'DEVELOPMENT')")
+        return value
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -109,7 +120,8 @@ class CovalAPIKeysAPICreateApiKeyRequest(BaseModel):
             "name": obj.get("name"),
             "description": obj.get("description"),
             "key_type": obj.get("key_type"),
-            "permissions": obj.get("permissions")
+            "permissions": obj.get("permissions"),
+            "environment": obj.get("environment") if obj.get("environment") is not None else 'PRODUCTION'
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

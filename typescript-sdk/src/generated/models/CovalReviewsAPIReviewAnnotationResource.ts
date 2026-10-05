@@ -125,6 +125,36 @@ export interface CovalReviewsAPIReviewAnnotationResource {
      * @memberof CovalReviewsAPIReviewAnnotationResource
      */
     update_time: Date;
+    /**
+     * 
+     * @type {any}
+     * @memberof CovalReviewsAPIReviewAnnotationResource
+     */
+    annotations?: any | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CovalReviewsAPIReviewAnnotationResource
+     */
+    canonical_annotation_id?: string | null;
+    /**
+     * 
+     * @type {any}
+     * @memberof CovalReviewsAPIReviewAnnotationResource
+     */
+    ground_truth_json?: any | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CovalReviewsAPIReviewAnnotationResource
+     */
+    ground_truth_set_value?: Array<string> | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CovalReviewsAPIReviewAnnotationResource
+     */
+    project_annotation_id?: string | null;
 }
 
 
@@ -170,6 +200,11 @@ export function CovalReviewsAPIReviewAnnotationResourceFromJSONTyped(json: any, 
         'priority': CovalReviewsAPIAnnotationPriorityFromJSON(json['priority']),
         'create_time': (new Date(json['create_time'])),
         'update_time': (new Date(json['update_time'])),
+        'annotations': json['annotations'] == null ? undefined : json['annotations'],
+        'canonical_annotation_id': json['canonical_annotation_id'] == null ? undefined : json['canonical_annotation_id'],
+        'ground_truth_json': json['ground_truth_json'] == null ? undefined : json['ground_truth_json'],
+        'ground_truth_set_value': json['ground_truth_set_value'] == null ? undefined : json['ground_truth_set_value'],
+        'project_annotation_id': json['project_annotation_id'] == null ? undefined : json['project_annotation_id'],
     };
 }
 
@@ -198,6 +233,11 @@ export function CovalReviewsAPIReviewAnnotationResourceToJSONTyped(value?: Coval
         'priority': CovalReviewsAPIAnnotationPriorityToJSON(value['priority']),
         'create_time': value['create_time'].toISOString(),
         'update_time': value['update_time'].toISOString(),
+        'annotations': value['annotations'],
+        'canonical_annotation_id': value['canonical_annotation_id'],
+        'ground_truth_json': value['ground_truth_json'],
+        'ground_truth_set_value': value['ground_truth_set_value'],
+        'project_annotation_id': value['project_annotation_id'],
     };
 }
 

@@ -39,7 +39,7 @@ export interface CovalPersonasAPIAudioDegradationConfig {
      * @type {number}
      * @memberof CovalPersonasAPIAudioDegradationConfig
      */
-    preset_version?: number;
+    preset_version?: number | null;
 }
 
 

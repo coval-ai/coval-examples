@@ -86,6 +86,11 @@ class CovalPersonasAPIAudioDegradationConfig(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if preset_version (nullable) is None
+        # and model_fields_set contains the field
+        if self.preset_version is None and "preset_version" in self.model_fields_set:
+            _dict['preset_version'] = None
+
         return _dict
 
     @classmethod

@@ -18,13 +18,17 @@
  * - SINGLE: Per-simulation value (average across sim outputs)
  * - RUN_AVERAGE: Average from pre-computed run aggregate
  * - RUN_FRACTION: Fraction matching a string value in the run
+ * - JOB_SUCCESS: Whether the run completed successfully
+ * - BASELINE_DEVIATION: Fraction of values that deviate from a metric baseline
  * 
  * @export
  */
 export const CovalAlertsAPIConditionAggregation = {
     Single: 'SINGLE',
     RunAverage: 'RUN_AVERAGE',
-    RunFraction: 'RUN_FRACTION'
+    RunFraction: 'RUN_FRACTION',
+    JobSuccess: 'JOB_SUCCESS',
+    BaselineDeviation: 'BASELINE_DEVIATION'
 } as const;
 export type CovalAlertsAPIConditionAggregation = typeof CovalAlertsAPIConditionAggregation[keyof typeof CovalAlertsAPIConditionAggregation];
 

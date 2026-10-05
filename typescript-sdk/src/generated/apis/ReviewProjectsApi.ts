@@ -14,6 +14,16 @@
 
 import * as runtime from '../runtime.js';
 import {
+    type CovalReviewsAPICompleteReviewConversationRequest,
+    CovalReviewsAPICompleteReviewConversationRequestFromJSON,
+    CovalReviewsAPICompleteReviewConversationRequestToJSON,
+} from '../models/CovalReviewsAPICompleteReviewConversationRequest.js';
+import {
+    type CovalReviewsAPICompleteReviewConversationResponse,
+    CovalReviewsAPICompleteReviewConversationResponseFromJSON,
+    CovalReviewsAPICompleteReviewConversationResponseToJSON,
+} from '../models/CovalReviewsAPICompleteReviewConversationResponse.js';
+import {
     type CovalReviewsAPICreateReviewProjectRequest,
     CovalReviewsAPICreateReviewProjectRequestFromJSON,
     CovalReviewsAPICreateReviewProjectRequestToJSON,
@@ -74,12 +84,20 @@ import {
     CovalReviewsAPIUpdateReviewProjectResponseToJSON,
 } from '../models/CovalReviewsAPIUpdateReviewProjectResponse.js';
 
+export interface CompleteReviewConversationRequest {
+    projectId: string;
+    covalReviewsAPICompleteReviewConversationRequest: CovalReviewsAPICompleteReviewConversationRequest;
+    xCovalWorkspaceId?: string;
+}
+
 export interface CreateReviewProjectRequest {
     covalReviewsAPICreateReviewProjectRequest: CovalReviewsAPICreateReviewProjectRequest;
+    xCovalWorkspaceId?: string;
 }
 
 export interface DeleteReviewProjectRequest {
     projectId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface GetReviewDisagreementStateRequest {
@@ -88,6 +106,7 @@ export interface GetReviewDisagreementStateRequest {
 
 export interface GetReviewProjectRequest {
     projectId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface GetReviewProjectInsightsRequest {
@@ -95,10 +114,12 @@ export interface GetReviewProjectInsightsRequest {
     startDate: Date;
     endDate: Date;
     labelTriageTimeBasis?: GetReviewProjectInsightsLabelTriageTimeBasisEnum;
+    criteriaViewMode?: GetReviewProjectInsightsCriteriaViewModeEnum;
 }
 
 export interface GetReviewProjectMetricAgreementRequest {
     projectId: string;
+    criteriaViewMode?: GetReviewProjectMetricAgreementCriteriaViewModeEnum;
 }
 
 export interface GetReviewProjectProgressRequest {
@@ -106,6 +127,7 @@ export interface GetReviewProjectProgressRequest {
 }
 
 export interface ListReviewProjectsRequest {
+    xCovalWorkspaceId?: string;
     pageSize?: number;
     pageToken?: string;
     orderBy?: string;
@@ -114,6 +136,7 @@ export interface ListReviewProjectsRequest {
 export interface UpdateReviewProjectRequest {
     projectId: string;
     covalReviewsAPIUpdateReviewProjectRequest: CovalReviewsAPIUpdateReviewProjectRequest;
+    xCovalWorkspaceId?: string;
 }
 
 /**
@@ -124,8 +147,37 @@ export interface UpdateReviewProjectRequest {
  */
 export interface ReviewProjectsApiInterface {
     /**
+     * Creates request options for completeReviewConversation without sending the request
+     * @param {string} projectId Review project ID (ULID).
+     * @param {CovalReviewsAPICompleteReviewConversationRequest} covalReviewsAPICompleteReviewConversationRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
+     * @throws {RequiredError}
+     * @memberof ReviewProjectsApiInterface
+     */
+    completeReviewConversationRequestOpts(requestParameters: CompleteReviewConversationRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Validate the conversation\'s required review values and mark it complete for the acting reviewer. A successful response can still report blockers when completion requirements have not been satisfied.
+     * @summary Complete a review-project conversation
+     * @param {string} projectId Review project ID (ULID).
+     * @param {CovalReviewsAPICompleteReviewConversationRequest} covalReviewsAPICompleteReviewConversationRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ReviewProjectsApiInterface
+     */
+    completeReviewConversationRaw(requestParameters: CompleteReviewConversationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReviewsAPICompleteReviewConversationResponse>>;
+
+    /**
+     * Validate the conversation\'s required review values and mark it complete for the acting reviewer. A successful response can still report blockers when completion requirements have not been satisfied.
+     * Complete a review-project conversation
+     */
+    completeReviewConversation(requestParameters: CompleteReviewConversationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPICompleteReviewConversationResponse>;
+
+    /**
      * Creates request options for createReviewProject without sending the request
      * @param {CovalReviewsAPICreateReviewProjectRequest} covalReviewsAPICreateReviewProjectRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof ReviewProjectsApiInterface
      */
@@ -135,6 +187,7 @@ export interface ReviewProjectsApiInterface {
      * Create a new review project. Automatically generates annotations for every (simulation, metric, assignee) combination. 
      * @summary Create review project
      * @param {CovalReviewsAPICreateReviewProjectRequest} covalReviewsAPICreateReviewProjectRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ReviewProjectsApiInterface
@@ -150,6 +203,7 @@ export interface ReviewProjectsApiInterface {
     /**
      * Creates request options for deleteReviewProject without sending the request
      * @param {string} projectId The project ID (ULID)
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof ReviewProjectsApiInterface
      */
@@ -159,6 +213,7 @@ export interface ReviewProjectsApiInterface {
      * Delete a review project. This permanently removes the project record.
      * @summary Delete review project
      * @param {string} projectId The project ID (ULID)
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ReviewProjectsApiInterface
@@ -198,6 +253,7 @@ export interface ReviewProjectsApiInterface {
     /**
      * Creates request options for getReviewProject without sending the request
      * @param {string} projectId The project ID (ULID)
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof ReviewProjectsApiInterface
      */
@@ -207,6 +263,7 @@ export interface ReviewProjectsApiInterface {
      * Get a single review project by ID.
      * @summary Get review project
      * @param {string} projectId The project ID (ULID)
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ReviewProjectsApiInterface
@@ -225,6 +282,7 @@ export interface ReviewProjectsApiInterface {
      * @param {Date} startDate Start of the insights window (ISO-8601).
      * @param {Date} endDate End of the insights window (ISO-8601); must be after start_date.
      * @param {'simulation' | 'label'} [labelTriageTimeBasis] Whether label triage timing is anchored to the simulation or the label.
+     * @param {'score' | 'criteria'} [criteriaViewMode] Include Composite Evaluation criterion-pair agreement alongside aggregate-score insights.
      * @throws {RequiredError}
      * @memberof ReviewProjectsApiInterface
      */
@@ -237,6 +295,7 @@ export interface ReviewProjectsApiInterface {
      * @param {Date} startDate Start of the insights window (ISO-8601).
      * @param {Date} endDate End of the insights window (ISO-8601); must be after start_date.
      * @param {'simulation' | 'label'} [labelTriageTimeBasis] Whether label triage timing is anchored to the simulation or the label.
+     * @param {'score' | 'criteria'} [criteriaViewMode] Include Composite Evaluation criterion-pair agreement alongside aggregate-score insights.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ReviewProjectsApiInterface
@@ -252,6 +311,7 @@ export interface ReviewProjectsApiInterface {
     /**
      * Creates request options for getReviewProjectMetricAgreement without sending the request
      * @param {string} projectId The project ID (ULID)
+     * @param {'score' | 'criteria'} [criteriaViewMode] Compare Composite Evaluation criteria instead of aggregate scores.
      * @throws {RequiredError}
      * @memberof ReviewProjectsApiInterface
      */
@@ -261,6 +321,7 @@ export interface ReviewProjectsApiInterface {
      * Machine-vs-human agreement by metric for one review project. The project resolves to its linked simulations and metrics; agreement is computed over that derived scope.
      * @summary Get project metric agreement
      * @param {string} projectId The project ID (ULID)
+     * @param {'score' | 'criteria'} [criteriaViewMode] Compare Composite Evaluation criteria instead of aggregate scores.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ReviewProjectsApiInterface
@@ -299,6 +360,7 @@ export interface ReviewProjectsApiInterface {
 
     /**
      * Creates request options for listReviewProjects without sending the request
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response
      * @param {string} [orderBy] Sort field and direction. Prefix with &#x60;-&#x60; for descending. Valid fields: &#x60;create_time&#x60;, &#x60;update_time&#x60;, &#x60;display_name&#x60;. 
@@ -310,6 +372,7 @@ export interface ReviewProjectsApiInterface {
     /**
      * List review projects for your organization with pagination.
      * @summary List review projects
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response
      * @param {string} [orderBy] Sort field and direction. Prefix with &#x60;-&#x60; for descending. Valid fields: &#x60;create_time&#x60;, &#x60;update_time&#x60;, &#x60;display_name&#x60;. 
@@ -329,6 +392,7 @@ export interface ReviewProjectsApiInterface {
      * Creates request options for updateReviewProject without sending the request
      * @param {string} projectId The project ID (ULID)
      * @param {CovalReviewsAPIUpdateReviewProjectRequest} covalReviewsAPIUpdateReviewProjectRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof ReviewProjectsApiInterface
      */
@@ -339,6 +403,7 @@ export interface ReviewProjectsApiInterface {
      * @summary Update review project
      * @param {string} projectId The project ID (ULID)
      * @param {CovalReviewsAPIUpdateReviewProjectRequest} covalReviewsAPIUpdateReviewProjectRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ReviewProjectsApiInterface
@@ -359,6 +424,71 @@ export interface ReviewProjectsApiInterface {
 export class ReviewProjectsApi extends runtime.BaseAPI implements ReviewProjectsApiInterface {
 
     /**
+     * Creates request options for completeReviewConversation without sending the request
+     */
+    async completeReviewConversationRequestOpts(requestParameters: CompleteReviewConversationRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['projectId'] == null) {
+            throw new runtime.RequiredError(
+                'projectId',
+                'Required parameter "projectId" was null or undefined when calling completeReviewConversation().'
+            );
+        }
+
+        if (requestParameters['covalReviewsAPICompleteReviewConversationRequest'] == null) {
+            throw new runtime.RequiredError(
+                'covalReviewsAPICompleteReviewConversationRequest',
+                'Required parameter "covalReviewsAPICompleteReviewConversationRequest" was null or undefined when calling completeReviewConversation().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Reviews_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/review-projects/{project_id}/complete-conversation`;
+        urlPath = urlPath.replace('{project_id}', encodeURIComponent(String(requestParameters['projectId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CovalReviewsAPICompleteReviewConversationRequestToJSON(requestParameters['covalReviewsAPICompleteReviewConversationRequest']),
+        };
+    }
+
+    /**
+     * Validate the conversation\'s required review values and mark it complete for the acting reviewer. A successful response can still report blockers when completion requirements have not been satisfied.
+     * Complete a review-project conversation
+     */
+    async completeReviewConversationRaw(requestParameters: CompleteReviewConversationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReviewsAPICompleteReviewConversationResponse>> {
+        const requestOptions = await this.completeReviewConversationRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CovalReviewsAPICompleteReviewConversationResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Validate the conversation\'s required review values and mark it complete for the acting reviewer. A successful response can still report blockers when completion requirements have not been satisfied.
+     * Complete a review-project conversation
+     */
+    async completeReviewConversation(requestParameters: CompleteReviewConversationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPICompleteReviewConversationResponse> {
+        const response = await this.completeReviewConversationRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for createReviewProject without sending the request
      */
     async createReviewProjectRequestOpts(requestParameters: CreateReviewProjectRequest): Promise<runtime.RequestOpts> {
@@ -374,6 +504,10 @@ export class ReviewProjectsApi extends runtime.BaseAPI implements ReviewProjects
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Reviews_API_ApiKeyAuth authentication
@@ -425,6 +559,10 @@ export class ReviewProjectsApi extends runtime.BaseAPI implements ReviewProjects
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Reviews_API_ApiKeyAuth authentication
@@ -530,6 +668,10 @@ export class ReviewProjectsApi extends runtime.BaseAPI implements ReviewProjects
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Reviews_API_ApiKeyAuth authentication
         }
@@ -605,6 +747,10 @@ export class ReviewProjectsApi extends runtime.BaseAPI implements ReviewProjects
             queryParameters['label_triage_time_basis'] = requestParameters['labelTriageTimeBasis'];
         }
 
+        if (requestParameters['criteriaViewMode'] != null) {
+            queryParameters['criteria_view_mode'] = requestParameters['criteriaViewMode'];
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.apiKey) {
@@ -655,6 +801,10 @@ export class ReviewProjectsApi extends runtime.BaseAPI implements ReviewProjects
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['criteriaViewMode'] != null) {
+            queryParameters['criteria_view_mode'] = requestParameters['criteriaViewMode'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -765,6 +915,10 @@ export class ReviewProjectsApi extends runtime.BaseAPI implements ReviewProjects
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Reviews_API_ApiKeyAuth authentication
         }
@@ -824,6 +978,10 @@ export class ReviewProjectsApi extends runtime.BaseAPI implements ReviewProjects
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Reviews_API_ApiKeyAuth authentication
         }
@@ -871,3 +1029,19 @@ export const GetReviewProjectInsightsLabelTriageTimeBasisEnum = {
     Label: 'label'
 } as const;
 export type GetReviewProjectInsightsLabelTriageTimeBasisEnum = typeof GetReviewProjectInsightsLabelTriageTimeBasisEnum[keyof typeof GetReviewProjectInsightsLabelTriageTimeBasisEnum];
+/**
+ * @export
+ */
+export const GetReviewProjectInsightsCriteriaViewModeEnum = {
+    Score: 'score',
+    Criteria: 'criteria'
+} as const;
+export type GetReviewProjectInsightsCriteriaViewModeEnum = typeof GetReviewProjectInsightsCriteriaViewModeEnum[keyof typeof GetReviewProjectInsightsCriteriaViewModeEnum];
+/**
+ * @export
+ */
+export const GetReviewProjectMetricAgreementCriteriaViewModeEnum = {
+    Score: 'score',
+    Criteria: 'criteria'
+} as const;
+export type GetReviewProjectMetricAgreementCriteriaViewModeEnum = typeof GetReviewProjectMetricAgreementCriteriaViewModeEnum[keyof typeof GetReviewProjectMetricAgreementCriteriaViewModeEnum];

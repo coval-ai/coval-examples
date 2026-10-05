@@ -19,7 +19,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from coval_sdk.models.coval_dashboards_api_metric_filter_operator import CovalDashboardsAPIMetricFilterOperator
 from coval_sdk.models.coval_dashboards_api_metric_filter_value import CovalDashboardsAPIMetricFilterValue
 from coval_sdk.models.coval_dashboards_api_metric_output_type import CovalDashboardsAPIMetricOutputType
@@ -32,9 +32,9 @@ class CovalDashboardsAPIMetricFilter(BaseModel):
     Filter condition applied to metric values
     """ # noqa: E501
     metric_id: StrictStr = Field(description="ID of the metric to filter on", alias="metricId")
-    operator: CovalDashboardsAPIMetricFilterOperator
-    value: CovalDashboardsAPIMetricFilterValue
-    metric_output_type: CovalDashboardsAPIMetricOutputType = Field(alias="metricOutputType")
+    operator: Optional[CovalDashboardsAPIMetricFilterOperator] = None
+    value: Optional[CovalDashboardsAPIMetricFilterValue] = None
+    metric_output_type: Optional[CovalDashboardsAPIMetricOutputType] = Field(default=None, alias="metricOutputType")
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["metricId", "operator", "value", "metricOutputType"]
 

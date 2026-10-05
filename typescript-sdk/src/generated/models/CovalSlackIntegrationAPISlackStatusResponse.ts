@@ -14,7 +14,7 @@
 
 import { mapValues } from '../runtime.js';
 /**
- * Product-facing Slack connection status. No secrets are returned.
+ * Secret-free Slack connection and binding-bootstrap state.
  * @export
  * @interface CovalSlackIntegrationAPISlackStatusResponse
  */
@@ -31,6 +31,36 @@ export interface CovalSlackIntegrationAPISlackStatusResponse {
      * @memberof CovalSlackIntegrationAPISlackStatusResponse
      */
     team_name?: string | null;
+    /**
+     * Slack Enterprise Grid ID, or null for non-Grid and disconnected states.
+     * @type {string}
+     * @memberof CovalSlackIntegrationAPISlackStatusResponse
+     */
+    enterprise_id?: string | null;
+    /**
+     * Slack workspace/team ID when connected.
+     * @type {string}
+     * @memberof CovalSlackIntegrationAPISlackStatusResponse
+     */
+    team_id?: string | null;
+    /**
+     * Opaque backend installation generation used to bind Sofia safely.
+     * @type {string}
+     * @memberof CovalSlackIntegrationAPISlackStatusResponse
+     */
+    installation_generation?: string | null;
+    /**
+     * Whether an admin must disconnect a legacy physical-store credential before reconnecting.
+     * @type {boolean}
+     * @memberof CovalSlackIntegrationAPISlackStatusResponse
+     */
+    migration_required?: boolean;
+    /**
+     * Whether the routed Slack connection must be reauthorized in place before Sofia can use it.
+     * @type {boolean}
+     * @memberof CovalSlackIntegrationAPISlackStatusResponse
+     */
+    reauthorization_required?: boolean;
 }
 
 /**
@@ -53,6 +83,11 @@ export function CovalSlackIntegrationAPISlackStatusResponseFromJSONTyped(json: a
         
         'connected': json['connected'],
         'team_name': json['team_name'] == null ? undefined : json['team_name'],
+        'enterprise_id': json['enterprise_id'] == null ? undefined : json['enterprise_id'],
+        'team_id': json['team_id'] == null ? undefined : json['team_id'],
+        'installation_generation': json['installation_generation'] == null ? undefined : json['installation_generation'],
+        'migration_required': json['migration_required'] == null ? undefined : json['migration_required'],
+        'reauthorization_required': json['reauthorization_required'] == null ? undefined : json['reauthorization_required'],
     };
 }
 
@@ -69,6 +104,11 @@ export function CovalSlackIntegrationAPISlackStatusResponseToJSONTyped(value?: C
         
         'connected': value['connected'],
         'team_name': value['team_name'],
+        'enterprise_id': value['enterprise_id'],
+        'team_id': value['team_id'],
+        'installation_generation': value['installation_generation'],
+        'migration_required': value['migration_required'],
+        'reauthorization_required': value['reauthorization_required'],
     };
 }
 

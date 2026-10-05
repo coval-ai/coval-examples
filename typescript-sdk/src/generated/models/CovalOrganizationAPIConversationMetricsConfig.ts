@@ -22,7 +22,7 @@ import {
 } from './CovalOrganizationAPIConversationMetricRule.js';
 
 /**
- * The organization's conversation metrics configuration.
+ * The resolved conversation metrics configuration for the selected workspace.
  * @export
  * @interface CovalOrganizationAPIConversationMetricsConfig
  */

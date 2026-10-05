@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime.js';
+import type { CovalReviewsAPIResourceAttribution } from './CovalReviewsAPIResourceAttribution.js';
+import {
+    CovalReviewsAPIResourceAttributionFromJSON,
+    CovalReviewsAPIResourceAttributionFromJSONTyped,
+    CovalReviewsAPIResourceAttributionToJSON,
+    CovalReviewsAPIResourceAttributionToJSONTyped,
+} from './CovalReviewsAPIResourceAttribution.js';
 import type { CovalReviewsAPIProjectType } from './CovalReviewsAPIProjectType.js';
 import {
     CovalReviewsAPIProjectTypeFromJSON,
@@ -34,6 +41,12 @@ import {
  * @interface CovalReviewsAPIReviewProjectResource
  */
 export interface CovalReviewsAPIReviewProjectResource {
+    /**
+     * Authoring timestamps and user IDs. Unknown or deleted users are null.
+     * @type {CovalReviewsAPIResourceAttribution}
+     * @memberof CovalReviewsAPIReviewProjectResource
+     */
+    readonly attribution?: CovalReviewsAPIResourceAttribution | null;
     /**
      * Resource name: review-projects/{id}
      * @type {string}
@@ -112,8 +125,63 @@ export interface CovalReviewsAPIReviewProjectResource {
      * @memberof CovalReviewsAPIReviewProjectResource
      */
     update_time: Date;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CovalReviewsAPIReviewProjectResource
+     */
+    blind_labeling_shown_metric_ids?: Array<string> | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof CovalReviewsAPIReviewProjectResource
+     */
+    linked_metric_count?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CovalReviewsAPIReviewProjectResource
+     */
+    linked_simulation_count?: number;
+    /**
+     * 
+     * @type {CovalReviewsAPIReviewProjectResourceReviewLabelInputModeEnum}
+     * @memberof CovalReviewsAPIReviewProjectResource
+     */
+    review_label_input_mode?: CovalReviewsAPIReviewProjectResourceReviewLabelInputModeEnum | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CovalReviewsAPIReviewProjectResource
+     */
+    review_label_options?: Array<string>;
+    /**
+     * 
+     * @type {CovalReviewsAPIReviewProjectResourceReviewLabelSelectionModeEnum}
+     * @memberof CovalReviewsAPIReviewProjectResource
+     */
+    review_label_selection_mode?: CovalReviewsAPIReviewProjectResourceReviewLabelSelectionModeEnum | null;
 }
 
+
+/**
+ * @export
+ */
+export const CovalReviewsAPIReviewProjectResourceReviewLabelInputModeEnum = {
+    OptionOnly: 'OPTION_ONLY',
+    CustomOnly: 'CUSTOM_ONLY',
+    OptionOrCustom: 'OPTION_OR_CUSTOM'
+} as const;
+export type CovalReviewsAPIReviewProjectResourceReviewLabelInputModeEnum = typeof CovalReviewsAPIReviewProjectResourceReviewLabelInputModeEnum[keyof typeof CovalReviewsAPIReviewProjectResourceReviewLabelInputModeEnum];
+
+/**
+ * @export
+ */
+export const CovalReviewsAPIReviewProjectResourceReviewLabelSelectionModeEnum = {
+    Single: 'SINGLE',
+    Multiple: 'MULTIPLE'
+} as const;
+export type CovalReviewsAPIReviewProjectResourceReviewLabelSelectionModeEnum = typeof CovalReviewsAPIReviewProjectResourceReviewLabelSelectionModeEnum[keyof typeof CovalReviewsAPIReviewProjectResourceReviewLabelSelectionModeEnum];
 
 
 /**
@@ -143,6 +211,7 @@ export function CovalReviewsAPIReviewProjectResourceFromJSONTyped(json: any, ign
     }
     return {
         
+        'attribution': json['attribution'] == null ? undefined : CovalReviewsAPIResourceAttributionFromJSON(json['attribution']),
         'name': json['name'],
         'id': json['id'],
         'display_name': json['display_name'],
@@ -156,6 +225,12 @@ export function CovalReviewsAPIReviewProjectResourceFromJSONTyped(json: any, ign
         'enforced_collaboration': json['enforced_collaboration'] == null ? undefined : json['enforced_collaboration'],
         'create_time': (new Date(json['create_time'])),
         'update_time': (new Date(json['update_time'])),
+        'blind_labeling_shown_metric_ids': json['blind_labeling_shown_metric_ids'] == null ? undefined : json['blind_labeling_shown_metric_ids'],
+        'linked_metric_count': json['linked_metric_count'] == null ? undefined : json['linked_metric_count'],
+        'linked_simulation_count': json['linked_simulation_count'] == null ? undefined : json['linked_simulation_count'],
+        'review_label_input_mode': json['review_label_input_mode'] == null ? undefined : json['review_label_input_mode'],
+        'review_label_options': json['review_label_options'] == null ? undefined : json['review_label_options'],
+        'review_label_selection_mode': json['review_label_selection_mode'] == null ? undefined : json['review_label_selection_mode'],
     };
 }
 
@@ -163,7 +238,7 @@ export function CovalReviewsAPIReviewProjectResourceToJSON(json: any): CovalRevi
     return CovalReviewsAPIReviewProjectResourceToJSONTyped(json, false);
 }
 
-export function CovalReviewsAPIReviewProjectResourceToJSONTyped(value?: CovalReviewsAPIReviewProjectResource | null, ignoreDiscriminator: boolean = false): any {
+export function CovalReviewsAPIReviewProjectResourceToJSONTyped(value?: Omit<CovalReviewsAPIReviewProjectResource, 'attribution'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -183,6 +258,12 @@ export function CovalReviewsAPIReviewProjectResourceToJSONTyped(value?: CovalRev
         'enforced_collaboration': value['enforced_collaboration'],
         'create_time': value['create_time'].toISOString(),
         'update_time': value['update_time'].toISOString(),
+        'blind_labeling_shown_metric_ids': value['blind_labeling_shown_metric_ids'],
+        'linked_metric_count': value['linked_metric_count'],
+        'linked_simulation_count': value['linked_simulation_count'],
+        'review_label_input_mode': value['review_label_input_mode'],
+        'review_label_options': value['review_label_options'],
+        'review_label_selection_mode': value['review_label_selection_mode'],
     };
 }
 

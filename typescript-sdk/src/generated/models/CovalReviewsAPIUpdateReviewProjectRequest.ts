@@ -105,6 +105,30 @@ export interface CovalReviewsAPIUpdateReviewProjectRequest {
      * @memberof CovalReviewsAPIUpdateReviewProjectRequest
      */
     enforced_collaboration?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof CovalReviewsAPIUpdateReviewProjectRequest
+     */
+    project_type?: string | null;
+    /**
+     * 
+     * @type {CovalReviewsAPIUpdateReviewProjectRequestReviewLabelInputModeEnum}
+     * @memberof CovalReviewsAPIUpdateReviewProjectRequest
+     */
+    review_label_input_mode?: CovalReviewsAPIUpdateReviewProjectRequestReviewLabelInputModeEnum | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CovalReviewsAPIUpdateReviewProjectRequest
+     */
+    review_label_options?: Array<string> | null;
+    /**
+     * 
+     * @type {CovalReviewsAPIUpdateReviewProjectRequestReviewLabelSelectionModeEnum}
+     * @memberof CovalReviewsAPIUpdateReviewProjectRequest
+     */
+    review_label_selection_mode?: CovalReviewsAPIUpdateReviewProjectRequestReviewLabelSelectionModeEnum | null;
 }
 
 
@@ -116,6 +140,25 @@ export const CovalReviewsAPIUpdateReviewProjectRequestMetricAdditionCompletionAc
     ReopenCompleted: 'REOPEN_COMPLETED'
 } as const;
 export type CovalReviewsAPIUpdateReviewProjectRequestMetricAdditionCompletionActionEnum = typeof CovalReviewsAPIUpdateReviewProjectRequestMetricAdditionCompletionActionEnum[keyof typeof CovalReviewsAPIUpdateReviewProjectRequestMetricAdditionCompletionActionEnum];
+
+/**
+ * @export
+ */
+export const CovalReviewsAPIUpdateReviewProjectRequestReviewLabelInputModeEnum = {
+    OptionOnly: 'OPTION_ONLY',
+    CustomOnly: 'CUSTOM_ONLY',
+    OptionOrCustom: 'OPTION_OR_CUSTOM'
+} as const;
+export type CovalReviewsAPIUpdateReviewProjectRequestReviewLabelInputModeEnum = typeof CovalReviewsAPIUpdateReviewProjectRequestReviewLabelInputModeEnum[keyof typeof CovalReviewsAPIUpdateReviewProjectRequestReviewLabelInputModeEnum];
+
+/**
+ * @export
+ */
+export const CovalReviewsAPIUpdateReviewProjectRequestReviewLabelSelectionModeEnum = {
+    Single: 'SINGLE',
+    Multiple: 'MULTIPLE'
+} as const;
+export type CovalReviewsAPIUpdateReviewProjectRequestReviewLabelSelectionModeEnum = typeof CovalReviewsAPIUpdateReviewProjectRequestReviewLabelSelectionModeEnum[keyof typeof CovalReviewsAPIUpdateReviewProjectRequestReviewLabelSelectionModeEnum];
 
 
 /**
@@ -148,6 +191,10 @@ export function CovalReviewsAPIUpdateReviewProjectRequestFromJSONTyped(json: any
         'blind_labeling_shown_metric_ids': json['blind_labeling_shown_metric_ids'] == null ? undefined : json['blind_labeling_shown_metric_ids'],
         'opted_out_assignees': json['opted_out_assignees'] == null ? undefined : json['opted_out_assignees'],
         'enforced_collaboration': json['enforced_collaboration'] == null ? undefined : json['enforced_collaboration'],
+        'project_type': json['project_type'] == null ? undefined : json['project_type'],
+        'review_label_input_mode': json['review_label_input_mode'] == null ? undefined : json['review_label_input_mode'],
+        'review_label_options': json['review_label_options'] == null ? undefined : json['review_label_options'],
+        'review_label_selection_mode': json['review_label_selection_mode'] == null ? undefined : json['review_label_selection_mode'],
     };
 }
 
@@ -175,6 +222,10 @@ export function CovalReviewsAPIUpdateReviewProjectRequestToJSONTyped(value?: Cov
         'blind_labeling_shown_metric_ids': value['blind_labeling_shown_metric_ids'],
         'opted_out_assignees': value['opted_out_assignees'],
         'enforced_collaboration': value['enforced_collaboration'],
+        'project_type': value['project_type'],
+        'review_label_input_mode': value['review_label_input_mode'],
+        'review_label_options': value['review_label_options'],
+        'review_label_selection_mode': value['review_label_selection_mode'],
     };
 }
 

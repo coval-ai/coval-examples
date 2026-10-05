@@ -18,7 +18,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_runs_api_launch_metadata import CovalRunsAPILaunchMetadata
@@ -37,11 +37,11 @@ class CovalRunsAPILaunchRunRequest(BaseModel):
     metric_ids: Optional[List[Annotated[str, Field(min_length=22, strict=True, max_length=22)]]] = Field(default=None, description="Optional list of metric IDs to evaluate. If not provided, uses agent's default metrics.")
     mutation_id: Optional[Annotated[str, Field(min_length=26, strict=True, max_length=26)]] = Field(default=None, description="Single mutation ID to run in addition to the base agent. Mutually exclusive with `mutation_ids`. The base agent always runs. ")
     mutation_ids: Optional[Annotated[List[Annotated[str, Field(min_length=26, strict=True, max_length=26)]], Field(max_length=100)]] = Field(default=None, description="List of mutation IDs to run in addition to the base agent. Mutually exclusive with `mutation_id`. Max 100 mutations. The base agent always runs alongside all mutations.  **Total simulations** = test_cases × iterations × (1 + len(mutation_ids)) ")
-    persona_metrics: Optional[List[StrictStr]] = Field(default=None, description="List of metric names that should evaluate the persona instead of the agent. Each entry should be the base metric name (e.g., 'latency', not 'persona:latency'). ")
     options: Optional[CovalRunsAPILaunchOptions] = None
     metadata: Optional[CovalRunsAPILaunchMetadata] = None
+    config_overrides: Optional[Dict[str, Any]] = Field(default=None, description="Launch-specific simulator configuration. Values override stored Agent configuration except for protected resource identity and connection fields. The Agent's stored model type remains authoritative. ")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["agent_id", "persona_id", "test_set_id", "metric_ids", "mutation_id", "mutation_ids", "persona_metrics", "options", "metadata"]
+    __properties: ClassVar[List[str]] = ["agent_id", "persona_id", "test_set_id", "metric_ids", "mutation_id", "mutation_ids", "options", "metadata", "config_overrides"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -100,6 +100,11 @@ class CovalRunsAPILaunchRunRequest(BaseModel):
         if self.mutation_id is None and "mutation_id" in self.model_fields_set:
             _dict['mutation_id'] = None
 
+        # set to None if config_overrides (nullable) is None
+        # and model_fields_set contains the field
+        if self.config_overrides is None and "config_overrides" in self.model_fields_set:
+            _dict['config_overrides'] = None
+
         return _dict
 
     @classmethod
@@ -118,9 +123,9 @@ class CovalRunsAPILaunchRunRequest(BaseModel):
             "metric_ids": obj.get("metric_ids"),
             "mutation_id": obj.get("mutation_id"),
             "mutation_ids": obj.get("mutation_ids"),
-            "persona_metrics": obj.get("persona_metrics"),
             "options": CovalRunsAPILaunchOptions.from_dict(obj["options"]) if obj.get("options") is not None else None,
-            "metadata": CovalRunsAPILaunchMetadata.from_dict(obj["metadata"]) if obj.get("metadata") is not None else None
+            "metadata": CovalRunsAPILaunchMetadata.from_dict(obj["metadata"]) if obj.get("metadata") is not None else None,
+            "config_overrides": obj.get("config_overrides")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

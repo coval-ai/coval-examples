@@ -346,7 +346,7 @@ class IntegrationsApi:
     ) -> CovalSlackIntegrationAPIDisconnectSlackResponse:
         """Disconnect Slack integration
 
-        Disconnect the Slack workspace from your organization. Revokes the token (best-effort) and clears the stored integration data.
+        Disconnect the Slack workspace from this organization by tombstoning its local credential generation. This does not revoke a workspace-wide Slack authorization that may be shared by another Coval organization.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -414,7 +414,7 @@ class IntegrationsApi:
     ) -> ApiResponse[CovalSlackIntegrationAPIDisconnectSlackResponse]:
         """Disconnect Slack integration
 
-        Disconnect the Slack workspace from your organization. Revokes the token (best-effort) and clears the stored integration data.
+        Disconnect the Slack workspace from this organization by tombstoning its local credential generation. This does not revoke a workspace-wide Slack authorization that may be shared by another Coval organization.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -482,7 +482,7 @@ class IntegrationsApi:
     ) -> RESTResponseType:
         """Disconnect Slack integration
 
-        Disconnect the Slack workspace from your organization. Revokes the token (best-effort) and clears the stored integration data.
+        Disconnect the Slack workspace from this organization by tombstoning its local credential generation. This does not revoke a workspace-wide Slack authorization that may be shared by another Coval organization.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -607,7 +607,7 @@ class IntegrationsApi:
     ) -> CovalSlackIntegrationAPISlackStatusResponse:
         """Get Slack integration status
 
-        Returns whether a Slack workspace is connected for your organization, and the connected team name. No secrets are returned.
+        Returns the secret-free Slack connection and binding-bootstrap state for your organization.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -674,7 +674,7 @@ class IntegrationsApi:
     ) -> ApiResponse[CovalSlackIntegrationAPISlackStatusResponse]:
         """Get Slack integration status
 
-        Returns whether a Slack workspace is connected for your organization, and the connected team name. No secrets are returned.
+        Returns the secret-free Slack connection and binding-bootstrap state for your organization.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -741,7 +741,7 @@ class IntegrationsApi:
     ) -> RESTResponseType:
         """Get Slack integration status
 
-        Returns whether a Slack workspace is connected for your organization, and the connected team name. No secrets are returned.
+        Returns the secret-free Slack connection and binding-bootstrap state for your organization.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request

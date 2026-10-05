@@ -16,7 +16,7 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictStr
+from pydantic import Field, StrictStr, field_validator
 from typing import Any, Dict, Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_reviews_api_create_review_annotation_request import CovalReviewsAPICreateReviewAnnotationRequest
@@ -1200,6 +1200,7 @@ class ReviewAnnotationsApi:
     def get_review_metric_health_stats(
         self,
         metric_id: Annotated[StrictStr, Field(description="The metric ID (22-char ShortUUID).")],
+        criteria_view_mode: Annotated[Optional[StrictStr], Field(description="Compare Composite Evaluation criteria instead of aggregate scores.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1219,6 +1220,8 @@ class ReviewAnnotationsApi:
 
         :param metric_id: The metric ID (22-char ShortUUID). (required)
         :type metric_id: str
+        :param criteria_view_mode: Compare Composite Evaluation criteria instead of aggregate scores.
+        :type criteria_view_mode: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1243,6 +1246,7 @@ class ReviewAnnotationsApi:
 
         _param = self._get_review_metric_health_stats_serialize(
             metric_id=metric_id,
+            criteria_view_mode=criteria_view_mode,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1272,6 +1276,7 @@ class ReviewAnnotationsApi:
     def get_review_metric_health_stats_with_http_info(
         self,
         metric_id: Annotated[StrictStr, Field(description="The metric ID (22-char ShortUUID).")],
+        criteria_view_mode: Annotated[Optional[StrictStr], Field(description="Compare Composite Evaluation criteria instead of aggregate scores.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1291,6 +1296,8 @@ class ReviewAnnotationsApi:
 
         :param metric_id: The metric ID (22-char ShortUUID). (required)
         :type metric_id: str
+        :param criteria_view_mode: Compare Composite Evaluation criteria instead of aggregate scores.
+        :type criteria_view_mode: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1315,6 +1322,7 @@ class ReviewAnnotationsApi:
 
         _param = self._get_review_metric_health_stats_serialize(
             metric_id=metric_id,
+            criteria_view_mode=criteria_view_mode,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1344,6 +1352,7 @@ class ReviewAnnotationsApi:
     def get_review_metric_health_stats_without_preload_content(
         self,
         metric_id: Annotated[StrictStr, Field(description="The metric ID (22-char ShortUUID).")],
+        criteria_view_mode: Annotated[Optional[StrictStr], Field(description="Compare Composite Evaluation criteria instead of aggregate scores.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1363,6 +1372,8 @@ class ReviewAnnotationsApi:
 
         :param metric_id: The metric ID (22-char ShortUUID). (required)
         :type metric_id: str
+        :param criteria_view_mode: Compare Composite Evaluation criteria instead of aggregate scores.
+        :type criteria_view_mode: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1387,6 +1398,7 @@ class ReviewAnnotationsApi:
 
         _param = self._get_review_metric_health_stats_serialize(
             metric_id=metric_id,
+            criteria_view_mode=criteria_view_mode,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1411,6 +1423,7 @@ class ReviewAnnotationsApi:
     def _get_review_metric_health_stats_serialize(
         self,
         metric_id,
+        criteria_view_mode,
         _request_auth,
         _content_type,
         _headers,
@@ -1436,6 +1449,10 @@ class ReviewAnnotationsApi:
         if metric_id is not None:
             
             _query_params.append(('metric_id', metric_id))
+            
+        if criteria_view_mode is not None:
+            
+            _query_params.append(('criteria_view_mode', criteria_view_mode))
             
         # process the header parameters
         # process the form parameters

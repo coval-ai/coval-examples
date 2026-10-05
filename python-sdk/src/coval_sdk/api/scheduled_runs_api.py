@@ -49,6 +49,7 @@ class ScheduledRunsApi:
     def create_scheduled_run(
         self,
         coval_scheduled_runs_api_create_scheduled_run_request: CovalScheduledRunsAPICreateScheduledRunRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -68,6 +69,8 @@ class ScheduledRunsApi:
 
         :param coval_scheduled_runs_api_create_scheduled_run_request: (required)
         :type coval_scheduled_runs_api_create_scheduled_run_request: CovalScheduledRunsAPICreateScheduledRunRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -92,6 +95,7 @@ class ScheduledRunsApi:
 
         _param = self._create_scheduled_run_serialize(
             coval_scheduled_runs_api_create_scheduled_run_request=coval_scheduled_runs_api_create_scheduled_run_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -120,6 +124,7 @@ class ScheduledRunsApi:
     def create_scheduled_run_with_http_info(
         self,
         coval_scheduled_runs_api_create_scheduled_run_request: CovalScheduledRunsAPICreateScheduledRunRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -139,6 +144,8 @@ class ScheduledRunsApi:
 
         :param coval_scheduled_runs_api_create_scheduled_run_request: (required)
         :type coval_scheduled_runs_api_create_scheduled_run_request: CovalScheduledRunsAPICreateScheduledRunRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -163,6 +170,7 @@ class ScheduledRunsApi:
 
         _param = self._create_scheduled_run_serialize(
             coval_scheduled_runs_api_create_scheduled_run_request=coval_scheduled_runs_api_create_scheduled_run_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -191,6 +199,7 @@ class ScheduledRunsApi:
     def create_scheduled_run_without_preload_content(
         self,
         coval_scheduled_runs_api_create_scheduled_run_request: CovalScheduledRunsAPICreateScheduledRunRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -210,6 +219,8 @@ class ScheduledRunsApi:
 
         :param coval_scheduled_runs_api_create_scheduled_run_request: (required)
         :type coval_scheduled_runs_api_create_scheduled_run_request: CovalScheduledRunsAPICreateScheduledRunRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -234,6 +245,7 @@ class ScheduledRunsApi:
 
         _param = self._create_scheduled_run_serialize(
             coval_scheduled_runs_api_create_scheduled_run_request=coval_scheduled_runs_api_create_scheduled_run_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -257,6 +269,7 @@ class ScheduledRunsApi:
     def _create_scheduled_run_serialize(
         self,
         coval_scheduled_runs_api_create_scheduled_run_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -280,6 +293,8 @@ class ScheduledRunsApi:
         # process the path parameters
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_scheduled_runs_api_create_scheduled_run_request is not None:
@@ -335,6 +350,7 @@ class ScheduledRunsApi:
     def delete_scheduled_run(
         self,
         scheduled_run_id: Annotated[str, Field(strict=True, description="Scheduled run resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -354,6 +370,8 @@ class ScheduledRunsApi:
 
         :param scheduled_run_id: Scheduled run resource ID (required)
         :type scheduled_run_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -378,6 +396,7 @@ class ScheduledRunsApi:
 
         _param = self._delete_scheduled_run_serialize(
             scheduled_run_id=scheduled_run_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -406,6 +425,7 @@ class ScheduledRunsApi:
     def delete_scheduled_run_with_http_info(
         self,
         scheduled_run_id: Annotated[str, Field(strict=True, description="Scheduled run resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -425,6 +445,8 @@ class ScheduledRunsApi:
 
         :param scheduled_run_id: Scheduled run resource ID (required)
         :type scheduled_run_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -449,6 +471,7 @@ class ScheduledRunsApi:
 
         _param = self._delete_scheduled_run_serialize(
             scheduled_run_id=scheduled_run_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -477,6 +500,7 @@ class ScheduledRunsApi:
     def delete_scheduled_run_without_preload_content(
         self,
         scheduled_run_id: Annotated[str, Field(strict=True, description="Scheduled run resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -496,6 +520,8 @@ class ScheduledRunsApi:
 
         :param scheduled_run_id: Scheduled run resource ID (required)
         :type scheduled_run_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -520,6 +546,7 @@ class ScheduledRunsApi:
 
         _param = self._delete_scheduled_run_serialize(
             scheduled_run_id=scheduled_run_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -543,6 +570,7 @@ class ScheduledRunsApi:
     def _delete_scheduled_run_serialize(
         self,
         scheduled_run_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -568,6 +596,8 @@ class ScheduledRunsApi:
             _path_params['scheduled_run_id'] = scheduled_run_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -608,6 +638,7 @@ class ScheduledRunsApi:
     def get_scheduled_run(
         self,
         scheduled_run_id: Annotated[str, Field(strict=True, description="Scheduled run resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -627,6 +658,8 @@ class ScheduledRunsApi:
 
         :param scheduled_run_id: Scheduled run resource ID (required)
         :type scheduled_run_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -651,6 +684,7 @@ class ScheduledRunsApi:
 
         _param = self._get_scheduled_run_serialize(
             scheduled_run_id=scheduled_run_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -679,6 +713,7 @@ class ScheduledRunsApi:
     def get_scheduled_run_with_http_info(
         self,
         scheduled_run_id: Annotated[str, Field(strict=True, description="Scheduled run resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -698,6 +733,8 @@ class ScheduledRunsApi:
 
         :param scheduled_run_id: Scheduled run resource ID (required)
         :type scheduled_run_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -722,6 +759,7 @@ class ScheduledRunsApi:
 
         _param = self._get_scheduled_run_serialize(
             scheduled_run_id=scheduled_run_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -750,6 +788,7 @@ class ScheduledRunsApi:
     def get_scheduled_run_without_preload_content(
         self,
         scheduled_run_id: Annotated[str, Field(strict=True, description="Scheduled run resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -769,6 +808,8 @@ class ScheduledRunsApi:
 
         :param scheduled_run_id: Scheduled run resource ID (required)
         :type scheduled_run_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -793,6 +834,7 @@ class ScheduledRunsApi:
 
         _param = self._get_scheduled_run_serialize(
             scheduled_run_id=scheduled_run_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -816,6 +858,7 @@ class ScheduledRunsApi:
     def _get_scheduled_run_serialize(
         self,
         scheduled_run_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -841,6 +884,8 @@ class ScheduledRunsApi:
             _path_params['scheduled_run_id'] = scheduled_run_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -1153,6 +1198,7 @@ class ScheduledRunsApi:
     @validate_call
     def list_scheduled_runs(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         enabled: Annotated[Optional[StrictBool], Field(description="Filter by enabled state (true = active schedules, false = paused)")] = None,
@@ -1174,6 +1220,8 @@ class ScheduledRunsApi:
 
         Retrieve a paginated list of scheduled runs with optional filtering.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of results per page
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
@@ -1205,6 +1253,7 @@ class ScheduledRunsApi:
         """ # noqa: E501
 
         _param = self._list_scheduled_runs_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             enabled=enabled,
@@ -1235,6 +1284,7 @@ class ScheduledRunsApi:
     @validate_call
     def list_scheduled_runs_with_http_info(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         enabled: Annotated[Optional[StrictBool], Field(description="Filter by enabled state (true = active schedules, false = paused)")] = None,
@@ -1256,6 +1306,8 @@ class ScheduledRunsApi:
 
         Retrieve a paginated list of scheduled runs with optional filtering.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of results per page
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
@@ -1287,6 +1339,7 @@ class ScheduledRunsApi:
         """ # noqa: E501
 
         _param = self._list_scheduled_runs_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             enabled=enabled,
@@ -1317,6 +1370,7 @@ class ScheduledRunsApi:
     @validate_call
     def list_scheduled_runs_without_preload_content(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         enabled: Annotated[Optional[StrictBool], Field(description="Filter by enabled state (true = active schedules, false = paused)")] = None,
@@ -1338,6 +1392,8 @@ class ScheduledRunsApi:
 
         Retrieve a paginated list of scheduled runs with optional filtering.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of results per page
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
@@ -1369,6 +1425,7 @@ class ScheduledRunsApi:
         """ # noqa: E501
 
         _param = self._list_scheduled_runs_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             enabled=enabled,
@@ -1394,6 +1451,7 @@ class ScheduledRunsApi:
 
     def _list_scheduled_runs_serialize(
         self,
+        x_coval_workspace_id,
         page_size,
         page_token,
         enabled,
@@ -1437,6 +1495,8 @@ class ScheduledRunsApi:
             _query_params.append(('template_id', template_id))
             
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -1478,6 +1538,7 @@ class ScheduledRunsApi:
         self,
         scheduled_run_id: Annotated[str, Field(strict=True, description="Scheduled run resource ID")],
         coval_scheduled_runs_api_update_scheduled_run_request: CovalScheduledRunsAPIUpdateScheduledRunRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1499,6 +1560,8 @@ class ScheduledRunsApi:
         :type scheduled_run_id: str
         :param coval_scheduled_runs_api_update_scheduled_run_request: (required)
         :type coval_scheduled_runs_api_update_scheduled_run_request: CovalScheduledRunsAPIUpdateScheduledRunRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1524,6 +1587,7 @@ class ScheduledRunsApi:
         _param = self._update_scheduled_run_serialize(
             scheduled_run_id=scheduled_run_id,
             coval_scheduled_runs_api_update_scheduled_run_request=coval_scheduled_runs_api_update_scheduled_run_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1553,6 +1617,7 @@ class ScheduledRunsApi:
         self,
         scheduled_run_id: Annotated[str, Field(strict=True, description="Scheduled run resource ID")],
         coval_scheduled_runs_api_update_scheduled_run_request: CovalScheduledRunsAPIUpdateScheduledRunRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1574,6 +1639,8 @@ class ScheduledRunsApi:
         :type scheduled_run_id: str
         :param coval_scheduled_runs_api_update_scheduled_run_request: (required)
         :type coval_scheduled_runs_api_update_scheduled_run_request: CovalScheduledRunsAPIUpdateScheduledRunRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1599,6 +1666,7 @@ class ScheduledRunsApi:
         _param = self._update_scheduled_run_serialize(
             scheduled_run_id=scheduled_run_id,
             coval_scheduled_runs_api_update_scheduled_run_request=coval_scheduled_runs_api_update_scheduled_run_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1628,6 +1696,7 @@ class ScheduledRunsApi:
         self,
         scheduled_run_id: Annotated[str, Field(strict=True, description="Scheduled run resource ID")],
         coval_scheduled_runs_api_update_scheduled_run_request: CovalScheduledRunsAPIUpdateScheduledRunRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1649,6 +1718,8 @@ class ScheduledRunsApi:
         :type scheduled_run_id: str
         :param coval_scheduled_runs_api_update_scheduled_run_request: (required)
         :type coval_scheduled_runs_api_update_scheduled_run_request: CovalScheduledRunsAPIUpdateScheduledRunRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1674,6 +1745,7 @@ class ScheduledRunsApi:
         _param = self._update_scheduled_run_serialize(
             scheduled_run_id=scheduled_run_id,
             coval_scheduled_runs_api_update_scheduled_run_request=coval_scheduled_runs_api_update_scheduled_run_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1698,6 +1770,7 @@ class ScheduledRunsApi:
         self,
         scheduled_run_id,
         coval_scheduled_runs_api_update_scheduled_run_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -1723,6 +1796,8 @@ class ScheduledRunsApi:
             _path_params['scheduled_run_id'] = scheduled_run_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_scheduled_runs_api_update_scheduled_run_request is not None:

@@ -19,9 +19,10 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
+from coval_sdk.models.test_sets_api_resource_attribution import TestSetsAPIResourceAttribution
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -30,20 +31,31 @@ class TestSetsAPITestSetResource(BaseModel):
     """
     Test set resource representation. 
     """ # noqa: E501
-    name: Optional[StrictStr] = Field(default=None, description="Resource name in format `test-sets/{id}`")
-    id: Optional[Annotated[str, Field(min_length=8, strict=True, max_length=8)]] = Field(default=None, description="Test set ID (8-character ID)")
-    slug: Optional[StrictStr] = Field(default=None, description="URL-friendly identifier (unique per organization)")
-    display_name: Optional[StrictStr] = Field(default=None, description="Human-readable test set name")
+    attribution: Optional[TestSetsAPIResourceAttribution] = Field(default=None, description="Authoring timestamps and user IDs. Unknown or deleted users are null.")
+    name: StrictStr = Field(description="Resource name in format `test-sets/{id}`")
+    id: Annotated[str, Field(min_length=8, strict=True, max_length=8)] = Field(description="Test set ID (8-character ID)")
+    slug: Annotated[str, Field(min_length=1, strict=True, max_length=100)] = Field(description="URL-friendly identifier containing only lowercase letters, numbers, dashes, and underscores (unique per organization)")
+    display_name: StrictStr = Field(description="Human-readable test set name")
     description: Optional[StrictStr] = Field(default=None, description="Test set description")
     test_set_type: Optional[StrictStr] = Field(default=None, description="Test set type (e.g., DEFAULT, SCENARIO, TRANSCRIPT, WORKFLOW)")
     test_set_metadata: Optional[Dict[str, Any]] = Field(default=None, description="Additional test set configuration (JSON)")
     parameters: Optional[Dict[str, Any]] = Field(default=None, description="Test case parameterization (e.g., {\"name\": [\"Alice\", \"Bob\"]})")
     test_case_count: Optional[StrictInt] = Field(default=None, description="Number of active test cases (GET endpoint only)")
     tags: Optional[List[StrictStr]] = Field(default=None, description="Tags associated with this test set")
-    create_time: Optional[datetime] = Field(default=None, description="Timestamp when test set was created")
+    create_time: datetime = Field(description="Timestamp when test set was created")
     update_time: Optional[datetime] = Field(default=None, description="Timestamp when test set was last updated")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "id", "slug", "display_name", "description", "test_set_type", "test_set_metadata", "parameters", "test_case_count", "tags", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["attribution", "name", "id", "slug", "display_name", "description", "test_set_type", "test_set_metadata", "parameters", "test_case_count", "tags", "create_time", "update_time"]
+
+    @field_validator('slug')
+    def slug_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if not isinstance(value, str):
+            value = str(value)
+
+        if not re.match(r"^[a-z0-9_-]+$", value):
+            raise ValueError(r"must validate the regular expression /^[a-z0-9_-]+$/")
+        return value
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -75,9 +87,11 @@ class TestSetsAPITestSetResource(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
         * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
+            "attribution",
             "additional_properties",
         ])
 
@@ -86,10 +100,18 @@ class TestSetsAPITestSetResource(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of attribution
+        if self.attribution:
+            _dict['attribution'] = self.attribution.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
+
+        # set to None if attribution (nullable) is None
+        # and model_fields_set contains the field
+        if self.attribution is None and "attribution" in self.model_fields_set:
+            _dict['attribution'] = None
 
         # set to None if description (nullable) is None
         # and model_fields_set contains the field
@@ -100,6 +122,11 @@ class TestSetsAPITestSetResource(BaseModel):
         # and model_fields_set contains the field
         if self.test_set_type is None and "test_set_type" in self.model_fields_set:
             _dict['test_set_type'] = None
+
+        # set to None if test_case_count (nullable) is None
+        # and model_fields_set contains the field
+        if self.test_case_count is None and "test_case_count" in self.model_fields_set:
+            _dict['test_case_count'] = None
 
         # set to None if update_time (nullable) is None
         # and model_fields_set contains the field
@@ -118,6 +145,7 @@ class TestSetsAPITestSetResource(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "attribution": TestSetsAPIResourceAttribution.from_dict(obj["attribution"]) if obj.get("attribution") is not None else None,
             "name": obj.get("name"),
             "id": obj.get("id"),
             "slug": obj.get("slug"),

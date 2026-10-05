@@ -21,6 +21,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
+from coval_sdk.models.coval_metrics_api_agent_judge_evidence_reference import CovalMetricsAPIAgentJudgeEvidenceReference
 from coval_sdk.models.coval_metrics_api_simple_metric_output_value import CovalMetricsAPISimpleMetricOutputValue
 from coval_sdk.models.coval_metrics_api_subvalue_by_timestamp import CovalMetricsAPISubvalueByTimestamp
 from typing import Optional, Set
@@ -38,11 +39,12 @@ class CovalMetricsAPISimpleMetricOutput(BaseModel):
     status: StrictStr = Field(description="Current status of the metric computation")
     status_reason: Optional[StrictStr] = Field(default=None, description="Stored reason for the current status, including the actionable reason a metric was skipped or failed. Null when no reason was recorded.")
     explanation: Optional[StrictStr] = Field(default=None, description="The LLM judge's reasoning for this metric output, as a flat string. Null for metrics that produce no explanation (non-judge metrics) or when the output is not yet computed.")
+    evidence_references: Optional[List[CovalMetricsAPIAgentJudgeEvidenceReference]] = Field(default=None, description="Stable frame or trace-span identities supporting an Agent Judge decision.")
     subvalues_by_timestamp: Optional[List[CovalMetricsAPISubvalueByTimestamp]] = Field(default=None, description="Time-series metric values anchored to time ranges")
     result: Optional[Dict[str, Any]] = Field(default=None, description="Structured metric result. Its keys depend on the metric type. Null for metrics that produce no structured result.")
     runtime_metadata: Optional[Dict[str, Any]] = Field(default=None, description="How the metric was computed at runtime (model version, trace context). Null when not recorded.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["metric_output_id", "metric_id", "metric_version_ulid", "value", "status", "status_reason", "explanation", "subvalues_by_timestamp", "result", "runtime_metadata"]
+    __properties: ClassVar[List[str]] = ["metric_output_id", "metric_id", "metric_version_ulid", "value", "status", "status_reason", "explanation", "evidence_references", "subvalues_by_timestamp", "result", "runtime_metadata"]
 
     @field_validator('status')
     def status_validate_enum(cls, value):
@@ -95,6 +97,13 @@ class CovalMetricsAPISimpleMetricOutput(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of value
         if self.value:
             _dict['value'] = self.value.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in evidence_references (list)
+        _items = []
+        if self.evidence_references:
+            for _item_evidence_references in self.evidence_references:
+                if _item_evidence_references:
+                    _items.append(_item_evidence_references.to_dict())
+            _dict['evidence_references'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in subvalues_by_timestamp (list)
         _items = []
         if self.subvalues_by_timestamp:
@@ -121,6 +130,11 @@ class CovalMetricsAPISimpleMetricOutput(BaseModel):
         # and model_fields_set contains the field
         if self.explanation is None and "explanation" in self.model_fields_set:
             _dict['explanation'] = None
+
+        # set to None if evidence_references (nullable) is None
+        # and model_fields_set contains the field
+        if self.evidence_references is None and "evidence_references" in self.model_fields_set:
+            _dict['evidence_references'] = None
 
         # set to None if subvalues_by_timestamp (nullable) is None
         # and model_fields_set contains the field
@@ -156,6 +170,7 @@ class CovalMetricsAPISimpleMetricOutput(BaseModel):
             "status": obj.get("status"),
             "status_reason": obj.get("status_reason"),
             "explanation": obj.get("explanation"),
+            "evidence_references": [CovalMetricsAPIAgentJudgeEvidenceReference.from_dict(_item) for _item in obj["evidence_references"]] if obj.get("evidence_references") is not None else None,
             "subvalues_by_timestamp": [CovalMetricsAPISubvalueByTimestamp.from_dict(_item) for _item in obj["subvalues_by_timestamp"]] if obj.get("subvalues_by_timestamp") is not None else None,
             "result": obj.get("result"),
             "runtime_metadata": obj.get("runtime_metadata")

@@ -41,17 +41,21 @@ import {
 
 export interface CreateTestCaseRequest {
     testCasesAPICreateTestCaseRequest: TestCasesAPICreateTestCaseRequest;
+    xCovalWorkspaceId?: string;
 }
 
 export interface DeleteTestCaseRequest {
     testCaseId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface GetTestCaseRequest {
     testCaseId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface ListTestCasesRequest {
+    xCovalWorkspaceId?: string;
     filter?: string;
     pageSize?: number;
     pageToken?: string;
@@ -61,6 +65,7 @@ export interface ListTestCasesRequest {
 export interface UpdateTestCaseRequest {
     testCaseId: string;
     testCasesAPIUpdateTestCaseRequest: TestCasesAPIUpdateTestCaseRequest;
+    xCovalWorkspaceId?: string;
 }
 
 /**
@@ -73,6 +78,7 @@ export interface TestCasesApiInterface {
     /**
      * Creates request options for createTestCase without sending the request
      * @param {TestCasesAPICreateTestCaseRequest} testCasesAPICreateTestCaseRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof TestCasesApiInterface
      */
@@ -82,6 +88,7 @@ export interface TestCasesApiInterface {
      * Create a new test case.
      * @summary Create test case
      * @param {TestCasesAPICreateTestCaseRequest} testCasesAPICreateTestCaseRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TestCasesApiInterface
@@ -97,6 +104,7 @@ export interface TestCasesApiInterface {
     /**
      * Creates request options for deleteTestCase without sending the request
      * @param {string} testCaseId Test case ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof TestCasesApiInterface
      */
@@ -106,6 +114,7 @@ export interface TestCasesApiInterface {
      * Delete a test case permanently. 
      * @summary Delete test case
      * @param {string} testCaseId Test case ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TestCasesApiInterface
@@ -121,6 +130,7 @@ export interface TestCasesApiInterface {
     /**
      * Creates request options for getTestCase without sending the request
      * @param {string} testCaseId Test case ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof TestCasesApiInterface
      */
@@ -130,6 +140,7 @@ export interface TestCasesApiInterface {
      * Retrieve a test case by ID.
      * @summary Get test case
      * @param {string} testCaseId Test case ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TestCasesApiInterface
@@ -144,6 +155,7 @@ export interface TestCasesApiInterface {
 
     /**
      * Creates request options for listTestCases without sending the request
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {string} [filter] Filter expression syntax. Values may be unquoted or double-quoted. Values containing spaces must be quoted. Example: &#x60;test_set_id&#x3D;abc12345&#x60; 
      * @param {number} [pageSize] Maximum number of test cases to return (default 50, max 100)
      * @param {string} [pageToken] Token for retrieving the next page of results
@@ -156,6 +168,7 @@ export interface TestCasesApiInterface {
     /**
      * List test cases for your organization. 
      * @summary List test cases
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {string} [filter] Filter expression syntax. Values may be unquoted or double-quoted. Values containing spaces must be quoted. Example: &#x60;test_set_id&#x3D;abc12345&#x60; 
      * @param {number} [pageSize] Maximum number of test cases to return (default 50, max 100)
      * @param {string} [pageToken] Token for retrieving the next page of results
@@ -176,6 +189,7 @@ export interface TestCasesApiInterface {
      * Creates request options for updateTestCase without sending the request
      * @param {string} testCaseId Test case ID
      * @param {TestCasesAPIUpdateTestCaseRequest} testCasesAPIUpdateTestCaseRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof TestCasesApiInterface
      */
@@ -186,6 +200,7 @@ export interface TestCasesApiInterface {
      * @summary Update test case
      * @param {string} testCaseId Test case ID
      * @param {TestCasesAPIUpdateTestCaseRequest} testCasesAPIUpdateTestCaseRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TestCasesApiInterface
@@ -221,6 +236,10 @@ export class TestCasesApi extends runtime.BaseAPI implements TestCasesApiInterfa
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Test_Cases_API_apiKey authentication
@@ -273,6 +292,10 @@ export class TestCasesApi extends runtime.BaseAPI implements TestCasesApiInterfa
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Test_Cases_API_apiKey authentication
         }
@@ -323,6 +346,10 @@ export class TestCasesApi extends runtime.BaseAPI implements TestCasesApiInterfa
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Test_Cases_API_apiKey authentication
@@ -384,6 +411,10 @@ export class TestCasesApi extends runtime.BaseAPI implements TestCasesApiInterfa
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Test_Cases_API_apiKey authentication
         }
@@ -442,6 +473,10 @@ export class TestCasesApi extends runtime.BaseAPI implements TestCasesApiInterfa
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Test_Cases_API_apiKey authentication

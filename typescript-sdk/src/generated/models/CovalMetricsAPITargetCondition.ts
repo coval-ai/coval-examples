@@ -92,5 +92,7 @@ export const CovalMetricsAPITargetConditionComparisonOperatorEnum = {
     Lte: "lte" as const,
     In: "in" as const,
     Nin: "nin" as const,
+    Bt: "bt" as const,
+    Nbt: "nbt" as const,
 } as const;
 export type CovalMetricsAPITargetConditionComparisonOperatorEnum = typeof CovalMetricsAPITargetConditionComparisonOperatorEnum[keyof typeof CovalMetricsAPITargetConditionComparisonOperatorEnum];

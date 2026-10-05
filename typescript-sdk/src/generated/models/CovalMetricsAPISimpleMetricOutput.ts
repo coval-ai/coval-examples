@@ -27,6 +27,13 @@ import {
     CovalMetricsAPISimpleMetricOutputValueToJSON,
     CovalMetricsAPISimpleMetricOutputValueToJSONTyped,
 } from './CovalMetricsAPISimpleMetricOutputValue.js';
+import type { CovalMetricsAPIAgentJudgeEvidenceReference } from './CovalMetricsAPIAgentJudgeEvidenceReference.js';
+import {
+    CovalMetricsAPIAgentJudgeEvidenceReferenceFromJSON,
+    CovalMetricsAPIAgentJudgeEvidenceReferenceFromJSONTyped,
+    CovalMetricsAPIAgentJudgeEvidenceReferenceToJSON,
+    CovalMetricsAPIAgentJudgeEvidenceReferenceToJSONTyped,
+} from './CovalMetricsAPIAgentJudgeEvidenceReference.js';
 
 /**
  * 
@@ -76,6 +83,12 @@ export interface CovalMetricsAPISimpleMetricOutput {
      * @memberof CovalMetricsAPISimpleMetricOutput
      */
     explanation?: string | null;
+    /**
+     * Stable frame or trace-span identities supporting an Agent Judge decision.
+     * @type {Array<CovalMetricsAPIAgentJudgeEvidenceReference>}
+     * @memberof CovalMetricsAPISimpleMetricOutput
+     */
+    evidence_references?: Array<CovalMetricsAPIAgentJudgeEvidenceReference> | null;
     /**
      * Time-series metric values anchored to time ranges
      * @type {Array<CovalMetricsAPISubvalueByTimestamp>}
@@ -138,6 +151,7 @@ export function CovalMetricsAPISimpleMetricOutputFromJSONTyped(json: any, ignore
         'status': json['status'],
         'status_reason': json['status_reason'] == null ? undefined : json['status_reason'],
         'explanation': json['explanation'] == null ? undefined : json['explanation'],
+        'evidence_references': json['evidence_references'] == null ? undefined : ((json['evidence_references'] as Array<any>).map(CovalMetricsAPIAgentJudgeEvidenceReferenceFromJSON)),
         'subvalues_by_timestamp': json['subvalues_by_timestamp'] == null ? undefined : ((json['subvalues_by_timestamp'] as Array<any>).map(CovalMetricsAPISubvalueByTimestampFromJSON)),
         'result': json['result'] == null ? undefined : json['result'],
         'runtime_metadata': json['runtime_metadata'] == null ? undefined : json['runtime_metadata'],
@@ -162,6 +176,7 @@ export function CovalMetricsAPISimpleMetricOutputToJSONTyped(value?: CovalMetric
         'status': value['status'],
         'status_reason': value['status_reason'],
         'explanation': value['explanation'],
+        'evidence_references': value['evidence_references'] == null ? undefined : ((value['evidence_references'] as Array<any>).map(CovalMetricsAPIAgentJudgeEvidenceReferenceToJSON)),
         'subvalues_by_timestamp': value['subvalues_by_timestamp'] == null ? undefined : ((value['subvalues_by_timestamp'] as Array<any>).map(CovalMetricsAPISubvalueByTimestampToJSON)),
         'result': value['result'],
         'runtime_metadata': value['runtime_metadata'],

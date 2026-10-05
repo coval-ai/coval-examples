@@ -21,6 +21,7 @@ export const CovalDashboardsAPIGroupByType = {
     Agent: 'agent',
     Mutation: 'mutation',
     Persona: 'persona',
+    Assignee: 'assignee',
     Template: 'template',
     TestSet: 'test_set'
 } as const;

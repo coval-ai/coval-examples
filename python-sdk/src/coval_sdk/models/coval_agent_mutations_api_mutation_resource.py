@@ -22,6 +22,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
+from coval_sdk.models.coval_agent_mutations_api_resource_attribution import CovalAgentMutationsAPIResourceAttribution
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -30,16 +31,18 @@ class CovalAgentMutationsAPIMutationResource(BaseModel):
     """
     Agent mutation resource representing a configuration variant.
     """ # noqa: E501
+    attribution: Optional[CovalAgentMutationsAPIResourceAttribution] = Field(default=None, description="Authoring timestamps and user IDs. Unknown or deleted users are null.")
     id: Annotated[str, Field(strict=True)] = Field(description="Mutation ID (26-character ULID)")
     agent_id: Annotated[str, Field(strict=True)] = Field(description="Parent agent ID (22-character ShortUUID)")
     display_name: Annotated[str, Field(min_length=1, strict=True, max_length=200)] = Field(description="Human-readable mutation name (unique per agent among active mutations)")
     description: Optional[Annotated[str, Field(strict=True, max_length=2000)]] = Field(default='', description="Optional description of the mutation's purpose")
-    config_overrides: Dict[str, Any] = Field(description="Configuration delta to deep-merge with parent agent. Keys must exist on the parent agent's configuration. ")
-    parameter_values: Dict[str, StrictStr] = Field(description="Flattened key-value pairs for display purposes. Auto-derived from config_overrides if not provided at creation. ")
+    config_overrides: Optional[Dict[str, Any]] = Field(default=None, description="Configuration delta to deep-merge with parent agent. Keys must exist on the parent agent's configuration. ")
+    parameter_values: Optional[Dict[str, StrictStr]] = Field(default=None, description="Flattened key-value pairs for display purposes. Auto-derived from config_overrides if not provided at creation. ")
     create_time: datetime = Field(description="Creation timestamp (ISO 8601)")
     update_time: Optional[datetime] = Field(default=None, description="Last update timestamp (ISO 8601)")
+    status: Optional[StrictStr] = Field(default='ACTIVE', description="Mutation lifecycle status")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["id", "agent_id", "display_name", "description", "config_overrides", "parameter_values", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["attribution", "id", "agent_id", "display_name", "description", "config_overrides", "parameter_values", "create_time", "update_time", "status"]
 
     @field_validator('id')
     def id_validate_regular_expression(cls, value):
@@ -59,6 +62,16 @@ class CovalAgentMutationsAPIMutationResource(BaseModel):
 
         if not re.match(r"^[A-Za-z0-9]{22}$", value):
             raise ValueError(r"must validate the regular expression /^[A-Za-z0-9]{22}$/")
+        return value
+
+    @field_validator('status')
+    def status_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['ACTIVE', 'DELETED']):
+            raise ValueError("must be one of enum values ('ACTIVE', 'DELETED')")
         return value
 
     model_config = ConfigDict(
@@ -91,9 +104,11 @@ class CovalAgentMutationsAPIMutationResource(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
         * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
+            "attribution",
             "additional_properties",
         ])
 
@@ -102,10 +117,18 @@ class CovalAgentMutationsAPIMutationResource(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of attribution
+        if self.attribution:
+            _dict['attribution'] = self.attribution.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
+
+        # set to None if attribution (nullable) is None
+        # and model_fields_set contains the field
+        if self.attribution is None and "attribution" in self.model_fields_set:
+            _dict['attribution'] = None
 
         # set to None if update_time (nullable) is None
         # and model_fields_set contains the field
@@ -124,6 +147,7 @@ class CovalAgentMutationsAPIMutationResource(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "attribution": CovalAgentMutationsAPIResourceAttribution.from_dict(obj["attribution"]) if obj.get("attribution") is not None else None,
             "id": obj.get("id"),
             "agent_id": obj.get("agent_id"),
             "display_name": obj.get("display_name"),
@@ -131,7 +155,8 @@ class CovalAgentMutationsAPIMutationResource(BaseModel):
             "config_overrides": obj.get("config_overrides"),
             "parameter_values": obj.get("parameter_values"),
             "create_time": obj.get("create_time"),
-            "update_time": obj.get("update_time")
+            "update_time": obj.get("update_time"),
+            "status": obj.get("status") if obj.get("status") is not None else 'ACTIVE'
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

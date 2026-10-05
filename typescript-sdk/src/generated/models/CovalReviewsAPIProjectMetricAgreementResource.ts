@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime.js';
+import type { CovalReviewsAPICompositeCriteriaAgreementResource } from './CovalReviewsAPICompositeCriteriaAgreementResource.js';
+import {
+    CovalReviewsAPICompositeCriteriaAgreementResourceFromJSON,
+    CovalReviewsAPICompositeCriteriaAgreementResourceFromJSONTyped,
+    CovalReviewsAPICompositeCriteriaAgreementResourceToJSON,
+    CovalReviewsAPICompositeCriteriaAgreementResourceToJSONTyped,
+} from './CovalReviewsAPICompositeCriteriaAgreementResource.js';
+
 /**
  * 
  * @export
@@ -43,6 +51,12 @@ export interface CovalReviewsAPIProjectMetricAgreementResource {
      * @memberof CovalReviewsAPIProjectMetricAgreementResource
      */
     agreement_rate: number;
+    /**
+     * 
+     * @type {CovalReviewsAPICompositeCriteriaAgreementResource}
+     * @memberof CovalReviewsAPIProjectMetricAgreementResource
+     */
+    criteria_agreement?: CovalReviewsAPICompositeCriteriaAgreementResource | null;
 }
 
 /**
@@ -70,6 +84,7 @@ export function CovalReviewsAPIProjectMetricAgreementResourceFromJSONTyped(json:
         'agreements': json['agreements'],
         'disagreements': json['disagreements'],
         'agreement_rate': json['agreement_rate'],
+        'criteria_agreement': json['criteria_agreement'] == null ? undefined : CovalReviewsAPICompositeCriteriaAgreementResourceFromJSON(json['criteria_agreement']),
     };
 }
 
@@ -88,6 +103,7 @@ export function CovalReviewsAPIProjectMetricAgreementResourceToJSONTyped(value?:
         'agreements': value['agreements'],
         'disagreements': value['disagreements'],
         'agreement_rate': value['agreement_rate'],
+        'criteria_agreement': CovalReviewsAPICompositeCriteriaAgreementResourceToJSON(value['criteria_agreement']),
     };
 }
 

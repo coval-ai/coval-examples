@@ -31,58 +31,20 @@ class CovalRunTemplatesAPIUpdateRunTemplateRequest(BaseModel):
     """ # noqa: E501
     display_name: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=200)]] = Field(default=None, description="Human-readable template name")
     description: Optional[StrictStr] = Field(default=None, description="Optional description")
-    agent_id: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Agent to test")
-    persona_id: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Simulated persona to use")
-    test_set_id: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Test set containing test cases")
+    agent_ids: Optional[Annotated[List[Annotated[str, Field(strict=True)]], Field(min_length=1)]] = Field(default=None, description="Agents to test. Omit to leave unchanged.")
+    persona_ids: Optional[Annotated[List[Annotated[str, Field(strict=True)]], Field(min_length=1)]] = Field(default=None, description="Simulated personas to use. Omit to leave unchanged.")
+    test_set_ids: Optional[Annotated[List[Annotated[str, Field(strict=True)]], Field(min_length=1)]] = Field(default=None, description="Test sets containing test cases. Omit to leave unchanged.")
     metric_ids: Optional[List[StrictStr]] = Field(default=None, description="Metrics to evaluate (null = no change, [] = use agent defaults)")
     mutation_ids: Optional[List[StrictStr]] = Field(default=None, description="Mutations for A/B testing (null = no change, [] = clear)")
     iteration_count: Optional[Annotated[int, Field(le=100, strict=True, ge=1)]] = Field(default=None, description="Number of times to run each test case")
     concurrency: Optional[Annotated[int, Field(le=50, strict=True, ge=1)]] = Field(default=None, description="Number of simulations to run concurrently")
     sub_sample_size: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Number of test cases to randomly sample")
     sub_sample_seed: Optional[StrictInt] = Field(default=None, description="Random seed for reproducible sub-sampling")
+    test_case_ids: Optional[Annotated[List[StrictStr], Field(min_length=1, max_length=100)]] = Field(default=None, description="Optional test cases to run from the selected test sets")
     metadata: Optional[Dict[str, Any]] = Field(default=None, description="Custom metadata (null = no change, {} = clear)")
     tags: Optional[List[StrictStr]] = Field(default=None, description="Tags to associate with this run template. Null or omitted leaves tags unchanged. Pass [] to clear all tags.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["display_name", "description", "agent_id", "persona_id", "test_set_id", "metric_ids", "mutation_ids", "iteration_count", "concurrency", "sub_sample_size", "sub_sample_seed", "metadata", "tags"]
-
-    @field_validator('agent_id')
-    def agent_id_validate_regular_expression(cls, value):
-        """Validates the regular expression"""
-        if value is None:
-            return value
-
-        if not isinstance(value, str):
-            value = str(value)
-
-        if not re.match(r"^[A-Za-z0-9]{22}$", value):
-            raise ValueError(r"must validate the regular expression /^[A-Za-z0-9]{22}$/")
-        return value
-
-    @field_validator('persona_id')
-    def persona_id_validate_regular_expression(cls, value):
-        """Validates the regular expression"""
-        if value is None:
-            return value
-
-        if not isinstance(value, str):
-            value = str(value)
-
-        if not re.match(r"^[A-Za-z0-9]{22}$", value):
-            raise ValueError(r"must validate the regular expression /^[A-Za-z0-9]{22}$/")
-        return value
-
-    @field_validator('test_set_id')
-    def test_set_id_validate_regular_expression(cls, value):
-        """Validates the regular expression"""
-        if value is None:
-            return value
-
-        if not isinstance(value, str):
-            value = str(value)
-
-        if not re.match(r"^[A-Za-z0-9]{8}$", value):
-            raise ValueError(r"must validate the regular expression /^[A-Za-z0-9]{8}$/")
-        return value
+    __properties: ClassVar[List[str]] = ["display_name", "description", "agent_ids", "persona_ids", "test_set_ids", "metric_ids", "mutation_ids", "iteration_count", "concurrency", "sub_sample_size", "sub_sample_seed", "test_case_ids", "metadata", "tags"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -135,6 +97,11 @@ class CovalRunTemplatesAPIUpdateRunTemplateRequest(BaseModel):
         if self.sub_sample_seed is None and "sub_sample_seed" in self.model_fields_set:
             _dict['sub_sample_seed'] = None
 
+        # set to None if test_case_ids (nullable) is None
+        # and model_fields_set contains the field
+        if self.test_case_ids is None and "test_case_ids" in self.model_fields_set:
+            _dict['test_case_ids'] = None
+
         # set to None if tags (nullable) is None
         # and model_fields_set contains the field
         if self.tags is None and "tags" in self.model_fields_set:
@@ -154,15 +121,16 @@ class CovalRunTemplatesAPIUpdateRunTemplateRequest(BaseModel):
         _obj = cls.model_validate({
             "display_name": obj.get("display_name"),
             "description": obj.get("description"),
-            "agent_id": obj.get("agent_id"),
-            "persona_id": obj.get("persona_id"),
-            "test_set_id": obj.get("test_set_id"),
+            "agent_ids": obj.get("agent_ids"),
+            "persona_ids": obj.get("persona_ids"),
+            "test_set_ids": obj.get("test_set_ids"),
             "metric_ids": obj.get("metric_ids"),
             "mutation_ids": obj.get("mutation_ids"),
             "iteration_count": obj.get("iteration_count"),
             "concurrency": obj.get("concurrency"),
             "sub_sample_size": obj.get("sub_sample_size"),
             "sub_sample_seed": obj.get("sub_sample_seed"),
+            "test_case_ids": obj.get("test_case_ids"),
             "metadata": obj.get("metadata"),
             "tags": obj.get("tags")
         })

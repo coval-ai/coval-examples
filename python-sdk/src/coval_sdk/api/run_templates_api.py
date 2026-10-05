@@ -48,6 +48,7 @@ class RunTemplatesApi:
     def create_run_template(
         self,
         coval_run_templates_api_create_run_template_request: CovalRunTemplatesAPICreateRunTemplateRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -67,6 +68,8 @@ class RunTemplatesApi:
 
         :param coval_run_templates_api_create_run_template_request: (required)
         :type coval_run_templates_api_create_run_template_request: CovalRunTemplatesAPICreateRunTemplateRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -91,6 +94,7 @@ class RunTemplatesApi:
 
         _param = self._create_run_template_serialize(
             coval_run_templates_api_create_run_template_request=coval_run_templates_api_create_run_template_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -119,6 +123,7 @@ class RunTemplatesApi:
     def create_run_template_with_http_info(
         self,
         coval_run_templates_api_create_run_template_request: CovalRunTemplatesAPICreateRunTemplateRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -138,6 +143,8 @@ class RunTemplatesApi:
 
         :param coval_run_templates_api_create_run_template_request: (required)
         :type coval_run_templates_api_create_run_template_request: CovalRunTemplatesAPICreateRunTemplateRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -162,6 +169,7 @@ class RunTemplatesApi:
 
         _param = self._create_run_template_serialize(
             coval_run_templates_api_create_run_template_request=coval_run_templates_api_create_run_template_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -190,6 +198,7 @@ class RunTemplatesApi:
     def create_run_template_without_preload_content(
         self,
         coval_run_templates_api_create_run_template_request: CovalRunTemplatesAPICreateRunTemplateRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -209,6 +218,8 @@ class RunTemplatesApi:
 
         :param coval_run_templates_api_create_run_template_request: (required)
         :type coval_run_templates_api_create_run_template_request: CovalRunTemplatesAPICreateRunTemplateRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -233,6 +244,7 @@ class RunTemplatesApi:
 
         _param = self._create_run_template_serialize(
             coval_run_templates_api_create_run_template_request=coval_run_templates_api_create_run_template_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -256,6 +268,7 @@ class RunTemplatesApi:
     def _create_run_template_serialize(
         self,
         coval_run_templates_api_create_run_template_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -279,6 +292,8 @@ class RunTemplatesApi:
         # process the path parameters
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_run_templates_api_create_run_template_request is not None:
@@ -334,6 +349,7 @@ class RunTemplatesApi:
     def delete_run_template(
         self,
         run_template_id: Annotated[str, Field(strict=True, description="Run template resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -353,6 +369,8 @@ class RunTemplatesApi:
 
         :param run_template_id: Run template resource ID (required)
         :type run_template_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -377,6 +395,7 @@ class RunTemplatesApi:
 
         _param = self._delete_run_template_serialize(
             run_template_id=run_template_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -406,6 +425,7 @@ class RunTemplatesApi:
     def delete_run_template_with_http_info(
         self,
         run_template_id: Annotated[str, Field(strict=True, description="Run template resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -425,6 +445,8 @@ class RunTemplatesApi:
 
         :param run_template_id: Run template resource ID (required)
         :type run_template_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -449,6 +471,7 @@ class RunTemplatesApi:
 
         _param = self._delete_run_template_serialize(
             run_template_id=run_template_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -478,6 +501,7 @@ class RunTemplatesApi:
     def delete_run_template_without_preload_content(
         self,
         run_template_id: Annotated[str, Field(strict=True, description="Run template resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -497,6 +521,8 @@ class RunTemplatesApi:
 
         :param run_template_id: Run template resource ID (required)
         :type run_template_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -521,6 +547,7 @@ class RunTemplatesApi:
 
         _param = self._delete_run_template_serialize(
             run_template_id=run_template_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -545,6 +572,7 @@ class RunTemplatesApi:
     def _delete_run_template_serialize(
         self,
         run_template_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -570,6 +598,8 @@ class RunTemplatesApi:
             _path_params['run_template_id'] = run_template_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -610,6 +640,7 @@ class RunTemplatesApi:
     def get_run_template(
         self,
         run_template_id: Annotated[str, Field(strict=True, description="Run template resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -629,6 +660,8 @@ class RunTemplatesApi:
 
         :param run_template_id: Run template resource ID (required)
         :type run_template_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -653,6 +686,7 @@ class RunTemplatesApi:
 
         _param = self._get_run_template_serialize(
             run_template_id=run_template_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -681,6 +715,7 @@ class RunTemplatesApi:
     def get_run_template_with_http_info(
         self,
         run_template_id: Annotated[str, Field(strict=True, description="Run template resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -700,6 +735,8 @@ class RunTemplatesApi:
 
         :param run_template_id: Run template resource ID (required)
         :type run_template_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -724,6 +761,7 @@ class RunTemplatesApi:
 
         _param = self._get_run_template_serialize(
             run_template_id=run_template_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -752,6 +790,7 @@ class RunTemplatesApi:
     def get_run_template_without_preload_content(
         self,
         run_template_id: Annotated[str, Field(strict=True, description="Run template resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -771,6 +810,8 @@ class RunTemplatesApi:
 
         :param run_template_id: Run template resource ID (required)
         :type run_template_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -795,6 +836,7 @@ class RunTemplatesApi:
 
         _param = self._get_run_template_serialize(
             run_template_id=run_template_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -818,6 +860,7 @@ class RunTemplatesApi:
     def _get_run_template_serialize(
         self,
         run_template_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -843,6 +886,8 @@ class RunTemplatesApi:
             _path_params['run_template_id'] = run_template_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -882,6 +927,7 @@ class RunTemplatesApi:
     @validate_call
     def list_run_templates(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         tag_filters: Annotated[Optional[Annotated[List[StrictStr], Field(max_length=20)]], Field(description="Filter run templates by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=nightly&tag_filters=voice`). ")] = None,
@@ -902,6 +948,8 @@ class RunTemplatesApi:
 
         Retrieve a paginated list of run templates.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of results per page
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
@@ -931,6 +979,7 @@ class RunTemplatesApi:
         """ # noqa: E501
 
         _param = self._list_run_templates_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             tag_filters=tag_filters,
@@ -960,6 +1009,7 @@ class RunTemplatesApi:
     @validate_call
     def list_run_templates_with_http_info(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         tag_filters: Annotated[Optional[Annotated[List[StrictStr], Field(max_length=20)]], Field(description="Filter run templates by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=nightly&tag_filters=voice`). ")] = None,
@@ -980,6 +1030,8 @@ class RunTemplatesApi:
 
         Retrieve a paginated list of run templates.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of results per page
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
@@ -1009,6 +1061,7 @@ class RunTemplatesApi:
         """ # noqa: E501
 
         _param = self._list_run_templates_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             tag_filters=tag_filters,
@@ -1038,6 +1091,7 @@ class RunTemplatesApi:
     @validate_call
     def list_run_templates_without_preload_content(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         tag_filters: Annotated[Optional[Annotated[List[StrictStr], Field(max_length=20)]], Field(description="Filter run templates by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=nightly&tag_filters=voice`). ")] = None,
@@ -1058,6 +1112,8 @@ class RunTemplatesApi:
 
         Retrieve a paginated list of run templates.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of results per page
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
@@ -1087,6 +1143,7 @@ class RunTemplatesApi:
         """ # noqa: E501
 
         _param = self._list_run_templates_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             tag_filters=tag_filters,
@@ -1111,6 +1168,7 @@ class RunTemplatesApi:
 
     def _list_run_templates_serialize(
         self,
+        x_coval_workspace_id,
         page_size,
         page_token,
         tag_filters,
@@ -1150,6 +1208,8 @@ class RunTemplatesApi:
             _query_params.append(('tag_filters', tag_filters))
             
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -1191,6 +1251,7 @@ class RunTemplatesApi:
         self,
         run_template_id: Annotated[str, Field(strict=True, description="Run template resource ID")],
         coval_run_templates_api_update_run_template_request: CovalRunTemplatesAPIUpdateRunTemplateRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1212,6 +1273,8 @@ class RunTemplatesApi:
         :type run_template_id: str
         :param coval_run_templates_api_update_run_template_request: (required)
         :type coval_run_templates_api_update_run_template_request: CovalRunTemplatesAPIUpdateRunTemplateRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1237,6 +1300,7 @@ class RunTemplatesApi:
         _param = self._update_run_template_serialize(
             run_template_id=run_template_id,
             coval_run_templates_api_update_run_template_request=coval_run_templates_api_update_run_template_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1266,6 +1330,7 @@ class RunTemplatesApi:
         self,
         run_template_id: Annotated[str, Field(strict=True, description="Run template resource ID")],
         coval_run_templates_api_update_run_template_request: CovalRunTemplatesAPIUpdateRunTemplateRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1287,6 +1352,8 @@ class RunTemplatesApi:
         :type run_template_id: str
         :param coval_run_templates_api_update_run_template_request: (required)
         :type coval_run_templates_api_update_run_template_request: CovalRunTemplatesAPIUpdateRunTemplateRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1312,6 +1379,7 @@ class RunTemplatesApi:
         _param = self._update_run_template_serialize(
             run_template_id=run_template_id,
             coval_run_templates_api_update_run_template_request=coval_run_templates_api_update_run_template_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1341,6 +1409,7 @@ class RunTemplatesApi:
         self,
         run_template_id: Annotated[str, Field(strict=True, description="Run template resource ID")],
         coval_run_templates_api_update_run_template_request: CovalRunTemplatesAPIUpdateRunTemplateRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1362,6 +1431,8 @@ class RunTemplatesApi:
         :type run_template_id: str
         :param coval_run_templates_api_update_run_template_request: (required)
         :type coval_run_templates_api_update_run_template_request: CovalRunTemplatesAPIUpdateRunTemplateRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1387,6 +1458,7 @@ class RunTemplatesApi:
         _param = self._update_run_template_serialize(
             run_template_id=run_template_id,
             coval_run_templates_api_update_run_template_request=coval_run_templates_api_update_run_template_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1411,6 +1483,7 @@ class RunTemplatesApi:
         self,
         run_template_id,
         coval_run_templates_api_update_run_template_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -1436,6 +1509,8 @@ class RunTemplatesApi:
             _path_params['run_template_id'] = run_template_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_run_templates_api_update_run_template_request is not None:

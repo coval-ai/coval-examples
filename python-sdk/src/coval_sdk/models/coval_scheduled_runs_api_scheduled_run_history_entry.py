@@ -37,7 +37,7 @@ class CovalScheduledRunsAPIScheduledRunHistoryEntry(BaseModel):
     test_set_name: StrictStr = Field(description="Test set display name")
     agent_id: Optional[StrictStr] = Field(default=None, description="Agent under test")
     model_type: StrictStr = Field(description="Model/connection type used for the run")
-    is_public: StrictBool = Field(description="Whether the run is shared via a public link")
+    is_public: Optional[StrictBool] = Field(default=None, description="Whether the run is shared via a public link")
     create_time: datetime = Field(description="When the run was created (ISO 8601)")
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["name", "id", "display_name", "status", "test_set_id", "test_set_name", "agent_id", "model_type", "is_public", "create_time"]

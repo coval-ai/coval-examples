@@ -29,12 +29,22 @@ import {
     CovalOrganizationAPIUpdateConversationMetricsRequestToJSON,
 } from '../models/CovalOrganizationAPIUpdateConversationMetricsRequest.js';
 
+export interface GetConversationMetricsRequest {
+    xCovalWorkspaceId?: string;
+}
+
+export interface GetMonitoringMetricsRequest {
+    xCovalWorkspaceId?: string;
+}
+
 export interface UpdateConversationMetricsRequest {
     covalOrganizationAPIUpdateConversationMetricsRequest: CovalOrganizationAPIUpdateConversationMetricsRequest;
+    xCovalWorkspaceId?: string;
 }
 
 export interface UpdateMonitoringMetricsRequest {
     covalOrganizationAPIUpdateConversationMetricsRequest: CovalOrganizationAPIUpdateConversationMetricsRequest;
+    xCovalWorkspaceId?: string;
 }
 
 /**
@@ -46,63 +56,69 @@ export interface UpdateMonitoringMetricsRequest {
 export interface OrganizationConversationsConfigApiInterface {
     /**
      * Creates request options for getConversationMetrics without sending the request
+     * @param {string} [xCovalWorkspaceId] Workspace whose conversation metrics configuration is read or updated. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof OrganizationConversationsConfigApiInterface
      */
-    getConversationMetricsRequestOpts(): Promise<runtime.RequestOpts>;
+    getConversationMetricsRequestOpts(requestParameters: GetConversationMetricsRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Return the organization\'s conversation metrics configuration: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata.
+     * Return the conversation metrics configuration for the selected workspace: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata. Each unset workspace field inherits from the organization configuration. If no workspace can be resolved, the organization configuration is returned for compatibility.
      * @summary Get conversation metrics config
+     * @param {string} [xCovalWorkspaceId] Workspace whose conversation metrics configuration is read or updated. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof OrganizationConversationsConfigApiInterface
      */
-    getConversationMetricsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIConversationMetricsConfig>>;
+    getConversationMetricsRaw(requestParameters: GetConversationMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIConversationMetricsConfig>>;
 
     /**
-     * Return the organization\'s conversation metrics configuration: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata.
+     * Return the conversation metrics configuration for the selected workspace: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata. Each unset workspace field inherits from the organization configuration. If no workspace can be resolved, the organization configuration is returned for compatibility.
      * Get conversation metrics config
      */
-    getConversationMetrics(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIConversationMetricsConfig>;
+    getConversationMetrics(requestParameters: GetConversationMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIConversationMetricsConfig>;
 
     /**
      * Creates request options for getMonitoringMetrics without sending the request
+     * @param {string} [xCovalWorkspaceId] Workspace whose conversation metrics configuration is read or updated. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @deprecated
      * @throws {RequiredError}
      * @memberof OrganizationConversationsConfigApiInterface
      */
-    getMonitoringMetricsRequestOpts(): Promise<runtime.RequestOpts>;
+    getMonitoringMetricsRequestOpts(requestParameters: GetMonitoringMetricsRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Deprecated alias for `GET /organization/conversation-metrics`. Returns the organization\'s conversation metrics configuration.
+     * Deprecated alias for `GET /organization/conversation-metrics`. Returns the selected workspace\'s conversation metrics configuration.
      * @summary Get conversation metrics config using the legacy path
+     * @param {string} [xCovalWorkspaceId] Workspace whose conversation metrics configuration is read or updated. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @deprecated
      * @throws {RequiredError}
      * @memberof OrganizationConversationsConfigApiInterface
      */
-    getMonitoringMetricsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIConversationMetricsConfig>>;
+    getMonitoringMetricsRaw(requestParameters: GetMonitoringMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIConversationMetricsConfig>>;
 
     /**
-     * Deprecated alias for `GET /organization/conversation-metrics`. Returns the organization\'s conversation metrics configuration.
+     * Deprecated alias for `GET /organization/conversation-metrics`. Returns the selected workspace\'s conversation metrics configuration.
      * Get conversation metrics config using the legacy path
      * @deprecated
      */
-    getMonitoringMetrics(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIConversationMetricsConfig>;
+    getMonitoringMetrics(requestParameters: GetMonitoringMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIConversationMetricsConfig>;
 
     /**
      * Creates request options for updateConversationMetrics without sending the request
      * @param {CovalOrganizationAPIUpdateConversationMetricsRequest} covalOrganizationAPIUpdateConversationMetricsRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace whose conversation metrics configuration is read or updated. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof OrganizationConversationsConfigApiInterface
      */
     updateConversationMetricsRequestOpts(requestParameters: UpdateConversationMetricsRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Partially update the organization\'s conversation metrics configuration. Provide at least one of `default_conversation_metrics` or `conditional_conversation_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
+     * Partially update the selected workspace\'s conversation metrics configuration. Every resolved workspace stores its own configuration. If no workspace can be resolved, the organization configuration is updated for compatibility. Provide at least one of `default_conversation_metrics` or `conditional_conversation_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
      * @summary Update conversation metrics config
      * @param {CovalOrganizationAPIUpdateConversationMetricsRequest} covalOrganizationAPIUpdateConversationMetricsRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace whose conversation metrics configuration is read or updated. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof OrganizationConversationsConfigApiInterface
@@ -110,7 +126,7 @@ export interface OrganizationConversationsConfigApiInterface {
     updateConversationMetricsRaw(requestParameters: UpdateConversationMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIConversationMetricsConfig>>;
 
     /**
-     * Partially update the organization\'s conversation metrics configuration. Provide at least one of `default_conversation_metrics` or `conditional_conversation_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
+     * Partially update the selected workspace\'s conversation metrics configuration. Every resolved workspace stores its own configuration. If no workspace can be resolved, the organization configuration is updated for compatibility. Provide at least one of `default_conversation_metrics` or `conditional_conversation_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
      * Update conversation metrics config
      */
     updateConversationMetrics(requestParameters: UpdateConversationMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIConversationMetricsConfig>;
@@ -118,6 +134,7 @@ export interface OrganizationConversationsConfigApiInterface {
     /**
      * Creates request options for updateMonitoringMetrics without sending the request
      * @param {CovalOrganizationAPIUpdateConversationMetricsRequest} covalOrganizationAPIUpdateConversationMetricsRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace whose conversation metrics configuration is read or updated. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @deprecated
      * @throws {RequiredError}
      * @memberof OrganizationConversationsConfigApiInterface
@@ -125,9 +142,10 @@ export interface OrganizationConversationsConfigApiInterface {
     updateMonitoringMetricsRequestOpts(requestParameters: UpdateMonitoringMetricsRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Deprecated alias for `PATCH /organization/conversation-metrics`. Partially updates the organization\'s conversation metrics configuration.
+     * Deprecated alias for `PATCH /organization/conversation-metrics`. Partially updates the selected workspace\'s conversation metrics configuration.
      * @summary Update conversation metrics config using the legacy path
      * @param {CovalOrganizationAPIUpdateConversationMetricsRequest} covalOrganizationAPIUpdateConversationMetricsRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace whose conversation metrics configuration is read or updated. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @deprecated
      * @throws {RequiredError}
@@ -136,7 +154,7 @@ export interface OrganizationConversationsConfigApiInterface {
     updateMonitoringMetricsRaw(requestParameters: UpdateMonitoringMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIConversationMetricsConfig>>;
 
     /**
-     * Deprecated alias for `PATCH /organization/conversation-metrics`. Partially updates the organization\'s conversation metrics configuration.
+     * Deprecated alias for `PATCH /organization/conversation-metrics`. Partially updates the selected workspace\'s conversation metrics configuration.
      * Update conversation metrics config using the legacy path
      * @deprecated
      */
@@ -152,10 +170,14 @@ export class OrganizationConversationsConfigApi extends runtime.BaseAPI implemen
     /**
      * Creates request options for getConversationMetrics without sending the request
      */
-    async getConversationMetricsRequestOpts(): Promise<runtime.RequestOpts> {
+    async getConversationMetricsRequestOpts(requestParameters: GetConversationMetricsRequest): Promise<runtime.RequestOpts> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Organization_API_ApiKeyAuth authentication
@@ -173,22 +195,22 @@ export class OrganizationConversationsConfigApi extends runtime.BaseAPI implemen
     }
 
     /**
-     * Return the organization\'s conversation metrics configuration: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata.
+     * Return the conversation metrics configuration for the selected workspace: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata. Each unset workspace field inherits from the organization configuration. If no workspace can be resolved, the organization configuration is returned for compatibility.
      * Get conversation metrics config
      */
-    async getConversationMetricsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIConversationMetricsConfig>> {
-        const requestOptions = await this.getConversationMetricsRequestOpts();
+    async getConversationMetricsRaw(requestParameters: GetConversationMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIConversationMetricsConfig>> {
+        const requestOptions = await this.getConversationMetricsRequestOpts(requestParameters);
         const response = await this.request(requestOptions, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => CovalOrganizationAPIConversationMetricsConfigFromJSON(jsonValue));
     }
 
     /**
-     * Return the organization\'s conversation metrics configuration: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata.
+     * Return the conversation metrics configuration for the selected workspace: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata. Each unset workspace field inherits from the organization configuration. If no workspace can be resolved, the organization configuration is returned for compatibility.
      * Get conversation metrics config
      */
-    async getConversationMetrics(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIConversationMetricsConfig> {
-        const response = await this.getConversationMetricsRaw(initOverrides);
+    async getConversationMetrics(requestParameters: GetConversationMetricsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIConversationMetricsConfig> {
+        const response = await this.getConversationMetricsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -196,10 +218,14 @@ export class OrganizationConversationsConfigApi extends runtime.BaseAPI implemen
      * Creates request options for getMonitoringMetrics without sending the request
      * @deprecated
      */
-    async getMonitoringMetricsRequestOpts(): Promise<runtime.RequestOpts> {
+    async getMonitoringMetricsRequestOpts(requestParameters: GetMonitoringMetricsRequest): Promise<runtime.RequestOpts> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Organization_API_ApiKeyAuth authentication
@@ -217,24 +243,24 @@ export class OrganizationConversationsConfigApi extends runtime.BaseAPI implemen
     }
 
     /**
-     * Deprecated alias for `GET /organization/conversation-metrics`. Returns the organization\'s conversation metrics configuration.
+     * Deprecated alias for `GET /organization/conversation-metrics`. Returns the selected workspace\'s conversation metrics configuration.
      * Get conversation metrics config using the legacy path
      * @deprecated
      */
-    async getMonitoringMetricsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIConversationMetricsConfig>> {
-        const requestOptions = await this.getMonitoringMetricsRequestOpts();
+    async getMonitoringMetricsRaw(requestParameters: GetMonitoringMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIConversationMetricsConfig>> {
+        const requestOptions = await this.getMonitoringMetricsRequestOpts(requestParameters);
         const response = await this.request(requestOptions, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => CovalOrganizationAPIConversationMetricsConfigFromJSON(jsonValue));
     }
 
     /**
-     * Deprecated alias for `GET /organization/conversation-metrics`. Returns the organization\'s conversation metrics configuration.
+     * Deprecated alias for `GET /organization/conversation-metrics`. Returns the selected workspace\'s conversation metrics configuration.
      * Get conversation metrics config using the legacy path
      * @deprecated
      */
-    async getMonitoringMetrics(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIConversationMetricsConfig> {
-        const response = await this.getMonitoringMetricsRaw(initOverrides);
+    async getMonitoringMetrics(requestParameters: GetMonitoringMetricsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIConversationMetricsConfig> {
+        const response = await this.getMonitoringMetricsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -255,6 +281,10 @@ export class OrganizationConversationsConfigApi extends runtime.BaseAPI implemen
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Organization_API_ApiKeyAuth authentication
         }
@@ -272,7 +302,7 @@ export class OrganizationConversationsConfigApi extends runtime.BaseAPI implemen
     }
 
     /**
-     * Partially update the organization\'s conversation metrics configuration. Provide at least one of `default_conversation_metrics` or `conditional_conversation_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
+     * Partially update the selected workspace\'s conversation metrics configuration. Every resolved workspace stores its own configuration. If no workspace can be resolved, the organization configuration is updated for compatibility. Provide at least one of `default_conversation_metrics` or `conditional_conversation_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
      * Update conversation metrics config
      */
     async updateConversationMetricsRaw(requestParameters: UpdateConversationMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalOrganizationAPIConversationMetricsConfig>> {
@@ -283,7 +313,7 @@ export class OrganizationConversationsConfigApi extends runtime.BaseAPI implemen
     }
 
     /**
-     * Partially update the organization\'s conversation metrics configuration. Provide at least one of `default_conversation_metrics` or `conditional_conversation_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
+     * Partially update the selected workspace\'s conversation metrics configuration. Every resolved workspace stores its own configuration. If no workspace can be resolved, the organization configuration is updated for compatibility. Provide at least one of `default_conversation_metrics` or `conditional_conversation_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
      * Update conversation metrics config
      */
     async updateConversationMetrics(requestParameters: UpdateConversationMetricsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalOrganizationAPIConversationMetricsConfig> {
@@ -309,6 +339,10 @@ export class OrganizationConversationsConfigApi extends runtime.BaseAPI implemen
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Organization_API_ApiKeyAuth authentication
         }
@@ -326,7 +360,7 @@ export class OrganizationConversationsConfigApi extends runtime.BaseAPI implemen
     }
 
     /**
-     * Deprecated alias for `PATCH /organization/conversation-metrics`. Partially updates the organization\'s conversation metrics configuration.
+     * Deprecated alias for `PATCH /organization/conversation-metrics`. Partially updates the selected workspace\'s conversation metrics configuration.
      * Update conversation metrics config using the legacy path
      * @deprecated
      */
@@ -338,7 +372,7 @@ export class OrganizationConversationsConfigApi extends runtime.BaseAPI implemen
     }
 
     /**
-     * Deprecated alias for `PATCH /organization/conversation-metrics`. Partially updates the organization\'s conversation metrics configuration.
+     * Deprecated alias for `PATCH /organization/conversation-metrics`. Partially updates the selected workspace\'s conversation metrics configuration.
      * Update conversation metrics config using the legacy path
      * @deprecated
      */

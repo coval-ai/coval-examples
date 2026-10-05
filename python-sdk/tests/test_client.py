@@ -18,6 +18,9 @@ from coval_sdk.client import (
   _IdleExpiryPoolMixin,
 )
 from coval_sdk.models.submit_conversation200_response import SubmitConversation200Response
+from coval_sdk.models.submit_uploaded_conversation200_response import (
+  SubmitUploadedConversation200Response,
+)
 from coval_sdk.models.update_run200_response import UpdateRun200Response
 
 
@@ -64,15 +67,31 @@ def test_client_exposes_every_generated_api() -> None:
     ),
   ),
 )
-def test_renamed_models_keep_compatibility_aliases(
+def test_renamed_models_keep_their_old_names(
   old_module: str, old_name: str, new_name: str
 ) -> None:
-  new_model = getattr(coval_sdk, new_name)
-  assert getattr(coval_sdk, old_name) is new_model
-  assert getattr(generated_models, old_name) is new_model
+  # An old name is either an alias of the new model or, once the legacy spec's
+  # schema diverges from the canonical one, its own generated model.
+  old_model = getattr(coval_sdk, old_name)
+  assert isinstance(old_model, type)
+  assert isinstance(getattr(coval_sdk, new_name), type)
+  assert getattr(generated_models, old_name) is old_model
 
   compatibility_module = importlib.import_module(f"coval_sdk.models.{old_module}")
-  assert getattr(compatibility_module, old_name) is new_model
+  assert getattr(compatibility_module, old_name) is old_model
+
+
+def test_client_keeps_the_legacy_conversation_simulation_and_monitor_apis() -> None:
+  client = CovalClient("test-key")
+  try:
+    assert isinstance(client.conversations, generated_apis.ConversationsApi)
+    assert isinstance(client.simulations, generated_apis.SimulationsApi)
+    assert isinstance(client.monitors, generated_apis.MonitorsApi)
+    assert isinstance(client.monitor_events, generated_apis.MonitorEventsApi)
+    assert isinstance(client.uploaded_conversations, generated_apis.UploadedConversationsApi)
+    assert isinstance(client.simulated_conversations, generated_apis.SimulatedConversationsApi)
+  finally:
+    client.close()
 
 
 def test_generated_apis_share_the_canonical_v1_base_path() -> None:
@@ -83,6 +102,7 @@ def test_generated_apis_share_the_canonical_v1_base_path() -> None:
     "page_token": None,
     "order_by": None,
     "tag_filters": None,
+    "x_coval_workspace_id": None,
     "_request_auth": None,
     "_content_type": None,
     "_headers": None,
@@ -141,7 +161,7 @@ def test_client_can_restore_strict_response_validation() -> None:
 
 def test_top_level_exports_and_version_match() -> None:
   assert coval_sdk.CovalClient is CovalClient
-  assert coval_sdk.__version__ == "0.7.0"
+  assert coval_sdk.__version__ == "0.8.0"
 
 
 def test_update_run_response_preserves_simulation_run_fields() -> None:
@@ -208,6 +228,42 @@ def test_submit_conversation_response_surfaces_simulation_filter_result() -> Non
   assert isinstance(
     response.actual_instance,
     generated_models.CovalConversationsAPIFilteredSubmitResponse,
+  )
+
+
+def test_submit_uploaded_conversation_response_preserves_conversation_fields() -> None:
+  response = SubmitUploadedConversation200Response.from_dict(
+    {
+      "uploaded_conversation": {
+        "name": "conversations/5BhqoFdXSuk6IcugFvkXeU",
+        "conversation_id": "5BhqoFdXSuk6IcugFvkXeU",
+        "status": "IN_QUEUE",
+        "create_time": "2026-10-05T00:00:00Z",
+      }
+    }
+  )
+
+  assert response.uploaded_conversation.conversation_id == "5BhqoFdXSuk6IcugFvkXeU"
+  assert isinstance(
+    response.actual_instance,
+    generated_models.CovalUploadedConversationsAPISubmitUploadedConversationResponse,
+  )
+
+
+def test_submit_uploaded_conversation_response_surfaces_simulation_filter_result() -> None:
+  response = SubmitUploadedConversation200Response.from_dict(
+    {
+      "filtered": True,
+      "reason": "Submit matched the organization's simulation filter.",
+      "simulation_id": "6CirpGeYTvl7JdvhGwlYfV",
+    }
+  )
+
+  assert response.filtered is True
+  assert response.simulation_id == "6CirpGeYTvl7JdvhGwlYfV"
+  assert isinstance(
+    response.actual_instance,
+    generated_models.CovalUploadedConversationsAPIFilteredSubmitResponse,
   )
 
 

@@ -82,7 +82,7 @@ export interface IntegrationsApiInterface {
     disconnectSlackRequestOpts(): Promise<runtime.RequestOpts>;
 
     /**
-     * Disconnect the Slack workspace from your organization. Revokes the token (best-effort) and clears the stored integration data.
+     * Disconnect the Slack workspace from this organization by tombstoning its local credential generation. This does not revoke a workspace-wide Slack authorization that may be shared by another Coval organization.
      * @summary Disconnect Slack integration
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -91,7 +91,7 @@ export interface IntegrationsApiInterface {
     disconnectSlackRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalSlackIntegrationAPIDisconnectSlackResponse>>;
 
     /**
-     * Disconnect the Slack workspace from your organization. Revokes the token (best-effort) and clears the stored integration data.
+     * Disconnect the Slack workspace from this organization by tombstoning its local credential generation. This does not revoke a workspace-wide Slack authorization that may be shared by another Coval organization.
      * Disconnect Slack integration
      */
     disconnectSlack(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalSlackIntegrationAPIDisconnectSlackResponse>;
@@ -104,7 +104,7 @@ export interface IntegrationsApiInterface {
     getSlackStatusRequestOpts(): Promise<runtime.RequestOpts>;
 
     /**
-     * Returns whether a Slack workspace is connected for your organization, and the connected team name. No secrets are returned.
+     * Returns the secret-free Slack connection and binding-bootstrap state for your organization.
      * @summary Get Slack integration status
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -113,7 +113,7 @@ export interface IntegrationsApiInterface {
     getSlackStatusRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalSlackIntegrationAPISlackStatusResponse>>;
 
     /**
-     * Returns whether a Slack workspace is connected for your organization, and the connected team name. No secrets are returned.
+     * Returns the secret-free Slack connection and binding-bootstrap state for your organization.
      * Get Slack integration status
      */
     getSlackStatus(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalSlackIntegrationAPISlackStatusResponse>;
@@ -202,7 +202,7 @@ export class IntegrationsApi extends runtime.BaseAPI implements IntegrationsApiI
     }
 
     /**
-     * Disconnect the Slack workspace from your organization. Revokes the token (best-effort) and clears the stored integration data.
+     * Disconnect the Slack workspace from this organization by tombstoning its local credential generation. This does not revoke a workspace-wide Slack authorization that may be shared by another Coval organization.
      * Disconnect Slack integration
      */
     async disconnectSlackRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalSlackIntegrationAPIDisconnectSlackResponse>> {
@@ -213,7 +213,7 @@ export class IntegrationsApi extends runtime.BaseAPI implements IntegrationsApiI
     }
 
     /**
-     * Disconnect the Slack workspace from your organization. Revokes the token (best-effort) and clears the stored integration data.
+     * Disconnect the Slack workspace from this organization by tombstoning its local credential generation. This does not revoke a workspace-wide Slack authorization that may be shared by another Coval organization.
      * Disconnect Slack integration
      */
     async disconnectSlack(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalSlackIntegrationAPIDisconnectSlackResponse> {
@@ -245,7 +245,7 @@ export class IntegrationsApi extends runtime.BaseAPI implements IntegrationsApiI
     }
 
     /**
-     * Returns whether a Slack workspace is connected for your organization, and the connected team name. No secrets are returned.
+     * Returns the secret-free Slack connection and binding-bootstrap state for your organization.
      * Get Slack integration status
      */
     async getSlackStatusRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalSlackIntegrationAPISlackStatusResponse>> {
@@ -256,7 +256,7 @@ export class IntegrationsApi extends runtime.BaseAPI implements IntegrationsApiI
     }
 
     /**
-     * Returns whether a Slack workspace is connected for your organization, and the connected team name. No secrets are returned.
+     * Returns the secret-free Slack connection and binding-bootstrap state for your organization.
      * Get Slack integration status
      */
     async getSlackStatus(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalSlackIntegrationAPISlackStatusResponse> {

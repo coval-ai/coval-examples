@@ -32,7 +32,7 @@ class CovalReportsAPICreateReportRequest(BaseModel):
     """
     CovalReportsAPICreateReportRequest
     """ # noqa: E501
-    name: Annotated[str, Field(min_length=1, strict=True, max_length=200)] = Field(description="Display name for the saved report.")
+    name: Annotated[str, Field(min_length=1, strict=True, max_length=200)] = Field(description="Report name, trimmed to 1–200 characters. Whitespace-only names are rejected.")
     run_ids: Annotated[List[StrictStr], Field(min_length=1, max_length=2000)] = Field(description="Run IDs to include in the report. All must belong to the authenticated organization.")
     simulation_output_ids: Optional[Annotated[List[StrictStr], Field(max_length=10000)]] = Field(default=None, description="Optional simulation IDs pinning the report to a subset of simulations. When set, this is the report's authoritative scope. All must belong to the authenticated organization. ")
     source_human_review_project_id: Optional[Annotated[str, Field(min_length=26, strict=True, max_length=26)]] = Field(default=None, description="Optional human review project the simulations were sourced from; `simulation_output_ids` must belong to it.")

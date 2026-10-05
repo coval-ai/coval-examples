@@ -24,6 +24,7 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_reports_api_report_metric_configuration_entry import CovalReportsAPIReportMetricConfigurationEntry
 from coval_sdk.models.coval_reports_api_report_view_configuration import CovalReportsAPIReportViewConfiguration
+from coval_sdk.models.coval_reports_api_resource_attribution import CovalReportsAPIResourceAttribution
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -32,6 +33,7 @@ class CovalReportsAPIReportDetail(BaseModel):
     """
     CovalReportsAPIReportDetail
     """ # noqa: E501
+    attribution: Optional[CovalReportsAPIResourceAttribution] = Field(default=None, description="Authoring timestamps and user IDs. Unknown or deleted users are null.")
     id: Annotated[str, Field(min_length=26, strict=True, max_length=26)] = Field(description="The report's ULID.")
     name: StrictStr = Field(description="Display name for the saved report.")
     run_ids: Annotated[List[StrictStr], Field(max_length=2000)] = Field(description="Empty for a dynamic monitoring report.")
@@ -46,7 +48,7 @@ class CovalReportsAPIReportDetail(BaseModel):
     view_config: CovalReportsAPIReportViewConfiguration
     metric_config: Dict[str, CovalReportsAPIReportMetricConfigurationEntry] = Field(description="Saved per-metric display configuration keyed by metric ID.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["id", "name", "run_ids", "simulation_output_ids", "source_human_review_project_id", "compare_by", "metadata_key", "custom_dimension_id", "permissions", "updated_at", "revision", "view_config", "metric_config"]
+    __properties: ClassVar[List[str]] = ["attribution", "id", "name", "run_ids", "simulation_output_ids", "source_human_review_project_id", "compare_by", "metadata_key", "custom_dimension_id", "permissions", "updated_at", "revision", "view_config", "metric_config"]
 
     @field_validator('compare_by')
     def compare_by_validate_enum(cls, value):
@@ -92,9 +94,11 @@ class CovalReportsAPIReportDetail(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
         * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
+            "attribution",
             "additional_properties",
         ])
 
@@ -103,6 +107,9 @@ class CovalReportsAPIReportDetail(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of attribution
+        if self.attribution:
+            _dict['attribution'] = self.attribution.to_dict()
         # override the default output from pydantic by calling `to_dict()` of view_config
         if self.view_config:
             _dict['view_config'] = self.view_config.to_dict()
@@ -117,6 +124,11 @@ class CovalReportsAPIReportDetail(BaseModel):
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
+
+        # set to None if attribution (nullable) is None
+        # and model_fields_set contains the field
+        if self.attribution is None and "attribution" in self.model_fields_set:
+            _dict['attribution'] = None
 
         # set to None if source_human_review_project_id (nullable) is None
         # and model_fields_set contains the field
@@ -145,6 +157,7 @@ class CovalReportsAPIReportDetail(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "attribution": CovalReportsAPIResourceAttribution.from_dict(obj["attribution"]) if obj.get("attribution") is not None else None,
             "id": obj.get("id"),
             "name": obj.get("name"),
             "run_ids": obj.get("run_ids"),

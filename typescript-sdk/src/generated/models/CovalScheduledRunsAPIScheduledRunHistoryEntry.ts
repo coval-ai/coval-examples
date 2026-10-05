@@ -72,7 +72,7 @@ export interface CovalScheduledRunsAPIScheduledRunHistoryEntry {
      * @type {boolean}
      * @memberof CovalScheduledRunsAPIScheduledRunHistoryEntry
      */
-    is_public: boolean;
+    is_public?: boolean;
     /**
      * When the run was created (ISO 8601)
      * @type {Date}
@@ -90,7 +90,6 @@ export function instanceOfCovalScheduledRunsAPIScheduledRunHistoryEntry(value: o
     if (!('status' in value) || value['status'] === undefined) return false;
     if (!('test_set_name' in value) || value['test_set_name'] === undefined) return false;
     if (!('model_type' in value) || value['model_type'] === undefined) return false;
-    if (!('is_public' in value) || value['is_public'] === undefined) return false;
     if (!('create_time' in value) || value['create_time'] === undefined) return false;
     return true;
 }
@@ -113,7 +112,7 @@ export function CovalScheduledRunsAPIScheduledRunHistoryEntryFromJSONTyped(json:
         'test_set_name': json['test_set_name'],
         'agent_id': json['agent_id'] == null ? undefined : json['agent_id'],
         'model_type': json['model_type'],
-        'is_public': json['is_public'],
+        'is_public': json['is_public'] == null ? undefined : json['is_public'],
         'create_time': (new Date(json['create_time'])),
     };
 }

@@ -32,7 +32,7 @@ class CovalAlertsAPIAlertChannel(BaseModel):
     """ # noqa: E501
     ulid: Annotated[str, Field(strict=True)] = Field(description="Channel ULID")
     channel_type: CovalAlertsAPIChannelType
-    config: Dict[str, Any] = Field(description="Channel-specific configuration.  **SLACK**: `{\"channel_id\": \"C0123ABC\", \"channel_name\": \"#alerts\"}`  **EMAIL**: `{\"recipients\": [\"team@company.com\"]}`  **WEBHOOK**: `{\"url\": \"https://...\", \"method\": \"POST\", \"auth_token\": \"...\"}`  **HUMAN_REVIEW**: `{\"project_id\": \"...\", \"sample_rate\": 0.1}` ")
+    config: Dict[str, Any] = Field(description="Channel-specific configuration.  **SLACK**: `{\"channel_id\": \"C0123ABC\", \"channel_name\": \"#alerts\"}`  **EMAIL**: `{\"recipients\": [\"team@company.com\"]}` **WEBHOOK**: `{\"url\": \"https://...\", \"method\": \"POST\", \"auth_token\": \"...\"}` **HUMAN_REVIEW**: `{\"project_id\": \"...\", \"sample_rate\": 0.1}` ")
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["ulid", "channel_type", "config"]
 

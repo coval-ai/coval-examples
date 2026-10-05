@@ -18,7 +18,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_agents_api_simulator_type import CovalAgentsAPISimulatorType
@@ -42,7 +42,7 @@ class CovalAgentsAPICreateAgentRequest(BaseModel):
     workflows: Optional[Dict[str, Any]] = Field(default=None, description="Workflow configuration (JSONB, max 10MB)")
     metric_ids: Optional[List[Annotated[str, Field(strict=True)]]] = Field(default=None, description="Associated metric IDs (22-char IDs)")
     test_set_ids: Optional[List[Annotated[str, Field(strict=True)]]] = Field(default=None, description="Associated test set IDs (8-char IDs)")
-    tags: Optional[List[StrictStr]] = Field(default=None, description="Tags to associate with this agent. Null or omitted creates the agent with no tags. Pass [] for an empty tag list.")
+    tags: Optional[Annotated[List[Annotated[str, Field(min_length=1, strict=True, max_length=200)]], Field(max_length=20)]] = Field(default=None, description="Tags to associate with this agent. Null or omitted creates the agent with no tags. Pass [] for an empty tag list.")
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["display_name", "model_type", "phone_number", "endpoint", "prompt", "customer_agent_id", "language", "attributes", "metadata", "workflows", "metric_ids", "test_set_ids", "tags"]
 

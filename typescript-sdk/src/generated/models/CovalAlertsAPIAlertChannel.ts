@@ -45,9 +45,7 @@ export interface CovalAlertsAPIAlertChannel {
      * **SLACK**: `{"channel_id": "C0123ABC", "channel_name": "#alerts"}`
      * 
      * **EMAIL**: `{"recipients": ["team@company.com"]}`
-     * 
      * **WEBHOOK**: `{"url": "https://...", "method": "POST", "auth_token": "..."}`
-     * 
      * **HUMAN_REVIEW**: `{"project_id": "...", "sample_rate": 0.1}`
      * 
      * @type {object}

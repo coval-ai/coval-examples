@@ -57,13 +57,13 @@ export interface CovalReviewsAPICreateReviewProjectRequest {
      * @type {Array<string>}
      * @memberof CovalReviewsAPICreateReviewProjectRequest
      */
-    linked_simulation_ids: Array<string>;
+    linked_simulation_ids?: Array<string>;
     /**
      * Metric IDs (at least one required)
      * @type {Array<string>}
      * @memberof CovalReviewsAPICreateReviewProjectRequest
      */
-    linked_metric_ids: Array<string>;
+    linked_metric_ids?: Array<string>;
     /**
      * 
      * @type {CovalReviewsAPIProjectType}
@@ -94,8 +94,45 @@ export interface CovalReviewsAPICreateReviewProjectRequest {
      * @memberof CovalReviewsAPICreateReviewProjectRequest
      */
     enforced_collaboration?: boolean;
+    /**
+     * 
+     * @type {CovalReviewsAPICreateReviewProjectRequestReviewLabelInputModeEnum}
+     * @memberof CovalReviewsAPICreateReviewProjectRequest
+     */
+    review_label_input_mode?: CovalReviewsAPICreateReviewProjectRequestReviewLabelInputModeEnum | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CovalReviewsAPICreateReviewProjectRequest
+     */
+    review_label_options?: Array<string> | null;
+    /**
+     * 
+     * @type {CovalReviewsAPICreateReviewProjectRequestReviewLabelSelectionModeEnum}
+     * @memberof CovalReviewsAPICreateReviewProjectRequest
+     */
+    review_label_selection_mode?: CovalReviewsAPICreateReviewProjectRequestReviewLabelSelectionModeEnum | null;
 }
 
+
+/**
+ * @export
+ */
+export const CovalReviewsAPICreateReviewProjectRequestReviewLabelInputModeEnum = {
+    OptionOnly: 'OPTION_ONLY',
+    CustomOnly: 'CUSTOM_ONLY',
+    OptionOrCustom: 'OPTION_OR_CUSTOM'
+} as const;
+export type CovalReviewsAPICreateReviewProjectRequestReviewLabelInputModeEnum = typeof CovalReviewsAPICreateReviewProjectRequestReviewLabelInputModeEnum[keyof typeof CovalReviewsAPICreateReviewProjectRequestReviewLabelInputModeEnum];
+
+/**
+ * @export
+ */
+export const CovalReviewsAPICreateReviewProjectRequestReviewLabelSelectionModeEnum = {
+    Single: 'SINGLE',
+    Multiple: 'MULTIPLE'
+} as const;
+export type CovalReviewsAPICreateReviewProjectRequestReviewLabelSelectionModeEnum = typeof CovalReviewsAPICreateReviewProjectRequestReviewLabelSelectionModeEnum[keyof typeof CovalReviewsAPICreateReviewProjectRequestReviewLabelSelectionModeEnum];
 
 
 /**
@@ -104,8 +141,6 @@ export interface CovalReviewsAPICreateReviewProjectRequest {
 export function instanceOfCovalReviewsAPICreateReviewProjectRequest(value: object): value is CovalReviewsAPICreateReviewProjectRequest {
     if (!('display_name' in value) || value['display_name'] === undefined) return false;
     if (!('assignees' in value) || value['assignees'] === undefined) return false;
-    if (!('linked_simulation_ids' in value) || value['linked_simulation_ids'] === undefined) return false;
-    if (!('linked_metric_ids' in value) || value['linked_metric_ids'] === undefined) return false;
     return true;
 }
 
@@ -122,13 +157,16 @@ export function CovalReviewsAPICreateReviewProjectRequestFromJSONTyped(json: any
         'display_name': json['display_name'],
         'description': json['description'] == null ? undefined : json['description'],
         'assignees': json['assignees'],
-        'linked_simulation_ids': json['linked_simulation_ids'],
-        'linked_metric_ids': json['linked_metric_ids'],
+        'linked_simulation_ids': json['linked_simulation_ids'] == null ? undefined : json['linked_simulation_ids'],
+        'linked_metric_ids': json['linked_metric_ids'] == null ? undefined : json['linked_metric_ids'],
         'project_type': json['project_type'] == null ? undefined : CovalReviewsAPIProjectTypeFromJSON(json['project_type']),
         'notifications': json['notifications'] == null ? undefined : json['notifications'],
         'project_rules': json['project_rules'] == null ? undefined : ((json['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleFromJSON)),
         'blind_labeling_shown_metric_ids': json['blind_labeling_shown_metric_ids'] == null ? undefined : json['blind_labeling_shown_metric_ids'],
         'enforced_collaboration': json['enforced_collaboration'] == null ? undefined : json['enforced_collaboration'],
+        'review_label_input_mode': json['review_label_input_mode'] == null ? undefined : json['review_label_input_mode'],
+        'review_label_options': json['review_label_options'] == null ? undefined : json['review_label_options'],
+        'review_label_selection_mode': json['review_label_selection_mode'] == null ? undefined : json['review_label_selection_mode'],
     };
 }
 
@@ -153,6 +191,9 @@ export function CovalReviewsAPICreateReviewProjectRequestToJSONTyped(value?: Cov
         'project_rules': value['project_rules'] == null ? undefined : ((value['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleToJSON)),
         'blind_labeling_shown_metric_ids': value['blind_labeling_shown_metric_ids'],
         'enforced_collaboration': value['enforced_collaboration'],
+        'review_label_input_mode': value['review_label_input_mode'],
+        'review_label_options': value['review_label_options'],
+        'review_label_selection_mode': value['review_label_selection_mode'],
     };
 }
 

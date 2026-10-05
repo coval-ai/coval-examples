@@ -27,6 +27,13 @@ import {
     CovalMetricsAPIThresholdSourceToJSON,
     CovalMetricsAPIThresholdSourceToJSONTyped,
 } from './CovalMetricsAPIThresholdSource.js';
+import type { CovalMetricsAPIResourceAttribution } from './CovalMetricsAPIResourceAttribution.js';
+import {
+    CovalMetricsAPIResourceAttributionFromJSON,
+    CovalMetricsAPIResourceAttributionFromJSONTyped,
+    CovalMetricsAPIResourceAttributionToJSON,
+    CovalMetricsAPIResourceAttributionToJSONTyped,
+} from './CovalMetricsAPIResourceAttribution.js';
 
 /**
  * Org-specific threshold for a metric
@@ -34,6 +41,12 @@ import {
  * @interface CovalMetricsAPIMetricThresholdResource
  */
 export interface CovalMetricsAPIMetricThresholdResource {
+    /**
+     * Authoring timestamps and user IDs. Unknown or deleted users are null.
+     * @type {CovalMetricsAPIResourceAttribution}
+     * @memberof CovalMetricsAPIMetricThresholdResource
+     */
+    readonly attribution?: CovalMetricsAPIResourceAttribution | null;
     /**
      * 26-character threshold ULID; null when no threshold is configured
      * @type {string}
@@ -110,6 +123,7 @@ export function CovalMetricsAPIMetricThresholdResourceFromJSONTyped(json: any, i
     }
     return {
         
+        'attribution': json['attribution'] == null ? undefined : CovalMetricsAPIResourceAttributionFromJSON(json['attribution']),
         'id': json['id'],
         'name': json['name'] == null ? undefined : json['name'],
         'comparison_operator': json['comparison_operator'] == null ? undefined : CovalMetricsAPIComparisonOperatorFromJSON(json['comparison_operator']),
@@ -126,7 +140,7 @@ export function CovalMetricsAPIMetricThresholdResourceToJSON(json: any): CovalMe
     return CovalMetricsAPIMetricThresholdResourceToJSONTyped(json, false);
 }
 
-export function CovalMetricsAPIMetricThresholdResourceToJSONTyped(value?: CovalMetricsAPIMetricThresholdResource | null, ignoreDiscriminator: boolean = false): any {
+export function CovalMetricsAPIMetricThresholdResourceToJSONTyped(value?: Omit<CovalMetricsAPIMetricThresholdResource, 'attribution'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

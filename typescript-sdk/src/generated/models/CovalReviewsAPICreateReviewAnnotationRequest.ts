@@ -13,14 +13,6 @@
  */
 
 import { mapValues } from '../runtime.js';
-import type { CovalReviewsAPIAnnotationPriority } from './CovalReviewsAPIAnnotationPriority.js';
-import {
-    CovalReviewsAPIAnnotationPriorityFromJSON,
-    CovalReviewsAPIAnnotationPriorityFromJSONTyped,
-    CovalReviewsAPIAnnotationPriorityToJSON,
-    CovalReviewsAPIAnnotationPriorityToJSONTyped,
-} from './CovalReviewsAPIAnnotationPriority.js';
-
 /**
  * 
  * @export
@@ -71,13 +63,23 @@ export interface CovalReviewsAPICreateReviewAnnotationRequest {
     reviewer_notes?: string | null;
     /**
      * 
-     * @type {CovalReviewsAPIAnnotationPriority}
+     * @type {any}
      * @memberof CovalReviewsAPICreateReviewAnnotationRequest
      */
-    priority?: CovalReviewsAPIAnnotationPriority;
+    annotations?: any | null;
+    /**
+     * 
+     * @type {any}
+     * @memberof CovalReviewsAPICreateReviewAnnotationRequest
+     */
+    ground_truth_json?: any | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CovalReviewsAPICreateReviewAnnotationRequest
+     */
+    ground_truth_set_value?: Array<string> | null;
 }
-
-
 
 /**
  * Check if a given object implements the CovalReviewsAPICreateReviewAnnotationRequest interface.
@@ -106,7 +108,9 @@ export function CovalReviewsAPICreateReviewAnnotationRequestFromJSONTyped(json: 
         'ground_truth_string_value': json['ground_truth_string_value'] == null ? undefined : json['ground_truth_string_value'],
         'ground_truth_subvalues_by_timestamp': json['ground_truth_subvalues_by_timestamp'] == null ? undefined : json['ground_truth_subvalues_by_timestamp'],
         'reviewer_notes': json['reviewer_notes'] == null ? undefined : json['reviewer_notes'],
-        'priority': json['priority'] == null ? undefined : CovalReviewsAPIAnnotationPriorityFromJSON(json['priority']),
+        'annotations': json['annotations'] == null ? undefined : json['annotations'],
+        'ground_truth_json': json['ground_truth_json'] == null ? undefined : json['ground_truth_json'],
+        'ground_truth_set_value': json['ground_truth_set_value'] == null ? undefined : json['ground_truth_set_value'],
     };
 }
 
@@ -128,7 +132,9 @@ export function CovalReviewsAPICreateReviewAnnotationRequestToJSONTyped(value?: 
         'ground_truth_string_value': value['ground_truth_string_value'],
         'ground_truth_subvalues_by_timestamp': value['ground_truth_subvalues_by_timestamp'],
         'reviewer_notes': value['reviewer_notes'],
-        'priority': CovalReviewsAPIAnnotationPriorityToJSON(value['priority']),
+        'annotations': value['annotations'],
+        'ground_truth_json': value['ground_truth_json'],
+        'ground_truth_set_value': value['ground_truth_set_value'],
     };
 }
 

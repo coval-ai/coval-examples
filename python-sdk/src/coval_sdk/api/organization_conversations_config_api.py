@@ -16,6 +16,9 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
+from pydantic import Field, StrictStr
+from typing import Optional
+from typing_extensions import Annotated
 from coval_sdk.models.coval_organization_api_conversation_metrics_config import CovalOrganizationAPIConversationMetricsConfig
 from coval_sdk.models.coval_organization_api_update_conversation_metrics_request import CovalOrganizationAPIUpdateConversationMetricsRequest
 
@@ -40,6 +43,7 @@ class OrganizationConversationsConfigApi:
     @validate_call
     def get_conversation_metrics(
         self,
+        x_coval_workspace_id: Annotated[Optional[StrictStr], Field(description="Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -55,8 +59,10 @@ class OrganizationConversationsConfigApi:
     ) -> CovalOrganizationAPIConversationMetricsConfig:
         """Get conversation metrics config
 
-        Return the organization's conversation metrics configuration: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata.
+        Return the conversation metrics configuration for the selected workspace: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata. Each unset workspace field inherits from the organization configuration. If no workspace can be resolved, the organization configuration is returned for compatibility.
 
+        :param x_coval_workspace_id: Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -80,6 +86,7 @@ class OrganizationConversationsConfigApi:
         """ # noqa: E501
 
         _param = self._get_conversation_metrics_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -107,6 +114,7 @@ class OrganizationConversationsConfigApi:
     @validate_call
     def get_conversation_metrics_with_http_info(
         self,
+        x_coval_workspace_id: Annotated[Optional[StrictStr], Field(description="Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -122,8 +130,10 @@ class OrganizationConversationsConfigApi:
     ) -> ApiResponse[CovalOrganizationAPIConversationMetricsConfig]:
         """Get conversation metrics config
 
-        Return the organization's conversation metrics configuration: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata.
+        Return the conversation metrics configuration for the selected workspace: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata. Each unset workspace field inherits from the organization configuration. If no workspace can be resolved, the organization configuration is returned for compatibility.
 
+        :param x_coval_workspace_id: Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -147,6 +157,7 @@ class OrganizationConversationsConfigApi:
         """ # noqa: E501
 
         _param = self._get_conversation_metrics_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -174,6 +185,7 @@ class OrganizationConversationsConfigApi:
     @validate_call
     def get_conversation_metrics_without_preload_content(
         self,
+        x_coval_workspace_id: Annotated[Optional[StrictStr], Field(description="Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -189,8 +201,10 @@ class OrganizationConversationsConfigApi:
     ) -> RESTResponseType:
         """Get conversation metrics config
 
-        Return the organization's conversation metrics configuration: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata.
+        Return the conversation metrics configuration for the selected workspace: the default metric IDs run on every conversation, plus the conditional rules that add metrics based on run metadata. Each unset workspace field inherits from the organization configuration. If no workspace can be resolved, the organization configuration is returned for compatibility.
 
+        :param x_coval_workspace_id: Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -214,6 +228,7 @@ class OrganizationConversationsConfigApi:
         """ # noqa: E501
 
         _param = self._get_conversation_metrics_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -236,6 +251,7 @@ class OrganizationConversationsConfigApi:
 
     def _get_conversation_metrics_serialize(
         self,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -259,6 +275,8 @@ class OrganizationConversationsConfigApi:
         # process the path parameters
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -298,6 +316,7 @@ class OrganizationConversationsConfigApi:
     @validate_call
     def get_monitoring_metrics(
         self,
+        x_coval_workspace_id: Annotated[Optional[StrictStr], Field(description="Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -313,8 +332,10 @@ class OrganizationConversationsConfigApi:
     ) -> CovalOrganizationAPIConversationMetricsConfig:
         """(Deprecated) Get conversation metrics config using the legacy path
 
-        Deprecated alias for `GET /organization/conversation-metrics`. Returns the organization's conversation metrics configuration.
+        Deprecated alias for `GET /organization/conversation-metrics`. Returns the selected workspace's conversation metrics configuration.
 
+        :param x_coval_workspace_id: Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -339,6 +360,7 @@ class OrganizationConversationsConfigApi:
         warnings.warn("GET /organization/monitoring-metrics is deprecated.", DeprecationWarning)
 
         _param = self._get_monitoring_metrics_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -366,6 +388,7 @@ class OrganizationConversationsConfigApi:
     @validate_call
     def get_monitoring_metrics_with_http_info(
         self,
+        x_coval_workspace_id: Annotated[Optional[StrictStr], Field(description="Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -381,8 +404,10 @@ class OrganizationConversationsConfigApi:
     ) -> ApiResponse[CovalOrganizationAPIConversationMetricsConfig]:
         """(Deprecated) Get conversation metrics config using the legacy path
 
-        Deprecated alias for `GET /organization/conversation-metrics`. Returns the organization's conversation metrics configuration.
+        Deprecated alias for `GET /organization/conversation-metrics`. Returns the selected workspace's conversation metrics configuration.
 
+        :param x_coval_workspace_id: Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -407,6 +432,7 @@ class OrganizationConversationsConfigApi:
         warnings.warn("GET /organization/monitoring-metrics is deprecated.", DeprecationWarning)
 
         _param = self._get_monitoring_metrics_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -434,6 +460,7 @@ class OrganizationConversationsConfigApi:
     @validate_call
     def get_monitoring_metrics_without_preload_content(
         self,
+        x_coval_workspace_id: Annotated[Optional[StrictStr], Field(description="Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -449,8 +476,10 @@ class OrganizationConversationsConfigApi:
     ) -> RESTResponseType:
         """(Deprecated) Get conversation metrics config using the legacy path
 
-        Deprecated alias for `GET /organization/conversation-metrics`. Returns the organization's conversation metrics configuration.
+        Deprecated alias for `GET /organization/conversation-metrics`. Returns the selected workspace's conversation metrics configuration.
 
+        :param x_coval_workspace_id: Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -475,6 +504,7 @@ class OrganizationConversationsConfigApi:
         warnings.warn("GET /organization/monitoring-metrics is deprecated.", DeprecationWarning)
 
         _param = self._get_monitoring_metrics_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -497,6 +527,7 @@ class OrganizationConversationsConfigApi:
 
     def _get_monitoring_metrics_serialize(
         self,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -520,6 +551,8 @@ class OrganizationConversationsConfigApi:
         # process the path parameters
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -560,6 +593,7 @@ class OrganizationConversationsConfigApi:
     def update_conversation_metrics(
         self,
         coval_organization_api_update_conversation_metrics_request: CovalOrganizationAPIUpdateConversationMetricsRequest,
+        x_coval_workspace_id: Annotated[Optional[StrictStr], Field(description="Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -575,10 +609,12 @@ class OrganizationConversationsConfigApi:
     ) -> CovalOrganizationAPIConversationMetricsConfig:
         """Update conversation metrics config
 
-        Partially update the organization's conversation metrics configuration. Provide at least one of `default_conversation_metrics` or `conditional_conversation_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
+        Partially update the selected workspace's conversation metrics configuration. Every resolved workspace stores its own configuration. If no workspace can be resolved, the organization configuration is updated for compatibility. Provide at least one of `default_conversation_metrics` or `conditional_conversation_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
 
         :param coval_organization_api_update_conversation_metrics_request: (required)
         :type coval_organization_api_update_conversation_metrics_request: CovalOrganizationAPIUpdateConversationMetricsRequest
+        :param x_coval_workspace_id: Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -603,6 +639,7 @@ class OrganizationConversationsConfigApi:
 
         _param = self._update_conversation_metrics_serialize(
             coval_organization_api_update_conversation_metrics_request=coval_organization_api_update_conversation_metrics_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -632,6 +669,7 @@ class OrganizationConversationsConfigApi:
     def update_conversation_metrics_with_http_info(
         self,
         coval_organization_api_update_conversation_metrics_request: CovalOrganizationAPIUpdateConversationMetricsRequest,
+        x_coval_workspace_id: Annotated[Optional[StrictStr], Field(description="Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -647,10 +685,12 @@ class OrganizationConversationsConfigApi:
     ) -> ApiResponse[CovalOrganizationAPIConversationMetricsConfig]:
         """Update conversation metrics config
 
-        Partially update the organization's conversation metrics configuration. Provide at least one of `default_conversation_metrics` or `conditional_conversation_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
+        Partially update the selected workspace's conversation metrics configuration. Every resolved workspace stores its own configuration. If no workspace can be resolved, the organization configuration is updated for compatibility. Provide at least one of `default_conversation_metrics` or `conditional_conversation_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
 
         :param coval_organization_api_update_conversation_metrics_request: (required)
         :type coval_organization_api_update_conversation_metrics_request: CovalOrganizationAPIUpdateConversationMetricsRequest
+        :param x_coval_workspace_id: Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -675,6 +715,7 @@ class OrganizationConversationsConfigApi:
 
         _param = self._update_conversation_metrics_serialize(
             coval_organization_api_update_conversation_metrics_request=coval_organization_api_update_conversation_metrics_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -704,6 +745,7 @@ class OrganizationConversationsConfigApi:
     def update_conversation_metrics_without_preload_content(
         self,
         coval_organization_api_update_conversation_metrics_request: CovalOrganizationAPIUpdateConversationMetricsRequest,
+        x_coval_workspace_id: Annotated[Optional[StrictStr], Field(description="Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -719,10 +761,12 @@ class OrganizationConversationsConfigApi:
     ) -> RESTResponseType:
         """Update conversation metrics config
 
-        Partially update the organization's conversation metrics configuration. Provide at least one of `default_conversation_metrics` or `conditional_conversation_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
+        Partially update the selected workspace's conversation metrics configuration. Every resolved workspace stores its own configuration. If no workspace can be resolved, the organization configuration is updated for compatibility. Provide at least one of `default_conversation_metrics` or `conditional_conversation_metrics`; each field provided fully replaces the stored value (a field omitted is left unchanged). Returns the full resulting configuration.
 
         :param coval_organization_api_update_conversation_metrics_request: (required)
         :type coval_organization_api_update_conversation_metrics_request: CovalOrganizationAPIUpdateConversationMetricsRequest
+        :param x_coval_workspace_id: Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -747,6 +791,7 @@ class OrganizationConversationsConfigApi:
 
         _param = self._update_conversation_metrics_serialize(
             coval_organization_api_update_conversation_metrics_request=coval_organization_api_update_conversation_metrics_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -771,6 +816,7 @@ class OrganizationConversationsConfigApi:
     def _update_conversation_metrics_serialize(
         self,
         coval_organization_api_update_conversation_metrics_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -794,6 +840,8 @@ class OrganizationConversationsConfigApi:
         # process the path parameters
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_organization_api_update_conversation_metrics_request is not None:
@@ -849,6 +897,7 @@ class OrganizationConversationsConfigApi:
     def update_monitoring_metrics(
         self,
         coval_organization_api_update_conversation_metrics_request: CovalOrganizationAPIUpdateConversationMetricsRequest,
+        x_coval_workspace_id: Annotated[Optional[StrictStr], Field(description="Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -864,10 +913,12 @@ class OrganizationConversationsConfigApi:
     ) -> CovalOrganizationAPIConversationMetricsConfig:
         """(Deprecated) Update conversation metrics config using the legacy path
 
-        Deprecated alias for `PATCH /organization/conversation-metrics`. Partially updates the organization's conversation metrics configuration.
+        Deprecated alias for `PATCH /organization/conversation-metrics`. Partially updates the selected workspace's conversation metrics configuration.
 
         :param coval_organization_api_update_conversation_metrics_request: (required)
         :type coval_organization_api_update_conversation_metrics_request: CovalOrganizationAPIUpdateConversationMetricsRequest
+        :param x_coval_workspace_id: Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -893,6 +944,7 @@ class OrganizationConversationsConfigApi:
 
         _param = self._update_monitoring_metrics_serialize(
             coval_organization_api_update_conversation_metrics_request=coval_organization_api_update_conversation_metrics_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -922,6 +974,7 @@ class OrganizationConversationsConfigApi:
     def update_monitoring_metrics_with_http_info(
         self,
         coval_organization_api_update_conversation_metrics_request: CovalOrganizationAPIUpdateConversationMetricsRequest,
+        x_coval_workspace_id: Annotated[Optional[StrictStr], Field(description="Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -937,10 +990,12 @@ class OrganizationConversationsConfigApi:
     ) -> ApiResponse[CovalOrganizationAPIConversationMetricsConfig]:
         """(Deprecated) Update conversation metrics config using the legacy path
 
-        Deprecated alias for `PATCH /organization/conversation-metrics`. Partially updates the organization's conversation metrics configuration.
+        Deprecated alias for `PATCH /organization/conversation-metrics`. Partially updates the selected workspace's conversation metrics configuration.
 
         :param coval_organization_api_update_conversation_metrics_request: (required)
         :type coval_organization_api_update_conversation_metrics_request: CovalOrganizationAPIUpdateConversationMetricsRequest
+        :param x_coval_workspace_id: Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -966,6 +1021,7 @@ class OrganizationConversationsConfigApi:
 
         _param = self._update_monitoring_metrics_serialize(
             coval_organization_api_update_conversation_metrics_request=coval_organization_api_update_conversation_metrics_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -995,6 +1051,7 @@ class OrganizationConversationsConfigApi:
     def update_monitoring_metrics_without_preload_content(
         self,
         coval_organization_api_update_conversation_metrics_request: CovalOrganizationAPIUpdateConversationMetricsRequest,
+        x_coval_workspace_id: Annotated[Optional[StrictStr], Field(description="Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1010,10 +1067,12 @@ class OrganizationConversationsConfigApi:
     ) -> RESTResponseType:
         """(Deprecated) Update conversation metrics config using the legacy path
 
-        Deprecated alias for `PATCH /organization/conversation-metrics`. Partially updates the organization's conversation metrics configuration.
+        Deprecated alias for `PATCH /organization/conversation-metrics`. Partially updates the selected workspace's conversation metrics configuration.
 
         :param coval_organization_api_update_conversation_metrics_request: (required)
         :type coval_organization_api_update_conversation_metrics_request: CovalOrganizationAPIUpdateConversationMetricsRequest
+        :param x_coval_workspace_id: Workspace whose conversation metrics configuration is read or updated. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1039,6 +1098,7 @@ class OrganizationConversationsConfigApi:
 
         _param = self._update_monitoring_metrics_serialize(
             coval_organization_api_update_conversation_metrics_request=coval_organization_api_update_conversation_metrics_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1063,6 +1123,7 @@ class OrganizationConversationsConfigApi:
     def _update_monitoring_metrics_serialize(
         self,
         coval_organization_api_update_conversation_metrics_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -1086,6 +1147,8 @@ class OrganizationConversationsConfigApi:
         # process the path parameters
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_organization_api_update_conversation_metrics_request is not None:

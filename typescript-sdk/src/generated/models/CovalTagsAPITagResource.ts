@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime.js';
+import type { CovalTagsAPITagUsage } from './CovalTagsAPITagUsage.js';
+import {
+    CovalTagsAPITagUsageFromJSON,
+    CovalTagsAPITagUsageFromJSONTyped,
+    CovalTagsAPITagUsageToJSON,
+    CovalTagsAPITagUsageToJSONTyped,
+} from './CovalTagsAPITagUsage.js';
+
 /**
  * Tag resource. Tags are used to organize agents, personas, test sets, metrics, and run templates.
  * @export
@@ -24,19 +32,19 @@ export interface CovalTagsAPITagResource {
      * @type {string}
      * @memberof CovalTagsAPITagResource
      */
-    name?: string;
+    name: string;
     /**
      * Tag resource ID
      * @type {string}
      * @memberof CovalTagsAPITagResource
      */
-    id?: string;
+    id: string;
     /**
      * Lowercase tag display name
      * @type {string}
      * @memberof CovalTagsAPITagResource
      */
-    tag_name?: string;
+    tag_name: string;
     /**
      * Hex color code (#RGB,
      * @type {string}
@@ -48,7 +56,19 @@ export interface CovalTagsAPITagResource {
      * @type {Date}
      * @memberof CovalTagsAPITagResource
      */
-    create_time?: Date;
+    create_time: Date;
+    /**
+     * All resource assignments, including inactive resources, when include_usage is true.
+     * @type {number}
+     * @memberof CovalTagsAPITagResource
+     */
+    assignment_count?: number | null;
+    /**
+     * Live assignment counts when include_usage is true; otherwise null.
+     * @type {CovalTagsAPITagUsage}
+     * @memberof CovalTagsAPITagResource
+     */
+    usage?: CovalTagsAPITagUsage | null;
     /**
      * Email of the user who created the tag
      * @type {string}
@@ -61,6 +81,10 @@ export interface CovalTagsAPITagResource {
  * Check if a given object implements the CovalTagsAPITagResource interface.
  */
 export function instanceOfCovalTagsAPITagResource(value: object): value is CovalTagsAPITagResource {
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('id' in value) || value['id'] === undefined) return false;
+    if (!('tag_name' in value) || value['tag_name'] === undefined) return false;
+    if (!('create_time' in value) || value['create_time'] === undefined) return false;
     return true;
 }
 
@@ -74,11 +98,13 @@ export function CovalTagsAPITagResourceFromJSONTyped(json: any, ignoreDiscrimina
     }
     return {
         
-        'name': json['name'] == null ? undefined : json['name'],
-        'id': json['id'] == null ? undefined : json['id'],
-        'tag_name': json['tag_name'] == null ? undefined : json['tag_name'],
+        'name': json['name'],
+        'id': json['id'],
+        'tag_name': json['tag_name'],
         'color': json['color'] == null ? undefined : json['color'],
-        'create_time': json['create_time'] == null ? undefined : (new Date(json['create_time'])),
+        'create_time': (new Date(json['create_time'])),
+        'assignment_count': json['assignment_count'] == null ? undefined : json['assignment_count'],
+        'usage': json['usage'] == null ? undefined : CovalTagsAPITagUsageFromJSON(json['usage']),
         'created_by': json['created_by'] == null ? undefined : json['created_by'],
     };
 }
@@ -98,7 +124,9 @@ export function CovalTagsAPITagResourceToJSONTyped(value?: CovalTagsAPITagResour
         'id': value['id'],
         'tag_name': value['tag_name'],
         'color': value['color'],
-        'create_time': value['create_time'] == null ? value['create_time'] : value['create_time'].toISOString(),
+        'create_time': value['create_time'].toISOString(),
+        'assignment_count': value['assignment_count'],
+        'usage': CovalTagsAPITagUsageToJSON(value['usage']),
         'created_by': value['created_by'],
     };
 }

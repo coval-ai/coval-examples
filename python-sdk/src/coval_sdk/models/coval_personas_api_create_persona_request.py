@@ -14,215 +14,122 @@
 
 
 from __future__ import annotations
+from inspect import getfullargspec
+import json
 import pprint
 import re  # noqa: F401
-import json
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
+from typing import Optional
+from coval_sdk.models.persona_with_prompt import PersonaWithPrompt
+from coval_sdk.models.silent_persona import SilentPersona
+from typing import Union, Any, List, Set, TYPE_CHECKING, Optional, Dict
+from typing_extensions import Literal, Self
+from pydantic import Field
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional, Union
-from typing_extensions import Annotated
-from coval_sdk.models.coval_personas_api_audio_degradation_config import CovalPersonasAPIAudioDegradationConfig
-from typing import Optional, Set
-from typing_extensions import Self
-from pydantic_core import to_jsonable_python
+COVALPERSONASAPICREATEPERSONAREQUEST_ANY_OF_SCHEMAS = ["PersonaWithPrompt", "SilentPersona"]
 
 class CovalPersonasAPICreatePersonaRequest(BaseModel):
     """
     CovalPersonasAPICreatePersonaRequest
-    """ # noqa: E501
-    name: Annotated[str, Field(min_length=1, strict=True, max_length=200)] = Field(description="Human-readable persona name")
-    persona_prompt: Optional[StrictStr] = Field(default=None, description="Instructions describing persona behavior and personality")
-    voice_name: StrictStr = Field(description="Coval voice name. Use GET /personas/voices to discover available voices and their supported language codes. ")
-    language_code: StrictStr = Field(description="BCP-47 language code for voice synthesis. Must be supported by the selected voice. Use GET /personas/voices to discover valid voice and language combinations. ")
-    background_sound: Optional[Annotated[str, Field(strict=True, max_length=100)]] = Field(default=None, description="Built-in background sound id, or custom:<background_sound_id> for an active custom sound returned by GET /personas/background-sounds.")
-    background_sound_volume: Optional[Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]]] = Field(default=None, description="Volume level for background sound (>= 0.0, no upper limit). Default is provider-controlled when omitted.")
-    voice_volume: Optional[Union[Annotated[float, Field(le=2, strict=True, ge=0)], Annotated[int, Field(le=2, strict=True, ge=0)]]] = Field(default=None, description="Voice gain multiplier. 0.0 is silent, 1.0 is unchanged, and 2.0 is double volume.")
-    voice_speed: Optional[Union[Annotated[float, Field(le=2, strict=True, ge=0.25)], Annotated[int, Field(le=2, strict=True, ge=1)]]] = Field(default=None, description="Voice speed multiplier accepted and stored from 0.25 to 2.0. 1.0 is unchanged. The selected voice may enforce a narrower effective range or ignore speed changes.")
-    wait_seconds: Optional[Union[Annotated[float, Field(le=2, strict=True, ge=0.1)], Annotated[int, Field(le=2, strict=True, ge=1)]]] = Field(default=None, description="Response delay in seconds")
-    conversation_initiation: Optional[StrictStr] = Field(default=None, description="Who initiates the conversation")
-    multi_language_stt: Optional[StrictBool] = Field(default=None, description="Enable multilingual speech-to-text so callers speaking languages other than the primary language_code are still transcribed accurately. ")
-    hold_music_timeout_seconds: Optional[Union[Annotated[float, Field(le=300, strict=True, ge=5)], Annotated[int, Field(le=300, strict=True, ge=5)]]] = Field(default=None, description="Disconnect after this many seconds of no speech (5-300)")
-    situate_speaker: Optional[StrictStr] = Field(default=None, description="Persona placement preset. - speakerphone-easy: User speaking from a distance from the microphone - speakerphone-hard: User speaking from a distance from the microphone in an acoustically challenging environment. ")
-    audio_degradation: Optional[CovalPersonasAPIAudioDegradationConfig] = Field(default=None, description="Channel degradation preset. Mutually exclusive with situate_speaker. 'cell-poor' and 'cell-handoff' additionally require background_sound to be something other than 'off', to give their target SNR a noise bed to apply against; 'landline' has no target SNR and carries no such requirement. ")
-    tags: Optional[List[StrictStr]] = Field(default=None, description="Tags to associate with this persona. Null or omitted creates the persona with no tags. Pass [] for an empty tag list.")
-    additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "persona_prompt", "voice_name", "language_code", "background_sound", "background_sound_volume", "voice_volume", "voice_speed", "wait_seconds", "conversation_initiation", "multi_language_stt", "hold_music_timeout_seconds", "situate_speaker", "audio_degradation", "tags"]
+    """
 
-    @field_validator('background_sound')
-    def background_sound_validate_regular_expression(cls, value):
-        """Validates the regular expression"""
-        if value is None:
-            return value
+    # data type: SilentPersona
+    anyof_schema_1_validator: Optional[SilentPersona] = None
+    # data type: PersonaWithPrompt
+    anyof_schema_2_validator: Optional[PersonaWithPrompt] = None
+    if TYPE_CHECKING:
+        actual_instance: Optional[Union[PersonaWithPrompt, SilentPersona]] = None
+    else:
+        actual_instance: Any = None
+    any_of_schemas: Set[str] = { "PersonaWithPrompt", "SilentPersona" }
 
-        if not isinstance(value, str):
-            value = str(value)
+    model_config = {
+        "validate_assignment": True,
+        "protected_namespaces": (),
+    }
 
-        if not re.match(r"^(off|office|lounge|crowd|airport|bus|playground|doorbell|train-arrival|portable-air-conditioner|skatepark|small-dog-bark|cafe|ferry-and-announcement|heavy-rain|moderate-wind|newborn-baby-crying|office-with-alarm|street-with-sirens|construction-work|backchanneling|custom:[A-Za-z0-9_-]+)$", value):
-            raise ValueError(r"must validate the regular expression /^(off|office|lounge|crowd|airport|bus|playground|doorbell|train-arrival|portable-air-conditioner|skatepark|small-dog-bark|cafe|ferry-and-announcement|heavy-rain|moderate-wind|newborn-baby-crying|office-with-alarm|street-with-sirens|construction-work|backchanneling|custom:[A-Za-z0-9_-]+)$/")
-        return value
+    def __init__(self, *args, **kwargs) -> None:
+        if args:
+            if len(args) > 1:
+                raise ValueError("If a position argument is used, only 1 is allowed to set `actual_instance`")
+            if kwargs:
+                raise ValueError("If a position argument is used, keyword arguments cannot be used.")
+            super().__init__(actual_instance=args[0])
+        else:
+            super().__init__(**kwargs)
 
-    @field_validator('conversation_initiation')
-    def conversation_initiation_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
+    @field_validator('actual_instance')
+    def actual_instance_must_validate_anyof(cls, v):
+        instance = CovalPersonasAPICreatePersonaRequest.model_construct()
+        error_messages = []
+        # validate data type: SilentPersona
+        if not isinstance(v, SilentPersona):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `SilentPersona`")
+        else:
+            return v
 
-        if value not in set(['speak_first', 'wait_for_user']):
-            raise ValueError("must be one of enum values ('speak_first', 'wait_for_user')")
-        return value
+        # validate data type: PersonaWithPrompt
+        if not isinstance(v, PersonaWithPrompt):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `PersonaWithPrompt`")
+        else:
+            return v
 
-    @field_validator('situate_speaker')
-    def situate_speaker_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
+        if error_messages:
+            # no match
+            raise ValueError("No match found when setting the actual_instance in CovalPersonasAPICreatePersonaRequest with anyOf schemas: PersonaWithPrompt, SilentPersona. Details: " + ", ".join(error_messages))
+        else:
+            return v
 
-        if value not in set(['speakerphone-easy', 'speakerphone-hard']):
-            raise ValueError("must be one of enum values ('speakerphone-easy', 'speakerphone-hard')")
-        return value
+    @classmethod
+    def from_dict(cls, obj: Dict[str, Any]) -> Self:
+        return cls.from_json(json.dumps(obj))
 
-    model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    @classmethod
+    def from_json(cls, json_str: str) -> Self:
+        """Returns the object represented by the json string"""
+        instance = cls.model_construct()
+        error_messages = []
+        # anyof_schema_1_validator: Optional[SilentPersona] = None
+        try:
+            instance.actual_instance = SilentPersona.from_json(json_str)
+            return instance
+        except (ValidationError, ValueError) as e:
+             error_messages.append(str(e))
+        # anyof_schema_2_validator: Optional[PersonaWithPrompt] = None
+        try:
+            instance.actual_instance = PersonaWithPrompt.from_json(json_str)
+            return instance
+        except (ValidationError, ValueError) as e:
+             error_messages.append(str(e))
 
-
-    def to_str(self) -> str:
-        """Returns the string representation of the model using alias"""
-        return pprint.pformat(self.model_dump(by_alias=True))
+        if error_messages:
+            # no match
+            raise ValueError("No match found when deserializing the JSON string into CovalPersonasAPICreatePersonaRequest with anyOf schemas: PersonaWithPrompt, SilentPersona. Details: " + ", ".join(error_messages))
+        else:
+            return instance
 
     def to_json(self) -> str:
-        """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        """Returns the JSON representation of the actual instance"""
+        if self.actual_instance is None:
+            return "null"
 
-    @classmethod
-    def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CovalPersonasAPICreatePersonaRequest from a JSON string"""
-        return cls.from_dict(json.loads(json_str))
+        if hasattr(self.actual_instance, "to_json") and callable(self.actual_instance.to_json):
+            return self.actual_instance.to_json()
+        else:
+            return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Dict[str, Any]:
-        """Return the dictionary representation of the model using alias.
-
-        This has the following differences from calling pydantic's
-        `self.model_dump(by_alias=True)`:
-
-        * `None` is only added to the output dict for nullable fields that
-          were set at model initialization. Other fields with value `None`
-          are ignored.
-        * Fields in `self.additional_properties` are added to the output dict.
-        """
-        excluded_fields: Set[str] = set([
-            "additional_properties",
-        ])
-
-        _dict = self.model_dump(
-            by_alias=True,
-            exclude=excluded_fields,
-            exclude_none=True,
-        )
-        # override the default output from pydantic by calling `to_dict()` of audio_degradation
-        if self.audio_degradation:
-            _dict['audio_degradation'] = self.audio_degradation.to_dict()
-        # puts key-value pairs in additional_properties in the top level
-        if self.additional_properties is not None:
-            for _key, _value in self.additional_properties.items():
-                _dict[_key] = _value
-
-        # set to None if persona_prompt (nullable) is None
-        # and model_fields_set contains the field
-        if self.persona_prompt is None and "persona_prompt" in self.model_fields_set:
-            _dict['persona_prompt'] = None
-
-        # set to None if background_sound (nullable) is None
-        # and model_fields_set contains the field
-        if self.background_sound is None and "background_sound" in self.model_fields_set:
-            _dict['background_sound'] = None
-
-        # set to None if background_sound_volume (nullable) is None
-        # and model_fields_set contains the field
-        if self.background_sound_volume is None and "background_sound_volume" in self.model_fields_set:
-            _dict['background_sound_volume'] = None
-
-        # set to None if voice_volume (nullable) is None
-        # and model_fields_set contains the field
-        if self.voice_volume is None and "voice_volume" in self.model_fields_set:
-            _dict['voice_volume'] = None
-
-        # set to None if voice_speed (nullable) is None
-        # and model_fields_set contains the field
-        if self.voice_speed is None and "voice_speed" in self.model_fields_set:
-            _dict['voice_speed'] = None
-
-        # set to None if wait_seconds (nullable) is None
-        # and model_fields_set contains the field
-        if self.wait_seconds is None and "wait_seconds" in self.model_fields_set:
-            _dict['wait_seconds'] = None
-
-        # set to None if conversation_initiation (nullable) is None
-        # and model_fields_set contains the field
-        if self.conversation_initiation is None and "conversation_initiation" in self.model_fields_set:
-            _dict['conversation_initiation'] = None
-
-        # set to None if multi_language_stt (nullable) is None
-        # and model_fields_set contains the field
-        if self.multi_language_stt is None and "multi_language_stt" in self.model_fields_set:
-            _dict['multi_language_stt'] = None
-
-        # set to None if hold_music_timeout_seconds (nullable) is None
-        # and model_fields_set contains the field
-        if self.hold_music_timeout_seconds is None and "hold_music_timeout_seconds" in self.model_fields_set:
-            _dict['hold_music_timeout_seconds'] = None
-
-        # set to None if situate_speaker (nullable) is None
-        # and model_fields_set contains the field
-        if self.situate_speaker is None and "situate_speaker" in self.model_fields_set:
-            _dict['situate_speaker'] = None
-
-        # set to None if audio_degradation (nullable) is None
-        # and model_fields_set contains the field
-        if self.audio_degradation is None and "audio_degradation" in self.model_fields_set:
-            _dict['audio_degradation'] = None
-
-        # set to None if tags (nullable) is None
-        # and model_fields_set contains the field
-        if self.tags is None and "tags" in self.model_fields_set:
-            _dict['tags'] = None
-
-        return _dict
-
-    @classmethod
-    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CovalPersonasAPICreatePersonaRequest from a dict"""
-        if obj is None:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], PersonaWithPrompt, SilentPersona]]:
+        """Returns the dict representation of the actual instance"""
+        if self.actual_instance is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        if hasattr(self.actual_instance, "to_dict") and callable(self.actual_instance.to_dict):
+            return self.actual_instance.to_dict()
+        else:
+            return self.actual_instance
 
-        _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "persona_prompt": obj.get("persona_prompt"),
-            "voice_name": obj.get("voice_name"),
-            "language_code": obj.get("language_code"),
-            "background_sound": obj.get("background_sound"),
-            "background_sound_volume": obj.get("background_sound_volume"),
-            "voice_volume": obj.get("voice_volume"),
-            "voice_speed": obj.get("voice_speed"),
-            "wait_seconds": obj.get("wait_seconds"),
-            "conversation_initiation": obj.get("conversation_initiation"),
-            "multi_language_stt": obj.get("multi_language_stt"),
-            "hold_music_timeout_seconds": obj.get("hold_music_timeout_seconds"),
-            "situate_speaker": obj.get("situate_speaker"),
-            "audio_degradation": CovalPersonasAPIAudioDegradationConfig.from_dict(obj["audio_degradation"]) if obj.get("audio_degradation") is not None else None,
-            "tags": obj.get("tags")
-        })
-        # store additional fields in additional_properties
-        for _key in obj.keys():
-            if _key not in cls.__properties:
-                _obj.additional_properties[_key] = obj.get(_key)
-
-        return _obj
+    def to_str(self) -> str:
+        """Returns the string representation of the actual instance"""
+        return pprint.pformat(self.model_dump())
 
 

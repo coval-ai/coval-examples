@@ -13,6 +13,20 @@
  */
 
 import { mapValues } from '../runtime.js';
+import type { SilentPersona } from './SilentPersona.js';
+import {
+    SilentPersonaFromJSON,
+    SilentPersonaFromJSONTyped,
+    SilentPersonaToJSON,
+    SilentPersonaToJSONTyped,
+} from './SilentPersona.js';
+import type { CovalPersonasAPIMultiPhoneConfig } from './CovalPersonasAPIMultiPhoneConfig.js';
+import {
+    CovalPersonasAPIMultiPhoneConfigFromJSON,
+    CovalPersonasAPIMultiPhoneConfigFromJSONTyped,
+    CovalPersonasAPIMultiPhoneConfigToJSON,
+    CovalPersonasAPIMultiPhoneConfigToJSONTyped,
+} from './CovalPersonasAPIMultiPhoneConfig.js';
 import type { CovalPersonasAPIAudioDegradationConfig } from './CovalPersonasAPIAudioDegradationConfig.js';
 import {
     CovalPersonasAPIAudioDegradationConfigFromJSON,
@@ -20,6 +34,13 @@ import {
     CovalPersonasAPIAudioDegradationConfigToJSON,
     CovalPersonasAPIAudioDegradationConfigToJSONTyped,
 } from './CovalPersonasAPIAudioDegradationConfig.js';
+import type { PersonaWithPrompt } from './PersonaWithPrompt.js';
+import {
+    PersonaWithPromptFromJSON,
+    PersonaWithPromptFromJSONTyped,
+    PersonaWithPromptToJSON,
+    PersonaWithPromptToJSONTyped,
+} from './PersonaWithPrompt.js';
 
 /**
  * 
@@ -28,13 +49,49 @@ import {
  */
 export interface CovalPersonasAPICreatePersonaRequest {
     /**
+     * Keep the persona silent for the whole simulation. Null clears the override.
+     * @type {boolean}
+     * @memberof CovalPersonasAPICreatePersonaRequest
+     */
+    silent_mode?: boolean | null;
+    /**
+     * Caller number selection from GET /v1/personas/phone-numbers. Omit to let the simulation select a random available number. Null clears it.
+     * @type {CovalPersonasAPIMultiPhoneConfig}
+     * @memberof CovalPersonasAPICreatePersonaRequest
+     */
+    multi_phone_config?: CovalPersonasAPIMultiPhoneConfig | null;
+    /**
+     * Persona-level initialization parameters. Null clears; an empty object replaces existing parameters. String values substitute into the initialization payload as JSON-escaped text (quote the "{{persona.key}}" placeholder); all other JSON values substitute as their JSON encoding.
+     * @type {{ [key: string]: any; }}
+     * @memberof CovalPersonasAPICreatePersonaRequest
+     */
+    initialization_parameters?: { [key: string]: any; } | null;
+    /**
+     * Additional serialized JSON object sent as the chat request's customPersonaData, overriding the agent-level customPersonaData. Included only when the HTTP text agent does not configure input_template; a template-configured agent shapes its own request and does not receive it. Must parse as a JSON object and stay under 16 KiB. Null clears it.
+     * @type {string}
+     * @memberof CovalPersonasAPICreatePersonaRequest
+     */
+    custom_persona_data?: string | null;
+    /**
+     * Agent voice override for OpenAI Realtime endpoint simulations. Null clears it.
+     * @type {CovalPersonasAPICreatePersonaRequestVoiceEnum}
+     * @memberof CovalPersonasAPICreatePersonaRequest
+     */
+    voice?: CovalPersonasAPICreatePersonaRequestVoiceEnum | null;
+    /**
+     * Server-issued custom voice reference belonging to this organization. Null selects the built-in voice again.
+     * @type {string}
+     * @memberof CovalPersonasAPICreatePersonaRequest
+     */
+    custom_voice_id?: string | null;
+    /**
      * Human-readable persona name
      * @type {string}
      * @memberof CovalPersonasAPICreatePersonaRequest
      */
     name: string;
     /**
-     * Instructions describing persona behavior and personality
+     * Instructions describing persona behavior and personality. Required unless silent_mode is true.
      * @type {string}
      * @memberof CovalPersonasAPICreatePersonaRequest
      */
@@ -93,6 +150,16 @@ export interface CovalPersonasAPICreatePersonaRequest {
      */
     conversation_initiation?: CovalPersonasAPICreatePersonaRequestConversationInitiationEnum | null;
     /**
+     * How often the persona interrupts the agent. While the agent is speaking, the persona
+     * forces a new turn once about 90 seconds (LOW), 45 seconds (MEDIUM), or 30 seconds
+     * (HIGH) have passed since the call started or since its last interruption. NONE never
+     * interrupts. This is a timer, not a semantic barge-in.
+     * 
+     * @type {CovalPersonasAPICreatePersonaRequestInterruptionRateEnum}
+     * @memberof CovalPersonasAPICreatePersonaRequest
+     */
+    interruption_rate?: CovalPersonasAPICreatePersonaRequestInterruptionRateEnum | null;
+    /**
      * Enable multilingual speech-to-text so callers speaking languages
      * other than the primary language_code are still transcribed accurately.
      * 
@@ -116,10 +183,7 @@ export interface CovalPersonasAPICreatePersonaRequest {
      */
     situate_speaker?: CovalPersonasAPICreatePersonaRequestSituateSpeakerEnum | null;
     /**
-     * Channel degradation preset. Mutually exclusive with situate_speaker. 'cell-poor' and
-     * 'cell-handoff' additionally require background_sound to be something other than
-     * 'off', to give their target SNR a noise bed to apply against; 'landline' has no
-     * target SNR and carries no such requirement.
+     * Channel degradation preset.
      * 
      * @type {CovalPersonasAPIAudioDegradationConfig}
      * @memberof CovalPersonasAPICreatePersonaRequest
@@ -137,11 +201,38 @@ export interface CovalPersonasAPICreatePersonaRequest {
 /**
  * @export
  */
+export const CovalPersonasAPICreatePersonaRequestVoiceEnum = {
+    Alloy: 'alloy',
+    Ash: 'ash',
+    Ballad: 'ballad',
+    Coral: 'coral',
+    Echo: 'echo',
+    Marin: 'marin',
+    Sage: 'sage',
+    Shimmer: 'shimmer',
+    Verse: 'verse'
+} as const;
+export type CovalPersonasAPICreatePersonaRequestVoiceEnum = typeof CovalPersonasAPICreatePersonaRequestVoiceEnum[keyof typeof CovalPersonasAPICreatePersonaRequestVoiceEnum];
+
+/**
+ * @export
+ */
 export const CovalPersonasAPICreatePersonaRequestConversationInitiationEnum = {
     SpeakFirst: 'speak_first',
     WaitForUser: 'wait_for_user'
 } as const;
 export type CovalPersonasAPICreatePersonaRequestConversationInitiationEnum = typeof CovalPersonasAPICreatePersonaRequestConversationInitiationEnum[keyof typeof CovalPersonasAPICreatePersonaRequestConversationInitiationEnum];
+
+/**
+ * @export
+ */
+export const CovalPersonasAPICreatePersonaRequestInterruptionRateEnum = {
+    None: 'NONE',
+    Low: 'LOW',
+    Medium: 'MEDIUM',
+    High: 'HIGH'
+} as const;
+export type CovalPersonasAPICreatePersonaRequestInterruptionRateEnum = typeof CovalPersonasAPICreatePersonaRequestInterruptionRateEnum[keyof typeof CovalPersonasAPICreatePersonaRequestInterruptionRateEnum];
 
 /**
  * @export
@@ -173,6 +264,12 @@ export function CovalPersonasAPICreatePersonaRequestFromJSONTyped(json: any, ign
     }
     return {
         
+        'silent_mode': json['silent_mode'] == null ? undefined : json['silent_mode'],
+        'multi_phone_config': json['multi_phone_config'] == null ? undefined : CovalPersonasAPIMultiPhoneConfigFromJSON(json['multi_phone_config']),
+        'initialization_parameters': json['initialization_parameters'] == null ? undefined : json['initialization_parameters'],
+        'custom_persona_data': json['custom_persona_data'] == null ? undefined : json['custom_persona_data'],
+        'voice': json['voice'] == null ? undefined : json['voice'],
+        'custom_voice_id': json['custom_voice_id'] == null ? undefined : json['custom_voice_id'],
         'name': json['name'],
         'persona_prompt': json['persona_prompt'] == null ? undefined : json['persona_prompt'],
         'voice_name': json['voice_name'],
@@ -183,6 +280,7 @@ export function CovalPersonasAPICreatePersonaRequestFromJSONTyped(json: any, ign
         'voice_speed': json['voice_speed'] == null ? undefined : json['voice_speed'],
         'wait_seconds': json['wait_seconds'] == null ? undefined : json['wait_seconds'],
         'conversation_initiation': json['conversation_initiation'] == null ? undefined : json['conversation_initiation'],
+        'interruption_rate': json['interruption_rate'] == null ? undefined : json['interruption_rate'],
         'multi_language_stt': json['multi_language_stt'] == null ? undefined : json['multi_language_stt'],
         'hold_music_timeout_seconds': json['hold_music_timeout_seconds'] == null ? undefined : json['hold_music_timeout_seconds'],
         'situate_speaker': json['situate_speaker'] == null ? undefined : json['situate_speaker'],
@@ -202,6 +300,12 @@ export function CovalPersonasAPICreatePersonaRequestToJSONTyped(value?: CovalPer
 
     return {
         
+        'silent_mode': value['silent_mode'],
+        'multi_phone_config': CovalPersonasAPIMultiPhoneConfigToJSON(value['multi_phone_config']),
+        'initialization_parameters': value['initialization_parameters'],
+        'custom_persona_data': value['custom_persona_data'],
+        'voice': value['voice'],
+        'custom_voice_id': value['custom_voice_id'],
         'name': value['name'],
         'persona_prompt': value['persona_prompt'],
         'voice_name': value['voice_name'],
@@ -212,6 +316,7 @@ export function CovalPersonasAPICreatePersonaRequestToJSONTyped(value?: CovalPer
         'voice_speed': value['voice_speed'],
         'wait_seconds': value['wait_seconds'],
         'conversation_initiation': value['conversation_initiation'],
+        'interruption_rate': value['interruption_rate'],
         'multi_language_stt': value['multi_language_stt'],
         'hold_music_timeout_seconds': value['hold_music_timeout_seconds'],
         'situate_speaker': value['situate_speaker'],

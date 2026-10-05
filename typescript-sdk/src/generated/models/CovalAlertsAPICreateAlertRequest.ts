@@ -13,13 +13,13 @@
  */
 
 import { mapValues } from '../runtime.js';
-import type { CovalAlertsAPIAlertScope } from './CovalAlertsAPIAlertScope.js';
+import type { CovalAlertsAPIAlertResourceCustomerMetadataValue } from './CovalAlertsAPIAlertResourceCustomerMetadataValue.js';
 import {
-    CovalAlertsAPIAlertScopeFromJSON,
-    CovalAlertsAPIAlertScopeFromJSONTyped,
-    CovalAlertsAPIAlertScopeToJSON,
-    CovalAlertsAPIAlertScopeToJSONTyped,
-} from './CovalAlertsAPIAlertScope.js';
+    CovalAlertsAPIAlertResourceCustomerMetadataValueFromJSON,
+    CovalAlertsAPIAlertResourceCustomerMetadataValueFromJSONTyped,
+    CovalAlertsAPIAlertResourceCustomerMetadataValueToJSON,
+    CovalAlertsAPIAlertResourceCustomerMetadataValueToJSONTyped,
+} from './CovalAlertsAPIAlertResourceCustomerMetadataValue.js';
 import type { CovalAlertsAPIAlertMatchMode } from './CovalAlertsAPIAlertMatchMode.js';
 import {
     CovalAlertsAPIAlertMatchModeFromJSON,
@@ -27,6 +27,13 @@ import {
     CovalAlertsAPIAlertMatchModeToJSON,
     CovalAlertsAPIAlertMatchModeToJSONTyped,
 } from './CovalAlertsAPIAlertMatchMode.js';
+import type { CovalAlertsAPIConversationSourceFilter } from './CovalAlertsAPIConversationSourceFilter.js';
+import {
+    CovalAlertsAPIConversationSourceFilterFromJSON,
+    CovalAlertsAPIConversationSourceFilterFromJSONTyped,
+    CovalAlertsAPIConversationSourceFilterToJSON,
+    CovalAlertsAPIConversationSourceFilterToJSONTyped,
+} from './CovalAlertsAPIConversationSourceFilter.js';
 import type { CovalAlertsAPIChannelInput } from './CovalAlertsAPIChannelInput.js';
 import {
     CovalAlertsAPIChannelInputFromJSON,
@@ -75,10 +82,10 @@ export interface CovalAlertsAPICreateAlertRequest {
     evaluation_type: CovalAlertsAPIAlertEvaluationType;
     /**
      * 
-     * @type {CovalAlertsAPIAlertScope}
+     * @type {CovalAlertsAPIConversationSourceFilter}
      * @memberof CovalAlertsAPICreateAlertRequest
      */
-    scope?: CovalAlertsAPIAlertScope;
+    conversation_source?: CovalAlertsAPIConversationSourceFilter;
     /**
      * 
      * @type {CovalAlertsAPIAlertMatchMode}
@@ -116,13 +123,19 @@ export interface CovalAlertsAPICreateAlertRequest {
      */
     scheduled_run_ids?: Array<string> | null;
     /**
-     * 
+     * Exact scalar Run customer metadata filters, joined by AND. Literal keys are 1–256 characters; values are case-sensitive text. A list of values matches when the metadata equals any one of them. Numbers and booleans use JSON text; missing, null, array, and object values do not match. An empty object applies no metadata filter.
+     * @type {{ [key: string]: CovalAlertsAPIAlertResourceCustomerMetadataValue; }}
+     * @memberof CovalAlertsAPICreateAlertRequest
+     */
+    customer_metadata?: { [key: string]: CovalAlertsAPIAlertResourceCustomerMetadataValue; };
+    /**
+     * Metric conditions. May be empty only when customer_metadata is nonempty.
      * @type {Array<CovalAlertsAPIConditionInput>}
      * @memberof CovalAlertsAPICreateAlertRequest
      */
     conditions: Array<CovalAlertsAPIConditionInput>;
     /**
-     * 
+     * Notification channels; at most one HUMAN_REVIEW channel is allowed.
      * @type {Array<CovalAlertsAPIChannelInput>}
      * @memberof CovalAlertsAPICreateAlertRequest
      */
@@ -154,13 +167,14 @@ export function CovalAlertsAPICreateAlertRequestFromJSONTyped(json: any, ignoreD
         'name': json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'evaluation_type': CovalAlertsAPIAlertEvaluationTypeFromJSON(json['evaluation_type']),
-        'scope': json['scope'] == null ? undefined : CovalAlertsAPIAlertScopeFromJSON(json['scope']),
+        'conversation_source': json['conversation_source'] == null ? undefined : CovalAlertsAPIConversationSourceFilterFromJSON(json['conversation_source']),
         'match_mode': json['match_mode'] == null ? undefined : CovalAlertsAPIAlertMatchModeFromJSON(json['match_mode']),
         'cooldown_seconds': json['cooldown_seconds'] == null ? undefined : json['cooldown_seconds'],
         'custom_message_template': json['custom_message_template'] == null ? undefined : json['custom_message_template'],
         'agent_ids': json['agent_ids'] == null ? undefined : json['agent_ids'],
         'required_tags': json['required_tags'] == null ? undefined : json['required_tags'],
         'scheduled_run_ids': json['scheduled_run_ids'] == null ? undefined : json['scheduled_run_ids'],
+        'customer_metadata': json['customer_metadata'] == null ? undefined : (mapValues(json['customer_metadata'], CovalAlertsAPIAlertResourceCustomerMetadataValueFromJSON)),
         'conditions': ((json['conditions'] as Array<any>).map(CovalAlertsAPIConditionInputFromJSON)),
         'channels': json['channels'] == null ? undefined : ((json['channels'] as Array<any>).map(CovalAlertsAPIChannelInputFromJSON)),
     };
@@ -180,13 +194,14 @@ export function CovalAlertsAPICreateAlertRequestToJSONTyped(value?: CovalAlertsA
         'name': value['name'],
         'description': value['description'],
         'evaluation_type': CovalAlertsAPIAlertEvaluationTypeToJSON(value['evaluation_type']),
-        'scope': CovalAlertsAPIAlertScopeToJSON(value['scope']),
+        'conversation_source': CovalAlertsAPIConversationSourceFilterToJSON(value['conversation_source']),
         'match_mode': CovalAlertsAPIAlertMatchModeToJSON(value['match_mode']),
         'cooldown_seconds': value['cooldown_seconds'],
         'custom_message_template': value['custom_message_template'],
         'agent_ids': value['agent_ids'],
         'required_tags': value['required_tags'],
         'scheduled_run_ids': value['scheduled_run_ids'],
+        'customer_metadata': value['customer_metadata'] == null ? undefined : (mapValues(value['customer_metadata'], CovalAlertsAPIAlertResourceCustomerMetadataValueToJSON)),
         'conditions': ((value['conditions'] as Array<any>).map(CovalAlertsAPIConditionInputToJSON)),
         'channels': value['channels'] == null ? undefined : ((value['channels'] as Array<any>).map(CovalAlertsAPIChannelInputToJSON)),
     };

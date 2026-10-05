@@ -100,7 +100,7 @@ export interface WorkspacesApiInterface {
     createWorkspaceRequestOpts(requestParameters: CreateWorkspaceRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Create a custom workspace for your organization. The slug must be unique within the organization.
+     * Create a custom workspace for your organization. Callers provide a display name and use the returned stable workspace ID for references.
      * @summary Create workspace
      * @param {CovalWorkspacesAPICreateWorkspaceRequest} covalWorkspacesAPICreateWorkspaceRequest 
      * @param {*} [options] Override http request option.
@@ -110,7 +110,7 @@ export interface WorkspacesApiInterface {
     createWorkspaceRaw(requestParameters: CreateWorkspaceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalWorkspacesAPIWorkspaceResponse>>;
 
     /**
-     * Create a custom workspace for your organization. The slug must be unique within the organization.
+     * Create a custom workspace for your organization. Callers provide a display name and use the returned stable workspace ID for references.
      * Create workspace
      */
     createWorkspace(requestParameters: CreateWorkspaceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalWorkspacesAPIWorkspaceResponse>;
@@ -303,7 +303,7 @@ export class WorkspacesApi extends runtime.BaseAPI implements WorkspacesApiInter
     }
 
     /**
-     * Create a custom workspace for your organization. The slug must be unique within the organization.
+     * Create a custom workspace for your organization. Callers provide a display name and use the returned stable workspace ID for references.
      * Create workspace
      */
     async createWorkspaceRaw(requestParameters: CreateWorkspaceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalWorkspacesAPIWorkspaceResponse>> {
@@ -314,7 +314,7 @@ export class WorkspacesApi extends runtime.BaseAPI implements WorkspacesApiInter
     }
 
     /**
-     * Create a custom workspace for your organization. The slug must be unique within the organization.
+     * Create a custom workspace for your organization. Callers provide a display name and use the returned stable workspace ID for references.
      * Create workspace
      */
     async createWorkspace(requestParameters: CreateWorkspaceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalWorkspacesAPIWorkspaceResponse> {

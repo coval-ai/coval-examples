@@ -84,6 +84,7 @@ export interface GetReviewAnnotationsWithMetricOutputsRequest {
 
 export interface GetReviewMetricHealthStatsRequest {
     metricId: string;
+    criteriaViewMode?: GetReviewMetricHealthStatsCriteriaViewModeEnum;
 }
 
 export interface ListReviewAnnotationsRequest {
@@ -209,6 +210,7 @@ export interface ReviewAnnotationsApiInterface {
     /**
      * Creates request options for getReviewMetricHealthStats without sending the request
      * @param {string} metricId The metric ID (22-char ShortUUID).
+     * @param {'score' | 'criteria'} [criteriaViewMode] Compare Composite Evaluation criteria instead of aggregate scores.
      * @throws {RequiredError}
      * @memberof ReviewAnnotationsApiInterface
      */
@@ -218,6 +220,7 @@ export interface ReviewAnnotationsApiInterface {
      * Compact machine-vs-human and human-vs-human agreement health for one metric, computed from its review annotations. Metric-scoped (no project).
      * @summary Get metric health stats
      * @param {string} metricId The metric ID (22-char ShortUUID).
+     * @param {'score' | 'criteria'} [criteriaViewMode] Compare Composite Evaluation criteria instead of aggregate scores.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ReviewAnnotationsApiInterface
@@ -521,6 +524,10 @@ export class ReviewAnnotationsApi extends runtime.BaseAPI implements ReviewAnnot
             queryParameters['metric_id'] = requestParameters['metricId'];
         }
 
+        if (requestParameters['criteriaViewMode'] != null) {
+            queryParameters['criteria_view_mode'] = requestParameters['criteriaViewMode'];
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.apiKey) {
@@ -683,3 +690,12 @@ export class ReviewAnnotationsApi extends runtime.BaseAPI implements ReviewAnnot
     }
 
 }
+
+/**
+ * @export
+ */
+export const GetReviewMetricHealthStatsCriteriaViewModeEnum = {
+    Score: 'score',
+    Criteria: 'criteria'
+} as const;
+export type GetReviewMetricHealthStatsCriteriaViewModeEnum = typeof GetReviewMetricHealthStatsCriteriaViewModeEnum[keyof typeof GetReviewMetricHealthStatsCriteriaViewModeEnum];

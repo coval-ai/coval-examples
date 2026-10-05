@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime.js';
+import type { CovalSlackIntegrationAPISlackAuthorizationIntent } from './CovalSlackIntegrationAPISlackAuthorizationIntent.js';
+import {
+    CovalSlackIntegrationAPISlackAuthorizationIntentFromJSON,
+    CovalSlackIntegrationAPISlackAuthorizationIntentFromJSONTyped,
+    CovalSlackIntegrationAPISlackAuthorizationIntentToJSON,
+    CovalSlackIntegrationAPISlackAuthorizationIntentToJSONTyped,
+} from './CovalSlackIntegrationAPISlackAuthorizationIntent.js';
+
 /**
  * 
  * @export
@@ -31,7 +39,15 @@ export interface CovalSlackIntegrationAPIConnectSlackRequest {
      * @memberof CovalSlackIntegrationAPIConnectSlackRequest
      */
     redirect_uri: string;
+    /**
+     * Optional only during the backend-first compatibility rollout; omission means guarded new connect. Reauthorization must be explicit and may replace only the exact routed installation captured before OAuth.
+     * @type {CovalSlackIntegrationAPISlackAuthorizationIntent}
+     * @memberof CovalSlackIntegrationAPIConnectSlackRequest
+     */
+    authorization_intent?: CovalSlackIntegrationAPISlackAuthorizationIntent;
 }
+
+
 
 /**
  * Check if a given object implements the CovalSlackIntegrationAPIConnectSlackRequest interface.
@@ -54,6 +70,7 @@ export function CovalSlackIntegrationAPIConnectSlackRequestFromJSONTyped(json: a
         
         'code': json['code'],
         'redirect_uri': json['redirect_uri'],
+        'authorization_intent': json['authorization_intent'] == null ? undefined : CovalSlackIntegrationAPISlackAuthorizationIntentFromJSON(json['authorization_intent']),
     };
 }
 
@@ -70,6 +87,7 @@ export function CovalSlackIntegrationAPIConnectSlackRequestToJSONTyped(value?: C
         
         'code': value['code'],
         'redirect_uri': value['redirect_uri'],
+        'authorization_intent': CovalSlackIntegrationAPISlackAuthorizationIntentToJSON(value['authorization_intent']),
     };
 }
 

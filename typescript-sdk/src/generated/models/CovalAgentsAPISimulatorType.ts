@@ -21,6 +21,7 @@
  * - **MODEL_TYPE_CHAT**: Text-based chat agents (requires metadata.chat_endpoint)
  * - **MODEL_TYPE_CHAT_A2A**: A2A JSON-RPC chat agents (requires metadata.chat_endpoint)
  * - **MODEL_TYPE_CHAT_WEBSOCKET**: Text chat over WebSocket (requires metadata.endpoint in direct mode)
+ * - **MODEL_TYPE_EMAIL**: Email-based text agents
  * - **MODEL_TYPE_SMS**: SMS messaging agents (requires phone_number in E.164 format)
  * - **MODEL_TYPE_WEBSOCKET**: WebSocket voice agents (requires metadata.endpoint wss:// URL in direct mode; metadata.initialization_json is optional)
  * - **MODEL_TYPE_LIVEKIT**: LiveKit agents (requires metadata.generate_token_endpoint and metadata.livekit_url)
@@ -38,6 +39,7 @@ export const CovalAgentsAPISimulatorType = {
     ModelTypeChat: 'MODEL_TYPE_CHAT',
     ModelTypeChatA2A: 'MODEL_TYPE_CHAT_A2A',
     ModelTypeChatWebsocket: 'MODEL_TYPE_CHAT_WEBSOCKET',
+    ModelTypeEmail: 'MODEL_TYPE_EMAIL',
     ModelTypeSms: 'MODEL_TYPE_SMS',
     ModelTypeWebsocket: 'MODEL_TYPE_WEBSOCKET',
     ModelTypeLivekit: 'MODEL_TYPE_LIVEKIT',

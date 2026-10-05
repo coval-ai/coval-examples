@@ -614,6 +614,7 @@ class PersonasApi:
     def create_persona(
         self,
         coval_personas_api_create_persona_request: CovalPersonasAPICreatePersonaRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -633,6 +634,8 @@ class PersonasApi:
 
         :param coval_personas_api_create_persona_request: (required)
         :type coval_personas_api_create_persona_request: CovalPersonasAPICreatePersonaRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -657,6 +660,7 @@ class PersonasApi:
 
         _param = self._create_persona_serialize(
             coval_personas_api_create_persona_request=coval_personas_api_create_persona_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -684,6 +688,7 @@ class PersonasApi:
     def create_persona_with_http_info(
         self,
         coval_personas_api_create_persona_request: CovalPersonasAPICreatePersonaRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -703,6 +708,8 @@ class PersonasApi:
 
         :param coval_personas_api_create_persona_request: (required)
         :type coval_personas_api_create_persona_request: CovalPersonasAPICreatePersonaRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -727,6 +734,7 @@ class PersonasApi:
 
         _param = self._create_persona_serialize(
             coval_personas_api_create_persona_request=coval_personas_api_create_persona_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -754,6 +762,7 @@ class PersonasApi:
     def create_persona_without_preload_content(
         self,
         coval_personas_api_create_persona_request: CovalPersonasAPICreatePersonaRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -773,6 +782,8 @@ class PersonasApi:
 
         :param coval_personas_api_create_persona_request: (required)
         :type coval_personas_api_create_persona_request: CovalPersonasAPICreatePersonaRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -797,6 +808,7 @@ class PersonasApi:
 
         _param = self._create_persona_serialize(
             coval_personas_api_create_persona_request=coval_personas_api_create_persona_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -819,6 +831,7 @@ class PersonasApi:
     def _create_persona_serialize(
         self,
         coval_personas_api_create_persona_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -842,6 +855,8 @@ class PersonasApi:
         # process the path parameters
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_personas_api_create_persona_request is not None:
@@ -897,6 +912,7 @@ class PersonasApi:
     def delete_persona(
         self,
         persona_id: Annotated[StrictStr, Field(description="Persona resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -912,10 +928,12 @@ class PersonasApi:
     ) -> object:
         """Delete persona
 
-        Delete a persona
+        Delete a persona. Personas referenced by active Templates cannot be deleted.
 
         :param persona_id: Persona resource ID (required)
         :type persona_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -940,6 +958,7 @@ class PersonasApi:
 
         _param = self._delete_persona_serialize(
             persona_id=persona_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -949,6 +968,7 @@ class PersonasApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
             '401': "CovalPersonasAPIError",
+            '409': "CovalPersonasAPIError",
             '500': "CovalPersonasAPIError",
         }
         response_data = self.api_client.call_api(
@@ -966,6 +986,7 @@ class PersonasApi:
     def delete_persona_with_http_info(
         self,
         persona_id: Annotated[StrictStr, Field(description="Persona resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -981,10 +1002,12 @@ class PersonasApi:
     ) -> ApiResponse[object]:
         """Delete persona
 
-        Delete a persona
+        Delete a persona. Personas referenced by active Templates cannot be deleted.
 
         :param persona_id: Persona resource ID (required)
         :type persona_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1009,6 +1032,7 @@ class PersonasApi:
 
         _param = self._delete_persona_serialize(
             persona_id=persona_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1018,6 +1042,7 @@ class PersonasApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
             '401': "CovalPersonasAPIError",
+            '409': "CovalPersonasAPIError",
             '500': "CovalPersonasAPIError",
         }
         response_data = self.api_client.call_api(
@@ -1035,6 +1060,7 @@ class PersonasApi:
     def delete_persona_without_preload_content(
         self,
         persona_id: Annotated[StrictStr, Field(description="Persona resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1050,10 +1076,12 @@ class PersonasApi:
     ) -> RESTResponseType:
         """Delete persona
 
-        Delete a persona
+        Delete a persona. Personas referenced by active Templates cannot be deleted.
 
         :param persona_id: Persona resource ID (required)
         :type persona_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1078,6 +1106,7 @@ class PersonasApi:
 
         _param = self._delete_persona_serialize(
             persona_id=persona_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1087,6 +1116,7 @@ class PersonasApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
             '401': "CovalPersonasAPIError",
+            '409': "CovalPersonasAPIError",
             '500': "CovalPersonasAPIError",
         }
         response_data = self.api_client.call_api(
@@ -1099,6 +1129,7 @@ class PersonasApi:
     def _delete_persona_serialize(
         self,
         persona_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -1124,6 +1155,8 @@ class PersonasApi:
             _path_params['persona_id'] = persona_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -1437,6 +1470,7 @@ class PersonasApi:
     def get_persona(
         self,
         persona_id: Annotated[StrictStr, Field(description="Persona resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1456,6 +1490,8 @@ class PersonasApi:
 
         :param persona_id: Persona resource ID (required)
         :type persona_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1480,6 +1516,7 @@ class PersonasApi:
 
         _param = self._get_persona_serialize(
             persona_id=persona_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1507,6 +1544,7 @@ class PersonasApi:
     def get_persona_with_http_info(
         self,
         persona_id: Annotated[StrictStr, Field(description="Persona resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1526,6 +1564,8 @@ class PersonasApi:
 
         :param persona_id: Persona resource ID (required)
         :type persona_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1550,6 +1590,7 @@ class PersonasApi:
 
         _param = self._get_persona_serialize(
             persona_id=persona_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1577,6 +1618,7 @@ class PersonasApi:
     def get_persona_without_preload_content(
         self,
         persona_id: Annotated[StrictStr, Field(description="Persona resource ID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1596,6 +1638,8 @@ class PersonasApi:
 
         :param persona_id: Persona resource ID (required)
         :type persona_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1620,6 +1664,7 @@ class PersonasApi:
 
         _param = self._get_persona_serialize(
             persona_id=persona_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1642,6 +1687,7 @@ class PersonasApi:
     def _get_persona_serialize(
         self,
         persona_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -1667,6 +1713,8 @@ class PersonasApi:
             _path_params['persona_id'] = persona_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -1993,7 +2041,7 @@ class PersonasApi:
     ) -> CovalPersonasAPIListPersonaTagsResponse:
         """List persona tag values
 
-        Distinct, active tag values used on this organization's personas, so callers can discover the valid values for the `tag=` filter on `GET /v1/personas`. `color` is not exposed via the public API (always null). 
+        The default workspace includes legacy unscoped records. Distinct, active tag values used on the authenticated workspace’s live personas, so callers can discover the valid values for the `tag=` filter on `GET /v1/personas`. `color` is not exposed via the public API (always null). 
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2060,7 +2108,7 @@ class PersonasApi:
     ) -> ApiResponse[CovalPersonasAPIListPersonaTagsResponse]:
         """List persona tag values
 
-        Distinct, active tag values used on this organization's personas, so callers can discover the valid values for the `tag=` filter on `GET /v1/personas`. `color` is not exposed via the public API (always null). 
+        The default workspace includes legacy unscoped records. Distinct, active tag values used on the authenticated workspace’s live personas, so callers can discover the valid values for the `tag=` filter on `GET /v1/personas`. `color` is not exposed via the public API (always null). 
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2127,7 +2175,7 @@ class PersonasApi:
     ) -> RESTResponseType:
         """List persona tag values
 
-        Distinct, active tag values used on this organization's personas, so callers can discover the valid values for the `tag=` filter on `GET /v1/personas`. `color` is not exposed via the public API (always null). 
+        The default workspace includes legacy unscoped records. Distinct, active tag values used on the authenticated workspace’s live personas, so callers can discover the valid values for the `tag=` filter on `GET /v1/personas`. `color` is not exposed via the public API (always null). 
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2506,11 +2554,12 @@ class PersonasApi:
     @validate_call
     def list_personas(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of personas to return (1-100)")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Token for retrieving the next page of results")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  Supported fields: - `name`: Filter by persona name (e.g., `name=Customer` or `name=\"Customer Support\"`) - `create_time`: Filter by creation time (e.g., `create_time>\"2025-01-01T00:00:00Z\"`) - `update_time`: Filter by update time  Examples: - `name=\"Customer Support\"` (quoted - contains space) - `create_time>\"2025-01-01T00:00:00Z\"` ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Field to order results by.  Supported fields: `create_time`, `update_time`, `name`  Formats: - Dash prefix: `-create_time` (descending) - Space separated: `create_time desc` (descending) - No prefix: `create_time` (ascending) ")] = None,
-        tag_filters: Annotated[Optional[Annotated[List[StrictStr], Field(max_length=20)]], Field(description="Filter personas by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=voice`). ")] = None,
+        tag_filters: Annotated[Optional[Annotated[List[Annotated[str, Field(strict=True, max_length=200)]], Field(max_length=20)]], Field(description="Filter personas by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=voice`). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2528,6 +2577,8 @@ class PersonasApi:
 
         Retrieve a paginated list of simulated personas with optional filtering and sorting.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of personas to return (1-100)
         :type page_size: int
         :param page_token: Token for retrieving the next page of results
@@ -2561,6 +2612,7 @@ class PersonasApi:
         """ # noqa: E501
 
         _param = self._list_personas_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             filter=filter,
@@ -2592,11 +2644,12 @@ class PersonasApi:
     @validate_call
     def list_personas_with_http_info(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of personas to return (1-100)")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Token for retrieving the next page of results")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  Supported fields: - `name`: Filter by persona name (e.g., `name=Customer` or `name=\"Customer Support\"`) - `create_time`: Filter by creation time (e.g., `create_time>\"2025-01-01T00:00:00Z\"`) - `update_time`: Filter by update time  Examples: - `name=\"Customer Support\"` (quoted - contains space) - `create_time>\"2025-01-01T00:00:00Z\"` ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Field to order results by.  Supported fields: `create_time`, `update_time`, `name`  Formats: - Dash prefix: `-create_time` (descending) - Space separated: `create_time desc` (descending) - No prefix: `create_time` (ascending) ")] = None,
-        tag_filters: Annotated[Optional[Annotated[List[StrictStr], Field(max_length=20)]], Field(description="Filter personas by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=voice`). ")] = None,
+        tag_filters: Annotated[Optional[Annotated[List[Annotated[str, Field(strict=True, max_length=200)]], Field(max_length=20)]], Field(description="Filter personas by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=voice`). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2614,6 +2667,8 @@ class PersonasApi:
 
         Retrieve a paginated list of simulated personas with optional filtering and sorting.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of personas to return (1-100)
         :type page_size: int
         :param page_token: Token for retrieving the next page of results
@@ -2647,6 +2702,7 @@ class PersonasApi:
         """ # noqa: E501
 
         _param = self._list_personas_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             filter=filter,
@@ -2678,11 +2734,12 @@ class PersonasApi:
     @validate_call
     def list_personas_without_preload_content(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of personas to return (1-100)")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Token for retrieving the next page of results")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Values may be unquoted or double-quoted. Values containing spaces must be quoted.  Supported fields: - `name`: Filter by persona name (e.g., `name=Customer` or `name=\"Customer Support\"`) - `create_time`: Filter by creation time (e.g., `create_time>\"2025-01-01T00:00:00Z\"`) - `update_time`: Filter by update time  Examples: - `name=\"Customer Support\"` (quoted - contains space) - `create_time>\"2025-01-01T00:00:00Z\"` ")] = None,
         order_by: Annotated[Optional[StrictStr], Field(description="Field to order results by.  Supported fields: `create_time`, `update_time`, `name`  Formats: - Dash prefix: `-create_time` (descending) - Space separated: `create_time desc` (descending) - No prefix: `create_time` (ascending) ")] = None,
-        tag_filters: Annotated[Optional[Annotated[List[StrictStr], Field(max_length=20)]], Field(description="Filter personas by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=voice`). ")] = None,
+        tag_filters: Annotated[Optional[Annotated[List[Annotated[str, Field(strict=True, max_length=200)]], Field(max_length=20)]], Field(description="Filter personas by tags. A resource matches when it has ALL the listed tags (AND-semantics).  Repeat the parameter for each tag (e.g., `?tag_filters=production&tag_filters=voice`). ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2700,6 +2757,8 @@ class PersonasApi:
 
         Retrieve a paginated list of simulated personas with optional filtering and sorting.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of personas to return (1-100)
         :type page_size: int
         :param page_token: Token for retrieving the next page of results
@@ -2733,6 +2792,7 @@ class PersonasApi:
         """ # noqa: E501
 
         _param = self._list_personas_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             filter=filter,
@@ -2759,6 +2819,7 @@ class PersonasApi:
 
     def _list_personas_serialize(
         self,
+        x_coval_workspace_id,
         page_size,
         page_token,
         filter,
@@ -2808,6 +2869,8 @@ class PersonasApi:
             _query_params.append(('tag_filters', tag_filters))
             
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -3945,6 +4008,7 @@ class PersonasApi:
         self,
         persona_id: Annotated[StrictStr, Field(description="Persona resource ID")],
         coval_personas_api_update_persona_request: CovalPersonasAPIUpdatePersonaRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3966,6 +4030,8 @@ class PersonasApi:
         :type persona_id: str
         :param coval_personas_api_update_persona_request: (required)
         :type coval_personas_api_update_persona_request: CovalPersonasAPIUpdatePersonaRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3991,6 +4057,7 @@ class PersonasApi:
         _param = self._update_persona_serialize(
             persona_id=persona_id,
             coval_personas_api_update_persona_request=coval_personas_api_update_persona_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4020,6 +4087,7 @@ class PersonasApi:
         self,
         persona_id: Annotated[StrictStr, Field(description="Persona resource ID")],
         coval_personas_api_update_persona_request: CovalPersonasAPIUpdatePersonaRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4041,6 +4109,8 @@ class PersonasApi:
         :type persona_id: str
         :param coval_personas_api_update_persona_request: (required)
         :type coval_personas_api_update_persona_request: CovalPersonasAPIUpdatePersonaRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4066,6 +4136,7 @@ class PersonasApi:
         _param = self._update_persona_serialize(
             persona_id=persona_id,
             coval_personas_api_update_persona_request=coval_personas_api_update_persona_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4095,6 +4166,7 @@ class PersonasApi:
         self,
         persona_id: Annotated[StrictStr, Field(description="Persona resource ID")],
         coval_personas_api_update_persona_request: CovalPersonasAPIUpdatePersonaRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4116,6 +4188,8 @@ class PersonasApi:
         :type persona_id: str
         :param coval_personas_api_update_persona_request: (required)
         :type coval_personas_api_update_persona_request: CovalPersonasAPIUpdatePersonaRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4141,6 +4215,7 @@ class PersonasApi:
         _param = self._update_persona_serialize(
             persona_id=persona_id,
             coval_personas_api_update_persona_request=coval_personas_api_update_persona_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4165,6 +4240,7 @@ class PersonasApi:
         self,
         persona_id,
         coval_personas_api_update_persona_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -4190,6 +4266,8 @@ class PersonasApi:
             _path_params['persona_id'] = persona_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_personas_api_update_persona_request is not None:

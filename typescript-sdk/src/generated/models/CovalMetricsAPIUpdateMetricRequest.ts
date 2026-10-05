@@ -27,6 +27,13 @@ import {
     CovalMetricsAPICreateMetricRequestExpectedBodyToJSON,
     CovalMetricsAPICreateMetricRequestExpectedBodyToJSONTyped,
 } from './CovalMetricsAPICreateMetricRequestExpectedBody.js';
+import type { CovalMetricsAPIJudgeMode } from './CovalMetricsAPIJudgeMode.js';
+import {
+    CovalMetricsAPIJudgeModeFromJSON,
+    CovalMetricsAPIJudgeModeFromJSONTyped,
+    CovalMetricsAPIJudgeModeToJSON,
+    CovalMetricsAPIJudgeModeToJSONTyped,
+} from './CovalMetricsAPIJudgeMode.js';
 import type { CovalMetricsAPITargetCondition } from './CovalMetricsAPITargetCondition.js';
 import {
     CovalMetricsAPITargetConditionFromJSON,
@@ -48,6 +55,20 @@ import {
     CovalMetricsAPIMetricTypeToJSON,
     CovalMetricsAPIMetricTypeToJSONTyped,
 } from './CovalMetricsAPIMetricType.js';
+import type { CovalMetricsAPIIvrFlow } from './CovalMetricsAPIIvrFlow.js';
+import {
+    CovalMetricsAPIIvrFlowFromJSON,
+    CovalMetricsAPIIvrFlowFromJSONTyped,
+    CovalMetricsAPIIvrFlowToJSON,
+    CovalMetricsAPIIvrFlowToJSONTyped,
+} from './CovalMetricsAPIIvrFlow.js';
+import type { CovalMetricsAPIAgentJudgeTool } from './CovalMetricsAPIAgentJudgeTool.js';
+import {
+    CovalMetricsAPIAgentJudgeToolFromJSON,
+    CovalMetricsAPIAgentJudgeToolFromJSONTyped,
+    CovalMetricsAPIAgentJudgeToolToJSON,
+    CovalMetricsAPIAgentJudgeToolToJSONTyped,
+} from './CovalMetricsAPIAgentJudgeTool.js';
 
 /**
  * Update metric request (partial update)
@@ -74,11 +95,23 @@ export interface CovalMetricsAPIUpdateMetricRequest {
      */
     metric_type?: CovalMetricsAPIMetricType;
     /**
+     * LLM Judge execution mode. Omit to preserve the existing mode.
+     * @type {CovalMetricsAPIJudgeMode}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    judge_mode?: CovalMetricsAPIJudgeMode | null;
+    /**
      * 
      * @type {string}
      * @memberof CovalMetricsAPIUpdateMetricRequest
      */
     prompt?: string;
+    /**
+     * Agentic LLM Judge tools. Omit to preserve the current/default selection; pass [] to disable all tools.
+     * @type {Array<CovalMetricsAPIAgentJudgeTool>}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    enabled_tools?: Array<CovalMetricsAPIAgentJudgeTool> | null;
     /**
      * 
      * @type {Array<string>}
@@ -206,11 +239,32 @@ export interface CovalMetricsAPIUpdateMetricRequest {
      */
     operator?: CovalMetricsAPIUpdateMetricRequestOperatorEnum;
     /**
-     * SQL query that defines the metric (for METRIC_SQL_FLOAT).
+     * IVR flow definition (for METRIC_IVR_FLOW_ADHERENCE). Explicit null clears it.
+     * @type {CovalMetricsAPIIvrFlow}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    ivr_flow?: CovalMetricsAPIIvrFlow;
+    /**
+     * SQL query that defines the metric (for METRIC_SQL_FLOAT). SQL `unit` values must
+     * use supported result-unit identifiers such as `s`, `ms`, or `count`. An omitted
+     * unit preserves the current value; null or an empty string clears it.
+     * 
      * @type {string}
      * @memberof CovalMetricsAPIUpdateMetricRequest
      */
     sql_query?: string;
+    /**
+     * Aggregation method for custom trace values, or SUM, AVERAGE, MIN, MAX, or COUNT for METRIC_SQL_FLOAT. Omit to preserve the current method; null resets a SQL metric to AVERAGE.
+     * @type {string}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    aggregation_method?: string | null;
+    /**
+     * Optional display unit. For METRIC_SQL_FLOAT, use a result-unit identifier such as s, ms, count, or percent. Omit to preserve the current unit; null or an empty string clears it.
+     * @type {string}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    unit?: string | null;
     /**
      * Where a METRIC_COMPOSITE_EVALUATION metric reads its criteria from.
      * @type {CovalMetricsAPIUpdateMetricRequestCriteriaSourceEnum}
@@ -274,6 +328,120 @@ export interface CovalMetricsAPIUpdateMetricRequest {
      * @memberof CovalMetricsAPIUpdateMetricRequest
      */
     tags?: Array<string> | null;
+    /**
+     * Apply case-insensitive matching
+     * @type {boolean}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    case_insensitive?: boolean | null;
+    /**
+     * METRIC_ABRUPT_PITCH_CHANGES / METRIC_NON_EXPRESSIVE_PAUSES / METRIC_VOCAL_FRY preset: 'strict', 'normal', or 'lenient'.
+     * @type {CovalMetricsAPIUpdateMetricRequestDetectionPresetEnum}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    detection_preset?: CovalMetricsAPIUpdateMetricRequestDetectionPresetEnum | null;
+    /**
+     * Advanced (dB): offset below baseline HNR under which a frame is fry (less negative flags more).
+     * @type {number}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    harmonics_to_noise_ratio_threshold_offset_db?: number | null;
+    /**
+     * Advanced: multiple of baseline jitter above which a frame is fry (lower flags more).
+     * @type {number}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    jitter_threshold_multiplier?: number | null;
+    /**
+     * Advanced (dBFS): level at/above which audio is flagged loud. Must exceed soft_threshold_db.
+     * @type {number}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    loud_threshold_db?: number | null;
+    /**
+     * Advanced: pitch fraction of baseline below which a frame is fry (higher flags more).
+     * @type {number}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    low_pitch_threshold_multiplier?: number | null;
+    /**
+     * Advanced: override the preset's MAD modified z-score threshold.
+     * @type {number}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    mad_z_score_threshold?: number | null;
+    /**
+     * Match mode: 'presence' or 'absence'
+     * @type {CovalMetricsAPIUpdateMetricRequestMatchModeEnum}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    match_mode?: CovalMetricsAPIUpdateMetricRequestMatchModeEnum | null;
+    /**
+     * Span attribute key to measure
+     * @type {string}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    metric_attribute?: string | null;
+    /**
+     * Derived metric config (replaces existing config on update)
+     * @type {{ [key: string]: any; }}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    metric_metadata?: { [key: string]: any; } | null;
+    /**
+     * Advanced (s): minimum kept fry-run duration (lower flags more).
+     * @type {number}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    min_fry_segment_seconds?: number | null;
+    /**
+     * Anomaly detection preset (recommended). 'strict' / 'normal' / 'lenient' control MAD threshold and minimum pause count. Most callers should set this instead of the fields below.
+     * @type {CovalMetricsAPIUpdateMetricRequestPauseDetectionPresetEnum}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    pause_detection_preset?: CovalMetricsAPIUpdateMetricRequestPauseDetectionPresetEnum | null;
+    /**
+     * Advanced (Hz): pitch movement near a pause above which the pause counts as expressive.
+     * @type {number}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    pitch_change_threshold_hz?: number | null;
+    /**
+     * Position constraint: 'any', 'first', or 'last'
+     * @type {CovalMetricsAPIUpdateMetricRequestPositionEnum}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    position?: CovalMetricsAPIUpdateMetricRequestPositionEnum | null;
+    /**
+     * Advanced (Hz): pitch jump above which a change counts as abrupt (lower flags more).
+     * @type {number}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    significant_changes_threshold_hz?: number | null;
+    /**
+     * Advanced (dBFS): level at/below which audio is flagged soft.
+     * @type {number}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    soft_threshold_db?: number | null;
+    /**
+     * OTel span name to query
+     * @type {string}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    span_name?: string | null;
+    /**
+     * METRIC_VOLUME threshold preset: 'strict', 'normal', or 'lenient'.
+     * @type {CovalMetricsAPIUpdateMetricRequestThresholdPresetEnum}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    threshold_preset?: CovalMetricsAPIUpdateMetricRequestThresholdPresetEnum | null;
+    /**
+     * Source of the aggregated value for METRIC_CUSTOM_TRACE: 'attribute' reads the configured span attribute; 'duration' aggregates the span's own duration in seconds. None leaves it unchanged.
+     * @type {string}
+     * @memberof CovalMetricsAPIUpdateMetricRequest
+     */
+    value_source?: string | null;
 }
 
 
@@ -314,6 +482,7 @@ export type CovalMetricsAPIUpdateMetricRequestSuccessSentimentsEnum = typeof Cov
 export const CovalMetricsAPIUpdateMetricRequestSuccessEndReasonsEnum = {
     Unknown: 'UNKNOWN',
     IdleTimeout: 'IDLE_TIMEOUT',
+    DurationLimit: 'DURATION_LIMIT',
     PersonaDisconnected: 'PERSONA_DISCONNECTED',
     AgentDisconnected: 'AGENT_DISCONNECTED',
     PipelineError: 'PIPELINE_ERROR',
@@ -357,6 +526,55 @@ export const CovalMetricsAPIUpdateMetricRequestReportingMethodEnum = {
 } as const;
 export type CovalMetricsAPIUpdateMetricRequestReportingMethodEnum = typeof CovalMetricsAPIUpdateMetricRequestReportingMethodEnum[keyof typeof CovalMetricsAPIUpdateMetricRequestReportingMethodEnum];
 
+/**
+ * @export
+ */
+export const CovalMetricsAPIUpdateMetricRequestDetectionPresetEnum = {
+    Strict: 'strict',
+    Normal: 'normal',
+    Lenient: 'lenient'
+} as const;
+export type CovalMetricsAPIUpdateMetricRequestDetectionPresetEnum = typeof CovalMetricsAPIUpdateMetricRequestDetectionPresetEnum[keyof typeof CovalMetricsAPIUpdateMetricRequestDetectionPresetEnum];
+
+/**
+ * @export
+ */
+export const CovalMetricsAPIUpdateMetricRequestMatchModeEnum = {
+    Presence: 'presence',
+    Absence: 'absence'
+} as const;
+export type CovalMetricsAPIUpdateMetricRequestMatchModeEnum = typeof CovalMetricsAPIUpdateMetricRequestMatchModeEnum[keyof typeof CovalMetricsAPIUpdateMetricRequestMatchModeEnum];
+
+/**
+ * @export
+ */
+export const CovalMetricsAPIUpdateMetricRequestPauseDetectionPresetEnum = {
+    Strict: 'strict',
+    Normal: 'normal',
+    Lenient: 'lenient'
+} as const;
+export type CovalMetricsAPIUpdateMetricRequestPauseDetectionPresetEnum = typeof CovalMetricsAPIUpdateMetricRequestPauseDetectionPresetEnum[keyof typeof CovalMetricsAPIUpdateMetricRequestPauseDetectionPresetEnum];
+
+/**
+ * @export
+ */
+export const CovalMetricsAPIUpdateMetricRequestPositionEnum = {
+    Any: 'any',
+    First: 'first',
+    Last: 'last'
+} as const;
+export type CovalMetricsAPIUpdateMetricRequestPositionEnum = typeof CovalMetricsAPIUpdateMetricRequestPositionEnum[keyof typeof CovalMetricsAPIUpdateMetricRequestPositionEnum];
+
+/**
+ * @export
+ */
+export const CovalMetricsAPIUpdateMetricRequestThresholdPresetEnum = {
+    Strict: 'strict',
+    Normal: 'normal',
+    Lenient: 'lenient'
+} as const;
+export type CovalMetricsAPIUpdateMetricRequestThresholdPresetEnum = typeof CovalMetricsAPIUpdateMetricRequestThresholdPresetEnum[keyof typeof CovalMetricsAPIUpdateMetricRequestThresholdPresetEnum];
+
 
 /**
  * Check if a given object implements the CovalMetricsAPIUpdateMetricRequest interface.
@@ -378,7 +596,9 @@ export function CovalMetricsAPIUpdateMetricRequestFromJSONTyped(json: any, ignor
         'metric_name': json['metric_name'] == null ? undefined : json['metric_name'],
         'description': json['description'] == null ? undefined : json['description'],
         'metric_type': json['metric_type'] == null ? undefined : CovalMetricsAPIMetricTypeFromJSON(json['metric_type']),
+        'judge_mode': json['judge_mode'] == null ? undefined : CovalMetricsAPIJudgeModeFromJSON(json['judge_mode']),
         'prompt': json['prompt'] == null ? undefined : json['prompt'],
+        'enabled_tools': json['enabled_tools'] == null ? undefined : ((json['enabled_tools'] as Array<any>).map(CovalMetricsAPIAgentJudgeToolFromJSON)),
         'categories': json['categories'] == null ? undefined : json['categories'],
         'min_value': json['min_value'] == null ? undefined : json['min_value'],
         'max_value': json['max_value'] == null ? undefined : json['max_value'],
@@ -400,7 +620,10 @@ export function CovalMetricsAPIUpdateMetricRequestFromJSONTyped(json: any, ignor
         'min_volume_change_for_pitch_misalignment': json['min_volume_change_for_pitch_misalignment'] == null ? undefined : json['min_volume_change_for_pitch_misalignment'],
         'threshold': json['threshold'] == null ? undefined : json['threshold'],
         'operator': json['operator'] == null ? undefined : json['operator'],
+        'ivr_flow': json['ivr_flow'] == null ? undefined : CovalMetricsAPIIvrFlowFromJSON(json['ivr_flow']),
         'sql_query': json['sql_query'] == null ? undefined : json['sql_query'],
+        'aggregation_method': json['aggregation_method'] == null ? undefined : json['aggregation_method'],
+        'unit': json['unit'] == null ? undefined : json['unit'],
         'criteria_source': json['criteria_source'] == null ? undefined : json['criteria_source'],
         'criteria_path': json['criteria_path'] == null ? undefined : json['criteria_path'],
         'criteria': json['criteria'] == null ? undefined : json['criteria'],
@@ -410,6 +633,25 @@ export function CovalMetricsAPIUpdateMetricRequestFromJSONTyped(json: any, ignor
         'runtime_config': json['runtime_config'] == null ? undefined : CovalMetricsAPIMetricRuntimeConfigFromJSON(json['runtime_config']),
         'target_condition': json['target_condition'] == null ? undefined : CovalMetricsAPITargetConditionFromJSON(json['target_condition']),
         'tags': json['tags'] == null ? undefined : json['tags'],
+        'case_insensitive': json['case_insensitive'] == null ? undefined : json['case_insensitive'],
+        'detection_preset': json['detection_preset'] == null ? undefined : json['detection_preset'],
+        'harmonics_to_noise_ratio_threshold_offset_db': json['harmonics_to_noise_ratio_threshold_offset_db'] == null ? undefined : json['harmonics_to_noise_ratio_threshold_offset_db'],
+        'jitter_threshold_multiplier': json['jitter_threshold_multiplier'] == null ? undefined : json['jitter_threshold_multiplier'],
+        'loud_threshold_db': json['loud_threshold_db'] == null ? undefined : json['loud_threshold_db'],
+        'low_pitch_threshold_multiplier': json['low_pitch_threshold_multiplier'] == null ? undefined : json['low_pitch_threshold_multiplier'],
+        'mad_z_score_threshold': json['mad_z_score_threshold'] == null ? undefined : json['mad_z_score_threshold'],
+        'match_mode': json['match_mode'] == null ? undefined : json['match_mode'],
+        'metric_attribute': json['metric_attribute'] == null ? undefined : json['metric_attribute'],
+        'metric_metadata': json['metric_metadata'] == null ? undefined : json['metric_metadata'],
+        'min_fry_segment_seconds': json['min_fry_segment_seconds'] == null ? undefined : json['min_fry_segment_seconds'],
+        'pause_detection_preset': json['pause_detection_preset'] == null ? undefined : json['pause_detection_preset'],
+        'pitch_change_threshold_hz': json['pitch_change_threshold_hz'] == null ? undefined : json['pitch_change_threshold_hz'],
+        'position': json['position'] == null ? undefined : json['position'],
+        'significant_changes_threshold_hz': json['significant_changes_threshold_hz'] == null ? undefined : json['significant_changes_threshold_hz'],
+        'soft_threshold_db': json['soft_threshold_db'] == null ? undefined : json['soft_threshold_db'],
+        'span_name': json['span_name'] == null ? undefined : json['span_name'],
+        'threshold_preset': json['threshold_preset'] == null ? undefined : json['threshold_preset'],
+        'value_source': json['value_source'] == null ? undefined : json['value_source'],
     };
 }
 
@@ -427,7 +669,9 @@ export function CovalMetricsAPIUpdateMetricRequestToJSONTyped(value?: CovalMetri
         'metric_name': value['metric_name'],
         'description': value['description'],
         'metric_type': CovalMetricsAPIMetricTypeToJSON(value['metric_type']),
+        'judge_mode': CovalMetricsAPIJudgeModeToJSON(value['judge_mode']),
         'prompt': value['prompt'],
+        'enabled_tools': value['enabled_tools'] == null ? undefined : ((value['enabled_tools'] as Array<any>).map(CovalMetricsAPIAgentJudgeToolToJSON)),
         'categories': value['categories'],
         'min_value': value['min_value'],
         'max_value': value['max_value'],
@@ -449,7 +693,10 @@ export function CovalMetricsAPIUpdateMetricRequestToJSONTyped(value?: CovalMetri
         'min_volume_change_for_pitch_misalignment': value['min_volume_change_for_pitch_misalignment'],
         'threshold': value['threshold'],
         'operator': value['operator'],
+        'ivr_flow': CovalMetricsAPIIvrFlowToJSON(value['ivr_flow']),
         'sql_query': value['sql_query'],
+        'aggregation_method': value['aggregation_method'],
+        'unit': value['unit'],
         'criteria_source': value['criteria_source'],
         'criteria_path': value['criteria_path'],
         'criteria': value['criteria'],
@@ -459,6 +706,25 @@ export function CovalMetricsAPIUpdateMetricRequestToJSONTyped(value?: CovalMetri
         'runtime_config': CovalMetricsAPIMetricRuntimeConfigToJSON(value['runtime_config']),
         'target_condition': CovalMetricsAPITargetConditionToJSON(value['target_condition']),
         'tags': value['tags'],
+        'case_insensitive': value['case_insensitive'],
+        'detection_preset': value['detection_preset'],
+        'harmonics_to_noise_ratio_threshold_offset_db': value['harmonics_to_noise_ratio_threshold_offset_db'],
+        'jitter_threshold_multiplier': value['jitter_threshold_multiplier'],
+        'loud_threshold_db': value['loud_threshold_db'],
+        'low_pitch_threshold_multiplier': value['low_pitch_threshold_multiplier'],
+        'mad_z_score_threshold': value['mad_z_score_threshold'],
+        'match_mode': value['match_mode'],
+        'metric_attribute': value['metric_attribute'],
+        'metric_metadata': value['metric_metadata'],
+        'min_fry_segment_seconds': value['min_fry_segment_seconds'],
+        'pause_detection_preset': value['pause_detection_preset'],
+        'pitch_change_threshold_hz': value['pitch_change_threshold_hz'],
+        'position': value['position'],
+        'significant_changes_threshold_hz': value['significant_changes_threshold_hz'],
+        'soft_threshold_db': value['soft_threshold_db'],
+        'span_name': value['span_name'],
+        'threshold_preset': value['threshold_preset'],
+        'value_source': value['value_source'],
     };
 }
 

@@ -22,11 +22,14 @@ from coval_sdk.api.review_projects_api import ReviewProjectsApi
 from coval_sdk.api.run_templates_api import RunTemplatesApi
 from coval_sdk.api.runs_api import RunsApi
 from coval_sdk.api.scheduled_runs_api import ScheduledRunsApi
+from coval_sdk.api.simulated_conversations_api import SimulatedConversationsApi
 from coval_sdk.api.simulations_api import SimulationsApi
+from coval_sdk.api.sofia_api import SofiaApi
 from coval_sdk.api.tags_api import TagsApi
 from coval_sdk.api.test_cases_api import TestCasesApi
 from coval_sdk.api.test_sets_api import TestSetsApi
 from coval_sdk.api.traces_api import TracesApi
+from coval_sdk.api.uploaded_conversations_api import UploadedConversationsApi
 from coval_sdk.api.webhooks_api import WebhooksApi
 from coval_sdk.api.widgets_api import WidgetsApi
 from coval_sdk.api.workspaces_api import WorkspacesApi

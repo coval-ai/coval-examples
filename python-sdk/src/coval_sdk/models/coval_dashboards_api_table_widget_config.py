@@ -22,7 +22,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from coval_sdk.models.coval_dashboards_api_aggregation_type import CovalDashboardsAPIAggregationType
-from coval_sdk.models.coval_dashboards_api_data_source_type import CovalDashboardsAPIDataSourceType
+from coval_sdk.models.coval_dashboards_api_conversation_source import CovalDashboardsAPIConversationSource
 from coval_sdk.models.coval_dashboards_api_filter_config import CovalDashboardsAPIFilterConfig
 from coval_sdk.models.coval_dashboards_api_group_by_type import CovalDashboardsAPIGroupByType
 from coval_sdk.models.coval_dashboards_api_metric_filter import CovalDashboardsAPIMetricFilter
@@ -35,14 +35,14 @@ class CovalDashboardsAPITableWidgetConfig(BaseModel):
     Configuration for table-type widgets
     """ # noqa: E501
     metric_ids: Optional[Annotated[List[StrictStr], Field(max_length=50)]] = Field(default=None, description="IDs of metrics to display (max 50)", alias="metricIds")
-    monitoring: Optional[CovalDashboardsAPIDataSourceType] = None
+    conversation_source: Optional[CovalDashboardsAPIConversationSource] = None
     aggregation: Optional[CovalDashboardsAPIAggregationType] = None
     group_by: Optional[CovalDashboardsAPIGroupByType] = Field(default=None, alias="groupBy")
     group_by_metadata_key: Optional[Annotated[str, Field(min_length=1, strict=True)]] = Field(default=None, description="Customer metadata key to group by; mutually exclusive with groupBy. Rows fall into one of three groups: the 20 most common values are separate groups, remaining values are combined as a synthetic Other group distinct from a literal customer value named Other, and rows that do not carry the key at all form their own group with a null value, which clients render as Unknown. That last group never occupies one of the 20 slots.", alias="groupByMetadataKey")
     filters: Optional[CovalDashboardsAPIFilterConfig] = None
     metric_filter: Optional[List[CovalDashboardsAPIMetricFilter]] = Field(default=None, description="Metric value filters (max 50)", alias="metricFilter")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["metricIds", "monitoring", "aggregation", "groupBy", "groupByMetadataKey", "filters", "metricFilter"]
+    __properties: ClassVar[List[str]] = ["metricIds", "conversation_source", "aggregation", "groupBy", "groupByMetadataKey", "filters", "metricFilter"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -100,6 +100,36 @@ class CovalDashboardsAPITableWidgetConfig(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if conversation_source (nullable) is None
+        # and model_fields_set contains the field
+        if self.conversation_source is None and "conversation_source" in self.model_fields_set:
+            _dict['conversation_source'] = None
+
+        # set to None if aggregation (nullable) is None
+        # and model_fields_set contains the field
+        if self.aggregation is None and "aggregation" in self.model_fields_set:
+            _dict['aggregation'] = None
+
+        # set to None if group_by (nullable) is None
+        # and model_fields_set contains the field
+        if self.group_by is None and "group_by" in self.model_fields_set:
+            _dict['groupBy'] = None
+
+        # set to None if group_by_metadata_key (nullable) is None
+        # and model_fields_set contains the field
+        if self.group_by_metadata_key is None and "group_by_metadata_key" in self.model_fields_set:
+            _dict['groupByMetadataKey'] = None
+
+        # set to None if filters (nullable) is None
+        # and model_fields_set contains the field
+        if self.filters is None and "filters" in self.model_fields_set:
+            _dict['filters'] = None
+
+        # set to None if metric_filter (nullable) is None
+        # and model_fields_set contains the field
+        if self.metric_filter is None and "metric_filter" in self.model_fields_set:
+            _dict['metricFilter'] = None
+
         return _dict
 
     @classmethod
@@ -113,7 +143,7 @@ class CovalDashboardsAPITableWidgetConfig(BaseModel):
 
         _obj = cls.model_validate({
             "metricIds": obj.get("metricIds"),
-            "monitoring": obj.get("monitoring"),
+            "conversation_source": obj.get("conversation_source"),
             "aggregation": obj.get("aggregation"),
             "groupBy": obj.get("groupBy"),
             "groupByMetadataKey": obj.get("groupByMetadataKey"),

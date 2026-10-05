@@ -56,14 +56,17 @@ import {
 
 export interface CreateScheduledRunRequest {
     covalScheduledRunsAPICreateScheduledRunRequest: CovalScheduledRunsAPICreateScheduledRunRequest;
+    xCovalWorkspaceId?: string;
 }
 
 export interface DeleteScheduledRunRequest {
     scheduledRunId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface GetScheduledRunRequest {
     scheduledRunId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface ListScheduledRunHistoryRequest {
@@ -71,6 +74,7 @@ export interface ListScheduledRunHistoryRequest {
 }
 
 export interface ListScheduledRunsRequest {
+    xCovalWorkspaceId?: string;
     pageSize?: number;
     pageToken?: string;
     enabled?: boolean;
@@ -80,6 +84,7 @@ export interface ListScheduledRunsRequest {
 export interface UpdateScheduledRunRequest {
     scheduledRunId: string;
     covalScheduledRunsAPIUpdateScheduledRunRequest: CovalScheduledRunsAPIUpdateScheduledRunRequest;
+    xCovalWorkspaceId?: string;
 }
 
 /**
@@ -92,6 +97,7 @@ export interface ScheduledRunsApiInterface {
     /**
      * Creates request options for createScheduledRun without sending the request
      * @param {CovalScheduledRunsAPICreateScheduledRunRequest} covalScheduledRunsAPICreateScheduledRunRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof ScheduledRunsApiInterface
      */
@@ -101,6 +107,7 @@ export interface ScheduledRunsApiInterface {
      * Create a new scheduled run that will trigger evaluations on a recurring schedule.  The schedule is defined using either: - **Rate expressions**: `rate(15 minutes)`, `rate(1 hour)`, `rate(1 day)` - **Cron expressions**: `cron(0 9 ? * MON-FRI *)` (9am weekdays)  Schedules are created in an enabled state by default and will begin triggering at the next scheduled time. 
      * @summary Create scheduled run
      * @param {CovalScheduledRunsAPICreateScheduledRunRequest} covalScheduledRunsAPICreateScheduledRunRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ScheduledRunsApiInterface
@@ -116,6 +123,7 @@ export interface ScheduledRunsApiInterface {
     /**
      * Creates request options for deleteScheduledRun without sending the request
      * @param {string} scheduledRunId Scheduled run resource ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof ScheduledRunsApiInterface
      */
@@ -125,6 +133,7 @@ export interface ScheduledRunsApiInterface {
      * Delete a scheduled run and remove its associated schedule.
      * @summary Delete scheduled run
      * @param {string} scheduledRunId Scheduled run resource ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ScheduledRunsApiInterface
@@ -140,6 +149,7 @@ export interface ScheduledRunsApiInterface {
     /**
      * Creates request options for getScheduledRun without sending the request
      * @param {string} scheduledRunId Scheduled run resource ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof ScheduledRunsApiInterface
      */
@@ -149,6 +159,7 @@ export interface ScheduledRunsApiInterface {
      * Retrieve a specific scheduled run by ID.
      * @summary Get scheduled run
      * @param {string} scheduledRunId Scheduled run resource ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ScheduledRunsApiInterface
@@ -187,6 +198,7 @@ export interface ScheduledRunsApiInterface {
 
     /**
      * Creates request options for listScheduledRuns without sending the request
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response
      * @param {boolean} [enabled] Filter by enabled state (true &#x3D; active schedules, false &#x3D; paused)
@@ -199,6 +211,7 @@ export interface ScheduledRunsApiInterface {
     /**
      * Retrieve a paginated list of scheduled runs with optional filtering.
      * @summary List scheduled runs
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response
      * @param {boolean} [enabled] Filter by enabled state (true &#x3D; active schedules, false &#x3D; paused)
@@ -219,6 +232,7 @@ export interface ScheduledRunsApiInterface {
      * Creates request options for updateScheduledRun without sending the request
      * @param {string} scheduledRunId Scheduled run resource ID
      * @param {CovalScheduledRunsAPIUpdateScheduledRunRequest} covalScheduledRunsAPIUpdateScheduledRunRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof ScheduledRunsApiInterface
      */
@@ -229,6 +243,7 @@ export interface ScheduledRunsApiInterface {
      * @summary Update scheduled run
      * @param {string} scheduledRunId Scheduled run resource ID
      * @param {CovalScheduledRunsAPIUpdateScheduledRunRequest} covalScheduledRunsAPIUpdateScheduledRunRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ScheduledRunsApiInterface
@@ -264,6 +279,10 @@ export class ScheduledRunsApi extends runtime.BaseAPI implements ScheduledRunsAp
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Scheduled_Runs_API_ApiKeyAuth authentication
@@ -316,6 +335,10 @@ export class ScheduledRunsApi extends runtime.BaseAPI implements ScheduledRunsAp
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Scheduled_Runs_API_ApiKeyAuth authentication
         }
@@ -365,6 +388,10 @@ export class ScheduledRunsApi extends runtime.BaseAPI implements ScheduledRunsAp
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Scheduled_Runs_API_ApiKeyAuth authentication
@@ -477,6 +504,10 @@ export class ScheduledRunsApi extends runtime.BaseAPI implements ScheduledRunsAp
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Scheduled_Runs_API_ApiKeyAuth authentication
         }
@@ -535,6 +566,10 @@ export class ScheduledRunsApi extends runtime.BaseAPI implements ScheduledRunsAp
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Scheduled_Runs_API_ApiKeyAuth authentication

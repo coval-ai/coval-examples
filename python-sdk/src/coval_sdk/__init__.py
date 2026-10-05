@@ -15,16 +15,14 @@
 """  # noqa: E501
 
 
-__version__ = "0.7.0"
+__version__ = "0.8.0"
 
 # Define package exports
 __all__ = [
     "paginate",
     "InvalidListItemWarning",
     "CovalClient",
-    "CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner",
     "CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue",
-    "CovalMonitorsAPIMonitorEventResourceConditionResultsInner",
     "CovalMonitorsAPIErrorResponseError",
     "CovalMetricsAPIErrorResponseErrorDetailsInner",
     "APIKeysApi",
@@ -48,11 +46,14 @@ __all__ = [
     "RunTemplatesApi",
     "RunsApi",
     "ScheduledRunsApi",
+    "SimulatedConversationsApi",
     "SimulationsApi",
+    "SofiaApi",
     "TagsApi",
     "TestCasesApi",
     "TestSetsApi",
     "TracesApi",
+    "UploadedConversationsApi",
     "WebhooksApi",
     "WidgetsApi",
     "WorkspacesApi",
@@ -86,9 +87,11 @@ __all__ = [
     "CovalAgentMutationsAPIGetMutationResponse",
     "CovalAgentMutationsAPIListMutationsResponse",
     "CovalAgentMutationsAPIMutationResource",
+    "CovalAgentMutationsAPIResourceAttribution",
     "CovalAgentMutationsAPIUpdateMutationRequest",
     "CovalAgentMutationsAPIUpdateMutationResponse",
     "CovalAgentsAPIAgentResource",
+    "CovalAgentsAPIAgentResourceModelType",
     "CovalAgentsAPIAgentVersionResource",
     "CovalAgentsAPICreateAgentRequest",
     "CovalAgentsAPICreateAgentResponse",
@@ -98,6 +101,7 @@ __all__ = [
     "CovalAgentsAPIGetAgentResponse",
     "CovalAgentsAPIListAgentVersionsResponse",
     "CovalAgentsAPIListAgentsResponse",
+    "CovalAgentsAPIResourceAttribution",
     "CovalAgentsAPISimulatorType",
     "CovalAgentsAPIUpdateAgentRequest",
     "CovalAgentsAPIUpdateAgentResponse",
@@ -111,18 +115,21 @@ __all__ = [
     "CovalAlertsAPIAlertEventResourceDispatchedChannelsInner",
     "CovalAlertsAPIAlertMatchMode",
     "CovalAlertsAPIAlertResource",
-    "CovalAlertsAPIAlertScope",
+    "CovalAlertsAPIAlertResourceCustomerMetadataValue",
+    "CovalAlertsAPIBaselineDeviationDirection",
     "CovalAlertsAPIChannelInput",
     "CovalAlertsAPIChannelType",
     "CovalAlertsAPIConditionAggregation",
     "CovalAlertsAPIConditionInput",
     "CovalAlertsAPIConditionOperator",
+    "CovalAlertsAPIConversationSourceFilter",
     "CovalAlertsAPICreateAlertRequest",
     "CovalAlertsAPIErrorResponse",
     "CovalAlertsAPIErrorResponseError",
     "CovalAlertsAPIErrorResponseErrorDetailsInner",
     "CovalAlertsAPIListAlertEventsResponse",
     "CovalAlertsAPIListAlertsResponse",
+    "CovalAlertsAPIResourceAttribution",
     "CovalAlertsAPITestEvaluateAlertRequest",
     "CovalAlertsAPITestEvaluateAlertResponse",
     "CovalAlertsAPIUpdateAlertRequest",
@@ -162,12 +169,12 @@ __all__ = [
     "CovalConversationsAPIWebsocketEndpoint",
     "CovalDashboardsAPIAggregationType",
     "CovalDashboardsAPIChartWidgetConfig",
+    "CovalDashboardsAPIConversationSource",
     "CovalDashboardsAPICreateDashboardRequest",
     "CovalDashboardsAPICreateDashboardResponse",
     "CovalDashboardsAPICreateWidgetRequest",
     "CovalDashboardsAPICreateWidgetResponse",
     "CovalDashboardsAPIDashboardResource",
-    "CovalDashboardsAPIDataSourceType",
     "CovalDashboardsAPIErrorResponse",
     "CovalDashboardsAPIErrorResponseError",
     "CovalDashboardsAPIErrorResponseErrorDetailsInner",
@@ -181,6 +188,7 @@ __all__ = [
     "CovalDashboardsAPIMetricFilterOperator",
     "CovalDashboardsAPIMetricFilterValue",
     "CovalDashboardsAPIMetricOutputType",
+    "CovalDashboardsAPIResourceAttribution",
     "CovalDashboardsAPITableWidgetConfig",
     "CovalDashboardsAPITextWidgetConfig",
     "CovalDashboardsAPIUpdateDashboardRequest",
@@ -191,6 +199,11 @@ __all__ = [
     "CovalDashboardsAPIWidgetConfig",
     "CovalDashboardsAPIWidgetResource",
     "CovalDashboardsAPIWidgetType",
+    "CovalMetricsAPIAgentJudgeEvidenceReference",
+    "CovalMetricsAPIAgentJudgeFrameEvidenceReference",
+    "CovalMetricsAPIAgentJudgeRuntimeTool",
+    "CovalMetricsAPIAgentJudgeTool",
+    "CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference",
     "CovalMetricsAPIBaseline",
     "CovalMetricsAPIBaselineConfig",
     "CovalMetricsAPIBaselineDetectionMethod",
@@ -213,6 +226,10 @@ __all__ = [
     "CovalMetricsAPIGetMetricResponse",
     "CovalMetricsAPIGetMetricTemplateVariablesResponse",
     "CovalMetricsAPIGetThresholdResponse",
+    "CovalMetricsAPIIvrFlow",
+    "CovalMetricsAPIIvrFlowEdgesInner",
+    "CovalMetricsAPIIvrFlowNodesInner",
+    "CovalMetricsAPIJudgeMode",
     "CovalMetricsAPIListMetricBaselinesResponse",
     "CovalMetricsAPIListMetricFlowsResponse",
     "CovalMetricsAPIListMetricModelsResponse",
@@ -222,6 +239,7 @@ __all__ = [
     "CovalMetricsAPIListRecentlyDeletedMetricsResponse",
     "CovalMetricsAPIListThresholdsResponse",
     "CovalMetricsAPIMetadataFieldType",
+    "CovalMetricsAPIMetricEvaluationResource",
     "CovalMetricsAPIMetricFlowResource",
     "CovalMetricsAPIMetricFlowResponse",
     "CovalMetricsAPIMetricModelResource",
@@ -238,11 +256,13 @@ __all__ = [
     "CovalMetricsAPIPatchThresholdRequest",
     "CovalMetricsAPIPatchThresholdResponse",
     "CovalMetricsAPIRecentlyDeletedMetricResource",
+    "CovalMetricsAPIResourceAttribution",
     "CovalMetricsAPISchemaColumnResource",
     "CovalMetricsAPISchemaTableResource",
     "CovalMetricsAPISimpleMetricOutput",
     "CovalMetricsAPISimpleMetricOutputValue",
     "CovalMetricsAPISimulationDataFramesSchemaResponse",
+    "CovalMetricsAPISqlMetricTestEvaluation",
     "CovalMetricsAPISqlMetricTestSubvalue",
     "CovalMetricsAPISubvalueByTimestamp",
     "CovalMetricsAPITargetCondition",
@@ -252,6 +272,7 @@ __all__ = [
     "CovalMetricsAPITestMetricResponse",
     "CovalMetricsAPITestSqlMetricRequest",
     "CovalMetricsAPITestSqlMetricResponse",
+    "CovalMetricsAPITestSqlMetricSimulationResult",
     "CovalMetricsAPIThresholdSource",
     "CovalMetricsAPIUpdateMetricBaselineRequest",
     "CovalMetricsAPIUpdateMetricFlowRequest",
@@ -270,6 +291,8 @@ __all__ = [
     "CovalMonitorsAPIMonitorEvaluationType",
     "CovalMonitorsAPIMonitorEventOutcome",
     "CovalMonitorsAPIMonitorEventResource",
+    "CovalMonitorsAPIMonitorEventResourceConditionResultsInner",
+    "CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner",
     "CovalMonitorsAPIMonitorMatchMode",
     "CovalMonitorsAPIMonitorResource",
     "CovalMonitorsAPIMonitorScope",
@@ -299,11 +322,13 @@ __all__ = [
     "CovalPersonasAPIListPersonasResponse",
     "CovalPersonasAPIListPhoneNumbersResponse",
     "CovalPersonasAPIListVoicesResponse",
+    "CovalPersonasAPIMultiPhoneConfig",
     "CovalPersonasAPIPersonaResource",
     "CovalPersonasAPIPersonaTagResource",
     "CovalPersonasAPIPersonaVersionResource",
     "CovalPersonasAPIPhoneNumberMapping",
     "CovalPersonasAPIPhoneNumbersData",
+    "CovalPersonasAPIResourceAttribution",
     "CovalPersonasAPIUpdateBackgroundSoundRequest",
     "CovalPersonasAPIUpdateBackgroundSoundResponse",
     "CovalPersonasAPIUpdatePersonaRequest",
@@ -332,11 +357,17 @@ __all__ = [
     "CovalReportsAPIReportRowResource",
     "CovalReportsAPIReportViewConfiguration",
     "CovalReportsAPIReportViewConfigurationPatch",
+    "CovalReportsAPIResourceAttribution",
     "CovalReportsAPIUpdateReportRequest",
     "CovalReportsAPIUpdateReportResponse",
     "CovalReviewsAPIAnnotationPriority",
     "CovalReviewsAPIAnnotationStatus",
+    "CovalReviewsAPICompleteReviewConversationBlocker",
+    "CovalReviewsAPICompleteReviewConversationRequest",
+    "CovalReviewsAPICompleteReviewConversationResponse",
     "CovalReviewsAPICompletionStatus",
+    "CovalReviewsAPICompositeCriteriaAgreementResource",
+    "CovalReviewsAPICompositeCriterionAgreementResource",
     "CovalReviewsAPICreateReviewAnnotationRequest",
     "CovalReviewsAPICreateReviewAnnotationResponse",
     "CovalReviewsAPICreateReviewProjectRequest",
@@ -353,12 +384,16 @@ __all__ = [
     "CovalReviewsAPIGetReviewDisagreementStateRequest",
     "CovalReviewsAPIGetReviewProjectResponse",
     "CovalReviewsAPIHumanAgreementStatsResource",
+    "CovalReviewsAPIHumanReviewProjectMetricDrilldownRow",
+    "CovalReviewsAPIHumanReviewProjectMetricInsightResource",
     "CovalReviewsAPIListReviewAnnotationsResponse",
     "CovalReviewsAPIListReviewProjectsResponse",
     "CovalReviewsAPIProjectMetricAgreementResource",
     "CovalReviewsAPIProjectRule",
     "CovalReviewsAPIProjectType",
+    "CovalReviewsAPIResourceAttribution",
     "CovalReviewsAPIReviewAnnotationResource",
+    "CovalReviewsAPIReviewAnnotationWithMetricVersionResource",
     "CovalReviewsAPIReviewDisagreementProjectState",
     "CovalReviewsAPIReviewDisagreementStateResponse",
     "CovalReviewsAPIReviewMetricOutputForAnnotationResource",
@@ -375,6 +410,7 @@ __all__ = [
     "CovalRunTemplatesAPIErrorResponseErrorDetailsInner",
     "CovalRunTemplatesAPIGetRunTemplateResponse",
     "CovalRunTemplatesAPIListRunTemplatesResponse",
+    "CovalRunTemplatesAPIResourceAttribution",
     "CovalRunTemplatesAPIRunTemplateResource",
     "CovalRunTemplatesAPIUpdateRunTemplateRequest",
     "CovalRunTemplatesAPIUpdateRunTemplateResponse",
@@ -383,6 +419,7 @@ __all__ = [
     "CovalRunsAPILaunchMetadata",
     "CovalRunsAPILaunchOptions",
     "CovalRunsAPILaunchRunRequest",
+    "CovalRunsAPILaunchRunResource",
     "CovalRunsAPILaunchRunResponse",
     "CovalRunsAPIListRunTagsResponse",
     "CovalRunsAPIMetricResult",
@@ -403,10 +440,36 @@ __all__ = [
     "CovalScheduledRunsAPIGetScheduledRunHistoryResponse",
     "CovalScheduledRunsAPIGetScheduledRunResponse",
     "CovalScheduledRunsAPIListScheduledRunsResponse",
+    "CovalScheduledRunsAPIResourceAttribution",
     "CovalScheduledRunsAPIScheduledRunHistoryEntry",
     "CovalScheduledRunsAPIScheduledRunResource",
     "CovalScheduledRunsAPIUpdateScheduledRunRequest",
     "CovalScheduledRunsAPIUpdateScheduledRunResponse",
+    "CovalSimulatedConversationsAPIErrorDetail",
+    "CovalSimulatedConversationsAPIErrorInfo",
+    "CovalSimulatedConversationsAPIErrorResponse",
+    "CovalSimulatedConversationsAPIGetSimulatedConversationAudioResponse",
+    "CovalSimulatedConversationsAPIGetSimulatedConversationMetricResponse",
+    "CovalSimulatedConversationsAPIGetSimulatedConversationResponse",
+    "CovalSimulatedConversationsAPIListSimulatedConversationMetricsResponse",
+    "CovalSimulatedConversationsAPIListSimulatedConversationsResponse",
+    "CovalSimulatedConversationsAPIMetricOutputCollection",
+    "CovalSimulatedConversationsAPIMetricOutputResource",
+    "CovalSimulatedConversationsAPIMetricOutputResourceValue",
+    "CovalSimulatedConversationsAPIPhoneEndpoint",
+    "CovalSimulatedConversationsAPIRerunMetricsResultItem",
+    "CovalSimulatedConversationsAPIRerunSimulatedConversationMetricsRequest",
+    "CovalSimulatedConversationsAPIRerunSimulatedConversationMetricsResponse",
+    "CovalSimulatedConversationsAPIResimulateSimulatedConversationResponse",
+    "CovalSimulatedConversationsAPISimulatedConversationResource",
+    "CovalSimulatedConversationsAPISimulatedConversationResourceDestination",
+    "CovalSimulatedConversationsAPISimulatedConversationResourceFull",
+    "CovalSimulatedConversationsAPISimulatedConversationResourceSource",
+    "CovalSimulatedConversationsAPISipEndpoint",
+    "CovalSimulatedConversationsAPISubvalueByTimestamp",
+    "CovalSimulatedConversationsAPIUpdateSimulatedConversationRequest",
+    "CovalSimulatedConversationsAPIUpdateSimulatedConversationResponse",
+    "CovalSimulatedConversationsAPIWebsocketEndpoint",
     "CovalSimulationsAPIErrorDetail",
     "CovalSimulationsAPIErrorInfo",
     "CovalSimulationsAPIErrorResponse",
@@ -438,7 +501,12 @@ __all__ = [
     "CovalSlackIntegrationAPIDisconnectSlackResponse",
     "CovalSlackIntegrationAPIErrorResponse",
     "CovalSlackIntegrationAPIErrorResponseError",
+    "CovalSlackIntegrationAPISlackAuthorizationIntent",
     "CovalSlackIntegrationAPISlackStatusResponse",
+    "CovalSofiaAPIErrorResponse",
+    "CovalSofiaAPIErrorResponseError",
+    "CovalSofiaAPISofiaDelegationTokenRequest",
+    "CovalSofiaAPISofiaDelegationTokenResponse",
     "CovalTagsAPICreateTagRequest",
     "CovalTagsAPICreateTagResponse",
     "CovalTagsAPIDeleteTagResponse",
@@ -448,8 +516,45 @@ __all__ = [
     "CovalTagsAPIGetTagResponse",
     "CovalTagsAPIListTagsResponse",
     "CovalTagsAPITagResource",
+    "CovalTagsAPITagUsage",
     "CovalTagsAPIUpdateTagRequest",
     "CovalTagsAPIUpdateTagResponse",
+    "CovalUploadedConversationsAPIConversationMetricValue",
+    "CovalUploadedConversationsAPIConversationMetricValueValue",
+    "CovalUploadedConversationsAPIConversationProgress",
+    "CovalUploadedConversationsAPIConversationStatus",
+    "CovalUploadedConversationsAPICreateAudioUploadRequest",
+    "CovalUploadedConversationsAPICreateAudioUploadResponse",
+    "CovalUploadedConversationsAPIErrorDetail",
+    "CovalUploadedConversationsAPIErrorResponse",
+    "CovalUploadedConversationsAPIErrorResponseError",
+    "CovalUploadedConversationsAPIFilteredSubmitResponse",
+    "CovalUploadedConversationsAPIGetUploadedConversationAudioResponse",
+    "CovalUploadedConversationsAPIGetUploadedConversationMetricResponse",
+    "CovalUploadedConversationsAPIGetUploadedConversationResponse",
+    "CovalUploadedConversationsAPIListUploadedConversationMetricsResponse",
+    "CovalUploadedConversationsAPIListUploadedConversationsResponse",
+    "CovalUploadedConversationsAPIMetricBreakdownResponse",
+    "CovalUploadedConversationsAPIMetricBreakdownRow",
+    "CovalUploadedConversationsAPIMetricOutputCollection",
+    "CovalUploadedConversationsAPIMetricOutputResource",
+    "CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInner",
+    "CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf",
+    "CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1",
+    "CovalUploadedConversationsAPIMetricOutputResourceSubvaluesByTimestampInner",
+    "CovalUploadedConversationsAPIMetricOutputResourceValue",
+    "CovalUploadedConversationsAPIPatchUploadedConversationRequest",
+    "CovalUploadedConversationsAPIPhoneEndpoint",
+    "CovalUploadedConversationsAPISipEndpoint",
+    "CovalUploadedConversationsAPISubmitUploadedConversationRequest",
+    "CovalUploadedConversationsAPISubmitUploadedConversationResponse",
+    "CovalUploadedConversationsAPIToolCall",
+    "CovalUploadedConversationsAPIToolCallFunction",
+    "CovalUploadedConversationsAPITranscriptMessage",
+    "CovalUploadedConversationsAPIUploadedConversationResource",
+    "CovalUploadedConversationsAPIUploadedConversationResourceDestination",
+    "CovalUploadedConversationsAPIUploadedConversationResourceSource",
+    "CovalUploadedConversationsAPIWebsocketEndpoint",
     "CovalWebhooksAPICreateWebhookRequest",
     "CovalWebhooksAPIDeleteWebhookResponse",
     "CovalWebhooksAPIErrorResponse",
@@ -471,21 +576,36 @@ __all__ = [
     "DuplicateAgentRequest",
     "GetConversationMetric200Response",
     "GetRun200Response",
+    "GetSimulatedConversationMetric200Response",
     "GetTraceQualitySummary200Response",
     "GetTraceQualitySummary200ResponseTarget",
+    "GetUploadedConversationMetric200Response",
     "IngestTraces200Response",
     "ListConversations200Response",
     "ListRuns200Response",
     "ListRuns400Response",
     "ListTestCases200Response",
     "ListTestSets200Response",
+    "ListUploadedConversations200Response",
+    "NonSCRIPTTestCase",
+    "PersonaWithPrompt",
+    "SCRIPTTestCaseWithLegacyNestedTurns",
+    "SCRIPTTestCaseWithLegacyNestedTurnsSimulationMetadataInput",
+    "SCRIPTTestCaseWithTopLevelTurns",
+    "SilentPersona",
     "SimulationsGetMetric200Response",
     "SubmitConversation200Response",
+    "SubmitUploadedConversation200Response",
     "TestCasesAPICreateTestCaseRequest",
     "TestCasesAPIErrorResponse",
     "TestCasesAPIErrorResponseError",
     "TestCasesAPIErrorResponseErrorDetailsInner",
+    "TestCasesAPIResourceAttribution",
+    "TestCasesAPIScriptTurnDtmf",
+    "TestCasesAPIScriptTurnSkip",
+    "TestCasesAPIScriptTurnText",
     "TestCasesAPITestCaseResource",
+    "TestCasesAPITestCaseResourceScriptTurnsInner",
     "TestCasesAPIUpdateTestCaseRequest",
     "TestSetsAPIAddTestSetAgentsRequest",
     "TestSetsAPICreateTestSetRequest",
@@ -495,6 +615,7 @@ __all__ = [
     "TestSetsAPIListTestSetAgentsResponse",
     "TestSetsAPIListTestSetRecordsResponse",
     "TestSetsAPIListTestSetVersionsResponse",
+    "TestSetsAPIResourceAttribution",
     "TestSetsAPITestSetAgentResource",
     "TestSetsAPITestSetRecordResource",
     "TestSetsAPITestSetRecordResourceExpectedOutput",
@@ -539,11 +660,14 @@ from coval_sdk.api.review_projects_api import ReviewProjectsApi as ReviewProject
 from coval_sdk.api.run_templates_api import RunTemplatesApi as RunTemplatesApi
 from coval_sdk.api.runs_api import RunsApi as RunsApi
 from coval_sdk.api.scheduled_runs_api import ScheduledRunsApi as ScheduledRunsApi
+from coval_sdk.api.simulated_conversations_api import SimulatedConversationsApi as SimulatedConversationsApi
 from coval_sdk.api.simulations_api import SimulationsApi as SimulationsApi
+from coval_sdk.api.sofia_api import SofiaApi as SofiaApi
 from coval_sdk.api.tags_api import TagsApi as TagsApi
 from coval_sdk.api.test_cases_api import TestCasesApi as TestCasesApi
 from coval_sdk.api.test_sets_api import TestSetsApi as TestSetsApi
 from coval_sdk.api.traces_api import TracesApi as TracesApi
+from coval_sdk.api.uploaded_conversations_api import UploadedConversationsApi as UploadedConversationsApi
 from coval_sdk.api.webhooks_api import WebhooksApi as WebhooksApi
 from coval_sdk.api.widgets_api import WidgetsApi as WidgetsApi
 from coval_sdk.api.workspaces_api import WorkspacesApi as WorkspacesApi
@@ -581,9 +705,11 @@ from coval_sdk.models.coval_agent_mutations_api_error_response_error_details_inn
 from coval_sdk.models.coval_agent_mutations_api_get_mutation_response import CovalAgentMutationsAPIGetMutationResponse as CovalAgentMutationsAPIGetMutationResponse
 from coval_sdk.models.coval_agent_mutations_api_list_mutations_response import CovalAgentMutationsAPIListMutationsResponse as CovalAgentMutationsAPIListMutationsResponse
 from coval_sdk.models.coval_agent_mutations_api_mutation_resource import CovalAgentMutationsAPIMutationResource as CovalAgentMutationsAPIMutationResource
+from coval_sdk.models.coval_agent_mutations_api_resource_attribution import CovalAgentMutationsAPIResourceAttribution as CovalAgentMutationsAPIResourceAttribution
 from coval_sdk.models.coval_agent_mutations_api_update_mutation_request import CovalAgentMutationsAPIUpdateMutationRequest as CovalAgentMutationsAPIUpdateMutationRequest
 from coval_sdk.models.coval_agent_mutations_api_update_mutation_response import CovalAgentMutationsAPIUpdateMutationResponse as CovalAgentMutationsAPIUpdateMutationResponse
 from coval_sdk.models.coval_agents_api_agent_resource import CovalAgentsAPIAgentResource as CovalAgentsAPIAgentResource
+from coval_sdk.models.coval_agents_api_agent_resource_model_type import CovalAgentsAPIAgentResourceModelType as CovalAgentsAPIAgentResourceModelType
 from coval_sdk.models.coval_agents_api_agent_version_resource import CovalAgentsAPIAgentVersionResource as CovalAgentsAPIAgentVersionResource
 from coval_sdk.models.coval_agents_api_create_agent_request import CovalAgentsAPICreateAgentRequest as CovalAgentsAPICreateAgentRequest
 from coval_sdk.models.coval_agents_api_create_agent_response import CovalAgentsAPICreateAgentResponse as CovalAgentsAPICreateAgentResponse
@@ -593,6 +719,7 @@ from coval_sdk.models.coval_agents_api_error_response_error_details_inner import
 from coval_sdk.models.coval_agents_api_get_agent_response import CovalAgentsAPIGetAgentResponse as CovalAgentsAPIGetAgentResponse
 from coval_sdk.models.coval_agents_api_list_agent_versions_response import CovalAgentsAPIListAgentVersionsResponse as CovalAgentsAPIListAgentVersionsResponse
 from coval_sdk.models.coval_agents_api_list_agents_response import CovalAgentsAPIListAgentsResponse as CovalAgentsAPIListAgentsResponse
+from coval_sdk.models.coval_agents_api_resource_attribution import CovalAgentsAPIResourceAttribution as CovalAgentsAPIResourceAttribution
 from coval_sdk.models.coval_agents_api_simulator_type import CovalAgentsAPISimulatorType as CovalAgentsAPISimulatorType
 from coval_sdk.models.coval_agents_api_update_agent_request import CovalAgentsAPIUpdateAgentRequest as CovalAgentsAPIUpdateAgentRequest
 from coval_sdk.models.coval_agents_api_update_agent_response import CovalAgentsAPIUpdateAgentResponse as CovalAgentsAPIUpdateAgentResponse
@@ -606,18 +733,21 @@ from coval_sdk.models.coval_alerts_api_alert_event_resource_condition_results_in
 from coval_sdk.models.coval_alerts_api_alert_event_resource_dispatched_channels_inner import CovalAlertsAPIAlertEventResourceDispatchedChannelsInner as CovalAlertsAPIAlertEventResourceDispatchedChannelsInner
 from coval_sdk.models.coval_alerts_api_alert_match_mode import CovalAlertsAPIAlertMatchMode as CovalAlertsAPIAlertMatchMode
 from coval_sdk.models.coval_alerts_api_alert_resource import CovalAlertsAPIAlertResource as CovalAlertsAPIAlertResource
-from coval_sdk.models.coval_alerts_api_alert_scope import CovalAlertsAPIAlertScope as CovalAlertsAPIAlertScope
+from coval_sdk.models.coval_alerts_api_alert_resource_customer_metadata_value import CovalAlertsAPIAlertResourceCustomerMetadataValue as CovalAlertsAPIAlertResourceCustomerMetadataValue
+from coval_sdk.models.coval_alerts_api_baseline_deviation_direction import CovalAlertsAPIBaselineDeviationDirection as CovalAlertsAPIBaselineDeviationDirection
 from coval_sdk.models.coval_alerts_api_channel_input import CovalAlertsAPIChannelInput as CovalAlertsAPIChannelInput
 from coval_sdk.models.coval_alerts_api_channel_type import CovalAlertsAPIChannelType as CovalAlertsAPIChannelType
 from coval_sdk.models.coval_alerts_api_condition_aggregation import CovalAlertsAPIConditionAggregation as CovalAlertsAPIConditionAggregation
 from coval_sdk.models.coval_alerts_api_condition_input import CovalAlertsAPIConditionInput as CovalAlertsAPIConditionInput
 from coval_sdk.models.coval_alerts_api_condition_operator import CovalAlertsAPIConditionOperator as CovalAlertsAPIConditionOperator
+from coval_sdk.models.coval_alerts_api_conversation_source_filter import CovalAlertsAPIConversationSourceFilter as CovalAlertsAPIConversationSourceFilter
 from coval_sdk.models.coval_alerts_api_create_alert_request import CovalAlertsAPICreateAlertRequest as CovalAlertsAPICreateAlertRequest
 from coval_sdk.models.coval_alerts_api_error_response import CovalAlertsAPIErrorResponse as CovalAlertsAPIErrorResponse
 from coval_sdk.models.coval_alerts_api_error_response_error import CovalAlertsAPIErrorResponseError as CovalAlertsAPIErrorResponseError
 from coval_sdk.models.coval_alerts_api_error_response_error_details_inner import CovalAlertsAPIErrorResponseErrorDetailsInner as CovalAlertsAPIErrorResponseErrorDetailsInner
 from coval_sdk.models.coval_alerts_api_list_alert_events_response import CovalAlertsAPIListAlertEventsResponse as CovalAlertsAPIListAlertEventsResponse
 from coval_sdk.models.coval_alerts_api_list_alerts_response import CovalAlertsAPIListAlertsResponse as CovalAlertsAPIListAlertsResponse
+from coval_sdk.models.coval_alerts_api_resource_attribution import CovalAlertsAPIResourceAttribution as CovalAlertsAPIResourceAttribution
 from coval_sdk.models.coval_alerts_api_test_evaluate_alert_request import CovalAlertsAPITestEvaluateAlertRequest as CovalAlertsAPITestEvaluateAlertRequest
 from coval_sdk.models.coval_alerts_api_test_evaluate_alert_response import CovalAlertsAPITestEvaluateAlertResponse as CovalAlertsAPITestEvaluateAlertResponse
 from coval_sdk.models.coval_alerts_api_update_alert_request import CovalAlertsAPIUpdateAlertRequest as CovalAlertsAPIUpdateAlertRequest
@@ -657,12 +787,12 @@ from coval_sdk.models.coval_conversations_api_transcript_message import CovalCon
 from coval_sdk.models.coval_conversations_api_websocket_endpoint import CovalConversationsAPIWebsocketEndpoint as CovalConversationsAPIWebsocketEndpoint
 from coval_sdk.models.coval_dashboards_api_aggregation_type import CovalDashboardsAPIAggregationType as CovalDashboardsAPIAggregationType
 from coval_sdk.models.coval_dashboards_api_chart_widget_config import CovalDashboardsAPIChartWidgetConfig as CovalDashboardsAPIChartWidgetConfig
+from coval_sdk.models.coval_dashboards_api_conversation_source import CovalDashboardsAPIConversationSource as CovalDashboardsAPIConversationSource
 from coval_sdk.models.coval_dashboards_api_create_dashboard_request import CovalDashboardsAPICreateDashboardRequest as CovalDashboardsAPICreateDashboardRequest
 from coval_sdk.models.coval_dashboards_api_create_dashboard_response import CovalDashboardsAPICreateDashboardResponse as CovalDashboardsAPICreateDashboardResponse
 from coval_sdk.models.coval_dashboards_api_create_widget_request import CovalDashboardsAPICreateWidgetRequest as CovalDashboardsAPICreateWidgetRequest
 from coval_sdk.models.coval_dashboards_api_create_widget_response import CovalDashboardsAPICreateWidgetResponse as CovalDashboardsAPICreateWidgetResponse
 from coval_sdk.models.coval_dashboards_api_dashboard_resource import CovalDashboardsAPIDashboardResource as CovalDashboardsAPIDashboardResource
-from coval_sdk.models.coval_dashboards_api_data_source_type import CovalDashboardsAPIDataSourceType as CovalDashboardsAPIDataSourceType
 from coval_sdk.models.coval_dashboards_api_error_response import CovalDashboardsAPIErrorResponse as CovalDashboardsAPIErrorResponse
 from coval_sdk.models.coval_dashboards_api_error_response_error import CovalDashboardsAPIErrorResponseError as CovalDashboardsAPIErrorResponseError
 from coval_sdk.models.coval_dashboards_api_error_response_error_details_inner import CovalDashboardsAPIErrorResponseErrorDetailsInner as CovalDashboardsAPIErrorResponseErrorDetailsInner
@@ -676,6 +806,7 @@ from coval_sdk.models.coval_dashboards_api_metric_filter import CovalDashboardsA
 from coval_sdk.models.coval_dashboards_api_metric_filter_operator import CovalDashboardsAPIMetricFilterOperator as CovalDashboardsAPIMetricFilterOperator
 from coval_sdk.models.coval_dashboards_api_metric_filter_value import CovalDashboardsAPIMetricFilterValue as CovalDashboardsAPIMetricFilterValue
 from coval_sdk.models.coval_dashboards_api_metric_output_type import CovalDashboardsAPIMetricOutputType as CovalDashboardsAPIMetricOutputType
+from coval_sdk.models.coval_dashboards_api_resource_attribution import CovalDashboardsAPIResourceAttribution as CovalDashboardsAPIResourceAttribution
 from coval_sdk.models.coval_dashboards_api_table_widget_config import CovalDashboardsAPITableWidgetConfig as CovalDashboardsAPITableWidgetConfig
 from coval_sdk.models.coval_dashboards_api_text_widget_config import CovalDashboardsAPITextWidgetConfig as CovalDashboardsAPITextWidgetConfig
 from coval_sdk.models.coval_dashboards_api_update_dashboard_request import CovalDashboardsAPIUpdateDashboardRequest as CovalDashboardsAPIUpdateDashboardRequest
@@ -686,6 +817,11 @@ from coval_sdk.models.coval_dashboards_api_visualization_type import CovalDashbo
 from coval_sdk.models.coval_dashboards_api_widget_config import CovalDashboardsAPIWidgetConfig as CovalDashboardsAPIWidgetConfig
 from coval_sdk.models.coval_dashboards_api_widget_resource import CovalDashboardsAPIWidgetResource as CovalDashboardsAPIWidgetResource
 from coval_sdk.models.coval_dashboards_api_widget_type import CovalDashboardsAPIWidgetType as CovalDashboardsAPIWidgetType
+from coval_sdk.models.coval_metrics_api_agent_judge_evidence_reference import CovalMetricsAPIAgentJudgeEvidenceReference as CovalMetricsAPIAgentJudgeEvidenceReference
+from coval_sdk.models.coval_metrics_api_agent_judge_frame_evidence_reference import CovalMetricsAPIAgentJudgeFrameEvidenceReference as CovalMetricsAPIAgentJudgeFrameEvidenceReference
+from coval_sdk.models.coval_metrics_api_agent_judge_runtime_tool import CovalMetricsAPIAgentJudgeRuntimeTool as CovalMetricsAPIAgentJudgeRuntimeTool
+from coval_sdk.models.coval_metrics_api_agent_judge_tool import CovalMetricsAPIAgentJudgeTool as CovalMetricsAPIAgentJudgeTool
+from coval_sdk.models.coval_metrics_api_agent_judge_trace_span_evidence_reference import CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference as CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference
 from coval_sdk.models.coval_metrics_api_baseline import CovalMetricsAPIBaseline as CovalMetricsAPIBaseline
 from coval_sdk.models.coval_metrics_api_baseline_config import CovalMetricsAPIBaselineConfig as CovalMetricsAPIBaselineConfig
 from coval_sdk.models.coval_metrics_api_baseline_detection_method import CovalMetricsAPIBaselineDetectionMethod as CovalMetricsAPIBaselineDetectionMethod
@@ -708,6 +844,10 @@ from coval_sdk.models.coval_metrics_api_error_response_error import CovalMetrics
 from coval_sdk.models.coval_metrics_api_get_metric_response import CovalMetricsAPIGetMetricResponse as CovalMetricsAPIGetMetricResponse
 from coval_sdk.models.coval_metrics_api_get_metric_template_variables_response import CovalMetricsAPIGetMetricTemplateVariablesResponse as CovalMetricsAPIGetMetricTemplateVariablesResponse
 from coval_sdk.models.coval_metrics_api_get_threshold_response import CovalMetricsAPIGetThresholdResponse as CovalMetricsAPIGetThresholdResponse
+from coval_sdk.models.coval_metrics_api_ivr_flow import CovalMetricsAPIIvrFlow as CovalMetricsAPIIvrFlow
+from coval_sdk.models.coval_metrics_api_ivr_flow_edges_inner import CovalMetricsAPIIvrFlowEdgesInner as CovalMetricsAPIIvrFlowEdgesInner
+from coval_sdk.models.coval_metrics_api_ivr_flow_nodes_inner import CovalMetricsAPIIvrFlowNodesInner as CovalMetricsAPIIvrFlowNodesInner
+from coval_sdk.models.coval_metrics_api_judge_mode import CovalMetricsAPIJudgeMode as CovalMetricsAPIJudgeMode
 from coval_sdk.models.coval_metrics_api_list_metric_baselines_response import CovalMetricsAPIListMetricBaselinesResponse as CovalMetricsAPIListMetricBaselinesResponse
 from coval_sdk.models.coval_metrics_api_list_metric_flows_response import CovalMetricsAPIListMetricFlowsResponse as CovalMetricsAPIListMetricFlowsResponse
 from coval_sdk.models.coval_metrics_api_list_metric_models_response import CovalMetricsAPIListMetricModelsResponse as CovalMetricsAPIListMetricModelsResponse
@@ -717,6 +857,7 @@ from coval_sdk.models.coval_metrics_api_list_metrics_response import CovalMetric
 from coval_sdk.models.coval_metrics_api_list_recently_deleted_metrics_response import CovalMetricsAPIListRecentlyDeletedMetricsResponse as CovalMetricsAPIListRecentlyDeletedMetricsResponse
 from coval_sdk.models.coval_metrics_api_list_thresholds_response import CovalMetricsAPIListThresholdsResponse as CovalMetricsAPIListThresholdsResponse
 from coval_sdk.models.coval_metrics_api_metadata_field_type import CovalMetricsAPIMetadataFieldType as CovalMetricsAPIMetadataFieldType
+from coval_sdk.models.coval_metrics_api_metric_evaluation_resource import CovalMetricsAPIMetricEvaluationResource as CovalMetricsAPIMetricEvaluationResource
 from coval_sdk.models.coval_metrics_api_metric_flow_resource import CovalMetricsAPIMetricFlowResource as CovalMetricsAPIMetricFlowResource
 from coval_sdk.models.coval_metrics_api_metric_flow_response import CovalMetricsAPIMetricFlowResponse as CovalMetricsAPIMetricFlowResponse
 from coval_sdk.models.coval_metrics_api_metric_model_resource import CovalMetricsAPIMetricModelResource as CovalMetricsAPIMetricModelResource
@@ -733,11 +874,13 @@ from coval_sdk.models.coval_metrics_api_metric_version_resource import CovalMetr
 from coval_sdk.models.coval_metrics_api_patch_threshold_request import CovalMetricsAPIPatchThresholdRequest as CovalMetricsAPIPatchThresholdRequest
 from coval_sdk.models.coval_metrics_api_patch_threshold_response import CovalMetricsAPIPatchThresholdResponse as CovalMetricsAPIPatchThresholdResponse
 from coval_sdk.models.coval_metrics_api_recently_deleted_metric_resource import CovalMetricsAPIRecentlyDeletedMetricResource as CovalMetricsAPIRecentlyDeletedMetricResource
+from coval_sdk.models.coval_metrics_api_resource_attribution import CovalMetricsAPIResourceAttribution as CovalMetricsAPIResourceAttribution
 from coval_sdk.models.coval_metrics_api_schema_column_resource import CovalMetricsAPISchemaColumnResource as CovalMetricsAPISchemaColumnResource
 from coval_sdk.models.coval_metrics_api_schema_table_resource import CovalMetricsAPISchemaTableResource as CovalMetricsAPISchemaTableResource
 from coval_sdk.models.coval_metrics_api_simple_metric_output import CovalMetricsAPISimpleMetricOutput as CovalMetricsAPISimpleMetricOutput
 from coval_sdk.models.coval_metrics_api_simple_metric_output_value import CovalMetricsAPISimpleMetricOutputValue as CovalMetricsAPISimpleMetricOutputValue
 from coval_sdk.models.coval_metrics_api_simulation_data_frames_schema_response import CovalMetricsAPISimulationDataFramesSchemaResponse as CovalMetricsAPISimulationDataFramesSchemaResponse
+from coval_sdk.models.coval_metrics_api_sql_metric_test_evaluation import CovalMetricsAPISqlMetricTestEvaluation as CovalMetricsAPISqlMetricTestEvaluation
 from coval_sdk.models.coval_metrics_api_sql_metric_test_subvalue import CovalMetricsAPISqlMetricTestSubvalue as CovalMetricsAPISqlMetricTestSubvalue
 from coval_sdk.models.coval_metrics_api_subvalue_by_timestamp import CovalMetricsAPISubvalueByTimestamp as CovalMetricsAPISubvalueByTimestamp
 from coval_sdk.models.coval_metrics_api_target_condition import CovalMetricsAPITargetCondition as CovalMetricsAPITargetCondition
@@ -747,6 +890,7 @@ from coval_sdk.models.coval_metrics_api_test_metric_request import CovalMetricsA
 from coval_sdk.models.coval_metrics_api_test_metric_response import CovalMetricsAPITestMetricResponse as CovalMetricsAPITestMetricResponse
 from coval_sdk.models.coval_metrics_api_test_sql_metric_request import CovalMetricsAPITestSqlMetricRequest as CovalMetricsAPITestSqlMetricRequest
 from coval_sdk.models.coval_metrics_api_test_sql_metric_response import CovalMetricsAPITestSqlMetricResponse as CovalMetricsAPITestSqlMetricResponse
+from coval_sdk.models.coval_metrics_api_test_sql_metric_simulation_result import CovalMetricsAPITestSqlMetricSimulationResult as CovalMetricsAPITestSqlMetricSimulationResult
 from coval_sdk.models.coval_metrics_api_threshold_source import CovalMetricsAPIThresholdSource as CovalMetricsAPIThresholdSource
 from coval_sdk.models.coval_metrics_api_update_metric_baseline_request import CovalMetricsAPIUpdateMetricBaselineRequest as CovalMetricsAPIUpdateMetricBaselineRequest
 from coval_sdk.models.coval_metrics_api_update_metric_flow_request import CovalMetricsAPIUpdateMetricFlowRequest as CovalMetricsAPIUpdateMetricFlowRequest
@@ -765,6 +909,8 @@ from coval_sdk.models.coval_monitors_api_monitor_condition import CovalMonitorsA
 from coval_sdk.models.coval_monitors_api_monitor_evaluation_type import CovalMonitorsAPIMonitorEvaluationType as CovalMonitorsAPIMonitorEvaluationType
 from coval_sdk.models.coval_monitors_api_monitor_event_outcome import CovalMonitorsAPIMonitorEventOutcome as CovalMonitorsAPIMonitorEventOutcome
 from coval_sdk.models.coval_monitors_api_monitor_event_resource import CovalMonitorsAPIMonitorEventResource as CovalMonitorsAPIMonitorEventResource
+from coval_sdk.models.coval_monitors_api_monitor_event_resource_condition_results_inner import CovalMonitorsAPIMonitorEventResourceConditionResultsInner as CovalMonitorsAPIMonitorEventResourceConditionResultsInner
+from coval_sdk.models.coval_monitors_api_monitor_event_resource_dispatched_channels_inner import CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner as CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner
 from coval_sdk.models.coval_monitors_api_monitor_match_mode import CovalMonitorsAPIMonitorMatchMode as CovalMonitorsAPIMonitorMatchMode
 from coval_sdk.models.coval_monitors_api_monitor_resource import CovalMonitorsAPIMonitorResource as CovalMonitorsAPIMonitorResource
 from coval_sdk.models.coval_monitors_api_monitor_scope import CovalMonitorsAPIMonitorScope as CovalMonitorsAPIMonitorScope
@@ -794,11 +940,13 @@ from coval_sdk.models.coval_personas_api_list_persona_versions_response import C
 from coval_sdk.models.coval_personas_api_list_personas_response import CovalPersonasAPIListPersonasResponse as CovalPersonasAPIListPersonasResponse
 from coval_sdk.models.coval_personas_api_list_phone_numbers_response import CovalPersonasAPIListPhoneNumbersResponse as CovalPersonasAPIListPhoneNumbersResponse
 from coval_sdk.models.coval_personas_api_list_voices_response import CovalPersonasAPIListVoicesResponse as CovalPersonasAPIListVoicesResponse
+from coval_sdk.models.coval_personas_api_multi_phone_config import CovalPersonasAPIMultiPhoneConfig as CovalPersonasAPIMultiPhoneConfig
 from coval_sdk.models.coval_personas_api_persona_resource import CovalPersonasAPIPersonaResource as CovalPersonasAPIPersonaResource
 from coval_sdk.models.coval_personas_api_persona_tag_resource import CovalPersonasAPIPersonaTagResource as CovalPersonasAPIPersonaTagResource
 from coval_sdk.models.coval_personas_api_persona_version_resource import CovalPersonasAPIPersonaVersionResource as CovalPersonasAPIPersonaVersionResource
 from coval_sdk.models.coval_personas_api_phone_number_mapping import CovalPersonasAPIPhoneNumberMapping as CovalPersonasAPIPhoneNumberMapping
 from coval_sdk.models.coval_personas_api_phone_numbers_data import CovalPersonasAPIPhoneNumbersData as CovalPersonasAPIPhoneNumbersData
+from coval_sdk.models.coval_personas_api_resource_attribution import CovalPersonasAPIResourceAttribution as CovalPersonasAPIResourceAttribution
 from coval_sdk.models.coval_personas_api_update_background_sound_request import CovalPersonasAPIUpdateBackgroundSoundRequest as CovalPersonasAPIUpdateBackgroundSoundRequest
 from coval_sdk.models.coval_personas_api_update_background_sound_response import CovalPersonasAPIUpdateBackgroundSoundResponse as CovalPersonasAPIUpdateBackgroundSoundResponse
 from coval_sdk.models.coval_personas_api_update_persona_request import CovalPersonasAPIUpdatePersonaRequest as CovalPersonasAPIUpdatePersonaRequest
@@ -827,11 +975,17 @@ from coval_sdk.models.coval_reports_api_report_permission import CovalReportsAPI
 from coval_sdk.models.coval_reports_api_report_row_resource import CovalReportsAPIReportRowResource as CovalReportsAPIReportRowResource
 from coval_sdk.models.coval_reports_api_report_view_configuration import CovalReportsAPIReportViewConfiguration as CovalReportsAPIReportViewConfiguration
 from coval_sdk.models.coval_reports_api_report_view_configuration_patch import CovalReportsAPIReportViewConfigurationPatch as CovalReportsAPIReportViewConfigurationPatch
+from coval_sdk.models.coval_reports_api_resource_attribution import CovalReportsAPIResourceAttribution as CovalReportsAPIResourceAttribution
 from coval_sdk.models.coval_reports_api_update_report_request import CovalReportsAPIUpdateReportRequest as CovalReportsAPIUpdateReportRequest
 from coval_sdk.models.coval_reports_api_update_report_response import CovalReportsAPIUpdateReportResponse as CovalReportsAPIUpdateReportResponse
 from coval_sdk.models.coval_reviews_api_annotation_priority import CovalReviewsAPIAnnotationPriority as CovalReviewsAPIAnnotationPriority
 from coval_sdk.models.coval_reviews_api_annotation_status import CovalReviewsAPIAnnotationStatus as CovalReviewsAPIAnnotationStatus
+from coval_sdk.models.coval_reviews_api_complete_review_conversation_blocker import CovalReviewsAPICompleteReviewConversationBlocker as CovalReviewsAPICompleteReviewConversationBlocker
+from coval_sdk.models.coval_reviews_api_complete_review_conversation_request import CovalReviewsAPICompleteReviewConversationRequest as CovalReviewsAPICompleteReviewConversationRequest
+from coval_sdk.models.coval_reviews_api_complete_review_conversation_response import CovalReviewsAPICompleteReviewConversationResponse as CovalReviewsAPICompleteReviewConversationResponse
 from coval_sdk.models.coval_reviews_api_completion_status import CovalReviewsAPICompletionStatus as CovalReviewsAPICompletionStatus
+from coval_sdk.models.coval_reviews_api_composite_criteria_agreement_resource import CovalReviewsAPICompositeCriteriaAgreementResource as CovalReviewsAPICompositeCriteriaAgreementResource
+from coval_sdk.models.coval_reviews_api_composite_criterion_agreement_resource import CovalReviewsAPICompositeCriterionAgreementResource as CovalReviewsAPICompositeCriterionAgreementResource
 from coval_sdk.models.coval_reviews_api_create_review_annotation_request import CovalReviewsAPICreateReviewAnnotationRequest as CovalReviewsAPICreateReviewAnnotationRequest
 from coval_sdk.models.coval_reviews_api_create_review_annotation_response import CovalReviewsAPICreateReviewAnnotationResponse as CovalReviewsAPICreateReviewAnnotationResponse
 from coval_sdk.models.coval_reviews_api_create_review_project_request import CovalReviewsAPICreateReviewProjectRequest as CovalReviewsAPICreateReviewProjectRequest
@@ -848,12 +1002,16 @@ from coval_sdk.models.coval_reviews_api_get_review_annotation_response import Co
 from coval_sdk.models.coval_reviews_api_get_review_disagreement_state_request import CovalReviewsAPIGetReviewDisagreementStateRequest as CovalReviewsAPIGetReviewDisagreementStateRequest
 from coval_sdk.models.coval_reviews_api_get_review_project_response import CovalReviewsAPIGetReviewProjectResponse as CovalReviewsAPIGetReviewProjectResponse
 from coval_sdk.models.coval_reviews_api_human_agreement_stats_resource import CovalReviewsAPIHumanAgreementStatsResource as CovalReviewsAPIHumanAgreementStatsResource
+from coval_sdk.models.coval_reviews_api_human_review_project_metric_drilldown_row import CovalReviewsAPIHumanReviewProjectMetricDrilldownRow as CovalReviewsAPIHumanReviewProjectMetricDrilldownRow
+from coval_sdk.models.coval_reviews_api_human_review_project_metric_insight_resource import CovalReviewsAPIHumanReviewProjectMetricInsightResource as CovalReviewsAPIHumanReviewProjectMetricInsightResource
 from coval_sdk.models.coval_reviews_api_list_review_annotations_response import CovalReviewsAPIListReviewAnnotationsResponse as CovalReviewsAPIListReviewAnnotationsResponse
 from coval_sdk.models.coval_reviews_api_list_review_projects_response import CovalReviewsAPIListReviewProjectsResponse as CovalReviewsAPIListReviewProjectsResponse
 from coval_sdk.models.coval_reviews_api_project_metric_agreement_resource import CovalReviewsAPIProjectMetricAgreementResource as CovalReviewsAPIProjectMetricAgreementResource
 from coval_sdk.models.coval_reviews_api_project_rule import CovalReviewsAPIProjectRule as CovalReviewsAPIProjectRule
 from coval_sdk.models.coval_reviews_api_project_type import CovalReviewsAPIProjectType as CovalReviewsAPIProjectType
+from coval_sdk.models.coval_reviews_api_resource_attribution import CovalReviewsAPIResourceAttribution as CovalReviewsAPIResourceAttribution
 from coval_sdk.models.coval_reviews_api_review_annotation_resource import CovalReviewsAPIReviewAnnotationResource as CovalReviewsAPIReviewAnnotationResource
+from coval_sdk.models.coval_reviews_api_review_annotation_with_metric_version_resource import CovalReviewsAPIReviewAnnotationWithMetricVersionResource as CovalReviewsAPIReviewAnnotationWithMetricVersionResource
 from coval_sdk.models.coval_reviews_api_review_disagreement_project_state import CovalReviewsAPIReviewDisagreementProjectState as CovalReviewsAPIReviewDisagreementProjectState
 from coval_sdk.models.coval_reviews_api_review_disagreement_state_response import CovalReviewsAPIReviewDisagreementStateResponse as CovalReviewsAPIReviewDisagreementStateResponse
 from coval_sdk.models.coval_reviews_api_review_metric_output_for_annotation_resource import CovalReviewsAPIReviewMetricOutputForAnnotationResource as CovalReviewsAPIReviewMetricOutputForAnnotationResource
@@ -870,6 +1028,7 @@ from coval_sdk.models.coval_run_templates_api_error_response_error import CovalR
 from coval_sdk.models.coval_run_templates_api_error_response_error_details_inner import CovalRunTemplatesAPIErrorResponseErrorDetailsInner as CovalRunTemplatesAPIErrorResponseErrorDetailsInner
 from coval_sdk.models.coval_run_templates_api_get_run_template_response import CovalRunTemplatesAPIGetRunTemplateResponse as CovalRunTemplatesAPIGetRunTemplateResponse
 from coval_sdk.models.coval_run_templates_api_list_run_templates_response import CovalRunTemplatesAPIListRunTemplatesResponse as CovalRunTemplatesAPIListRunTemplatesResponse
+from coval_sdk.models.coval_run_templates_api_resource_attribution import CovalRunTemplatesAPIResourceAttribution as CovalRunTemplatesAPIResourceAttribution
 from coval_sdk.models.coval_run_templates_api_run_template_resource import CovalRunTemplatesAPIRunTemplateResource as CovalRunTemplatesAPIRunTemplateResource
 from coval_sdk.models.coval_run_templates_api_update_run_template_request import CovalRunTemplatesAPIUpdateRunTemplateRequest as CovalRunTemplatesAPIUpdateRunTemplateRequest
 from coval_sdk.models.coval_run_templates_api_update_run_template_response import CovalRunTemplatesAPIUpdateRunTemplateResponse as CovalRunTemplatesAPIUpdateRunTemplateResponse
@@ -878,6 +1037,7 @@ from coval_sdk.models.coval_runs_api_error_detail import CovalRunsAPIErrorDetail
 from coval_sdk.models.coval_runs_api_launch_metadata import CovalRunsAPILaunchMetadata as CovalRunsAPILaunchMetadata
 from coval_sdk.models.coval_runs_api_launch_options import CovalRunsAPILaunchOptions as CovalRunsAPILaunchOptions
 from coval_sdk.models.coval_runs_api_launch_run_request import CovalRunsAPILaunchRunRequest as CovalRunsAPILaunchRunRequest
+from coval_sdk.models.coval_runs_api_launch_run_resource import CovalRunsAPILaunchRunResource as CovalRunsAPILaunchRunResource
 from coval_sdk.models.coval_runs_api_launch_run_response import CovalRunsAPILaunchRunResponse as CovalRunsAPILaunchRunResponse
 from coval_sdk.models.coval_runs_api_list_run_tags_response import CovalRunsAPIListRunTagsResponse as CovalRunsAPIListRunTagsResponse
 from coval_sdk.models.coval_runs_api_metric_result import CovalRunsAPIMetricResult as CovalRunsAPIMetricResult
@@ -898,10 +1058,36 @@ from coval_sdk.models.coval_scheduled_runs_api_error_response_error_details_inne
 from coval_sdk.models.coval_scheduled_runs_api_get_scheduled_run_history_response import CovalScheduledRunsAPIGetScheduledRunHistoryResponse as CovalScheduledRunsAPIGetScheduledRunHistoryResponse
 from coval_sdk.models.coval_scheduled_runs_api_get_scheduled_run_response import CovalScheduledRunsAPIGetScheduledRunResponse as CovalScheduledRunsAPIGetScheduledRunResponse
 from coval_sdk.models.coval_scheduled_runs_api_list_scheduled_runs_response import CovalScheduledRunsAPIListScheduledRunsResponse as CovalScheduledRunsAPIListScheduledRunsResponse
+from coval_sdk.models.coval_scheduled_runs_api_resource_attribution import CovalScheduledRunsAPIResourceAttribution as CovalScheduledRunsAPIResourceAttribution
 from coval_sdk.models.coval_scheduled_runs_api_scheduled_run_history_entry import CovalScheduledRunsAPIScheduledRunHistoryEntry as CovalScheduledRunsAPIScheduledRunHistoryEntry
 from coval_sdk.models.coval_scheduled_runs_api_scheduled_run_resource import CovalScheduledRunsAPIScheduledRunResource as CovalScheduledRunsAPIScheduledRunResource
 from coval_sdk.models.coval_scheduled_runs_api_update_scheduled_run_request import CovalScheduledRunsAPIUpdateScheduledRunRequest as CovalScheduledRunsAPIUpdateScheduledRunRequest
 from coval_sdk.models.coval_scheduled_runs_api_update_scheduled_run_response import CovalScheduledRunsAPIUpdateScheduledRunResponse as CovalScheduledRunsAPIUpdateScheduledRunResponse
+from coval_sdk.models.coval_simulated_conversations_api_error_detail import CovalSimulatedConversationsAPIErrorDetail as CovalSimulatedConversationsAPIErrorDetail
+from coval_sdk.models.coval_simulated_conversations_api_error_info import CovalSimulatedConversationsAPIErrorInfo as CovalSimulatedConversationsAPIErrorInfo
+from coval_sdk.models.coval_simulated_conversations_api_error_response import CovalSimulatedConversationsAPIErrorResponse as CovalSimulatedConversationsAPIErrorResponse
+from coval_sdk.models.coval_simulated_conversations_api_get_simulated_conversation_audio_response import CovalSimulatedConversationsAPIGetSimulatedConversationAudioResponse as CovalSimulatedConversationsAPIGetSimulatedConversationAudioResponse
+from coval_sdk.models.coval_simulated_conversations_api_get_simulated_conversation_metric_response import CovalSimulatedConversationsAPIGetSimulatedConversationMetricResponse as CovalSimulatedConversationsAPIGetSimulatedConversationMetricResponse
+from coval_sdk.models.coval_simulated_conversations_api_get_simulated_conversation_response import CovalSimulatedConversationsAPIGetSimulatedConversationResponse as CovalSimulatedConversationsAPIGetSimulatedConversationResponse
+from coval_sdk.models.coval_simulated_conversations_api_list_simulated_conversation_metrics_response import CovalSimulatedConversationsAPIListSimulatedConversationMetricsResponse as CovalSimulatedConversationsAPIListSimulatedConversationMetricsResponse
+from coval_sdk.models.coval_simulated_conversations_api_list_simulated_conversations_response import CovalSimulatedConversationsAPIListSimulatedConversationsResponse as CovalSimulatedConversationsAPIListSimulatedConversationsResponse
+from coval_sdk.models.coval_simulated_conversations_api_metric_output_collection import CovalSimulatedConversationsAPIMetricOutputCollection as CovalSimulatedConversationsAPIMetricOutputCollection
+from coval_sdk.models.coval_simulated_conversations_api_metric_output_resource import CovalSimulatedConversationsAPIMetricOutputResource as CovalSimulatedConversationsAPIMetricOutputResource
+from coval_sdk.models.coval_simulated_conversations_api_metric_output_resource_value import CovalSimulatedConversationsAPIMetricOutputResourceValue as CovalSimulatedConversationsAPIMetricOutputResourceValue
+from coval_sdk.models.coval_simulated_conversations_api_phone_endpoint import CovalSimulatedConversationsAPIPhoneEndpoint as CovalSimulatedConversationsAPIPhoneEndpoint
+from coval_sdk.models.coval_simulated_conversations_api_rerun_metrics_result_item import CovalSimulatedConversationsAPIRerunMetricsResultItem as CovalSimulatedConversationsAPIRerunMetricsResultItem
+from coval_sdk.models.coval_simulated_conversations_api_rerun_simulated_conversation_metrics_request import CovalSimulatedConversationsAPIRerunSimulatedConversationMetricsRequest as CovalSimulatedConversationsAPIRerunSimulatedConversationMetricsRequest
+from coval_sdk.models.coval_simulated_conversations_api_rerun_simulated_conversation_metrics_response import CovalSimulatedConversationsAPIRerunSimulatedConversationMetricsResponse as CovalSimulatedConversationsAPIRerunSimulatedConversationMetricsResponse
+from coval_sdk.models.coval_simulated_conversations_api_resimulate_simulated_conversation_response import CovalSimulatedConversationsAPIResimulateSimulatedConversationResponse as CovalSimulatedConversationsAPIResimulateSimulatedConversationResponse
+from coval_sdk.models.coval_simulated_conversations_api_simulated_conversation_resource import CovalSimulatedConversationsAPISimulatedConversationResource as CovalSimulatedConversationsAPISimulatedConversationResource
+from coval_sdk.models.coval_simulated_conversations_api_simulated_conversation_resource_destination import CovalSimulatedConversationsAPISimulatedConversationResourceDestination as CovalSimulatedConversationsAPISimulatedConversationResourceDestination
+from coval_sdk.models.coval_simulated_conversations_api_simulated_conversation_resource_full import CovalSimulatedConversationsAPISimulatedConversationResourceFull as CovalSimulatedConversationsAPISimulatedConversationResourceFull
+from coval_sdk.models.coval_simulated_conversations_api_simulated_conversation_resource_source import CovalSimulatedConversationsAPISimulatedConversationResourceSource as CovalSimulatedConversationsAPISimulatedConversationResourceSource
+from coval_sdk.models.coval_simulated_conversations_api_sip_endpoint import CovalSimulatedConversationsAPISipEndpoint as CovalSimulatedConversationsAPISipEndpoint
+from coval_sdk.models.coval_simulated_conversations_api_subvalue_by_timestamp import CovalSimulatedConversationsAPISubvalueByTimestamp as CovalSimulatedConversationsAPISubvalueByTimestamp
+from coval_sdk.models.coval_simulated_conversations_api_update_simulated_conversation_request import CovalSimulatedConversationsAPIUpdateSimulatedConversationRequest as CovalSimulatedConversationsAPIUpdateSimulatedConversationRequest
+from coval_sdk.models.coval_simulated_conversations_api_update_simulated_conversation_response import CovalSimulatedConversationsAPIUpdateSimulatedConversationResponse as CovalSimulatedConversationsAPIUpdateSimulatedConversationResponse
+from coval_sdk.models.coval_simulated_conversations_api_websocket_endpoint import CovalSimulatedConversationsAPIWebsocketEndpoint as CovalSimulatedConversationsAPIWebsocketEndpoint
 from coval_sdk.models.coval_simulations_api_error_detail import CovalSimulationsAPIErrorDetail as CovalSimulationsAPIErrorDetail
 from coval_sdk.models.coval_simulations_api_error_info import CovalSimulationsAPIErrorInfo as CovalSimulationsAPIErrorInfo
 from coval_sdk.models.coval_simulations_api_error_response import CovalSimulationsAPIErrorResponse as CovalSimulationsAPIErrorResponse
@@ -933,7 +1119,12 @@ from coval_sdk.models.coval_slack_integration_api_connect_slack_response import 
 from coval_sdk.models.coval_slack_integration_api_disconnect_slack_response import CovalSlackIntegrationAPIDisconnectSlackResponse as CovalSlackIntegrationAPIDisconnectSlackResponse
 from coval_sdk.models.coval_slack_integration_api_error_response import CovalSlackIntegrationAPIErrorResponse as CovalSlackIntegrationAPIErrorResponse
 from coval_sdk.models.coval_slack_integration_api_error_response_error import CovalSlackIntegrationAPIErrorResponseError as CovalSlackIntegrationAPIErrorResponseError
+from coval_sdk.models.coval_slack_integration_api_slack_authorization_intent import CovalSlackIntegrationAPISlackAuthorizationIntent as CovalSlackIntegrationAPISlackAuthorizationIntent
 from coval_sdk.models.coval_slack_integration_api_slack_status_response import CovalSlackIntegrationAPISlackStatusResponse as CovalSlackIntegrationAPISlackStatusResponse
+from coval_sdk.models.coval_sofia_api_error_response import CovalSofiaAPIErrorResponse as CovalSofiaAPIErrorResponse
+from coval_sdk.models.coval_sofia_api_error_response_error import CovalSofiaAPIErrorResponseError as CovalSofiaAPIErrorResponseError
+from coval_sdk.models.coval_sofia_api_sofia_delegation_token_request import CovalSofiaAPISofiaDelegationTokenRequest as CovalSofiaAPISofiaDelegationTokenRequest
+from coval_sdk.models.coval_sofia_api_sofia_delegation_token_response import CovalSofiaAPISofiaDelegationTokenResponse as CovalSofiaAPISofiaDelegationTokenResponse
 from coval_sdk.models.coval_tags_api_create_tag_request import CovalTagsAPICreateTagRequest as CovalTagsAPICreateTagRequest
 from coval_sdk.models.coval_tags_api_create_tag_response import CovalTagsAPICreateTagResponse as CovalTagsAPICreateTagResponse
 from coval_sdk.models.coval_tags_api_delete_tag_response import CovalTagsAPIDeleteTagResponse as CovalTagsAPIDeleteTagResponse
@@ -943,8 +1134,45 @@ from coval_sdk.models.coval_tags_api_error_response_error_details_inner import C
 from coval_sdk.models.coval_tags_api_get_tag_response import CovalTagsAPIGetTagResponse as CovalTagsAPIGetTagResponse
 from coval_sdk.models.coval_tags_api_list_tags_response import CovalTagsAPIListTagsResponse as CovalTagsAPIListTagsResponse
 from coval_sdk.models.coval_tags_api_tag_resource import CovalTagsAPITagResource as CovalTagsAPITagResource
+from coval_sdk.models.coval_tags_api_tag_usage import CovalTagsAPITagUsage as CovalTagsAPITagUsage
 from coval_sdk.models.coval_tags_api_update_tag_request import CovalTagsAPIUpdateTagRequest as CovalTagsAPIUpdateTagRequest
 from coval_sdk.models.coval_tags_api_update_tag_response import CovalTagsAPIUpdateTagResponse as CovalTagsAPIUpdateTagResponse
+from coval_sdk.models.coval_uploaded_conversations_api_conversation_metric_value import CovalUploadedConversationsAPIConversationMetricValue as CovalUploadedConversationsAPIConversationMetricValue
+from coval_sdk.models.coval_uploaded_conversations_api_conversation_metric_value_value import CovalUploadedConversationsAPIConversationMetricValueValue as CovalUploadedConversationsAPIConversationMetricValueValue
+from coval_sdk.models.coval_uploaded_conversations_api_conversation_progress import CovalUploadedConversationsAPIConversationProgress as CovalUploadedConversationsAPIConversationProgress
+from coval_sdk.models.coval_uploaded_conversations_api_conversation_status import CovalUploadedConversationsAPIConversationStatus as CovalUploadedConversationsAPIConversationStatus
+from coval_sdk.models.coval_uploaded_conversations_api_create_audio_upload_request import CovalUploadedConversationsAPICreateAudioUploadRequest as CovalUploadedConversationsAPICreateAudioUploadRequest
+from coval_sdk.models.coval_uploaded_conversations_api_create_audio_upload_response import CovalUploadedConversationsAPICreateAudioUploadResponse as CovalUploadedConversationsAPICreateAudioUploadResponse
+from coval_sdk.models.coval_uploaded_conversations_api_error_detail import CovalUploadedConversationsAPIErrorDetail as CovalUploadedConversationsAPIErrorDetail
+from coval_sdk.models.coval_uploaded_conversations_api_error_response import CovalUploadedConversationsAPIErrorResponse as CovalUploadedConversationsAPIErrorResponse
+from coval_sdk.models.coval_uploaded_conversations_api_error_response_error import CovalUploadedConversationsAPIErrorResponseError as CovalUploadedConversationsAPIErrorResponseError
+from coval_sdk.models.coval_uploaded_conversations_api_filtered_submit_response import CovalUploadedConversationsAPIFilteredSubmitResponse as CovalUploadedConversationsAPIFilteredSubmitResponse
+from coval_sdk.models.coval_uploaded_conversations_api_get_uploaded_conversation_audio_response import CovalUploadedConversationsAPIGetUploadedConversationAudioResponse as CovalUploadedConversationsAPIGetUploadedConversationAudioResponse
+from coval_sdk.models.coval_uploaded_conversations_api_get_uploaded_conversation_metric_response import CovalUploadedConversationsAPIGetUploadedConversationMetricResponse as CovalUploadedConversationsAPIGetUploadedConversationMetricResponse
+from coval_sdk.models.coval_uploaded_conversations_api_get_uploaded_conversation_response import CovalUploadedConversationsAPIGetUploadedConversationResponse as CovalUploadedConversationsAPIGetUploadedConversationResponse
+from coval_sdk.models.coval_uploaded_conversations_api_list_uploaded_conversation_metrics_response import CovalUploadedConversationsAPIListUploadedConversationMetricsResponse as CovalUploadedConversationsAPIListUploadedConversationMetricsResponse
+from coval_sdk.models.coval_uploaded_conversations_api_list_uploaded_conversations_response import CovalUploadedConversationsAPIListUploadedConversationsResponse as CovalUploadedConversationsAPIListUploadedConversationsResponse
+from coval_sdk.models.coval_uploaded_conversations_api_metric_breakdown_response import CovalUploadedConversationsAPIMetricBreakdownResponse as CovalUploadedConversationsAPIMetricBreakdownResponse
+from coval_sdk.models.coval_uploaded_conversations_api_metric_breakdown_row import CovalUploadedConversationsAPIMetricBreakdownRow as CovalUploadedConversationsAPIMetricBreakdownRow
+from coval_sdk.models.coval_uploaded_conversations_api_metric_output_collection import CovalUploadedConversationsAPIMetricOutputCollection as CovalUploadedConversationsAPIMetricOutputCollection
+from coval_sdk.models.coval_uploaded_conversations_api_metric_output_resource import CovalUploadedConversationsAPIMetricOutputResource as CovalUploadedConversationsAPIMetricOutputResource
+from coval_sdk.models.coval_uploaded_conversations_api_metric_output_resource_evidence_references_inner import CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInner as CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInner
+from coval_sdk.models.coval_uploaded_conversations_api_metric_output_resource_evidence_references_inner_one_of import CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf as CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf
+from coval_sdk.models.coval_uploaded_conversations_api_metric_output_resource_evidence_references_inner_one_of1 import CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1 as CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1
+from coval_sdk.models.coval_uploaded_conversations_api_metric_output_resource_subvalues_by_timestamp_inner import CovalUploadedConversationsAPIMetricOutputResourceSubvaluesByTimestampInner as CovalUploadedConversationsAPIMetricOutputResourceSubvaluesByTimestampInner
+from coval_sdk.models.coval_uploaded_conversations_api_metric_output_resource_value import CovalUploadedConversationsAPIMetricOutputResourceValue as CovalUploadedConversationsAPIMetricOutputResourceValue
+from coval_sdk.models.coval_uploaded_conversations_api_patch_uploaded_conversation_request import CovalUploadedConversationsAPIPatchUploadedConversationRequest as CovalUploadedConversationsAPIPatchUploadedConversationRequest
+from coval_sdk.models.coval_uploaded_conversations_api_phone_endpoint import CovalUploadedConversationsAPIPhoneEndpoint as CovalUploadedConversationsAPIPhoneEndpoint
+from coval_sdk.models.coval_uploaded_conversations_api_sip_endpoint import CovalUploadedConversationsAPISipEndpoint as CovalUploadedConversationsAPISipEndpoint
+from coval_sdk.models.coval_uploaded_conversations_api_submit_uploaded_conversation_request import CovalUploadedConversationsAPISubmitUploadedConversationRequest as CovalUploadedConversationsAPISubmitUploadedConversationRequest
+from coval_sdk.models.coval_uploaded_conversations_api_submit_uploaded_conversation_response import CovalUploadedConversationsAPISubmitUploadedConversationResponse as CovalUploadedConversationsAPISubmitUploadedConversationResponse
+from coval_sdk.models.coval_uploaded_conversations_api_tool_call import CovalUploadedConversationsAPIToolCall as CovalUploadedConversationsAPIToolCall
+from coval_sdk.models.coval_uploaded_conversations_api_tool_call_function import CovalUploadedConversationsAPIToolCallFunction as CovalUploadedConversationsAPIToolCallFunction
+from coval_sdk.models.coval_uploaded_conversations_api_transcript_message import CovalUploadedConversationsAPITranscriptMessage as CovalUploadedConversationsAPITranscriptMessage
+from coval_sdk.models.coval_uploaded_conversations_api_uploaded_conversation_resource import CovalUploadedConversationsAPIUploadedConversationResource as CovalUploadedConversationsAPIUploadedConversationResource
+from coval_sdk.models.coval_uploaded_conversations_api_uploaded_conversation_resource_destination import CovalUploadedConversationsAPIUploadedConversationResourceDestination as CovalUploadedConversationsAPIUploadedConversationResourceDestination
+from coval_sdk.models.coval_uploaded_conversations_api_uploaded_conversation_resource_source import CovalUploadedConversationsAPIUploadedConversationResourceSource as CovalUploadedConversationsAPIUploadedConversationResourceSource
+from coval_sdk.models.coval_uploaded_conversations_api_websocket_endpoint import CovalUploadedConversationsAPIWebsocketEndpoint as CovalUploadedConversationsAPIWebsocketEndpoint
 from coval_sdk.models.coval_webhooks_api_create_webhook_request import CovalWebhooksAPICreateWebhookRequest as CovalWebhooksAPICreateWebhookRequest
 from coval_sdk.models.coval_webhooks_api_delete_webhook_response import CovalWebhooksAPIDeleteWebhookResponse as CovalWebhooksAPIDeleteWebhookResponse
 from coval_sdk.models.coval_webhooks_api_error_response import CovalWebhooksAPIErrorResponse as CovalWebhooksAPIErrorResponse
@@ -966,21 +1194,36 @@ from coval_sdk.models.create_test_set201_response import CreateTestSet201Respons
 from coval_sdk.models.duplicate_agent_request import DuplicateAgentRequest as DuplicateAgentRequest
 from coval_sdk.models.get_conversation_metric200_response import GetConversationMetric200Response as GetConversationMetric200Response
 from coval_sdk.models.get_run200_response import GetRun200Response as GetRun200Response
+from coval_sdk.models.get_simulated_conversation_metric200_response import GetSimulatedConversationMetric200Response as GetSimulatedConversationMetric200Response
 from coval_sdk.models.get_trace_quality_summary200_response import GetTraceQualitySummary200Response as GetTraceQualitySummary200Response
 from coval_sdk.models.get_trace_quality_summary200_response_target import GetTraceQualitySummary200ResponseTarget as GetTraceQualitySummary200ResponseTarget
+from coval_sdk.models.get_uploaded_conversation_metric200_response import GetUploadedConversationMetric200Response as GetUploadedConversationMetric200Response
 from coval_sdk.models.ingest_traces200_response import IngestTraces200Response as IngestTraces200Response
 from coval_sdk.models.list_conversations200_response import ListConversations200Response as ListConversations200Response
 from coval_sdk.models.list_runs200_response import ListRuns200Response as ListRuns200Response
 from coval_sdk.models.list_runs400_response import ListRuns400Response as ListRuns400Response
 from coval_sdk.models.list_test_cases200_response import ListTestCases200Response as ListTestCases200Response
 from coval_sdk.models.list_test_sets200_response import ListTestSets200Response as ListTestSets200Response
+from coval_sdk.models.list_uploaded_conversations200_response import ListUploadedConversations200Response as ListUploadedConversations200Response
+from coval_sdk.models.non_script_test_case import NonSCRIPTTestCase as NonSCRIPTTestCase
+from coval_sdk.models.persona_with_prompt import PersonaWithPrompt as PersonaWithPrompt
+from coval_sdk.models.script_test_case_with_legacy_nested_turns import SCRIPTTestCaseWithLegacyNestedTurns as SCRIPTTestCaseWithLegacyNestedTurns
+from coval_sdk.models.script_test_case_with_legacy_nested_turns_simulation_metadata_input import SCRIPTTestCaseWithLegacyNestedTurnsSimulationMetadataInput as SCRIPTTestCaseWithLegacyNestedTurnsSimulationMetadataInput
+from coval_sdk.models.script_test_case_with_top_level_turns import SCRIPTTestCaseWithTopLevelTurns as SCRIPTTestCaseWithTopLevelTurns
+from coval_sdk.models.silent_persona import SilentPersona as SilentPersona
 from coval_sdk.models.simulations_get_metric200_response import SimulationsGetMetric200Response as SimulationsGetMetric200Response
 from coval_sdk.models.submit_conversation200_response import SubmitConversation200Response as SubmitConversation200Response
+from coval_sdk.models.submit_uploaded_conversation200_response import SubmitUploadedConversation200Response as SubmitUploadedConversation200Response
 from coval_sdk.models.test_cases_api_create_test_case_request import TestCasesAPICreateTestCaseRequest as TestCasesAPICreateTestCaseRequest
 from coval_sdk.models.test_cases_api_error_response import TestCasesAPIErrorResponse as TestCasesAPIErrorResponse
 from coval_sdk.models.test_cases_api_error_response_error import TestCasesAPIErrorResponseError as TestCasesAPIErrorResponseError
 from coval_sdk.models.test_cases_api_error_response_error_details_inner import TestCasesAPIErrorResponseErrorDetailsInner as TestCasesAPIErrorResponseErrorDetailsInner
+from coval_sdk.models.test_cases_api_resource_attribution import TestCasesAPIResourceAttribution as TestCasesAPIResourceAttribution
+from coval_sdk.models.test_cases_api_script_turn_dtmf import TestCasesAPIScriptTurnDtmf as TestCasesAPIScriptTurnDtmf
+from coval_sdk.models.test_cases_api_script_turn_skip import TestCasesAPIScriptTurnSkip as TestCasesAPIScriptTurnSkip
+from coval_sdk.models.test_cases_api_script_turn_text import TestCasesAPIScriptTurnText as TestCasesAPIScriptTurnText
 from coval_sdk.models.test_cases_api_test_case_resource import TestCasesAPITestCaseResource as TestCasesAPITestCaseResource
+from coval_sdk.models.test_cases_api_test_case_resource_script_turns_inner import TestCasesAPITestCaseResourceScriptTurnsInner as TestCasesAPITestCaseResourceScriptTurnsInner
 from coval_sdk.models.test_cases_api_update_test_case_request import TestCasesAPIUpdateTestCaseRequest as TestCasesAPIUpdateTestCaseRequest
 from coval_sdk.models.test_sets_api_add_test_set_agents_request import TestSetsAPIAddTestSetAgentsRequest as TestSetsAPIAddTestSetAgentsRequest
 from coval_sdk.models.test_sets_api_create_test_set_request import TestSetsAPICreateTestSetRequest as TestSetsAPICreateTestSetRequest
@@ -990,6 +1233,7 @@ from coval_sdk.models.test_sets_api_error_response_error_details_inner import Te
 from coval_sdk.models.test_sets_api_list_test_set_agents_response import TestSetsAPIListTestSetAgentsResponse as TestSetsAPIListTestSetAgentsResponse
 from coval_sdk.models.test_sets_api_list_test_set_records_response import TestSetsAPIListTestSetRecordsResponse as TestSetsAPIListTestSetRecordsResponse
 from coval_sdk.models.test_sets_api_list_test_set_versions_response import TestSetsAPIListTestSetVersionsResponse as TestSetsAPIListTestSetVersionsResponse
+from coval_sdk.models.test_sets_api_resource_attribution import TestSetsAPIResourceAttribution as TestSetsAPIResourceAttribution
 from coval_sdk.models.test_sets_api_test_set_agent_resource import TestSetsAPITestSetAgentResource as TestSetsAPITestSetAgentResource
 from coval_sdk.models.test_sets_api_test_set_record_resource import TestSetsAPITestSetRecordResource as TestSetsAPITestSetRecordResource
 from coval_sdk.models.test_sets_api_test_set_record_resource_expected_output import TestSetsAPITestSetRecordResourceExpectedOutput as TestSetsAPITestSetRecordResourceExpectedOutput
@@ -1015,11 +1259,7 @@ from coval_sdk.models.coval_metrics_api_error_response_error_details_inner impor
 
 from coval_sdk.models.coval_monitors_api_error_response_error import CovalMonitorsAPIErrorResponseError
 
-from coval_sdk.models.coval_monitors_api_monitor_event_resource_condition_results_inner import CovalMonitorsAPIMonitorEventResourceConditionResultsInner
-
 from coval_sdk.models.coval_monitors_api_monitor_event_resource_condition_results_inner_computed_value import CovalMonitorsAPIMonitorEventResourceConditionResultsInnerComputedValue
-
-from coval_sdk.models.coval_monitors_api_monitor_event_resource_dispatched_channels_inner import CovalMonitorsAPIMonitorEventResourceDispatchedChannelsInner
 
 from coval_sdk.client import CovalClient
 

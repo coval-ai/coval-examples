@@ -22,7 +22,7 @@ import {
 } from './CovalAgentsAPISimulatorType.js';
 
 /**
- * Partial update request (PATCH semantics - only provided fields are updated)
+ * Fields to update on an agent.
  * @export
  * @interface CovalAgentsAPIUpdateAgentRequest
  */
@@ -58,11 +58,11 @@ export interface CovalAgentsAPIUpdateAgentRequest {
      */
     prompt?: string | null;
     /**
-     * New external id for the agent
+     * External identifier for the agent
      * @type {string}
      * @memberof CovalAgentsAPIUpdateAgentRequest
      */
-    customer_agent_id?: string | null;
+    customer_agent_id?: string;
     /**
      * Primary language for the agent
      * @type {string}
@@ -70,37 +70,37 @@ export interface CovalAgentsAPIUpdateAgentRequest {
      */
     language?: string | null;
     /**
-     * Free-form agent attributes. None means don't update; {} clears them.
+     * Free-form agent attributes
      * @type {{ [key: string]: any; }}
      * @memberof CovalAgentsAPIUpdateAgentRequest
      */
     attributes?: { [key: string]: any; } | null;
     /**
-     * Simulator-specific configuration (null = no change, {} = clear)
+     * Simulator-specific configuration
      * @type {{ [key: string]: any; }}
      * @memberof CovalAgentsAPIUpdateAgentRequest
      */
     metadata?: { [key: string]: any; } | null;
     /**
-     * Workflow configuration (null = no change, {} = clear)
+     * Workflow configuration
      * @type {{ [key: string]: any; }}
      * @memberof CovalAgentsAPIUpdateAgentRequest
      */
     workflows?: { [key: string]: any; } | null;
     /**
-     * Associated metric IDs (null = no change, [] = clear)
+     * Associated metric IDs
      * @type {Array<string>}
      * @memberof CovalAgentsAPIUpdateAgentRequest
      */
     metric_ids?: Array<string> | null;
     /**
-     * Associated test set IDs (null = no change, [] = clear)
+     * Associated test set IDs
      * @type {Array<string>}
      * @memberof CovalAgentsAPIUpdateAgentRequest
      */
     test_set_ids?: Array<string> | null;
     /**
-     * Tags to associate with this agent. Null or omitted leaves tags unchanged. Pass [] to clear all tags.
+     * Tags associated with the agent
      * @type {Array<string>}
      * @memberof CovalAgentsAPIUpdateAgentRequest
      */

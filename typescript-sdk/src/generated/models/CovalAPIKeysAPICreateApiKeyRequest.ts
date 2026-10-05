@@ -58,8 +58,24 @@ export interface CovalAPIKeysAPICreateApiKeyRequest {
      * @memberof CovalAPIKeysAPICreateApiKeyRequest
      */
     permissions?: Array<CovalAPIKeysAPIPermissionScope>;
+    /**
+     * Target environment
+     * @type {CovalAPIKeysAPICreateApiKeyRequestEnvironmentEnum}
+     * @memberof CovalAPIKeysAPICreateApiKeyRequest
+     */
+    environment?: CovalAPIKeysAPICreateApiKeyRequestEnvironmentEnum;
 }
 
+
+/**
+ * @export
+ */
+export const CovalAPIKeysAPICreateApiKeyRequestEnvironmentEnum = {
+    Production: 'PRODUCTION',
+    Staging: 'STAGING',
+    Development: 'DEVELOPMENT'
+} as const;
+export type CovalAPIKeysAPICreateApiKeyRequestEnvironmentEnum = typeof CovalAPIKeysAPICreateApiKeyRequestEnvironmentEnum[keyof typeof CovalAPIKeysAPICreateApiKeyRequestEnvironmentEnum];
 
 
 /**
@@ -83,6 +99,7 @@ export function CovalAPIKeysAPICreateApiKeyRequestFromJSONTyped(json: any, ignor
         'description': json['description'] == null ? undefined : json['description'],
         'key_type': json['key_type'] == null ? undefined : CovalAPIKeysAPIKeyTypeFromJSON(json['key_type']),
         'permissions': json['permissions'] == null ? undefined : ((json['permissions'] as Array<any>).map(CovalAPIKeysAPIPermissionScopeFromJSON)),
+        'environment': json['environment'] == null ? undefined : json['environment'],
     };
 }
 
@@ -101,6 +118,7 @@ export function CovalAPIKeysAPICreateApiKeyRequestToJSONTyped(value?: CovalAPIKe
         'description': value['description'],
         'key_type': CovalAPIKeysAPIKeyTypeToJSON(value['key_type']),
         'permissions': value['permissions'] == null ? undefined : ((value['permissions'] as Array<any>).map(CovalAPIKeysAPIPermissionScopeToJSON)),
+        'environment': value['environment'],
     };
 }
 

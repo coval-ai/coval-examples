@@ -49,6 +49,7 @@ class WidgetsApi:
         self,
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
         coval_dashboards_api_create_widget_request: CovalDashboardsAPICreateWidgetRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -70,6 +71,8 @@ class WidgetsApi:
         :type dashboard_id: str
         :param coval_dashboards_api_create_widget_request: (required)
         :type coval_dashboards_api_create_widget_request: CovalDashboardsAPICreateWidgetRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -95,6 +98,7 @@ class WidgetsApi:
         _param = self._create_widget_serialize(
             dashboard_id=dashboard_id,
             coval_dashboards_api_create_widget_request=coval_dashboards_api_create_widget_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -124,6 +128,7 @@ class WidgetsApi:
         self,
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
         coval_dashboards_api_create_widget_request: CovalDashboardsAPICreateWidgetRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -145,6 +150,8 @@ class WidgetsApi:
         :type dashboard_id: str
         :param coval_dashboards_api_create_widget_request: (required)
         :type coval_dashboards_api_create_widget_request: CovalDashboardsAPICreateWidgetRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -170,6 +177,7 @@ class WidgetsApi:
         _param = self._create_widget_serialize(
             dashboard_id=dashboard_id,
             coval_dashboards_api_create_widget_request=coval_dashboards_api_create_widget_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -199,6 +207,7 @@ class WidgetsApi:
         self,
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
         coval_dashboards_api_create_widget_request: CovalDashboardsAPICreateWidgetRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -220,6 +229,8 @@ class WidgetsApi:
         :type dashboard_id: str
         :param coval_dashboards_api_create_widget_request: (required)
         :type coval_dashboards_api_create_widget_request: CovalDashboardsAPICreateWidgetRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -245,6 +256,7 @@ class WidgetsApi:
         _param = self._create_widget_serialize(
             dashboard_id=dashboard_id,
             coval_dashboards_api_create_widget_request=coval_dashboards_api_create_widget_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -269,6 +281,7 @@ class WidgetsApi:
         self,
         dashboard_id,
         coval_dashboards_api_create_widget_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -294,6 +307,8 @@ class WidgetsApi:
             _path_params['dashboard_id'] = dashboard_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_dashboards_api_create_widget_request is not None:
@@ -350,6 +365,7 @@ class WidgetsApi:
         self,
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
         widget_id: Annotated[StrictStr, Field(description="Widget resource ID (22-character ShortUUID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -371,6 +387,8 @@ class WidgetsApi:
         :type dashboard_id: str
         :param widget_id: Widget resource ID (22-character ShortUUID) (required)
         :type widget_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -396,6 +414,7 @@ class WidgetsApi:
         _param = self._delete_widget_serialize(
             dashboard_id=dashboard_id,
             widget_id=widget_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -424,6 +443,7 @@ class WidgetsApi:
         self,
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
         widget_id: Annotated[StrictStr, Field(description="Widget resource ID (22-character ShortUUID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -445,6 +465,8 @@ class WidgetsApi:
         :type dashboard_id: str
         :param widget_id: Widget resource ID (22-character ShortUUID) (required)
         :type widget_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -470,6 +492,7 @@ class WidgetsApi:
         _param = self._delete_widget_serialize(
             dashboard_id=dashboard_id,
             widget_id=widget_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -498,6 +521,7 @@ class WidgetsApi:
         self,
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
         widget_id: Annotated[StrictStr, Field(description="Widget resource ID (22-character ShortUUID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -519,6 +543,8 @@ class WidgetsApi:
         :type dashboard_id: str
         :param widget_id: Widget resource ID (22-character ShortUUID) (required)
         :type widget_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -544,6 +570,7 @@ class WidgetsApi:
         _param = self._delete_widget_serialize(
             dashboard_id=dashboard_id,
             widget_id=widget_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -567,6 +594,7 @@ class WidgetsApi:
         self,
         dashboard_id,
         widget_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -594,6 +622,8 @@ class WidgetsApi:
             _path_params['widget_id'] = widget_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -635,6 +665,7 @@ class WidgetsApi:
         self,
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
         widget_id: Annotated[StrictStr, Field(description="Widget resource ID (22-character ShortUUID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -656,6 +687,8 @@ class WidgetsApi:
         :type dashboard_id: str
         :param widget_id: Widget resource ID (22-character ShortUUID) (required)
         :type widget_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -681,6 +714,7 @@ class WidgetsApi:
         _param = self._get_widget_serialize(
             dashboard_id=dashboard_id,
             widget_id=widget_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -709,6 +743,7 @@ class WidgetsApi:
         self,
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
         widget_id: Annotated[StrictStr, Field(description="Widget resource ID (22-character ShortUUID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -730,6 +765,8 @@ class WidgetsApi:
         :type dashboard_id: str
         :param widget_id: Widget resource ID (22-character ShortUUID) (required)
         :type widget_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -755,6 +792,7 @@ class WidgetsApi:
         _param = self._get_widget_serialize(
             dashboard_id=dashboard_id,
             widget_id=widget_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -783,6 +821,7 @@ class WidgetsApi:
         self,
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
         widget_id: Annotated[StrictStr, Field(description="Widget resource ID (22-character ShortUUID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -804,6 +843,8 @@ class WidgetsApi:
         :type dashboard_id: str
         :param widget_id: Widget resource ID (22-character ShortUUID) (required)
         :type widget_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -829,6 +870,7 @@ class WidgetsApi:
         _param = self._get_widget_serialize(
             dashboard_id=dashboard_id,
             widget_id=widget_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -852,6 +894,7 @@ class WidgetsApi:
         self,
         dashboard_id,
         widget_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -879,6 +922,8 @@ class WidgetsApi:
             _path_params['widget_id'] = widget_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -919,6 +964,7 @@ class WidgetsApi:
     def list_widgets(
         self,
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         _request_timeout: Union[
@@ -940,6 +986,8 @@ class WidgetsApi:
 
         :param dashboard_id: Dashboard resource ID (22-character ShortUUID) (required)
         :type dashboard_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of results per page
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
@@ -968,6 +1016,7 @@ class WidgetsApi:
 
         _param = self._list_widgets_serialize(
             dashboard_id=dashboard_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             _request_auth=_request_auth,
@@ -997,6 +1046,7 @@ class WidgetsApi:
     def list_widgets_with_http_info(
         self,
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         _request_timeout: Union[
@@ -1018,6 +1068,8 @@ class WidgetsApi:
 
         :param dashboard_id: Dashboard resource ID (22-character ShortUUID) (required)
         :type dashboard_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of results per page
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
@@ -1046,6 +1098,7 @@ class WidgetsApi:
 
         _param = self._list_widgets_serialize(
             dashboard_id=dashboard_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             _request_auth=_request_auth,
@@ -1075,6 +1128,7 @@ class WidgetsApi:
     def list_widgets_without_preload_content(
         self,
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         _request_timeout: Union[
@@ -1096,6 +1150,8 @@ class WidgetsApi:
 
         :param dashboard_id: Dashboard resource ID (22-character ShortUUID) (required)
         :type dashboard_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of results per page
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
@@ -1124,6 +1180,7 @@ class WidgetsApi:
 
         _param = self._list_widgets_serialize(
             dashboard_id=dashboard_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             _request_auth=_request_auth,
@@ -1148,6 +1205,7 @@ class WidgetsApi:
     def _list_widgets_serialize(
         self,
         dashboard_id,
+        x_coval_workspace_id,
         page_size,
         page_token,
         _request_auth,
@@ -1183,6 +1241,8 @@ class WidgetsApi:
             _query_params.append(('page_token', page_token))
             
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -1225,6 +1285,7 @@ class WidgetsApi:
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
         widget_id: Annotated[StrictStr, Field(description="Widget resource ID (22-character ShortUUID)")],
         coval_dashboards_api_update_widget_request: CovalDashboardsAPIUpdateWidgetRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1248,6 +1309,8 @@ class WidgetsApi:
         :type widget_id: str
         :param coval_dashboards_api_update_widget_request: (required)
         :type coval_dashboards_api_update_widget_request: CovalDashboardsAPIUpdateWidgetRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1274,6 +1337,7 @@ class WidgetsApi:
             dashboard_id=dashboard_id,
             widget_id=widget_id,
             coval_dashboards_api_update_widget_request=coval_dashboards_api_update_widget_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1304,6 +1368,7 @@ class WidgetsApi:
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
         widget_id: Annotated[StrictStr, Field(description="Widget resource ID (22-character ShortUUID)")],
         coval_dashboards_api_update_widget_request: CovalDashboardsAPIUpdateWidgetRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1327,6 +1392,8 @@ class WidgetsApi:
         :type widget_id: str
         :param coval_dashboards_api_update_widget_request: (required)
         :type coval_dashboards_api_update_widget_request: CovalDashboardsAPIUpdateWidgetRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1353,6 +1420,7 @@ class WidgetsApi:
             dashboard_id=dashboard_id,
             widget_id=widget_id,
             coval_dashboards_api_update_widget_request=coval_dashboards_api_update_widget_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1383,6 +1451,7 @@ class WidgetsApi:
         dashboard_id: Annotated[StrictStr, Field(description="Dashboard resource ID (22-character ShortUUID)")],
         widget_id: Annotated[StrictStr, Field(description="Widget resource ID (22-character ShortUUID)")],
         coval_dashboards_api_update_widget_request: CovalDashboardsAPIUpdateWidgetRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1406,6 +1475,8 @@ class WidgetsApi:
         :type widget_id: str
         :param coval_dashboards_api_update_widget_request: (required)
         :type coval_dashboards_api_update_widget_request: CovalDashboardsAPIUpdateWidgetRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1432,6 +1503,7 @@ class WidgetsApi:
             dashboard_id=dashboard_id,
             widget_id=widget_id,
             coval_dashboards_api_update_widget_request=coval_dashboards_api_update_widget_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1457,6 +1529,7 @@ class WidgetsApi:
         dashboard_id,
         widget_id,
         coval_dashboards_api_update_widget_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -1484,6 +1557,8 @@ class WidgetsApi:
             _path_params['widget_id'] = widget_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_dashboards_api_update_widget_request is not None:

@@ -22,6 +22,8 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
+from coval_sdk.models.test_cases_api_resource_attribution import TestCasesAPIResourceAttribution
+from coval_sdk.models.test_cases_api_test_case_resource_script_turns_inner import TestCasesAPITestCaseResourceScriptTurnsInner
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -30,21 +32,23 @@ class TestCasesAPITestCaseResource(BaseModel):
     """
     Test case resource.
     """ # noqa: E501
-    name: Optional[StrictStr] = Field(default=None, description="Resource name in format `test-cases/{id}`")
-    id: Optional[Annotated[str, Field(min_length=22, strict=True, max_length=22)]] = Field(default=None, description="Test case ID")
+    attribution: Optional[TestCasesAPIResourceAttribution] = Field(default=None, description="Authoring timestamps and user IDs. Unknown or deleted users are null.")
+    name: StrictStr = Field(description="Resource name in format `test-cases/{id}`")
+    id: Annotated[str, Field(min_length=22, strict=True, max_length=22)] = Field(description="Test case ID")
     test_set_id: Optional[Annotated[str, Field(min_length=8, strict=True, max_length=8)]] = Field(default=None, description="Test set ID (8-character ID)")
-    input_str: Optional[StrictStr] = Field(default=None, description="Input for the test case")
-    expected_output_str: Optional[StrictStr] = Field(default=None, description="Expected output string")
+    input_str: StrictStr = Field(description="Input for the test case")
+    expected_behaviors: Optional[List[StrictStr]] = Field(default=None, description="Expected behaviors (list of strings), returned in the form they were written.")
     expected_output_json: Optional[Dict[str, Any]] = Field(default=None, description="Expected output as JSON object")
     description: Optional[StrictStr] = Field(default=None, description="Human-readable description of the test case")
-    input_type: Optional[StrictStr] = Field(default='SCENARIO', description="Type of input for the test case. Defaults to SCENARIO. When set to SCRIPT, the simulation_metadata_input should contain a script_turns field with ordered persona turn texts. ")
-    simulation_metadata_input: Optional[Dict[str, Any]] = Field(default=None, description="Metadata for simulation execution. Contents vary by input_type. When input_type is SCRIPT, this object should contain a script_turns field (array of strings) with the ordered lines for the persona to deliver. ")
+    input_type: Optional[StrictStr] = Field(default='SCENARIO', description="Type of input for the test case. IVR_CRAWL identifies crawler-managed cases and is response-only in this API.")
+    script_turns: Optional[List[TestCasesAPITestCaseResourceScriptTurnsInner]] = Field(default=None, description="Ordered persona turns for SCRIPT and IVR_CRAWL cases, exposed at the preferred top-level field. Each entry is either a bare string (spoken text), {\"type\": \"text\", \"text\": ...} (spoken text, explicit form), {\"type\": \"dtmf\", \"digits\": ...} (keypad presses; digits 0-9, *, #, and phone punctuation), or {\"type\": \"skip\"} (the persona stays silent for one turn).")
+    simulation_metadata_input: Optional[Dict[str, Any]] = Field(default=None, description="Legacy simulation metadata. For SCRIPT and IVR_CRAWL cases, script_turns may also be returned here for backward compatibility; new integrations should use the top-level script_turns field. ")
     metric_input: Optional[Dict[str, Any]] = Field(default=None, description="Input data for metric calculations")
     user_notes: Optional[StrictStr] = Field(default=None, description="User-provided notes about the test case")
-    create_time: Optional[datetime] = Field(default=None, description="Timestamp when test case was created")
+    create_time: datetime = Field(description="Timestamp when test case was created")
     update_time: Optional[datetime] = Field(default=None, description="Timestamp when test case was last updated")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "id", "test_set_id", "input_str", "expected_output_str", "expected_output_json", "description", "input_type", "simulation_metadata_input", "metric_input", "user_notes", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["attribution", "name", "id", "test_set_id", "input_str", "expected_behaviors", "expected_output_json", "description", "input_type", "script_turns", "simulation_metadata_input", "metric_input", "user_notes", "create_time", "update_time"]
 
     @field_validator('input_type')
     def input_type_validate_enum(cls, value):
@@ -52,8 +56,8 @@ class TestCasesAPITestCaseResource(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['SCENARIO', 'TRANSCRIPT', 'IVR', 'AUDIO', 'MANUAL', 'SCRIPT']):
-            raise ValueError("must be one of enum values ('SCENARIO', 'TRANSCRIPT', 'IVR', 'AUDIO', 'MANUAL', 'SCRIPT')")
+        if value not in set(['SCENARIO', 'TRANSCRIPT', 'IVR', 'AUDIO', 'MANUAL', 'SCRIPT', 'IVR_CRAWL']):
+            raise ValueError("must be one of enum values ('SCENARIO', 'TRANSCRIPT', 'IVR', 'AUDIO', 'MANUAL', 'SCRIPT', 'IVR_CRAWL')")
         return value
 
     model_config = ConfigDict(
@@ -86,9 +90,11 @@ class TestCasesAPITestCaseResource(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
         * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
+            "attribution",
             "additional_properties",
         ])
 
@@ -97,20 +103,35 @@ class TestCasesAPITestCaseResource(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of attribution
+        if self.attribution:
+            _dict['attribution'] = self.attribution.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in script_turns (list)
+        _items = []
+        if self.script_turns:
+            for _item_script_turns in self.script_turns:
+                if _item_script_turns:
+                    _items.append(_item_script_turns.to_dict())
+            _dict['script_turns'] = _items
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
+
+        # set to None if attribution (nullable) is None
+        # and model_fields_set contains the field
+        if self.attribution is None and "attribution" in self.model_fields_set:
+            _dict['attribution'] = None
 
         # set to None if test_set_id (nullable) is None
         # and model_fields_set contains the field
         if self.test_set_id is None and "test_set_id" in self.model_fields_set:
             _dict['test_set_id'] = None
 
-        # set to None if expected_output_str (nullable) is None
+        # set to None if expected_behaviors (nullable) is None
         # and model_fields_set contains the field
-        if self.expected_output_str is None and "expected_output_str" in self.model_fields_set:
-            _dict['expected_output_str'] = None
+        if self.expected_behaviors is None and "expected_behaviors" in self.model_fields_set:
+            _dict['expected_behaviors'] = None
 
         # set to None if description (nullable) is None
         # and model_fields_set contains the field
@@ -121,6 +142,11 @@ class TestCasesAPITestCaseResource(BaseModel):
         # and model_fields_set contains the field
         if self.input_type is None and "input_type" in self.model_fields_set:
             _dict['input_type'] = None
+
+        # set to None if script_turns (nullable) is None
+        # and model_fields_set contains the field
+        if self.script_turns is None and "script_turns" in self.model_fields_set:
+            _dict['script_turns'] = None
 
         # set to None if user_notes (nullable) is None
         # and model_fields_set contains the field
@@ -144,14 +170,16 @@ class TestCasesAPITestCaseResource(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "attribution": TestCasesAPIResourceAttribution.from_dict(obj["attribution"]) if obj.get("attribution") is not None else None,
             "name": obj.get("name"),
             "id": obj.get("id"),
             "test_set_id": obj.get("test_set_id"),
             "input_str": obj.get("input_str"),
-            "expected_output_str": obj.get("expected_output_str"),
+            "expected_behaviors": obj.get("expected_behaviors"),
             "expected_output_json": obj.get("expected_output_json"),
             "description": obj.get("description"),
             "input_type": obj.get("input_type") if obj.get("input_type") is not None else 'SCENARIO',
+            "script_turns": [TestCasesAPITestCaseResourceScriptTurnsInner.from_dict(_item) for _item in obj["script_turns"]] if obj.get("script_turns") is not None else None,
             "simulation_metadata_input": obj.get("simulation_metadata_input"),
             "metric_input": obj.get("metric_input"),
             "user_notes": obj.get("user_notes"),

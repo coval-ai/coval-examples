@@ -27,13 +27,6 @@ import {
     CovalDashboardsAPITableWidgetConfigToJSON,
     CovalDashboardsAPITableWidgetConfigToJSONTyped,
 } from './CovalDashboardsAPITableWidgetConfig.js';
-import type { CovalDashboardsAPIDataSourceType } from './CovalDashboardsAPIDataSourceType.js';
-import {
-    CovalDashboardsAPIDataSourceTypeFromJSON,
-    CovalDashboardsAPIDataSourceTypeFromJSONTyped,
-    CovalDashboardsAPIDataSourceTypeToJSON,
-    CovalDashboardsAPIDataSourceTypeToJSONTyped,
-} from './CovalDashboardsAPIDataSourceType.js';
 import type { CovalDashboardsAPITextWidgetConfig } from './CovalDashboardsAPITextWidgetConfig.js';
 import {
     CovalDashboardsAPITextWidgetConfigFromJSON,
@@ -69,6 +62,13 @@ import {
     CovalDashboardsAPIVisualizationTypeToJSON,
     CovalDashboardsAPIVisualizationTypeToJSONTyped,
 } from './CovalDashboardsAPIVisualizationType.js';
+import type { CovalDashboardsAPIConversationSource } from './CovalDashboardsAPIConversationSource.js';
+import {
+    CovalDashboardsAPIConversationSourceFromJSON,
+    CovalDashboardsAPIConversationSourceFromJSONTyped,
+    CovalDashboardsAPIConversationSourceToJSON,
+    CovalDashboardsAPIConversationSourceToJSONTyped,
+} from './CovalDashboardsAPIConversationSource.js';
 import type { CovalDashboardsAPIFilterConfig } from './CovalDashboardsAPIFilterConfig.js';
 import {
     CovalDashboardsAPIFilterConfigFromJSON,
@@ -95,67 +95,67 @@ export interface CovalDashboardsAPIWidgetConfig {
      * @type {string}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    metricId?: string;
+    metricId?: string | null;
     /**
      * 
      * @type {CovalDashboardsAPIVisualizationType}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    visualizationType?: CovalDashboardsAPIVisualizationType;
+    visualizationType?: CovalDashboardsAPIVisualizationType | null;
     /**
      * 
-     * @type {CovalDashboardsAPIDataSourceType}
+     * @type {CovalDashboardsAPIConversationSource}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    monitoring?: CovalDashboardsAPIDataSourceType;
+    conversation_source?: CovalDashboardsAPIConversationSource | null;
     /**
      * 
      * @type {CovalDashboardsAPIAggregationType}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    aggregation?: CovalDashboardsAPIAggregationType;
+    aggregation?: CovalDashboardsAPIAggregationType | null;
     /**
      * 
      * @type {CovalDashboardsAPIMetricOutputType}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    metricOutputType?: CovalDashboardsAPIMetricOutputType;
+    metricOutputType?: CovalDashboardsAPIMetricOutputType | null;
     /**
      * Time bucket interval for aggregation
      * @type {CovalDashboardsAPIWidgetConfigBucketIntervalEnum}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    bucketInterval?: CovalDashboardsAPIWidgetConfigBucketIntervalEnum;
+    bucketInterval?: CovalDashboardsAPIWidgetConfigBucketIntervalEnum | null;
     /**
      * Stack series in the chart
      * @type {boolean}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    stacked?: boolean;
+    stacked?: boolean | null;
     /**
      * Group series in the chart
      * @type {boolean}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    grouped?: boolean;
+    grouped?: boolean | null;
     /**
      * Display values as percentages
      * @type {boolean}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    showAsPercentage?: boolean;
+    showAsPercentage?: boolean | null;
     /**
      * 
      * @type {CovalDashboardsAPIGroupByType}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    groupBy?: CovalDashboardsAPIGroupByType;
+    groupBy?: CovalDashboardsAPIGroupByType | null;
     /**
      * Customer metadata key to group by; mutually exclusive with groupBy. Rows fall into one of three groups: the 20 most common values are separate groups, remaining values are combined as a synthetic Other group distinct from a literal customer value named Other, and rows that do not carry the key at all form their own group with a null value, which clients render as Unknown. That last group never occupies one of the 20 slots.
      * @type {string}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    groupByMetadataKey?: string;
+    groupByMetadataKey?: string | null;
     /**
      * Custom color assignments for series (max 200 entries)
      * @type {{ [key: string]: string; }}
@@ -167,13 +167,13 @@ export interface CovalDashboardsAPIWidgetConfig {
      * @type {string}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    xAxisLabel?: string;
+    xAxisLabel?: string | null;
     /**
      * Custom Y-axis label
      * @type {string}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    yAxisLabel?: string;
+    yAxisLabel?: string | null;
     /**
      * Custom display names for series (max 200 entries)
      * @type {{ [key: string]: string; }}
@@ -185,61 +185,61 @@ export interface CovalDashboardsAPIWidgetConfig {
      * @type {Array<string>}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    hiddenSeries?: Array<string>;
+    hiddenSeries?: Array<string> | null;
     /**
      * Decimal precision for displayed values
      * @type {number}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    precision?: number;
+    precision?: number | null;
     /**
      * Unit label for values
      * @type {string}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    units?: string;
+    units?: string | null;
     /**
      * Show count alongside metric
      * @type {boolean}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    showCount?: boolean;
+    showCount?: boolean | null;
     /**
      * Show min/max range
      * @type {boolean}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    showRange?: boolean;
+    showRange?: boolean | null;
     /**
      * Show standard deviation
      * @type {boolean}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    showStdDev?: boolean;
+    showStdDev?: boolean | null;
     /**
      * Show box plot overlay
      * @type {boolean}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    showBoxPlot?: boolean;
+    showBoxPlot?: boolean | null;
     /**
      * Show target zone overlay
      * @type {boolean}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    showTargetZone?: boolean;
+    showTargetZone?: boolean | null;
     /**
      * 
      * @type {CovalDashboardsAPIFilterConfig}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    filters?: CovalDashboardsAPIFilterConfig;
+    filters?: CovalDashboardsAPIFilterConfig | null;
     /**
      * Metric value filters (max 50)
      * @type {Array<CovalDashboardsAPIMetricFilter>}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    metricFilter?: Array<CovalDashboardsAPIMetricFilter>;
+    metricFilter?: Array<CovalDashboardsAPIMetricFilter> | null;
     /**
      * IDs of metrics to display (max 50)
      * @type {Array<string>}
@@ -251,7 +251,7 @@ export interface CovalDashboardsAPIWidgetConfig {
      * @type {string}
      * @memberof CovalDashboardsAPIWidgetConfig
      */
-    text?: string;
+    text?: string | null;
 }
 
 
@@ -286,7 +286,7 @@ export function CovalDashboardsAPIWidgetConfigFromJSONTyped(json: any, ignoreDis
         
         'metricId': json['metricId'] == null ? undefined : json['metricId'],
         'visualizationType': json['visualizationType'] == null ? undefined : CovalDashboardsAPIVisualizationTypeFromJSON(json['visualizationType']),
-        'monitoring': json['monitoring'] == null ? undefined : CovalDashboardsAPIDataSourceTypeFromJSON(json['monitoring']),
+        'conversation_source': json['conversation_source'] == null ? undefined : CovalDashboardsAPIConversationSourceFromJSON(json['conversation_source']),
         'aggregation': json['aggregation'] == null ? undefined : CovalDashboardsAPIAggregationTypeFromJSON(json['aggregation']),
         'metricOutputType': json['metricOutputType'] == null ? undefined : CovalDashboardsAPIMetricOutputTypeFromJSON(json['metricOutputType']),
         'bucketInterval': json['bucketInterval'] == null ? undefined : json['bucketInterval'],
@@ -327,7 +327,7 @@ export function CovalDashboardsAPIWidgetConfigToJSONTyped(value?: CovalDashboard
         
         'metricId': value['metricId'],
         'visualizationType': CovalDashboardsAPIVisualizationTypeToJSON(value['visualizationType']),
-        'monitoring': CovalDashboardsAPIDataSourceTypeToJSON(value['monitoring']),
+        'conversation_source': CovalDashboardsAPIConversationSourceToJSON(value['conversation_source']),
         'aggregation': CovalDashboardsAPIAggregationTypeToJSON(value['aggregation']),
         'metricOutputType': CovalDashboardsAPIMetricOutputTypeToJSON(value['metricOutputType']),
         'bucketInterval': value['bucketInterval'],

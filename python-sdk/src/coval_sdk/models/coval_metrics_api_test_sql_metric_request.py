@@ -31,7 +31,8 @@ class CovalMetricsAPITestSqlMetricRequest(BaseModel):
     sql_query: StrictStr = Field(description="The draft SQL Float metric query to evaluate. Must return the columns `start_offset_milliseconds` and `value`. ")
     aggregation_method: Optional[StrictStr] = Field(default=None, description="How per-row values are aggregated into a single metric value (e.g. MEAN, SUM).")
     unit: Optional[StrictStr] = Field(default=None, description="Optional result unit.")
-    __properties: ClassVar[List[str]] = ["sql_query", "aggregation_method", "unit"]
+    simulation_output_id: Optional[StrictStr] = Field(default=None, description="Run against this simulation only; omit or send null to use recent workspace simulations.")
+    __properties: ClassVar[List[str]] = ["sql_query", "aggregation_method", "unit", "simulation_output_id"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -82,6 +83,11 @@ class CovalMetricsAPITestSqlMetricRequest(BaseModel):
         if self.unit is None and "unit" in self.model_fields_set:
             _dict['unit'] = None
 
+        # set to None if simulation_output_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.simulation_output_id is None and "simulation_output_id" in self.model_fields_set:
+            _dict['simulation_output_id'] = None
+
         return _dict
 
     @classmethod
@@ -96,7 +102,8 @@ class CovalMetricsAPITestSqlMetricRequest(BaseModel):
         _obj = cls.model_validate({
             "sql_query": obj.get("sql_query"),
             "aggregation_method": obj.get("aggregation_method"),
-            "unit": obj.get("unit")
+            "unit": obj.get("unit"),
+            "simulation_output_id": obj.get("simulation_output_id")
         })
         return _obj
 

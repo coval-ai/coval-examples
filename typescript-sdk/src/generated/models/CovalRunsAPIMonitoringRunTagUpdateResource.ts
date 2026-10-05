@@ -36,7 +36,7 @@ export interface CovalRunsAPIMonitoringRunTagUpdateResource {
      * @type {Array<string>}
      * @memberof CovalRunsAPIMonitoringRunTagUpdateResource
      */
-    tags: Array<string>;
+    tags?: Array<string>;
 }
 
 /**
@@ -45,7 +45,6 @@ export interface CovalRunsAPIMonitoringRunTagUpdateResource {
 export function instanceOfCovalRunsAPIMonitoringRunTagUpdateResource(value: object): value is CovalRunsAPIMonitoringRunTagUpdateResource {
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('run_id' in value) || value['run_id'] === undefined) return false;
-    if (!('tags' in value) || value['tags'] === undefined) return false;
     return true;
 }
 
@@ -61,7 +60,7 @@ export function CovalRunsAPIMonitoringRunTagUpdateResourceFromJSONTyped(json: an
         
         'name': json['name'],
         'run_id': json['run_id'],
-        'tags': json['tags'],
+        'tags': json['tags'] == null ? undefined : json['tags'],
     };
 }
 

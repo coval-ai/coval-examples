@@ -18,20 +18,39 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
 
 class CovalSlackIntegrationAPISlackStatusResponse(BaseModel):
     """
-    Product-facing Slack connection status. No secrets are returned.
+    Secret-free Slack connection and binding-bootstrap state.
     """ # noqa: E501
     connected: StrictBool = Field(description="Whether a Slack workspace is connected for this organization")
     team_name: Optional[StrictStr] = Field(default=None, description="Connected Slack workspace/team name, or null when not connected")
+    enterprise_id: Optional[StrictStr] = Field(default=None, description="Slack Enterprise Grid ID, or null for non-Grid and disconnected states.")
+    team_id: Optional[StrictStr] = Field(default=None, description="Slack workspace/team ID when connected.")
+    installation_generation: Optional[Annotated[str, Field(min_length=16, strict=True, max_length=128)]] = Field(default=None, description="Opaque backend installation generation used to bind Sofia safely.")
+    migration_required: Optional[StrictBool] = Field(default=False, description="Whether an admin must disconnect a legacy physical-store credential before reconnecting.")
+    reauthorization_required: Optional[StrictBool] = Field(default=False, description="Whether the routed Slack connection must be reauthorized in place before Sofia can use it.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["connected", "team_name"]
+    __properties: ClassVar[List[str]] = ["connected", "team_name", "enterprise_id", "team_id", "installation_generation", "migration_required", "reauthorization_required"]
+
+    @field_validator('installation_generation')
+    def installation_generation_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if value is None:
+            return value
+
+        if not isinstance(value, str):
+            value = str(value)
+
+        if not re.match(r"^[A-Za-z0-9_-]+$", value):
+            raise ValueError(r"must validate the regular expression /^[A-Za-z0-9_-]+$/")
+        return value
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -84,6 +103,21 @@ class CovalSlackIntegrationAPISlackStatusResponse(BaseModel):
         if self.team_name is None and "team_name" in self.model_fields_set:
             _dict['team_name'] = None
 
+        # set to None if enterprise_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.enterprise_id is None and "enterprise_id" in self.model_fields_set:
+            _dict['enterprise_id'] = None
+
+        # set to None if team_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.team_id is None and "team_id" in self.model_fields_set:
+            _dict['team_id'] = None
+
+        # set to None if installation_generation (nullable) is None
+        # and model_fields_set contains the field
+        if self.installation_generation is None and "installation_generation" in self.model_fields_set:
+            _dict['installation_generation'] = None
+
         return _dict
 
     @classmethod
@@ -97,7 +131,12 @@ class CovalSlackIntegrationAPISlackStatusResponse(BaseModel):
 
         _obj = cls.model_validate({
             "connected": obj.get("connected"),
-            "team_name": obj.get("team_name")
+            "team_name": obj.get("team_name"),
+            "enterprise_id": obj.get("enterprise_id"),
+            "team_id": obj.get("team_id"),
+            "installation_generation": obj.get("installation_generation"),
+            "migration_required": obj.get("migration_required") if obj.get("migration_required") is not None else False,
+            "reauthorization_required": obj.get("reauthorization_required") if obj.get("reauthorization_required") is not None else False
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

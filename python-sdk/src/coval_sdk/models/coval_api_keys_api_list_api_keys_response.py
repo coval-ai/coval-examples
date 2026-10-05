@@ -32,7 +32,7 @@ class CovalAPIKeysAPIListApiKeysResponse(BaseModel):
     """ # noqa: E501
     api_keys: List[CovalAPIKeysAPIApiKeyResource] = Field(description="List of API key resources (masked)")
     next_page_token: Optional[StrictStr] = Field(default=None, description="Token for fetching next page (null if no more results)")
-    total_count: StrictInt = Field(description="Total number of API keys matching the filter criteria")
+    total_count: Optional[StrictInt] = Field(default=None, description="Total number of API keys matching the filter criteria")
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["api_keys", "next_page_token", "total_count"]
 

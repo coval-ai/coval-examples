@@ -35,8 +35,11 @@ class CovalReviewsAPIUpdateReviewAnnotationRequest(BaseModel):
     reviewer_notes: Optional[StrictStr] = Field(default=None, description="Reviewer notes")
     priority: Optional[CovalReviewsAPIAnnotationPriority] = CovalReviewsAPIAnnotationPriority.PRIORITY_STANDARD
     assignee: Optional[StrictStr] = Field(default=None, description="Reassign to a different reviewer")
+    annotations: Optional[Any] = None
+    ground_truth_json: Optional[Any] = None
+    ground_truth_set_value: Optional[List[StrictStr]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["ground_truth_float_value", "ground_truth_string_value", "ground_truth_subvalues_by_timestamp", "reviewer_notes", "priority", "assignee"]
+    __properties: ClassVar[List[str]] = ["ground_truth_float_value", "ground_truth_string_value", "ground_truth_subvalues_by_timestamp", "reviewer_notes", "priority", "assignee", "annotations", "ground_truth_json", "ground_truth_set_value"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -109,6 +112,21 @@ class CovalReviewsAPIUpdateReviewAnnotationRequest(BaseModel):
         if self.assignee is None and "assignee" in self.model_fields_set:
             _dict['assignee'] = None
 
+        # set to None if annotations (nullable) is None
+        # and model_fields_set contains the field
+        if self.annotations is None and "annotations" in self.model_fields_set:
+            _dict['annotations'] = None
+
+        # set to None if ground_truth_json (nullable) is None
+        # and model_fields_set contains the field
+        if self.ground_truth_json is None and "ground_truth_json" in self.model_fields_set:
+            _dict['ground_truth_json'] = None
+
+        # set to None if ground_truth_set_value (nullable) is None
+        # and model_fields_set contains the field
+        if self.ground_truth_set_value is None and "ground_truth_set_value" in self.model_fields_set:
+            _dict['ground_truth_set_value'] = None
+
         return _dict
 
     @classmethod
@@ -126,7 +144,10 @@ class CovalReviewsAPIUpdateReviewAnnotationRequest(BaseModel):
             "ground_truth_subvalues_by_timestamp": obj.get("ground_truth_subvalues_by_timestamp"),
             "reviewer_notes": obj.get("reviewer_notes"),
             "priority": obj.get("priority") if obj.get("priority") is not None else CovalReviewsAPIAnnotationPriority.PRIORITY_STANDARD,
-            "assignee": obj.get("assignee")
+            "assignee": obj.get("assignee"),
+            "annotations": obj.get("annotations"),
+            "ground_truth_json": obj.get("ground_truth_json"),
+            "ground_truth_set_value": obj.get("ground_truth_set_value")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

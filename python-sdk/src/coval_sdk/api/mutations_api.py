@@ -49,6 +49,7 @@ class MutationsApi:
         self,
         agent_id: Annotated[str, Field(strict=True, description="Parent agent ID (22-character ShortUUID)")],
         coval_agent_mutations_api_create_mutation_request: CovalAgentMutationsAPICreateMutationRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -70,6 +71,8 @@ class MutationsApi:
         :type agent_id: str
         :param coval_agent_mutations_api_create_mutation_request: (required)
         :type coval_agent_mutations_api_create_mutation_request: CovalAgentMutationsAPICreateMutationRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -95,6 +98,7 @@ class MutationsApi:
         _param = self._create_mutation_serialize(
             agent_id=agent_id,
             coval_agent_mutations_api_create_mutation_request=coval_agent_mutations_api_create_mutation_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -125,6 +129,7 @@ class MutationsApi:
         self,
         agent_id: Annotated[str, Field(strict=True, description="Parent agent ID (22-character ShortUUID)")],
         coval_agent_mutations_api_create_mutation_request: CovalAgentMutationsAPICreateMutationRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -146,6 +151,8 @@ class MutationsApi:
         :type agent_id: str
         :param coval_agent_mutations_api_create_mutation_request: (required)
         :type coval_agent_mutations_api_create_mutation_request: CovalAgentMutationsAPICreateMutationRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -171,6 +178,7 @@ class MutationsApi:
         _param = self._create_mutation_serialize(
             agent_id=agent_id,
             coval_agent_mutations_api_create_mutation_request=coval_agent_mutations_api_create_mutation_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -201,6 +209,7 @@ class MutationsApi:
         self,
         agent_id: Annotated[str, Field(strict=True, description="Parent agent ID (22-character ShortUUID)")],
         coval_agent_mutations_api_create_mutation_request: CovalAgentMutationsAPICreateMutationRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -222,6 +231,8 @@ class MutationsApi:
         :type agent_id: str
         :param coval_agent_mutations_api_create_mutation_request: (required)
         :type coval_agent_mutations_api_create_mutation_request: CovalAgentMutationsAPICreateMutationRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -247,6 +258,7 @@ class MutationsApi:
         _param = self._create_mutation_serialize(
             agent_id=agent_id,
             coval_agent_mutations_api_create_mutation_request=coval_agent_mutations_api_create_mutation_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -272,6 +284,7 @@ class MutationsApi:
         self,
         agent_id,
         coval_agent_mutations_api_create_mutation_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -297,6 +310,8 @@ class MutationsApi:
             _path_params['agent_id'] = agent_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_agent_mutations_api_create_mutation_request is not None:
@@ -353,6 +368,7 @@ class MutationsApi:
         self,
         agent_id: Annotated[str, Field(strict=True, description="Parent agent ID (22-character ShortUUID)")],
         mutation_id: Annotated[str, Field(strict=True, description="Mutation ID (26-character ULID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -368,12 +384,14 @@ class MutationsApi:
     ) -> None:
         """Delete mutation
 
-        Delete a mutation.
+        Delete a mutation. Mutations referenced by active Templates cannot be deleted.
 
         :param agent_id: Parent agent ID (22-character ShortUUID) (required)
         :type agent_id: str
         :param mutation_id: Mutation ID (26-character ULID) (required)
         :type mutation_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -399,6 +417,7 @@ class MutationsApi:
         _param = self._delete_mutation_serialize(
             agent_id=agent_id,
             mutation_id=mutation_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -409,6 +428,7 @@ class MutationsApi:
             '204': None,
             '401': "CovalAgentMutationsAPIErrorResponse",
             '404': "CovalAgentMutationsAPIErrorResponse",
+            '409': "CovalAgentMutationsAPIErrorResponse",
             '500': "CovalAgentMutationsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -427,6 +447,7 @@ class MutationsApi:
         self,
         agent_id: Annotated[str, Field(strict=True, description="Parent agent ID (22-character ShortUUID)")],
         mutation_id: Annotated[str, Field(strict=True, description="Mutation ID (26-character ULID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -442,12 +463,14 @@ class MutationsApi:
     ) -> ApiResponse[None]:
         """Delete mutation
 
-        Delete a mutation.
+        Delete a mutation. Mutations referenced by active Templates cannot be deleted.
 
         :param agent_id: Parent agent ID (22-character ShortUUID) (required)
         :type agent_id: str
         :param mutation_id: Mutation ID (26-character ULID) (required)
         :type mutation_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -473,6 +496,7 @@ class MutationsApi:
         _param = self._delete_mutation_serialize(
             agent_id=agent_id,
             mutation_id=mutation_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -483,6 +507,7 @@ class MutationsApi:
             '204': None,
             '401': "CovalAgentMutationsAPIErrorResponse",
             '404': "CovalAgentMutationsAPIErrorResponse",
+            '409': "CovalAgentMutationsAPIErrorResponse",
             '500': "CovalAgentMutationsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -501,6 +526,7 @@ class MutationsApi:
         self,
         agent_id: Annotated[str, Field(strict=True, description="Parent agent ID (22-character ShortUUID)")],
         mutation_id: Annotated[str, Field(strict=True, description="Mutation ID (26-character ULID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -516,12 +542,14 @@ class MutationsApi:
     ) -> RESTResponseType:
         """Delete mutation
 
-        Delete a mutation.
+        Delete a mutation. Mutations referenced by active Templates cannot be deleted.
 
         :param agent_id: Parent agent ID (22-character ShortUUID) (required)
         :type agent_id: str
         :param mutation_id: Mutation ID (26-character ULID) (required)
         :type mutation_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -547,6 +575,7 @@ class MutationsApi:
         _param = self._delete_mutation_serialize(
             agent_id=agent_id,
             mutation_id=mutation_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -557,6 +586,7 @@ class MutationsApi:
             '204': None,
             '401': "CovalAgentMutationsAPIErrorResponse",
             '404': "CovalAgentMutationsAPIErrorResponse",
+            '409': "CovalAgentMutationsAPIErrorResponse",
             '500': "CovalAgentMutationsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -570,6 +600,7 @@ class MutationsApi:
         self,
         agent_id,
         mutation_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -597,6 +628,8 @@ class MutationsApi:
             _path_params['mutation_id'] = mutation_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -638,6 +671,7 @@ class MutationsApi:
         self,
         agent_id: Annotated[str, Field(strict=True, description="Parent agent ID (22-character ShortUUID)")],
         mutation_id: Annotated[str, Field(strict=True, description="Mutation ID (26-character ULID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -659,6 +693,8 @@ class MutationsApi:
         :type agent_id: str
         :param mutation_id: Mutation ID (26-character ULID) (required)
         :type mutation_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -684,6 +720,7 @@ class MutationsApi:
         _param = self._get_mutation_serialize(
             agent_id=agent_id,
             mutation_id=mutation_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -712,6 +749,7 @@ class MutationsApi:
         self,
         agent_id: Annotated[str, Field(strict=True, description="Parent agent ID (22-character ShortUUID)")],
         mutation_id: Annotated[str, Field(strict=True, description="Mutation ID (26-character ULID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -733,6 +771,8 @@ class MutationsApi:
         :type agent_id: str
         :param mutation_id: Mutation ID (26-character ULID) (required)
         :type mutation_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -758,6 +798,7 @@ class MutationsApi:
         _param = self._get_mutation_serialize(
             agent_id=agent_id,
             mutation_id=mutation_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -786,6 +827,7 @@ class MutationsApi:
         self,
         agent_id: Annotated[str, Field(strict=True, description="Parent agent ID (22-character ShortUUID)")],
         mutation_id: Annotated[str, Field(strict=True, description="Mutation ID (26-character ULID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -807,6 +849,8 @@ class MutationsApi:
         :type agent_id: str
         :param mutation_id: Mutation ID (26-character ULID) (required)
         :type mutation_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -832,6 +876,7 @@ class MutationsApi:
         _param = self._get_mutation_serialize(
             agent_id=agent_id,
             mutation_id=mutation_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -855,6 +900,7 @@ class MutationsApi:
         self,
         agent_id,
         mutation_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -882,6 +928,8 @@ class MutationsApi:
             _path_params['mutation_id'] = mutation_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -922,6 +970,7 @@ class MutationsApi:
     def list_mutations(
         self,
         agent_id: Annotated[str, Field(strict=True, description="Parent agent ID (22-character ShortUUID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         _request_timeout: Union[
@@ -943,6 +992,8 @@ class MutationsApi:
 
         :param agent_id: Parent agent ID (22-character ShortUUID) (required)
         :type agent_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of results per page
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
@@ -971,6 +1022,7 @@ class MutationsApi:
 
         _param = self._list_mutations_serialize(
             agent_id=agent_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             _request_auth=_request_auth,
@@ -1000,6 +1052,7 @@ class MutationsApi:
     def list_mutations_with_http_info(
         self,
         agent_id: Annotated[str, Field(strict=True, description="Parent agent ID (22-character ShortUUID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         _request_timeout: Union[
@@ -1021,6 +1074,8 @@ class MutationsApi:
 
         :param agent_id: Parent agent ID (22-character ShortUUID) (required)
         :type agent_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of results per page
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
@@ -1049,6 +1104,7 @@ class MutationsApi:
 
         _param = self._list_mutations_serialize(
             agent_id=agent_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             _request_auth=_request_auth,
@@ -1078,6 +1134,7 @@ class MutationsApi:
     def list_mutations_without_preload_content(
         self,
         agent_id: Annotated[str, Field(strict=True, description="Parent agent ID (22-character ShortUUID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
         _request_timeout: Union[
@@ -1099,6 +1156,8 @@ class MutationsApi:
 
         :param agent_id: Parent agent ID (22-character ShortUUID) (required)
         :type agent_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param page_size: Maximum number of results per page
         :type page_size: int
         :param page_token: Opaque pagination token from previous response
@@ -1127,6 +1186,7 @@ class MutationsApi:
 
         _param = self._list_mutations_serialize(
             agent_id=agent_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             page_size=page_size,
             page_token=page_token,
             _request_auth=_request_auth,
@@ -1151,6 +1211,7 @@ class MutationsApi:
     def _list_mutations_serialize(
         self,
         agent_id,
+        x_coval_workspace_id,
         page_size,
         page_token,
         _request_auth,
@@ -1186,6 +1247,8 @@ class MutationsApi:
             _query_params.append(('page_token', page_token))
             
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -1228,6 +1291,7 @@ class MutationsApi:
         agent_id: Annotated[str, Field(strict=True, description="Parent agent ID (22-character ShortUUID)")],
         mutation_id: Annotated[str, Field(strict=True, description="Mutation ID (26-character ULID)")],
         coval_agent_mutations_api_update_mutation_request: CovalAgentMutationsAPIUpdateMutationRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1251,6 +1315,8 @@ class MutationsApi:
         :type mutation_id: str
         :param coval_agent_mutations_api_update_mutation_request: (required)
         :type coval_agent_mutations_api_update_mutation_request: CovalAgentMutationsAPIUpdateMutationRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1277,6 +1343,7 @@ class MutationsApi:
             agent_id=agent_id,
             mutation_id=mutation_id,
             coval_agent_mutations_api_update_mutation_request=coval_agent_mutations_api_update_mutation_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1308,6 +1375,7 @@ class MutationsApi:
         agent_id: Annotated[str, Field(strict=True, description="Parent agent ID (22-character ShortUUID)")],
         mutation_id: Annotated[str, Field(strict=True, description="Mutation ID (26-character ULID)")],
         coval_agent_mutations_api_update_mutation_request: CovalAgentMutationsAPIUpdateMutationRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1331,6 +1399,8 @@ class MutationsApi:
         :type mutation_id: str
         :param coval_agent_mutations_api_update_mutation_request: (required)
         :type coval_agent_mutations_api_update_mutation_request: CovalAgentMutationsAPIUpdateMutationRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1357,6 +1427,7 @@ class MutationsApi:
             agent_id=agent_id,
             mutation_id=mutation_id,
             coval_agent_mutations_api_update_mutation_request=coval_agent_mutations_api_update_mutation_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1388,6 +1459,7 @@ class MutationsApi:
         agent_id: Annotated[str, Field(strict=True, description="Parent agent ID (22-character ShortUUID)")],
         mutation_id: Annotated[str, Field(strict=True, description="Mutation ID (26-character ULID)")],
         coval_agent_mutations_api_update_mutation_request: CovalAgentMutationsAPIUpdateMutationRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1411,6 +1483,8 @@ class MutationsApi:
         :type mutation_id: str
         :param coval_agent_mutations_api_update_mutation_request: (required)
         :type coval_agent_mutations_api_update_mutation_request: CovalAgentMutationsAPIUpdateMutationRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1437,6 +1511,7 @@ class MutationsApi:
             agent_id=agent_id,
             mutation_id=mutation_id,
             coval_agent_mutations_api_update_mutation_request=coval_agent_mutations_api_update_mutation_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1463,6 +1538,7 @@ class MutationsApi:
         agent_id,
         mutation_id,
         coval_agent_mutations_api_update_mutation_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -1490,6 +1566,8 @@ class MutationsApi:
             _path_params['mutation_id'] = mutation_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if coval_agent_mutations_api_update_mutation_request is not None:

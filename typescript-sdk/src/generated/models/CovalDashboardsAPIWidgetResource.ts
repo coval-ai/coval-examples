@@ -27,6 +27,13 @@ import {
     CovalDashboardsAPIWidgetConfigToJSON,
     CovalDashboardsAPIWidgetConfigToJSONTyped,
 } from './CovalDashboardsAPIWidgetConfig.js';
+import type { CovalDashboardsAPIResourceAttribution } from './CovalDashboardsAPIResourceAttribution.js';
+import {
+    CovalDashboardsAPIResourceAttributionFromJSON,
+    CovalDashboardsAPIResourceAttributionFromJSONTyped,
+    CovalDashboardsAPIResourceAttributionToJSON,
+    CovalDashboardsAPIResourceAttributionToJSONTyped,
+} from './CovalDashboardsAPIResourceAttribution.js';
 
 /**
  * Widget resource
@@ -34,6 +41,12 @@ import {
  * @interface CovalDashboardsAPIWidgetResource
  */
 export interface CovalDashboardsAPIWidgetResource {
+    /**
+     * Authoring timestamps and user IDs. Unknown or deleted users are null.
+     * @type {CovalDashboardsAPIResourceAttribution}
+     * @memberof CovalDashboardsAPIWidgetResource
+     */
+    readonly attribution?: CovalDashboardsAPIResourceAttribution | null;
     /**
      * Resource name in format `dashboards/{dashboard_id}/widgets/{id}`
      * @type {string}
@@ -119,6 +132,7 @@ export function CovalDashboardsAPIWidgetResourceFromJSONTyped(json: any, ignoreD
     }
     return {
         
+        'attribution': json['attribution'] == null ? undefined : CovalDashboardsAPIResourceAttributionFromJSON(json['attribution']),
         'name': json['name'],
         'display_name': json['display_name'] == null ? undefined : json['display_name'],
         'type': CovalDashboardsAPIWidgetTypeFromJSON(json['type']),
@@ -136,7 +150,7 @@ export function CovalDashboardsAPIWidgetResourceToJSON(json: any): CovalDashboar
     return CovalDashboardsAPIWidgetResourceToJSONTyped(json, false);
 }
 
-export function CovalDashboardsAPIWidgetResourceToJSONTyped(value?: CovalDashboardsAPIWidgetResource | null, ignoreDiscriminator: boolean = false): any {
+export function CovalDashboardsAPIWidgetResourceToJSONTyped(value?: Omit<CovalDashboardsAPIWidgetResource, 'attribution'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

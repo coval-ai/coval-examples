@@ -21,6 +21,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
+from coval_sdk.models.coval_alerts_api_baseline_deviation_direction import CovalAlertsAPIBaselineDeviationDirection
 from coval_sdk.models.coval_alerts_api_condition_aggregation import CovalAlertsAPIConditionAggregation
 from coval_sdk.models.coval_alerts_api_condition_operator import CovalAlertsAPIConditionOperator
 from typing import Optional, Set
@@ -31,7 +32,7 @@ class CovalAlertsAPIConditionInput(BaseModel):
     """
     CovalAlertsAPIConditionInput
     """ # noqa: E501
-    metric_id: StrictStr = Field(description="ULID of the metric to evaluate")
+    metric_id: Optional[StrictStr] = Field(default=None, description="ULID of the metric to evaluate. Omit for JOB_SUCCESS conditions.")
     aggregation: CovalAlertsAPIConditionAggregation
     operator: CovalAlertsAPIConditionOperator
     threshold_float: Optional[Union[StrictFloat, StrictInt]] = None
@@ -40,8 +41,12 @@ class CovalAlertsAPIConditionInput(BaseModel):
     window_size_runs: Optional[Annotated[int, Field(le=10000, strict=True, ge=1)]] = None
     match_value: Optional[StrictStr] = None
     match_mode: Optional[StrictStr] = None
+    baseline_id: Optional[StrictStr] = Field(default=None, description="ULID of the metric baseline to evaluate. Required for BASELINE_DEVIATION.")
+    sigma_threshold: Optional[Union[Annotated[float, Field(strict=True, gt=0)], Annotated[int, Field(strict=True, gt=0)]]] = Field(default=None, description="Sigmas from the baseline that constitute an anomaly")
+    direction: Optional[CovalAlertsAPIBaselineDeviationDirection] = Field(default=None, description="Which direction of deviation counts as anomalous")
+    warm_up_count: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Minimum baseline observations required before the alert can fire")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["metric_id", "aggregation", "operator", "threshold_float", "threshold_string", "window_size_days", "window_size_runs", "match_value", "match_mode"]
+    __properties: ClassVar[List[str]] = ["metric_id", "aggregation", "operator", "threshold_float", "threshold_string", "window_size_days", "window_size_runs", "match_value", "match_mode", "baseline_id", "sigma_threshold", "direction", "warm_up_count"]
 
     @field_validator('match_mode')
     def match_mode_validate_enum(cls, value):
@@ -99,6 +104,11 @@ class CovalAlertsAPIConditionInput(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if metric_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.metric_id is None and "metric_id" in self.model_fields_set:
+            _dict['metric_id'] = None
+
         # set to None if threshold_float (nullable) is None
         # and model_fields_set contains the field
         if self.threshold_float is None and "threshold_float" in self.model_fields_set:
@@ -129,6 +139,26 @@ class CovalAlertsAPIConditionInput(BaseModel):
         if self.match_mode is None and "match_mode" in self.model_fields_set:
             _dict['match_mode'] = None
 
+        # set to None if baseline_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.baseline_id is None and "baseline_id" in self.model_fields_set:
+            _dict['baseline_id'] = None
+
+        # set to None if sigma_threshold (nullable) is None
+        # and model_fields_set contains the field
+        if self.sigma_threshold is None and "sigma_threshold" in self.model_fields_set:
+            _dict['sigma_threshold'] = None
+
+        # set to None if direction (nullable) is None
+        # and model_fields_set contains the field
+        if self.direction is None and "direction" in self.model_fields_set:
+            _dict['direction'] = None
+
+        # set to None if warm_up_count (nullable) is None
+        # and model_fields_set contains the field
+        if self.warm_up_count is None and "warm_up_count" in self.model_fields_set:
+            _dict['warm_up_count'] = None
+
         return _dict
 
     @classmethod
@@ -149,7 +179,11 @@ class CovalAlertsAPIConditionInput(BaseModel):
             "window_size_days": obj.get("window_size_days"),
             "window_size_runs": obj.get("window_size_runs"),
             "match_value": obj.get("match_value"),
-            "match_mode": obj.get("match_mode")
+            "match_mode": obj.get("match_mode"),
+            "baseline_id": obj.get("baseline_id"),
+            "sigma_threshold": obj.get("sigma_threshold"),
+            "direction": obj.get("direction"),
+            "warm_up_count": obj.get("warm_up_count")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

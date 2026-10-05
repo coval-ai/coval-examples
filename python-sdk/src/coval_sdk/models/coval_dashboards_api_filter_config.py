@@ -35,8 +35,9 @@ class CovalDashboardsAPIFilterConfig(BaseModel):
     template_names: Optional[List[StrictStr]] = Field(default=None, description="Filter to specific template names", alias="templateNames")
     test_set_ids: Optional[List[StrictStr]] = Field(default=None, description="Filter to specific test set IDs", alias="testSetIds")
     metadata: Optional[List[Dict[str, Any]]] = Field(default=None, description="Metadata-based filters")
+    tag_filters: Optional[List[StrictStr]] = Field(default=None, alias="tagFilters")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["metricIds", "agentIds", "agentMutationIds", "personaIds", "templateNames", "testSetIds", "metadata"]
+    __properties: ClassVar[List[str]] = ["metricIds", "agentIds", "agentMutationIds", "personaIds", "templateNames", "testSetIds", "metadata", "tagFilters"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -102,7 +103,8 @@ class CovalDashboardsAPIFilterConfig(BaseModel):
             "personaIds": obj.get("personaIds"),
             "templateNames": obj.get("templateNames"),
             "testSetIds": obj.get("testSetIds"),
-            "metadata": obj.get("metadata")
+            "metadata": obj.get("metadata"),
+            "tagFilters": obj.get("tagFilters")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

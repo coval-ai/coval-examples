@@ -52,19 +52,19 @@ export interface CovalDashboardsAPIMetricFilter {
      * @type {CovalDashboardsAPIMetricFilterOperator}
      * @memberof CovalDashboardsAPIMetricFilter
      */
-    operator: CovalDashboardsAPIMetricFilterOperator;
+    operator?: CovalDashboardsAPIMetricFilterOperator;
     /**
      * 
      * @type {CovalDashboardsAPIMetricFilterValue}
      * @memberof CovalDashboardsAPIMetricFilter
      */
-    value: CovalDashboardsAPIMetricFilterValue;
+    value?: CovalDashboardsAPIMetricFilterValue;
     /**
      * 
      * @type {CovalDashboardsAPIMetricOutputType}
      * @memberof CovalDashboardsAPIMetricFilter
      */
-    metricOutputType: CovalDashboardsAPIMetricOutputType;
+    metricOutputType?: CovalDashboardsAPIMetricOutputType;
 }
 
 
@@ -74,9 +74,6 @@ export interface CovalDashboardsAPIMetricFilter {
  */
 export function instanceOfCovalDashboardsAPIMetricFilter(value: object): value is CovalDashboardsAPIMetricFilter {
     if (!('metricId' in value) || value['metricId'] === undefined) return false;
-    if (!('operator' in value) || value['operator'] === undefined) return false;
-    if (!('value' in value) || value['value'] === undefined) return false;
-    if (!('metricOutputType' in value) || value['metricOutputType'] === undefined) return false;
     return true;
 }
 
@@ -91,9 +88,9 @@ export function CovalDashboardsAPIMetricFilterFromJSONTyped(json: any, ignoreDis
     return {
         
         'metricId': json['metricId'],
-        'operator': CovalDashboardsAPIMetricFilterOperatorFromJSON(json['operator']),
-        'value': CovalDashboardsAPIMetricFilterValueFromJSON(json['value']),
-        'metricOutputType': CovalDashboardsAPIMetricOutputTypeFromJSON(json['metricOutputType']),
+        'operator': json['operator'] == null ? undefined : CovalDashboardsAPIMetricFilterOperatorFromJSON(json['operator']),
+        'value': json['value'] == null ? undefined : CovalDashboardsAPIMetricFilterValueFromJSON(json['value']),
+        'metricOutputType': json['metricOutputType'] == null ? undefined : CovalDashboardsAPIMetricOutputTypeFromJSON(json['metricOutputType']),
     };
 }
 

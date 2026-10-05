@@ -37,11 +37,14 @@ import {
   RunTemplatesApi,
   RunsApi,
   ScheduledRunsApi,
+  SimulatedConversationsApi,
   SimulationsApi,
+  SofiaApi,
   TagsApi,
   TestCasesApi,
   TestSetsApi,
   TracesApi,
+  UploadedConversationsApi,
   WebhooksApi,
   WidgetsApi,
   WorkspacesApi,
@@ -94,11 +97,14 @@ export const GENERATED_API_PROPERTY_NAMES = [
   'runTemplates',
   'runs',
   'scheduledRuns',
+  'simulatedConversations',
   'simulations',
+  'sofia',
   'tags',
   'testCases',
   'testSets',
   'traces',
+  'uploadedConversations',
   'webhooks',
   'widgets',
   'workspaces',
@@ -128,11 +134,14 @@ export class CovalClient {
   readonly runTemplates: RunTemplatesApi;
   readonly runs: RunsApi;
   readonly scheduledRuns: ScheduledRunsApi;
+  readonly simulatedConversations: SimulatedConversationsApi;
   readonly simulations: SimulationsApi;
+  readonly sofia: SofiaApi;
   readonly tags: TagsApi;
   readonly testCases: TestCasesApi;
   readonly testSets: TestSetsApi;
   readonly traces: TracesApi;
+  readonly uploadedConversations: UploadedConversationsApi;
   readonly webhooks: WebhooksApi;
   readonly widgets: WidgetsApi;
   readonly workspaces: WorkspacesApi;
@@ -198,11 +207,14 @@ export class CovalClient {
     this.runTemplates = new RunTemplatesApi(this.configuration);
     this.runs = new RunsApi(this.configuration);
     this.scheduledRuns = new ScheduledRunsApi(this.configuration);
+    this.simulatedConversations = new SimulatedConversationsApi(this.configuration);
     this.simulations = new SimulationsApi(this.configuration);
+    this.sofia = new SofiaApi(this.configuration);
     this.tags = new TagsApi(this.configuration);
     this.testCases = new TestCasesApi(this.configuration);
     this.testSets = new TestSetsApi(this.configuration);
     this.traces = new TracesApi(this.configuration);
+    this.uploadedConversations = new UploadedConversationsApi(this.configuration);
     this.webhooks = new WebhooksApi(this.configuration);
     this.widgets = new WidgetsApi(this.configuration);
     this.workspaces = new WorkspacesApi(this.configuration);

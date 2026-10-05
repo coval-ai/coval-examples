@@ -21,7 +21,6 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
-from coval_sdk.models.coval_reviews_api_annotation_priority import CovalReviewsAPIAnnotationPriority
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -37,9 +36,11 @@ class CovalReviewsAPICreateReviewAnnotationRequest(BaseModel):
     ground_truth_string_value: Optional[StrictStr] = Field(default=None, description="Optional ground truth string value (auto-completes annotation)")
     ground_truth_subvalues_by_timestamp: Optional[List[Dict[str, Any]]] = Field(default=None, description="Optional ground truth subvalues")
     reviewer_notes: Optional[StrictStr] = Field(default=None, description="Optional reviewer notes")
-    priority: Optional[CovalReviewsAPIAnnotationPriority] = CovalReviewsAPIAnnotationPriority.PRIORITY_STANDARD
+    annotations: Optional[Any] = None
+    ground_truth_json: Optional[Any] = None
+    ground_truth_set_value: Optional[List[StrictStr]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["simulation_output_id", "metric_id", "assignee", "ground_truth_float_value", "ground_truth_string_value", "ground_truth_subvalues_by_timestamp", "reviewer_notes", "priority"]
+    __properties: ClassVar[List[str]] = ["simulation_output_id", "metric_id", "assignee", "ground_truth_float_value", "ground_truth_string_value", "ground_truth_subvalues_by_timestamp", "reviewer_notes", "annotations", "ground_truth_json", "ground_truth_set_value"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -107,6 +108,21 @@ class CovalReviewsAPICreateReviewAnnotationRequest(BaseModel):
         if self.reviewer_notes is None and "reviewer_notes" in self.model_fields_set:
             _dict['reviewer_notes'] = None
 
+        # set to None if annotations (nullable) is None
+        # and model_fields_set contains the field
+        if self.annotations is None and "annotations" in self.model_fields_set:
+            _dict['annotations'] = None
+
+        # set to None if ground_truth_json (nullable) is None
+        # and model_fields_set contains the field
+        if self.ground_truth_json is None and "ground_truth_json" in self.model_fields_set:
+            _dict['ground_truth_json'] = None
+
+        # set to None if ground_truth_set_value (nullable) is None
+        # and model_fields_set contains the field
+        if self.ground_truth_set_value is None and "ground_truth_set_value" in self.model_fields_set:
+            _dict['ground_truth_set_value'] = None
+
         return _dict
 
     @classmethod
@@ -126,7 +142,9 @@ class CovalReviewsAPICreateReviewAnnotationRequest(BaseModel):
             "ground_truth_string_value": obj.get("ground_truth_string_value"),
             "ground_truth_subvalues_by_timestamp": obj.get("ground_truth_subvalues_by_timestamp"),
             "reviewer_notes": obj.get("reviewer_notes"),
-            "priority": obj.get("priority") if obj.get("priority") is not None else CovalReviewsAPIAnnotationPriority.PRIORITY_STANDARD
+            "annotations": obj.get("annotations"),
+            "ground_truth_json": obj.get("ground_truth_json"),
+            "ground_truth_set_value": obj.get("ground_truth_set_value")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

@@ -66,6 +66,12 @@ export interface CovalReviewsAPIReviewMetricOutputForAnnotationResource {
      * @type {any}
      * @memberof CovalReviewsAPIReviewMetricOutputForAnnotationResource
      */
+    result?: any | null;
+    /**
+     * 
+     * @type {any}
+     * @memberof CovalReviewsAPIReviewMetricOutputForAnnotationResource
+     */
     result_json?: any | null;
     /**
      * 
@@ -112,6 +118,7 @@ export function CovalReviewsAPIReviewMetricOutputForAnnotationResourceFromJSONTy
         'error_status': json['error_status'] == null ? undefined : json['error_status'],
         'created_at': (new Date(json['created_at'])),
         'explanation': json['explanation'] == null ? undefined : json['explanation'],
+        'result': json['result'] == null ? undefined : json['result'],
         'result_json': json['result_json'] == null ? undefined : json['result_json'],
         'subvalues_by_timestamp': json['subvalues_by_timestamp'] == null ? undefined : json['subvalues_by_timestamp'],
         'metric_version_number': json['metric_version_number'] == null ? undefined : json['metric_version_number'],
@@ -137,6 +144,7 @@ export function CovalReviewsAPIReviewMetricOutputForAnnotationResourceToJSONType
         'error_status': value['error_status'],
         'created_at': value['created_at'].toISOString(),
         'explanation': value['explanation'],
+        'result': value['result'],
         'result_json': value['result_json'],
         'subvalues_by_timestamp': value['subvalues_by_timestamp'],
         'metric_version_number': value['metric_version_number'],

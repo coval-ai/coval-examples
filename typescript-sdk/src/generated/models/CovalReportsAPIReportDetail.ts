@@ -27,6 +27,13 @@ import {
     CovalReportsAPIReportMetricConfigurationEntryToJSON,
     CovalReportsAPIReportMetricConfigurationEntryToJSONTyped,
 } from './CovalReportsAPIReportMetricConfigurationEntry.js';
+import type { CovalReportsAPIResourceAttribution } from './CovalReportsAPIResourceAttribution.js';
+import {
+    CovalReportsAPIResourceAttributionFromJSON,
+    CovalReportsAPIResourceAttributionFromJSONTyped,
+    CovalReportsAPIResourceAttributionToJSON,
+    CovalReportsAPIResourceAttributionToJSONTyped,
+} from './CovalReportsAPIResourceAttribution.js';
 
 /**
  * 
@@ -34,6 +41,12 @@ import {
  * @interface CovalReportsAPIReportDetail
  */
 export interface CovalReportsAPIReportDetail {
+    /**
+     * Authoring timestamps and user IDs. Unknown or deleted users are null.
+     * @type {CovalReportsAPIResourceAttribution}
+     * @memberof CovalReportsAPIReportDetail
+     */
+    readonly attribution?: CovalReportsAPIResourceAttribution | null;
     /**
      * The report's ULID.
      * @type {string}
@@ -168,6 +181,7 @@ export function CovalReportsAPIReportDetailFromJSONTyped(json: any, ignoreDiscri
     }
     return {
         
+        'attribution': json['attribution'] == null ? undefined : CovalReportsAPIResourceAttributionFromJSON(json['attribution']),
         'id': json['id'],
         'name': json['name'],
         'run_ids': json['run_ids'],
@@ -188,7 +202,7 @@ export function CovalReportsAPIReportDetailToJSON(json: any): CovalReportsAPIRep
     return CovalReportsAPIReportDetailToJSONTyped(json, false);
 }
 
-export function CovalReportsAPIReportDetailToJSONTyped(value?: CovalReportsAPIReportDetail | null, ignoreDiscriminator: boolean = false): any {
+export function CovalReportsAPIReportDetailToJSONTyped(value?: Omit<CovalReportsAPIReportDetail, 'attribution'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

@@ -351,6 +351,7 @@ class TestSetsApi:
     def create_test_set(
         self,
         test_sets_api_create_test_set_request: TestSetsAPICreateTestSetRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -370,6 +371,8 @@ class TestSetsApi:
 
         :param test_sets_api_create_test_set_request: (required)
         :type test_sets_api_create_test_set_request: TestSetsAPICreateTestSetRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -394,6 +397,7 @@ class TestSetsApi:
 
         _param = self._create_test_set_serialize(
             test_sets_api_create_test_set_request=test_sets_api_create_test_set_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -422,6 +426,7 @@ class TestSetsApi:
     def create_test_set_with_http_info(
         self,
         test_sets_api_create_test_set_request: TestSetsAPICreateTestSetRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -441,6 +446,8 @@ class TestSetsApi:
 
         :param test_sets_api_create_test_set_request: (required)
         :type test_sets_api_create_test_set_request: TestSetsAPICreateTestSetRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -465,6 +472,7 @@ class TestSetsApi:
 
         _param = self._create_test_set_serialize(
             test_sets_api_create_test_set_request=test_sets_api_create_test_set_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -493,6 +501,7 @@ class TestSetsApi:
     def create_test_set_without_preload_content(
         self,
         test_sets_api_create_test_set_request: TestSetsAPICreateTestSetRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -512,6 +521,8 @@ class TestSetsApi:
 
         :param test_sets_api_create_test_set_request: (required)
         :type test_sets_api_create_test_set_request: TestSetsAPICreateTestSetRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -536,6 +547,7 @@ class TestSetsApi:
 
         _param = self._create_test_set_serialize(
             test_sets_api_create_test_set_request=test_sets_api_create_test_set_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -559,6 +571,7 @@ class TestSetsApi:
     def _create_test_set_serialize(
         self,
         test_sets_api_create_test_set_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -582,6 +595,8 @@ class TestSetsApi:
         # process the path parameters
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if test_sets_api_create_test_set_request is not None:
@@ -637,6 +652,7 @@ class TestSetsApi:
     def delete_test_set(
         self,
         test_set_id: Annotated[str, Field(min_length=8, strict=True, max_length=8, description="Test set ID (8-character ID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -652,10 +668,12 @@ class TestSetsApi:
     ) -> object:
         """Delete test set
 
-        Delete a test set. 
+        Delete a test set. Test sets referenced by active Templates cannot be deleted. 
 
         :param test_set_id: Test set ID (8-character ID) (required)
         :type test_set_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -680,6 +698,7 @@ class TestSetsApi:
 
         _param = self._delete_test_set_serialize(
             test_set_id=test_set_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -690,6 +709,7 @@ class TestSetsApi:
             '200': "object",
             '401': "TestSetsAPIErrorResponse",
             '404': "TestSetsAPIErrorResponse",
+            '409': "TestSetsAPIErrorResponse",
             '500': "TestSetsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -707,6 +727,7 @@ class TestSetsApi:
     def delete_test_set_with_http_info(
         self,
         test_set_id: Annotated[str, Field(min_length=8, strict=True, max_length=8, description="Test set ID (8-character ID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -722,10 +743,12 @@ class TestSetsApi:
     ) -> ApiResponse[object]:
         """Delete test set
 
-        Delete a test set. 
+        Delete a test set. Test sets referenced by active Templates cannot be deleted. 
 
         :param test_set_id: Test set ID (8-character ID) (required)
         :type test_set_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -750,6 +773,7 @@ class TestSetsApi:
 
         _param = self._delete_test_set_serialize(
             test_set_id=test_set_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -760,6 +784,7 @@ class TestSetsApi:
             '200': "object",
             '401': "TestSetsAPIErrorResponse",
             '404': "TestSetsAPIErrorResponse",
+            '409': "TestSetsAPIErrorResponse",
             '500': "TestSetsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -777,6 +802,7 @@ class TestSetsApi:
     def delete_test_set_without_preload_content(
         self,
         test_set_id: Annotated[str, Field(min_length=8, strict=True, max_length=8, description="Test set ID (8-character ID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -792,10 +818,12 @@ class TestSetsApi:
     ) -> RESTResponseType:
         """Delete test set
 
-        Delete a test set. 
+        Delete a test set. Test sets referenced by active Templates cannot be deleted. 
 
         :param test_set_id: Test set ID (8-character ID) (required)
         :type test_set_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -820,6 +848,7 @@ class TestSetsApi:
 
         _param = self._delete_test_set_serialize(
             test_set_id=test_set_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -830,6 +859,7 @@ class TestSetsApi:
             '200': "object",
             '401': "TestSetsAPIErrorResponse",
             '404': "TestSetsAPIErrorResponse",
+            '409': "TestSetsAPIErrorResponse",
             '500': "TestSetsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -842,6 +872,7 @@ class TestSetsApi:
     def _delete_test_set_serialize(
         self,
         test_set_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -867,6 +898,8 @@ class TestSetsApi:
             _path_params['test_set_id'] = test_set_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -1177,6 +1210,7 @@ class TestSetsApi:
     def get_test_set(
         self,
         test_set_id: Annotated[str, Field(min_length=8, strict=True, max_length=8, description="Test set ID (8-character ID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1196,6 +1230,8 @@ class TestSetsApi:
 
         :param test_set_id: Test set ID (8-character ID) (required)
         :type test_set_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1220,6 +1256,7 @@ class TestSetsApi:
 
         _param = self._get_test_set_serialize(
             test_set_id=test_set_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1247,6 +1284,7 @@ class TestSetsApi:
     def get_test_set_with_http_info(
         self,
         test_set_id: Annotated[str, Field(min_length=8, strict=True, max_length=8, description="Test set ID (8-character ID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1266,6 +1304,8 @@ class TestSetsApi:
 
         :param test_set_id: Test set ID (8-character ID) (required)
         :type test_set_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1290,6 +1330,7 @@ class TestSetsApi:
 
         _param = self._get_test_set_serialize(
             test_set_id=test_set_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1317,6 +1358,7 @@ class TestSetsApi:
     def get_test_set_without_preload_content(
         self,
         test_set_id: Annotated[str, Field(min_length=8, strict=True, max_length=8, description="Test set ID (8-character ID)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1336,6 +1378,8 @@ class TestSetsApi:
 
         :param test_set_id: Test set ID (8-character ID) (required)
         :type test_set_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1360,6 +1404,7 @@ class TestSetsApi:
 
         _param = self._get_test_set_serialize(
             test_set_id=test_set_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1382,6 +1427,7 @@ class TestSetsApi:
     def _get_test_set_serialize(
         self,
         test_set_id,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -1407,6 +1453,8 @@ class TestSetsApi:
             _path_params['test_set_id'] = test_set_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -2253,6 +2301,7 @@ class TestSetsApi:
     @validate_call
     def list_test_sets(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax. Values may be unquoted or double-quoted. Values containing spaces must be quoted. Example: `test_set_type=SCENARIO` ")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True)]], Field(description="Maximum number of test sets to return (default 50, max 100)")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Token for retrieving the next page of results")] = None,
@@ -2275,6 +2324,8 @@ class TestSetsApi:
 
         List test sets for your organization.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param filter: Filter expression syntax. Values may be unquoted or double-quoted. Values containing spaces must be quoted. Example: `test_set_type=SCENARIO` 
         :type filter: str
         :param page_size: Maximum number of test sets to return (default 50, max 100)
@@ -2308,6 +2359,7 @@ class TestSetsApi:
         """ # noqa: E501
 
         _param = self._list_test_sets_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             filter=filter,
             page_size=page_size,
             page_token=page_token,
@@ -2338,6 +2390,7 @@ class TestSetsApi:
     @validate_call
     def list_test_sets_with_http_info(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax. Values may be unquoted or double-quoted. Values containing spaces must be quoted. Example: `test_set_type=SCENARIO` ")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True)]], Field(description="Maximum number of test sets to return (default 50, max 100)")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Token for retrieving the next page of results")] = None,
@@ -2360,6 +2413,8 @@ class TestSetsApi:
 
         List test sets for your organization.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param filter: Filter expression syntax. Values may be unquoted or double-quoted. Values containing spaces must be quoted. Example: `test_set_type=SCENARIO` 
         :type filter: str
         :param page_size: Maximum number of test sets to return (default 50, max 100)
@@ -2393,6 +2448,7 @@ class TestSetsApi:
         """ # noqa: E501
 
         _param = self._list_test_sets_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             filter=filter,
             page_size=page_size,
             page_token=page_token,
@@ -2423,6 +2479,7 @@ class TestSetsApi:
     @validate_call
     def list_test_sets_without_preload_content(
         self,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax. Values may be unquoted or double-quoted. Values containing spaces must be quoted. Example: `test_set_type=SCENARIO` ")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True)]], Field(description="Maximum number of test sets to return (default 50, max 100)")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Token for retrieving the next page of results")] = None,
@@ -2445,6 +2502,8 @@ class TestSetsApi:
 
         List test sets for your organization.
 
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param filter: Filter expression syntax. Values may be unquoted or double-quoted. Values containing spaces must be quoted. Example: `test_set_type=SCENARIO` 
         :type filter: str
         :param page_size: Maximum number of test sets to return (default 50, max 100)
@@ -2478,6 +2537,7 @@ class TestSetsApi:
         """ # noqa: E501
 
         _param = self._list_test_sets_serialize(
+            x_coval_workspace_id=x_coval_workspace_id,
             filter=filter,
             page_size=page_size,
             page_token=page_token,
@@ -2503,6 +2563,7 @@ class TestSetsApi:
 
     def _list_test_sets_serialize(
         self,
+        x_coval_workspace_id,
         filter,
         page_size,
         page_token,
@@ -2552,6 +2613,8 @@ class TestSetsApi:
             _query_params.append(('tag_filters', tag_filters))
             
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -3163,6 +3226,7 @@ class TestSetsApi:
         self,
         test_set_id: Annotated[str, Field(min_length=8, strict=True, max_length=8, description="Test set ID (8-character ID)")],
         test_sets_api_update_test_set_request: TestSetsAPIUpdateTestSetRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3184,6 +3248,8 @@ class TestSetsApi:
         :type test_set_id: str
         :param test_sets_api_update_test_set_request: (required)
         :type test_sets_api_update_test_set_request: TestSetsAPIUpdateTestSetRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3209,6 +3275,7 @@ class TestSetsApi:
         _param = self._update_test_set_serialize(
             test_set_id=test_set_id,
             test_sets_api_update_test_set_request=test_sets_api_update_test_set_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3239,6 +3306,7 @@ class TestSetsApi:
         self,
         test_set_id: Annotated[str, Field(min_length=8, strict=True, max_length=8, description="Test set ID (8-character ID)")],
         test_sets_api_update_test_set_request: TestSetsAPIUpdateTestSetRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3260,6 +3328,8 @@ class TestSetsApi:
         :type test_set_id: str
         :param test_sets_api_update_test_set_request: (required)
         :type test_sets_api_update_test_set_request: TestSetsAPIUpdateTestSetRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3285,6 +3355,7 @@ class TestSetsApi:
         _param = self._update_test_set_serialize(
             test_set_id=test_set_id,
             test_sets_api_update_test_set_request=test_sets_api_update_test_set_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3315,6 +3386,7 @@ class TestSetsApi:
         self,
         test_set_id: Annotated[str, Field(min_length=8, strict=True, max_length=8, description="Test set ID (8-character ID)")],
         test_sets_api_update_test_set_request: TestSetsAPIUpdateTestSetRequest,
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3336,6 +3408,8 @@ class TestSetsApi:
         :type test_set_id: str
         :param test_sets_api_update_test_set_request: (required)
         :type test_sets_api_update_test_set_request: TestSetsAPIUpdateTestSetRequest
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3361,6 +3435,7 @@ class TestSetsApi:
         _param = self._update_test_set_serialize(
             test_set_id=test_set_id,
             test_sets_api_update_test_set_request=test_sets_api_update_test_set_request,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3386,6 +3461,7 @@ class TestSetsApi:
         self,
         test_set_id,
         test_sets_api_update_test_set_request,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -3411,6 +3487,8 @@ class TestSetsApi:
             _path_params['test_set_id'] = test_set_id
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
         if test_sets_api_update_test_set_request is not None:

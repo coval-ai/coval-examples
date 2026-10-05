@@ -18,8 +18,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -30,8 +31,21 @@ class CovalSlackIntegrationAPIConnectSlackResponse(BaseModel):
     """ # noqa: E501
     team_name: StrictStr = Field(description="Connected Slack workspace/team name.")
     connected: StrictBool = Field(description="True when the workspace is connected.")
+    enterprise_id: Optional[StrictStr] = Field(description="Slack Enterprise Grid ID, or null for a non-Grid workspace.")
+    team_id: StrictStr = Field(description="Slack workspace/team ID.")
+    installation_generation: Annotated[str, Field(min_length=16, strict=True, max_length=128)] = Field(description="Opaque backend-authoritative generation for safely binding Sofia.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["team_name", "connected"]
+    __properties: ClassVar[List[str]] = ["team_name", "connected", "enterprise_id", "team_id", "installation_generation"]
+
+    @field_validator('installation_generation')
+    def installation_generation_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if not isinstance(value, str):
+            value = str(value)
+
+        if not re.match(r"^[A-Za-z0-9_-]+$", value):
+            raise ValueError(r"must validate the regular expression /^[A-Za-z0-9_-]+$/")
+        return value
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -79,6 +93,11 @@ class CovalSlackIntegrationAPIConnectSlackResponse(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if enterprise_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.enterprise_id is None and "enterprise_id" in self.model_fields_set:
+            _dict['enterprise_id'] = None
+
         return _dict
 
     @classmethod
@@ -92,7 +111,10 @@ class CovalSlackIntegrationAPIConnectSlackResponse(BaseModel):
 
         _obj = cls.model_validate({
             "team_name": obj.get("team_name"),
-            "connected": obj.get("connected")
+            "connected": obj.get("connected"),
+            "enterprise_id": obj.get("enterprise_id"),
+            "team_id": obj.get("team_id"),
+            "installation_generation": obj.get("installation_generation")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

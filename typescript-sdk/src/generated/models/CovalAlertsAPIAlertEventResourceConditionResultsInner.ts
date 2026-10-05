@@ -32,19 +32,19 @@ export interface CovalAlertsAPIAlertEventResourceConditionResultsInner {
      * @type {string}
      * @memberof CovalAlertsAPIAlertEventResourceConditionResultsInner
      */
-    metric_id?: string;
+    metric_id: string;
     /**
      * 
      * @type {string}
      * @memberof CovalAlertsAPIAlertEventResourceConditionResultsInner
      */
-    metric_display_name?: string;
+    metric_display_name: string;
     /**
      * 
      * @type {string}
      * @memberof CovalAlertsAPIAlertEventResourceConditionResultsInner
      */
-    aggregation?: string;
+    aggregation: string;
     /**
      * 
      * @type {CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue}
@@ -59,22 +59,48 @@ export interface CovalAlertsAPIAlertEventResourceConditionResultsInner {
     threshold?: CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue | null;
     /**
      * 
-     * @type {string}
+     * @type {CovalAlertsAPIAlertEventResourceConditionResultsInnerOperatorEnum}
      * @memberof CovalAlertsAPIAlertEventResourceConditionResultsInner
      */
-    operator?: string;
+    operator: CovalAlertsAPIAlertEventResourceConditionResultsInnerOperatorEnum;
     /**
      * 
      * @type {boolean}
      * @memberof CovalAlertsAPIAlertEventResourceConditionResultsInner
      */
-    met?: boolean;
+    met: boolean;
+    /**
+     * 
+     * @type {{ [key: string]: any; }}
+     * @memberof CovalAlertsAPIAlertEventResourceConditionResultsInner
+     */
+    metadata?: { [key: string]: any; };
 }
+
+
+/**
+ * @export
+ */
+export const CovalAlertsAPIAlertEventResourceConditionResultsInnerOperatorEnum = {
+    Gt: 'GT',
+    Gte: 'GTE',
+    Lt: 'LT',
+    Lte: 'LTE',
+    Eq: 'EQ',
+    Neq: 'NEQ'
+} as const;
+export type CovalAlertsAPIAlertEventResourceConditionResultsInnerOperatorEnum = typeof CovalAlertsAPIAlertEventResourceConditionResultsInnerOperatorEnum[keyof typeof CovalAlertsAPIAlertEventResourceConditionResultsInnerOperatorEnum];
+
 
 /**
  * Check if a given object implements the CovalAlertsAPIAlertEventResourceConditionResultsInner interface.
  */
 export function instanceOfCovalAlertsAPIAlertEventResourceConditionResultsInner(value: object): value is CovalAlertsAPIAlertEventResourceConditionResultsInner {
+    if (!('metric_id' in value) || value['metric_id'] === undefined) return false;
+    if (!('metric_display_name' in value) || value['metric_display_name'] === undefined) return false;
+    if (!('aggregation' in value) || value['aggregation'] === undefined) return false;
+    if (!('operator' in value) || value['operator'] === undefined) return false;
+    if (!('met' in value) || value['met'] === undefined) return false;
     return true;
 }
 
@@ -88,13 +114,14 @@ export function CovalAlertsAPIAlertEventResourceConditionResultsInnerFromJSONTyp
     }
     return {
         
-        'metric_id': json['metric_id'] == null ? undefined : json['metric_id'],
-        'metric_display_name': json['metric_display_name'] == null ? undefined : json['metric_display_name'],
-        'aggregation': json['aggregation'] == null ? undefined : json['aggregation'],
+        'metric_id': json['metric_id'],
+        'metric_display_name': json['metric_display_name'],
+        'aggregation': json['aggregation'],
         'computed_value': json['computed_value'] == null ? undefined : CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValueFromJSON(json['computed_value']),
         'threshold': json['threshold'] == null ? undefined : CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValueFromJSON(json['threshold']),
-        'operator': json['operator'] == null ? undefined : json['operator'],
-        'met': json['met'] == null ? undefined : json['met'],
+        'operator': json['operator'],
+        'met': json['met'],
+        'metadata': json['metadata'] == null ? undefined : json['metadata'],
     };
 }
 
@@ -116,6 +143,7 @@ export function CovalAlertsAPIAlertEventResourceConditionResultsInnerToJSONTyped
         'threshold': CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValueToJSON(value['threshold']),
         'operator': value['operator'],
         'met': value['met'],
+        'metadata': value['metadata'],
     };
 }
 

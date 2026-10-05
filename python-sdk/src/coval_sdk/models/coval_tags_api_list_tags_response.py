@@ -31,7 +31,7 @@ class CovalTagsAPIListTagsResponse(BaseModel):
     CovalTagsAPIListTagsResponse
     """ # noqa: E501
     tags: List[CovalTagsAPITagResource] = Field(description="List of tag resources")
-    next_page_token: Optional[StrictStr] = Field(default=None, description="Token for fetching next page (null if no more results)")
+    next_page_token: Optional[StrictStr] = Field(default=None, description="Opaque continuation token; null when there are no more tags.")
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["tags", "next_page_token"]
 

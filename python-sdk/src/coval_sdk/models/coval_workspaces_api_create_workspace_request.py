@@ -19,7 +19,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
@@ -29,13 +29,16 @@ class CovalWorkspacesAPICreateWorkspaceRequest(BaseModel):
     """
     CovalWorkspacesAPICreateWorkspaceRequest
     """ # noqa: E501
-    slug: Annotated[str, Field(min_length=1, strict=True, max_length=100)]
+    slug: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=100)]] = Field(default=None, description="Deprecated and ignored, including when null. Use the returned id to identify the workspace.")
     display_name: Annotated[str, Field(min_length=1, strict=True, max_length=200)]
     __properties: ClassVar[List[str]] = ["slug", "display_name"]
 
     @field_validator('slug')
     def slug_validate_regular_expression(cls, value):
         """Validates the regular expression"""
+        if value is None:
+            return value
+
         if not isinstance(value, str):
             value = str(value)
 
@@ -82,6 +85,11 @@ class CovalWorkspacesAPICreateWorkspaceRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if slug (nullable) is None
+        # and model_fields_set contains the field
+        if self.slug is None and "slug" in self.model_fields_set:
+            _dict['slug'] = None
+
         return _dict
 
     @classmethod

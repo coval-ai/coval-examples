@@ -102,18 +102,18 @@ export interface TracesApiInterface {
      * Creates request options for ingestTraces without sending the request
      * @param {Blob} body OTLP &#x60;ExportTraceServiceRequest&#x60; payload — protobuf or JSON. 
      * @param {string} [xSimulationId] Simulation output ID to associate the spans with. Use for simulation-based flows. Mutually exclusive with &#x60;X-Conversation-Id&#x60;. 
-     * @param {string} [xConversationId] Conversation (Run) ID returned by &#x60;POST /v1/conversations:submit&#x60;. Use for monitoring flows. Mutually exclusive with &#x60;X-Simulation-Id&#x60;. 
+     * @param {string} [xConversationId] Conversation ID returned by &#x60;POST /v1/conversations/uploaded:submit&#x60;. Use for uploaded conversation flows. Mutually exclusive with &#x60;X-Simulation-Id&#x60;. 
      * @throws {RequiredError}
      * @memberof TracesApiInterface
      */
     ingestTracesRequestOpts(requestParameters: IngestTracesRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Ingest OpenTelemetry trace data and associate it with a simulation output or a monitoring conversation.  The request body must be a standard OTLP `ExportTraceServiceRequest`, in protobuf binary (`application/x-protobuf`, the default for stock OTLP HTTP exporters) or JSON (`application/json`) format. See the [OTLP/HTTP specification](https://opentelemetry.io/docs/specs/otlp/#otlphttp) and [opentelemetry-proto](https://github.com/open-telemetry/opentelemetry-proto) for the wire format.  Identify the target by providing exactly one of `X-Simulation-Id` or `X-Conversation-Id` (not both). 
+     * Ingest OpenTelemetry trace data and associate it with a simulation output or an uploaded conversation.  The request body must be a standard OTLP `ExportTraceServiceRequest`, in protobuf binary (`application/x-protobuf`, the default for stock OTLP HTTP exporters) or JSON (`application/json`) format. See the [OTLP/HTTP specification](https://opentelemetry.io/docs/specs/otlp/#otlphttp) and [opentelemetry-proto](https://github.com/open-telemetry/opentelemetry-proto) for the wire format.  Identify the target by providing exactly one of `X-Simulation-Id` or `X-Conversation-Id` (not both). 
      * @summary Ingest OTLP traces
      * @param {Blob} body OTLP &#x60;ExportTraceServiceRequest&#x60; payload — protobuf or JSON. 
      * @param {string} [xSimulationId] Simulation output ID to associate the spans with. Use for simulation-based flows. Mutually exclusive with &#x60;X-Conversation-Id&#x60;. 
-     * @param {string} [xConversationId] Conversation (Run) ID returned by &#x60;POST /v1/conversations:submit&#x60;. Use for monitoring flows. Mutually exclusive with &#x60;X-Simulation-Id&#x60;. 
+     * @param {string} [xConversationId] Conversation ID returned by &#x60;POST /v1/conversations/uploaded:submit&#x60;. Use for uploaded conversation flows. Mutually exclusive with &#x60;X-Simulation-Id&#x60;. 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TracesApiInterface
@@ -121,7 +121,7 @@ export interface TracesApiInterface {
     ingestTracesRaw(requestParameters: IngestTracesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<IngestTraces200Response>>;
 
     /**
-     * Ingest OpenTelemetry trace data and associate it with a simulation output or a monitoring conversation.  The request body must be a standard OTLP `ExportTraceServiceRequest`, in protobuf binary (`application/x-protobuf`, the default for stock OTLP HTTP exporters) or JSON (`application/json`) format. See the [OTLP/HTTP specification](https://opentelemetry.io/docs/specs/otlp/#otlphttp) and [opentelemetry-proto](https://github.com/open-telemetry/opentelemetry-proto) for the wire format.  Identify the target by providing exactly one of `X-Simulation-Id` or `X-Conversation-Id` (not both). 
+     * Ingest OpenTelemetry trace data and associate it with a simulation output or an uploaded conversation.  The request body must be a standard OTLP `ExportTraceServiceRequest`, in protobuf binary (`application/x-protobuf`, the default for stock OTLP HTTP exporters) or JSON (`application/json`) format. See the [OTLP/HTTP specification](https://opentelemetry.io/docs/specs/otlp/#otlphttp) and [opentelemetry-proto](https://github.com/open-telemetry/opentelemetry-proto) for the wire format.  Identify the target by providing exactly one of `X-Simulation-Id` or `X-Conversation-Id` (not both). 
      * Ingest OTLP traces
      */
     ingestTraces(requestParameters: IngestTracesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<IngestTraces200Response>;
@@ -278,7 +278,7 @@ export class TracesApi extends runtime.BaseAPI implements TracesApiInterface {
     }
 
     /**
-     * Ingest OpenTelemetry trace data and associate it with a simulation output or a monitoring conversation.  The request body must be a standard OTLP `ExportTraceServiceRequest`, in protobuf binary (`application/x-protobuf`, the default for stock OTLP HTTP exporters) or JSON (`application/json`) format. See the [OTLP/HTTP specification](https://opentelemetry.io/docs/specs/otlp/#otlphttp) and [opentelemetry-proto](https://github.com/open-telemetry/opentelemetry-proto) for the wire format.  Identify the target by providing exactly one of `X-Simulation-Id` or `X-Conversation-Id` (not both). 
+     * Ingest OpenTelemetry trace data and associate it with a simulation output or an uploaded conversation.  The request body must be a standard OTLP `ExportTraceServiceRequest`, in protobuf binary (`application/x-protobuf`, the default for stock OTLP HTTP exporters) or JSON (`application/json`) format. See the [OTLP/HTTP specification](https://opentelemetry.io/docs/specs/otlp/#otlphttp) and [opentelemetry-proto](https://github.com/open-telemetry/opentelemetry-proto) for the wire format.  Identify the target by providing exactly one of `X-Simulation-Id` or `X-Conversation-Id` (not both). 
      * Ingest OTLP traces
      */
     async ingestTracesRaw(requestParameters: IngestTracesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<IngestTraces200Response>> {
@@ -289,7 +289,7 @@ export class TracesApi extends runtime.BaseAPI implements TracesApiInterface {
     }
 
     /**
-     * Ingest OpenTelemetry trace data and associate it with a simulation output or a monitoring conversation.  The request body must be a standard OTLP `ExportTraceServiceRequest`, in protobuf binary (`application/x-protobuf`, the default for stock OTLP HTTP exporters) or JSON (`application/json`) format. See the [OTLP/HTTP specification](https://opentelemetry.io/docs/specs/otlp/#otlphttp) and [opentelemetry-proto](https://github.com/open-telemetry/opentelemetry-proto) for the wire format.  Identify the target by providing exactly one of `X-Simulation-Id` or `X-Conversation-Id` (not both). 
+     * Ingest OpenTelemetry trace data and associate it with a simulation output or an uploaded conversation.  The request body must be a standard OTLP `ExportTraceServiceRequest`, in protobuf binary (`application/x-protobuf`, the default for stock OTLP HTTP exporters) or JSON (`application/json`) format. See the [OTLP/HTTP specification](https://opentelemetry.io/docs/specs/otlp/#otlphttp) and [opentelemetry-proto](https://github.com/open-telemetry/opentelemetry-proto) for the wire format.  Identify the target by providing exactly one of `X-Simulation-Id` or `X-Conversation-Id` (not both). 
      * Ingest OTLP traces
      */
     async ingestTraces(requestParameters: IngestTracesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<IngestTraces200Response> {

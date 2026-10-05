@@ -18,7 +18,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from coval_sdk.models.coval_alerts_api_alert_event_resource_condition_results_inner_computed_value import CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue
 from typing import Optional, Set
@@ -29,15 +29,23 @@ class CovalAlertsAPIAlertEventResourceConditionResultsInner(BaseModel):
     """
     CovalAlertsAPIAlertEventResourceConditionResultsInner
     """ # noqa: E501
-    metric_id: Optional[StrictStr] = None
-    metric_display_name: Optional[StrictStr] = None
-    aggregation: Optional[StrictStr] = None
+    metric_id: StrictStr
+    metric_display_name: StrictStr
+    aggregation: StrictStr
     computed_value: Optional[CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue] = None
     threshold: Optional[CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue] = None
-    operator: Optional[StrictStr] = None
-    met: Optional[StrictBool] = None
+    operator: StrictStr
+    met: StrictBool
+    metadata: Optional[Dict[str, Any]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["metric_id", "metric_display_name", "aggregation", "computed_value", "threshold", "operator", "met"]
+    __properties: ClassVar[List[str]] = ["metric_id", "metric_display_name", "aggregation", "computed_value", "threshold", "operator", "met", "metadata"]
+
+    @field_validator('operator')
+    def operator_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['GT', 'GTE', 'LT', 'LTE', 'EQ', 'NEQ']):
+            raise ValueError("must be one of enum values ('GT', 'GTE', 'LT', 'LTE', 'EQ', 'NEQ')")
+        return value
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -119,7 +127,8 @@ class CovalAlertsAPIAlertEventResourceConditionResultsInner(BaseModel):
             "computed_value": CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue.from_dict(obj["computed_value"]) if obj.get("computed_value") is not None else None,
             "threshold": CovalAlertsAPIAlertEventResourceConditionResultsInnerComputedValue.from_dict(obj["threshold"]) if obj.get("threshold") is not None else None,
             "operator": obj.get("operator"),
-            "met": obj.get("met")
+            "met": obj.get("met"),
+            "metadata": obj.get("metadata")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

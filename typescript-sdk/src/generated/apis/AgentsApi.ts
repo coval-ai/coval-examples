@@ -61,10 +61,12 @@ import {
 
 export interface CreateAgentRequest {
     covalAgentsAPICreateAgentRequest: CovalAgentsAPICreateAgentRequest;
+    xCovalWorkspaceId?: string;
 }
 
 export interface DeleteAgentRequest {
     agentId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface DuplicateAgentOperationRequest {
@@ -74,6 +76,7 @@ export interface DuplicateAgentOperationRequest {
 
 export interface GetAgentRequest {
     agentId: string;
+    xCovalWorkspaceId?: string;
 }
 
 export interface ListAgentVersionsRequest {
@@ -81,6 +84,7 @@ export interface ListAgentVersionsRequest {
 }
 
 export interface ListAgentsRequest {
+    xCovalWorkspaceId?: string;
     filter?: string;
     pageSize?: number;
     pageToken?: string;
@@ -96,6 +100,7 @@ export interface RevertAgentVersionRequest {
 export interface UpdateAgentRequest {
     agentId: string;
     covalAgentsAPIUpdateAgentRequest: CovalAgentsAPIUpdateAgentRequest;
+    xCovalWorkspaceId?: string;
 }
 
 /**
@@ -108,6 +113,7 @@ export interface AgentsApiInterface {
     /**
      * Creates request options for createAgent without sending the request
      * @param {CovalAgentsAPICreateAgentRequest} covalAgentsAPICreateAgentRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof AgentsApiInterface
      */
@@ -117,6 +123,7 @@ export interface AgentsApiInterface {
      * Connect an agent to coval by providing the agent\'s configuration.
      * @summary Connect an agent
      * @param {CovalAgentsAPICreateAgentRequest} covalAgentsAPICreateAgentRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AgentsApiInterface
@@ -132,15 +139,17 @@ export interface AgentsApiInterface {
     /**
      * Creates request options for deleteAgent without sending the request
      * @param {string} agentId Agent resource ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof AgentsApiInterface
      */
     deleteAgentRequestOpts(requestParameters: DeleteAgentRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Soft-delete an agent configuration, marking it as inactive while preserving the record.
+     * Soft-delete an agent configuration, marking it as inactive while preserving the record. Agents referenced by active Templates cannot be deleted.
      * @summary Delete agent
      * @param {string} agentId Agent resource ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AgentsApiInterface
@@ -148,7 +157,7 @@ export interface AgentsApiInterface {
     deleteAgentRaw(requestParameters: DeleteAgentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>>;
 
     /**
-     * Soft-delete an agent configuration, marking it as inactive while preserving the record.
+     * Soft-delete an agent configuration, marking it as inactive while preserving the record. Agents referenced by active Templates cannot be deleted.
      * Delete agent
      */
     deleteAgent(requestParameters: DeleteAgentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object>;
@@ -182,6 +191,7 @@ export interface AgentsApiInterface {
     /**
      * Creates request options for getAgent without sending the request
      * @param {string} agentId Agent resource ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof AgentsApiInterface
      */
@@ -191,6 +201,7 @@ export interface AgentsApiInterface {
      * Retrieve a specific agent configuration by its unique identifier.
      * @summary Get agent
      * @param {string} agentId Agent resource ID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AgentsApiInterface
@@ -229,6 +240,7 @@ export interface AgentsApiInterface {
 
     /**
      * Creates request options for listAgents without sending the request
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {string} [filter] Filter expression syntax.  **Supported fields:** &#x60;model_type&#x60;, &#x60;display_name&#x60;, &#x60;create_time&#x60;, &#x60;update_time&#x60;  **Operators:** &#x60;&#x3D;&#x60;, &#x60;!&#x3D;&#x60;, &#x60;&gt;&#x60;, &#x60;&lt;&#x60;, &#x60;&gt;&#x3D;&#x60;, &#x60;&lt;&#x3D;&#x60;, &#x60;AND&#x60;, &#x60;OR&#x60;  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., &#x60;display_name&#x3D;\&quot;Support Agent\&quot;&#x60;).  **Date format:** ISO 8601 (e.g., &#x60;2025-10-01T00:00:00Z&#x60;) 
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response.  Do not decode or modify this token. 
@@ -242,6 +254,7 @@ export interface AgentsApiInterface {
     /**
      * Retrieve a paginated list of agent configurations with optional filtering and sorting.
      * @summary List agents
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {string} [filter] Filter expression syntax.  **Supported fields:** &#x60;model_type&#x60;, &#x60;display_name&#x60;, &#x60;create_time&#x60;, &#x60;update_time&#x60;  **Operators:** &#x60;&#x3D;&#x60;, &#x60;!&#x3D;&#x60;, &#x60;&gt;&#x60;, &#x60;&lt;&#x60;, &#x60;&gt;&#x3D;&#x60;, &#x60;&lt;&#x3D;&#x60;, &#x60;AND&#x60;, &#x60;OR&#x60;  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., &#x60;display_name&#x3D;\&quot;Support Agent\&quot;&#x60;).  **Date format:** ISO 8601 (e.g., &#x60;2025-10-01T00:00:00Z&#x60;) 
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response.  Do not decode or modify this token. 
@@ -289,6 +302,7 @@ export interface AgentsApiInterface {
      * Creates request options for updateAgent without sending the request
      * @param {string} agentId Agent resource ID
      * @param {CovalAgentsAPIUpdateAgentRequest} covalAgentsAPIUpdateAgentRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @throws {RequiredError}
      * @memberof AgentsApiInterface
      */
@@ -299,6 +313,7 @@ export interface AgentsApiInterface {
      * @summary Update agent
      * @param {string} agentId Agent resource ID
      * @param {CovalAgentsAPIUpdateAgentRequest} covalAgentsAPIUpdateAgentRequest 
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AgentsApiInterface
@@ -334,6 +349,10 @@ export class AgentsApi extends runtime.BaseAPI implements AgentsApiInterface {
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Agents_API_ApiKeyAuth authentication
@@ -386,6 +405,10 @@ export class AgentsApi extends runtime.BaseAPI implements AgentsApiInterface {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Agents_API_ApiKeyAuth authentication
         }
@@ -403,7 +426,7 @@ export class AgentsApi extends runtime.BaseAPI implements AgentsApiInterface {
     }
 
     /**
-     * Soft-delete an agent configuration, marking it as inactive while preserving the record.
+     * Soft-delete an agent configuration, marking it as inactive while preserving the record. Agents referenced by active Templates cannot be deleted.
      * Delete agent
      */
     async deleteAgentRaw(requestParameters: DeleteAgentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
@@ -414,7 +437,7 @@ export class AgentsApi extends runtime.BaseAPI implements AgentsApiInterface {
     }
 
     /**
-     * Soft-delete an agent configuration, marking it as inactive while preserving the record.
+     * Soft-delete an agent configuration, marking it as inactive while preserving the record. Agents referenced by active Templates cannot be deleted.
      * Delete agent
      */
     async deleteAgent(requestParameters: DeleteAgentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
@@ -490,6 +513,10 @@ export class AgentsApi extends runtime.BaseAPI implements AgentsApiInterface {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Agents_API_ApiKeyAuth authentication
@@ -605,6 +632,10 @@ export class AgentsApi extends runtime.BaseAPI implements AgentsApiInterface {
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Agents_API_ApiKeyAuth authentication
@@ -723,6 +754,10 @@ export class AgentsApi extends runtime.BaseAPI implements AgentsApiInterface {
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["x-api-key"] = await this.configuration.apiKey("x-api-key"); // Coval_Agents_API_ApiKeyAuth authentication

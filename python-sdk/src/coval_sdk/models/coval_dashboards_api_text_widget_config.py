@@ -79,6 +79,11 @@ class CovalDashboardsAPITextWidgetConfig(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if text (nullable) is None
+        # and model_fields_set contains the field
+        if self.text is None and "text" in self.model_fields_set:
+            _dict['text'] = None
+
         return _dict
 
     @classmethod

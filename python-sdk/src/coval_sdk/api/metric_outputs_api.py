@@ -16,10 +16,12 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictStr, field_validator
+from pydantic import Field, StrictBool, StrictStr, field_validator
 from typing import Optional
 from typing_extensions import Annotated
+from coval_sdk.models.coval_simulated_conversations_api_list_simulated_conversation_metrics_response import CovalSimulatedConversationsAPIListSimulatedConversationMetricsResponse
 from coval_sdk.models.coval_simulations_api_list_metrics_response import CovalSimulationsAPIListMetricsResponse
+from coval_sdk.models.get_simulated_conversation_metric200_response import GetSimulatedConversationMetric200Response
 from coval_sdk.models.simulations_get_metric200_response import SimulationsGetMetric200Response
 
 from coval_sdk.api_client import ApiClient, RequestSerialized
@@ -38,6 +40,666 @@ class MetricOutputsApi:
         if api_client is None:
             api_client = ApiClient.get_default()
         self.api_client = api_client
+
+
+    @validate_call
+    def get_simulated_conversation_metric(
+        self,
+        simulation_id: Annotated[str, Field(min_length=22, strict=True, max_length=27, description="The simulation ID")],
+        metric_output_id: Annotated[str, Field(min_length=22, strict=True, max_length=26, description="Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type. ")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> GetSimulatedConversationMetric200Response:
+        """Get simulation metric output(s)
+
+        Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed.  **Retrieving test-metric results:** after calling `POST /v1/metrics/{metric_id}/test`, poll this endpoint using the same simulation output ID you tested against as `simulation_id`, plus the returned 26-char `metric_output_ulid`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test-metric outputs belong to the simulation they ran against, so they are retrieved here, not via the conversations endpoint. 
+
+        :param simulation_id: The simulation ID (required)
+        :type simulation_id: str
+        :param metric_output_id: Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type.  (required)
+        :type metric_output_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_simulated_conversation_metric_serialize(
+            simulation_id=simulation_id,
+            metric_output_id=metric_output_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetSimulatedConversationMetric200Response",
+            '401': "CovalSimulatedConversationsAPIErrorResponse",
+            '404': "CovalSimulatedConversationsAPIErrorResponse",
+            '500': "CovalSimulatedConversationsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def get_simulated_conversation_metric_with_http_info(
+        self,
+        simulation_id: Annotated[str, Field(min_length=22, strict=True, max_length=27, description="The simulation ID")],
+        metric_output_id: Annotated[str, Field(min_length=22, strict=True, max_length=26, description="Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type. ")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[GetSimulatedConversationMetric200Response]:
+        """Get simulation metric output(s)
+
+        Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed.  **Retrieving test-metric results:** after calling `POST /v1/metrics/{metric_id}/test`, poll this endpoint using the same simulation output ID you tested against as `simulation_id`, plus the returned 26-char `metric_output_ulid`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test-metric outputs belong to the simulation they ran against, so they are retrieved here, not via the conversations endpoint. 
+
+        :param simulation_id: The simulation ID (required)
+        :type simulation_id: str
+        :param metric_output_id: Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type.  (required)
+        :type metric_output_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_simulated_conversation_metric_serialize(
+            simulation_id=simulation_id,
+            metric_output_id=metric_output_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetSimulatedConversationMetric200Response",
+            '401': "CovalSimulatedConversationsAPIErrorResponse",
+            '404': "CovalSimulatedConversationsAPIErrorResponse",
+            '500': "CovalSimulatedConversationsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def get_simulated_conversation_metric_without_preload_content(
+        self,
+        simulation_id: Annotated[str, Field(min_length=22, strict=True, max_length=27, description="The simulation ID")],
+        metric_output_id: Annotated[str, Field(min_length=22, strict=True, max_length=26, description="Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type. ")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Get simulation metric output(s)
+
+        Retrieve metric output(s) for a simulation by ID. The path segment accepts two ID types and returns different response shapes:  - **26-char MetricOutput ULID**: returns a single metric output as   `{ \"metric\": {...} }`. - **22-char Metric definition ID**: returns every output for that   metric on the simulation as `{ \"metric_outputs\": [...] }`.  Clients should branch on the input ID length they passed.  **Retrieving test-metric results:** after calling `POST /v1/metrics/{metric_id}/test`, poll this endpoint using the same simulation output ID you tested against as `simulation_id`, plus the returned 26-char `metric_output_ulid`. The response includes a `status` field (`IN QUEUE`, `IN PROGRESS`, `COMPLETED`, `FAILED`) — poll until it is terminal. Test-metric outputs belong to the simulation they ran against, so they are retrieved here, not via the conversations endpoint. 
+
+        :param simulation_id: The simulation ID (required)
+        :type simulation_id: str
+        :param metric_output_id: Either a 26-char MetricOutput ULID or a 22-char Metric definition ID. See endpoint description for response shape per ID type.  (required)
+        :type metric_output_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_simulated_conversation_metric_serialize(
+            simulation_id=simulation_id,
+            metric_output_id=metric_output_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetSimulatedConversationMetric200Response",
+            '401': "CovalSimulatedConversationsAPIErrorResponse",
+            '404': "CovalSimulatedConversationsAPIErrorResponse",
+            '500': "CovalSimulatedConversationsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _get_simulated_conversation_metric_serialize(
+        self,
+        simulation_id,
+        metric_output_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if simulation_id is not None:
+            _path_params['simulation_id'] = simulation_id
+        if metric_output_id is not None:
+            _path_params['metric_output_id'] = metric_output_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'Coval_Simulated_Conversations_API_ApiKeyAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/conversations/simulated/{simulation_id}/metrics/{metric_output_id}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def list_simulated_conversation_metrics(
+        self,
+        simulation_id: Annotated[str, Field(min_length=22, strict=True, max_length=27, description="The simulation ID")],
+        filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Supported fields: `status`, `metric_id`, `metric_name`, `value`, `create_time`, `start_time`, `end_time`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`). ")] = None,
+        page_size: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
+        view: Annotated[Optional[StrictStr], Field(description="Response detail level. `FULL` preserves the historical response including structured `result` and `runtime_metadata`; `BASIC` omits those heavy fields while retaining value, status, explanation, and bounded subvalues. ")] = None,
+        include_superseded: Annotated[Optional[StrictBool], Field(description="Include outputs that a later re-score of the same metric has superseded.  When `false` (default) each metric contributes only its most recent output. When `true` every output is returned, so one metric may appear multiple times; recency is determined by creation time, with the `metric_output_id` ULID breaking ties, and the response order still follows `order_by`. ")] = None,
+        order_by: Annotated[Optional[StrictStr], Field(description="Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `metric_name`, `create_time`, `value`, `start_time`, `end_time` ")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> CovalSimulatedConversationsAPIListSimulatedConversationMetricsResponse:
+        """List metrics
+
+        List metric results for a simulation.  Re-scoring a metric on a simulation appends a new output rather than replacing the previous one. By default this endpoint returns only the most recent output for each metric, so a metric appears at most once. Pass `include_superseded=true` to get the full history, including outputs that a later re-score has replaced. 
+
+        :param simulation_id: The simulation ID (required)
+        :type simulation_id: str
+        :param filter: Filter expression syntax.  Supported fields: `status`, `metric_id`, `metric_name`, `value`, `create_time`, `start_time`, `end_time`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`). 
+        :type filter: str
+        :param page_size: Maximum number of results per page
+        :type page_size: int
+        :param page_token: Opaque pagination token from previous response
+        :type page_token: str
+        :param view: Response detail level. `FULL` preserves the historical response including structured `result` and `runtime_metadata`; `BASIC` omits those heavy fields while retaining value, status, explanation, and bounded subvalues. 
+        :type view: str
+        :param include_superseded: Include outputs that a later re-score of the same metric has superseded.  When `false` (default) each metric contributes only its most recent output. When `true` every output is returned, so one metric may appear multiple times; recency is determined by creation time, with the `metric_output_id` ULID breaking ties, and the response order still follows `order_by`. 
+        :type include_superseded: bool
+        :param order_by: Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `metric_name`, `create_time`, `value`, `start_time`, `end_time` 
+        :type order_by: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._list_simulated_conversation_metrics_serialize(
+            simulation_id=simulation_id,
+            filter=filter,
+            page_size=page_size,
+            page_token=page_token,
+            view=view,
+            include_superseded=include_superseded,
+            order_by=order_by,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalSimulatedConversationsAPIListSimulatedConversationMetricsResponse",
+            '400': "CovalSimulatedConversationsAPIErrorResponse",
+            '401': "CovalSimulatedConversationsAPIErrorResponse",
+            '404': "CovalSimulatedConversationsAPIErrorResponse",
+            '500': "CovalSimulatedConversationsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def list_simulated_conversation_metrics_with_http_info(
+        self,
+        simulation_id: Annotated[str, Field(min_length=22, strict=True, max_length=27, description="The simulation ID")],
+        filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Supported fields: `status`, `metric_id`, `metric_name`, `value`, `create_time`, `start_time`, `end_time`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`). ")] = None,
+        page_size: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
+        view: Annotated[Optional[StrictStr], Field(description="Response detail level. `FULL` preserves the historical response including structured `result` and `runtime_metadata`; `BASIC` omits those heavy fields while retaining value, status, explanation, and bounded subvalues. ")] = None,
+        include_superseded: Annotated[Optional[StrictBool], Field(description="Include outputs that a later re-score of the same metric has superseded.  When `false` (default) each metric contributes only its most recent output. When `true` every output is returned, so one metric may appear multiple times; recency is determined by creation time, with the `metric_output_id` ULID breaking ties, and the response order still follows `order_by`. ")] = None,
+        order_by: Annotated[Optional[StrictStr], Field(description="Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `metric_name`, `create_time`, `value`, `start_time`, `end_time` ")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[CovalSimulatedConversationsAPIListSimulatedConversationMetricsResponse]:
+        """List metrics
+
+        List metric results for a simulation.  Re-scoring a metric on a simulation appends a new output rather than replacing the previous one. By default this endpoint returns only the most recent output for each metric, so a metric appears at most once. Pass `include_superseded=true` to get the full history, including outputs that a later re-score has replaced. 
+
+        :param simulation_id: The simulation ID (required)
+        :type simulation_id: str
+        :param filter: Filter expression syntax.  Supported fields: `status`, `metric_id`, `metric_name`, `value`, `create_time`, `start_time`, `end_time`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`). 
+        :type filter: str
+        :param page_size: Maximum number of results per page
+        :type page_size: int
+        :param page_token: Opaque pagination token from previous response
+        :type page_token: str
+        :param view: Response detail level. `FULL` preserves the historical response including structured `result` and `runtime_metadata`; `BASIC` omits those heavy fields while retaining value, status, explanation, and bounded subvalues. 
+        :type view: str
+        :param include_superseded: Include outputs that a later re-score of the same metric has superseded.  When `false` (default) each metric contributes only its most recent output. When `true` every output is returned, so one metric may appear multiple times; recency is determined by creation time, with the `metric_output_id` ULID breaking ties, and the response order still follows `order_by`. 
+        :type include_superseded: bool
+        :param order_by: Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `metric_name`, `create_time`, `value`, `start_time`, `end_time` 
+        :type order_by: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._list_simulated_conversation_metrics_serialize(
+            simulation_id=simulation_id,
+            filter=filter,
+            page_size=page_size,
+            page_token=page_token,
+            view=view,
+            include_superseded=include_superseded,
+            order_by=order_by,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalSimulatedConversationsAPIListSimulatedConversationMetricsResponse",
+            '400': "CovalSimulatedConversationsAPIErrorResponse",
+            '401': "CovalSimulatedConversationsAPIErrorResponse",
+            '404': "CovalSimulatedConversationsAPIErrorResponse",
+            '500': "CovalSimulatedConversationsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def list_simulated_conversation_metrics_without_preload_content(
+        self,
+        simulation_id: Annotated[str, Field(min_length=22, strict=True, max_length=27, description="The simulation ID")],
+        filter: Annotated[Optional[StrictStr], Field(description="Filter expression syntax.  Supported fields: `status`, `metric_id`, `metric_name`, `value`, `create_time`, `start_time`, `end_time`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`). ")] = None,
+        page_size: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of results per page")] = None,
+        page_token: Annotated[Optional[StrictStr], Field(description="Opaque pagination token from previous response")] = None,
+        view: Annotated[Optional[StrictStr], Field(description="Response detail level. `FULL` preserves the historical response including structured `result` and `runtime_metadata`; `BASIC` omits those heavy fields while retaining value, status, explanation, and bounded subvalues. ")] = None,
+        include_superseded: Annotated[Optional[StrictBool], Field(description="Include outputs that a later re-score of the same metric has superseded.  When `false` (default) each metric contributes only its most recent output. When `true` every output is returned, so one metric may appear multiple times; recency is determined by creation time, with the `metric_output_id` ULID breaking ties, and the response order still follows `order_by`. ")] = None,
+        order_by: Annotated[Optional[StrictStr], Field(description="Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `metric_name`, `create_time`, `value`, `start_time`, `end_time` ")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """List metrics
+
+        List metric results for a simulation.  Re-scoring a metric on a simulation appends a new output rather than replacing the previous one. By default this endpoint returns only the most recent output for each metric, so a metric appears at most once. Pass `include_superseded=true` to get the full history, including outputs that a later re-score has replaced. 
+
+        :param simulation_id: The simulation ID (required)
+        :type simulation_id: str
+        :param filter: Filter expression syntax.  Supported fields: `status`, `metric_id`, `metric_name`, `value`, `create_time`, `start_time`, `end_time`  Operators: `=`, `!=`, `>`, `<`, `>=`, `<=`, `AND`, `OR`  Values may be unquoted or double-quoted. Values containing spaces must be quoted (e.g., `status=\"IN PROGRESS\"`). 
+        :type filter: str
+        :param page_size: Maximum number of results per page
+        :type page_size: int
+        :param page_token: Opaque pagination token from previous response
+        :type page_token: str
+        :param view: Response detail level. `FULL` preserves the historical response including structured `result` and `runtime_metadata`; `BASIC` omits those heavy fields while retaining value, status, explanation, and bounded subvalues. 
+        :type view: str
+        :param include_superseded: Include outputs that a later re-score of the same metric has superseded.  When `false` (default) each metric contributes only its most recent output. When `true` every output is returned, so one metric may appear multiple times; recency is determined by creation time, with the `metric_output_id` ULID breaking ties, and the response order still follows `order_by`. 
+        :type include_superseded: bool
+        :param order_by: Sort order specification.  Format: `field` or `-field` (descending)  Supported fields: `metric_name`, `create_time`, `value`, `start_time`, `end_time` 
+        :type order_by: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._list_simulated_conversation_metrics_serialize(
+            simulation_id=simulation_id,
+            filter=filter,
+            page_size=page_size,
+            page_token=page_token,
+            view=view,
+            include_superseded=include_superseded,
+            order_by=order_by,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CovalSimulatedConversationsAPIListSimulatedConversationMetricsResponse",
+            '400': "CovalSimulatedConversationsAPIErrorResponse",
+            '401': "CovalSimulatedConversationsAPIErrorResponse",
+            '404': "CovalSimulatedConversationsAPIErrorResponse",
+            '500': "CovalSimulatedConversationsAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _list_simulated_conversation_metrics_serialize(
+        self,
+        simulation_id,
+        filter,
+        page_size,
+        page_token,
+        view,
+        include_superseded,
+        order_by,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if simulation_id is not None:
+            _path_params['simulation_id'] = simulation_id
+        # process the query parameters
+        if filter is not None:
+            
+            _query_params.append(('filter', filter))
+            
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if page_token is not None:
+            
+            _query_params.append(('page_token', page_token))
+            
+        if view is not None:
+            
+            _query_params.append(('view', view))
+            
+        if include_superseded is not None:
+            
+            _query_params.append(('include_superseded', include_superseded))
+            
+        if order_by is not None:
+            
+            _query_params.append(('order_by', order_by))
+            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'Coval_Simulated_Conversations_API_ApiKeyAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/conversations/simulated/{simulation_id}/metrics',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
 
 
     @validate_call

@@ -21,22 +21,22 @@ import { mapValues } from '../runtime.js';
 export interface CovalAlertsAPIAlertEventResourceDispatchedChannelsInner {
     /**
      * 
-     * @type {string}
+     * @type {CovalAlertsAPIAlertEventResourceDispatchedChannelsInnerChannelTypeEnum}
      * @memberof CovalAlertsAPIAlertEventResourceDispatchedChannelsInner
      */
-    channel_type?: string;
+    channel_type: CovalAlertsAPIAlertEventResourceDispatchedChannelsInnerChannelTypeEnum;
     /**
      * 
      * @type {string}
      * @memberof CovalAlertsAPIAlertEventResourceDispatchedChannelsInner
      */
-    channel_summary?: string;
+    channel_summary: string;
     /**
      * 
      * @type {boolean}
      * @memberof CovalAlertsAPIAlertEventResourceDispatchedChannelsInner
      */
-    success?: boolean;
+    success: boolean;
     /**
      * 
      * @type {string}
@@ -45,10 +45,26 @@ export interface CovalAlertsAPIAlertEventResourceDispatchedChannelsInner {
     error?: string | null;
 }
 
+
+/**
+ * @export
+ */
+export const CovalAlertsAPIAlertEventResourceDispatchedChannelsInnerChannelTypeEnum = {
+    Slack: 'SLACK',
+    Email: 'EMAIL',
+    Webhook: 'WEBHOOK',
+    HumanReview: 'HUMAN_REVIEW'
+} as const;
+export type CovalAlertsAPIAlertEventResourceDispatchedChannelsInnerChannelTypeEnum = typeof CovalAlertsAPIAlertEventResourceDispatchedChannelsInnerChannelTypeEnum[keyof typeof CovalAlertsAPIAlertEventResourceDispatchedChannelsInnerChannelTypeEnum];
+
+
 /**
  * Check if a given object implements the CovalAlertsAPIAlertEventResourceDispatchedChannelsInner interface.
  */
 export function instanceOfCovalAlertsAPIAlertEventResourceDispatchedChannelsInner(value: object): value is CovalAlertsAPIAlertEventResourceDispatchedChannelsInner {
+    if (!('channel_type' in value) || value['channel_type'] === undefined) return false;
+    if (!('channel_summary' in value) || value['channel_summary'] === undefined) return false;
+    if (!('success' in value) || value['success'] === undefined) return false;
     return true;
 }
 
@@ -62,9 +78,9 @@ export function CovalAlertsAPIAlertEventResourceDispatchedChannelsInnerFromJSONT
     }
     return {
         
-        'channel_type': json['channel_type'] == null ? undefined : json['channel_type'],
-        'channel_summary': json['channel_summary'] == null ? undefined : json['channel_summary'],
-        'success': json['success'] == null ? undefined : json['success'],
+        'channel_type': json['channel_type'],
+        'channel_summary': json['channel_summary'],
+        'success': json['success'],
         'error': json['error'] == null ? undefined : json['error'],
     };
 }

@@ -25,7 +25,9 @@
 export const CovalDashboardsAPIWidgetType = {
     Chart: 'chart',
     Table: 'table',
-    Text: 'text'
+    Text: 'text',
+    AssigneeCallVolume: 'assignee_call_volume',
+    AssigneeCallHistory: 'assignee_call_history'
 } as const;
 export type CovalDashboardsAPIWidgetType = typeof CovalDashboardsAPIWidgetType[keyof typeof CovalDashboardsAPIWidgetType];
 

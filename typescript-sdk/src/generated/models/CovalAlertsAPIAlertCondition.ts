@@ -20,6 +20,13 @@ import {
     CovalAlertsAPIConditionOperatorToJSON,
     CovalAlertsAPIConditionOperatorToJSONTyped,
 } from './CovalAlertsAPIConditionOperator.js';
+import type { CovalAlertsAPIBaselineDeviationDirection } from './CovalAlertsAPIBaselineDeviationDirection.js';
+import {
+    CovalAlertsAPIBaselineDeviationDirectionFromJSON,
+    CovalAlertsAPIBaselineDeviationDirectionFromJSONTyped,
+    CovalAlertsAPIBaselineDeviationDirectionToJSON,
+    CovalAlertsAPIBaselineDeviationDirectionToJSONTyped,
+} from './CovalAlertsAPIBaselineDeviationDirection.js';
 import type { CovalAlertsAPIConditionAggregation } from './CovalAlertsAPIConditionAggregation.js';
 import {
     CovalAlertsAPIConditionAggregationFromJSON,
@@ -41,11 +48,11 @@ export interface CovalAlertsAPIAlertCondition {
      */
     ulid: string;
     /**
-     * ULID of the metric to evaluate
+     * ULID of the metric to evaluate. Null for JOB_SUCCESS conditions.
      * @type {string}
      * @memberof CovalAlertsAPIAlertCondition
      */
-    metric_id: string;
+    metric_id?: string | null;
     /**
      * 
      * @type {CovalAlertsAPIConditionAggregation}
@@ -94,6 +101,30 @@ export interface CovalAlertsAPIAlertCondition {
      * @memberof CovalAlertsAPIAlertCondition
      */
     match_mode?: CovalAlertsAPIAlertConditionMatchModeEnum | null;
+    /**
+     * ULID of the metric baseline used by a BASELINE_DEVIATION condition
+     * @type {string}
+     * @memberof CovalAlertsAPIAlertCondition
+     */
+    baseline_id?: string | null;
+    /**
+     * Sigmas from the baseline that constitute an anomaly
+     * @type {number}
+     * @memberof CovalAlertsAPIAlertCondition
+     */
+    sigma_threshold?: number | null;
+    /**
+     * Which direction of deviation counts as anomalous
+     * @type {CovalAlertsAPIBaselineDeviationDirection}
+     * @memberof CovalAlertsAPIAlertCondition
+     */
+    direction?: CovalAlertsAPIBaselineDeviationDirection | null;
+    /**
+     * Minimum baseline observations required before the alert can fire
+     * @type {number}
+     * @memberof CovalAlertsAPIAlertCondition
+     */
+    warm_up_count?: number | null;
 }
 
 
@@ -113,7 +144,6 @@ export type CovalAlertsAPIAlertConditionMatchModeEnum = typeof CovalAlertsAPIAle
  */
 export function instanceOfCovalAlertsAPIAlertCondition(value: object): value is CovalAlertsAPIAlertCondition {
     if (!('ulid' in value) || value['ulid'] === undefined) return false;
-    if (!('metric_id' in value) || value['metric_id'] === undefined) return false;
     if (!('aggregation' in value) || value['aggregation'] === undefined) return false;
     if (!('operator' in value) || value['operator'] === undefined) return false;
     return true;
@@ -130,7 +160,7 @@ export function CovalAlertsAPIAlertConditionFromJSONTyped(json: any, ignoreDiscr
     return {
         
         'ulid': json['ulid'],
-        'metric_id': json['metric_id'],
+        'metric_id': json['metric_id'] == null ? undefined : json['metric_id'],
         'aggregation': CovalAlertsAPIConditionAggregationFromJSON(json['aggregation']),
         'operator': CovalAlertsAPIConditionOperatorFromJSON(json['operator']),
         'threshold_float': json['threshold_float'] == null ? undefined : json['threshold_float'],
@@ -139,6 +169,10 @@ export function CovalAlertsAPIAlertConditionFromJSONTyped(json: any, ignoreDiscr
         'window_size_runs': json['window_size_runs'] == null ? undefined : json['window_size_runs'],
         'match_value': json['match_value'] == null ? undefined : json['match_value'],
         'match_mode': json['match_mode'] == null ? undefined : json['match_mode'],
+        'baseline_id': json['baseline_id'] == null ? undefined : json['baseline_id'],
+        'sigma_threshold': json['sigma_threshold'] == null ? undefined : json['sigma_threshold'],
+        'direction': json['direction'] == null ? undefined : CovalAlertsAPIBaselineDeviationDirectionFromJSON(json['direction']),
+        'warm_up_count': json['warm_up_count'] == null ? undefined : json['warm_up_count'],
     };
 }
 
@@ -163,6 +197,10 @@ export function CovalAlertsAPIAlertConditionToJSONTyped(value?: CovalAlertsAPIAl
         'window_size_runs': value['window_size_runs'],
         'match_value': value['match_value'],
         'match_mode': value['match_mode'],
+        'baseline_id': value['baseline_id'],
+        'sigma_threshold': value['sigma_threshold'],
+        'direction': CovalAlertsAPIBaselineDeviationDirectionToJSON(value['direction']),
+        'warm_up_count': value['warm_up_count'],
     };
 }
 

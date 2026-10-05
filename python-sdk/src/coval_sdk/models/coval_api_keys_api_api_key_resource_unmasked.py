@@ -33,31 +33,40 @@ class CovalAPIKeysAPIApiKeyResourceUnmasked(BaseModel):
     """
     API key resource with full key value. Only returned during creation.
     """ # noqa: E501
-    id: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="API key resource ID (ULID, 26 characters)")
-    organization_id: Optional[StrictStr] = Field(default=None, description="Organization ID that owns this API key")
-    api_key: Optional[StrictStr] = Field(default=None, description="The full API key value. Store it securely -- it cannot be retrieved again.")
+    id: Annotated[str, Field(strict=True)] = Field(description="API key resource ID (ULID, 26 characters)")
+    organization_id: StrictStr = Field(description="Organization ID that owns this API key")
+    api_key: StrictStr = Field(description="The full API key value. Store it securely -- it cannot be retrieved again.")
     key_type: Optional[CovalAPIKeysAPIKeyType] = None
     status: Optional[CovalAPIKeysAPIApiKeyStatus] = None
     name: Optional[Annotated[str, Field(strict=True, max_length=200)]] = Field(default=None, description="Human-readable name for the API key")
     description: Optional[Annotated[str, Field(strict=True, max_length=2000)]] = Field(default=None, description="Detailed description of the API key purpose")
     permissions: Optional[List[CovalAPIKeysAPIPermissionScope]] = Field(default=None, description="Permission scopes granted to this key. Empty array grants full access. See `PermissionScope` for valid values. ")
-    create_time: Optional[datetime] = Field(default=None, description="Creation timestamp (ISO 8601)")
+    create_time: datetime = Field(description="Creation timestamp (ISO 8601)")
     update_time: Optional[datetime] = Field(default=None, description="Last update timestamp (ISO 8601)")
     last_used_at: Optional[datetime] = Field(default=None, description="Timestamp of last API key usage (ISO 8601)")
+    created_by_id: Optional[StrictStr] = Field(default=None, description="User ULID of whoever created the key")
+    environment: Optional[StrictStr] = Field(default='PRODUCTION', description="API key environment")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["id", "organization_id", "api_key", "key_type", "status", "name", "description", "permissions", "create_time", "update_time", "last_used_at"]
+    __properties: ClassVar[List[str]] = ["id", "organization_id", "api_key", "key_type", "status", "name", "description", "permissions", "create_time", "update_time", "last_used_at", "created_by_id", "environment"]
 
     @field_validator('id')
     def id_validate_regular_expression(cls, value):
         """Validates the regular expression"""
-        if value is None:
-            return value
-
         if not isinstance(value, str):
             value = str(value)
 
         if not re.match(r"^[0-9A-Z]{26}$", value):
             raise ValueError(r"must validate the regular expression /^[0-9A-Z]{26}$/")
+        return value
+
+    @field_validator('environment')
+    def environment_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['PRODUCTION', 'STAGING', 'DEVELOPMENT']):
+            raise ValueError("must be one of enum values ('PRODUCTION', 'STAGING', 'DEVELOPMENT')")
         return value
 
     model_config = ConfigDict(
@@ -106,16 +115,6 @@ class CovalAPIKeysAPIApiKeyResourceUnmasked(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if name (nullable) is None
-        # and model_fields_set contains the field
-        if self.name is None and "name" in self.model_fields_set:
-            _dict['name'] = None
-
-        # set to None if description (nullable) is None
-        # and model_fields_set contains the field
-        if self.description is None and "description" in self.model_fields_set:
-            _dict['description'] = None
-
         # set to None if update_time (nullable) is None
         # and model_fields_set contains the field
         if self.update_time is None and "update_time" in self.model_fields_set:
@@ -125,6 +124,11 @@ class CovalAPIKeysAPIApiKeyResourceUnmasked(BaseModel):
         # and model_fields_set contains the field
         if self.last_used_at is None and "last_used_at" in self.model_fields_set:
             _dict['last_used_at'] = None
+
+        # set to None if created_by_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.created_by_id is None and "created_by_id" in self.model_fields_set:
+            _dict['created_by_id'] = None
 
         return _dict
 
@@ -148,7 +152,9 @@ class CovalAPIKeysAPIApiKeyResourceUnmasked(BaseModel):
             "permissions": obj.get("permissions"),
             "create_time": obj.get("create_time"),
             "update_time": obj.get("update_time"),
-            "last_used_at": obj.get("last_used_at")
+            "last_used_at": obj.get("last_used_at"),
+            "created_by_id": obj.get("created_by_id"),
+            "environment": obj.get("environment") if obj.get("environment") is not None else 'PRODUCTION'
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

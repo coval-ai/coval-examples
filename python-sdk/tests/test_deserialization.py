@@ -14,12 +14,22 @@ from coval_sdk.models.test_sets_api_test_set_resource import (
 )
 
 
+def _test_set(test_set_id, display_name):
+  return {
+    "name": f"test-sets/{test_set_id}",
+    "id": test_set_id,
+    "slug": display_name.replace(" ", "-"),
+    "display_name": display_name,
+    "create_time": "2026-10-05T00:00:00Z",
+  }
+
+
 def _test_sets_payload():
   return {
     "test_sets": [
-      {"id": "12345678", "display_name": "valid"},
-      {"id": "short", "display_name": "invalid"},
-      {"id": "87654321", "display_name": "also valid"},
+      _test_set("12345678", "valid"),
+      _test_set("short", "invalid"),
+      _test_set("87654321", "also valid"),
     ],
     "next_page_token": "next",
   }

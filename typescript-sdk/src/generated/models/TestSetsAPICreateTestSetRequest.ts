@@ -26,7 +26,7 @@ export interface TestSetsAPICreateTestSetRequest {
      */
     display_name: string;
     /**
-     * URL-friendly identifier (auto-generated from display_name if not provided)
+     * URL-friendly identifier containing only lowercase letters, numbers, dashes, and underscores (auto-generated from display_name if not provided)
      * @type {string}
      * @memberof TestSetsAPICreateTestSetRequest
      */

@@ -24,7 +24,7 @@ export interface CovalDashboardsAPITextWidgetConfig {
      * @type {string}
      * @memberof CovalDashboardsAPITextWidgetConfig
      */
-    text?: string;
+    text?: string | null;
 }
 
 /**

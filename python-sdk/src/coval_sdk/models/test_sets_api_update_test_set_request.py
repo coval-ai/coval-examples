@@ -18,7 +18,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from typing import Optional, Set
@@ -30,7 +30,7 @@ class TestSetsAPIUpdateTestSetRequest(BaseModel):
     Update request. Only provided fields will be updated.
     """ # noqa: E501
     display_name: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=100)]] = Field(default=None, description="Human-readable test set name")
-    slug: Optional[Annotated[str, Field(strict=True, max_length=100)]] = Field(default=None, description="URL-friendly identifier")
+    slug: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=100)]] = Field(default=None, description="URL-friendly identifier containing only lowercase letters, numbers, dashes, and underscores")
     description: Optional[StrictStr] = Field(default=None, description="Test set description")
     test_set_type: Optional[Annotated[str, Field(strict=True, max_length=50)]] = Field(default=None, description="Test set type")
     test_set_metadata: Optional[Dict[str, Any]] = Field(default=None, description="Additional configuration (null = don't update, {} = clear field)")
@@ -38,6 +38,19 @@ class TestSetsAPIUpdateTestSetRequest(BaseModel):
     tags: Optional[List[StrictStr]] = Field(default=None, description="Tags to associate with this test set. Null or omitted leaves tags unchanged. Pass [] to clear all tags.")
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["display_name", "slug", "description", "test_set_type", "test_set_metadata", "parameters", "tags"]
+
+    @field_validator('slug')
+    def slug_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if value is None:
+            return value
+
+        if not isinstance(value, str):
+            value = str(value)
+
+        if not re.match(r"^[a-z0-9_-]+$", value):
+            raise ValueError(r"must validate the regular expression /^[a-z0-9_-]+$/")
+        return value
 
     model_config = ConfigDict(
         validate_by_name=True,
