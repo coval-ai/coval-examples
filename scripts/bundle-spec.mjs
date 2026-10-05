@@ -27,7 +27,7 @@
 // Each source spec is self-contained (no cross-file $refs), so step 4 is
 // primarily a paths + components consolidation.
 
-import { execSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
@@ -211,27 +211,26 @@ if (normalizedPaths.length > 0) {
 
 mkdirSync(OUT_DIR, { recursive: true });
 
-const quoted = (s) => `"${s.replace(/"/g, '\\"')}"`;
 const redocly = join(repoRoot, 'scripts', 'node_modules', '.bin', 'redocly');
 if (!existsSync(redocly)) {
   console.error('Redocly CLI is not installed. Run `npm ci --prefix scripts`.');
   process.exit(1);
 }
-const cmd = [
-  quoted(redocly),
+// An argument array, not a shell string, so no path needs quoting or escaping.
+const args = [
   'join',
-  ...tmpFiles.map(quoted),
+  ...tmpFiles,
   '-o',
-  quoted(OUTPUT),
+  OUTPUT,
   '--prefix-components-with-info-prop=title',
   // Legacy specs reuse canonical tag names (Audio, Metric Outputs) so their
   // operations stay in the same API classes. x-tagGroups cannot hold one tag in
   // two groups, and openapi-generator ignores them.
   '--without-x-tag-groups',
-].join(' ');
+];
 
 try {
-  execSync(cmd, { stdio: 'inherit', cwd: repoRoot });
+  execFileSync(redocly, args, { stdio: 'inherit', cwd: repoRoot });
 } catch (err) {
   console.error(`\n✗ redocly join failed (exit ${err.status})`);
   rmSync(tmpRoot, { recursive: true, force: true });
