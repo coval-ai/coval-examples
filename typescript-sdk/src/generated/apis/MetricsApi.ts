@@ -572,7 +572,7 @@ export interface MetricsApiInterface {
     duplicateMetricRequestOpts(requestParameters: DuplicateMetricRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Clone an existing metric into a new metric owned by your organization. Copies the metric configuration, tags, and active thresholds. Returns the new metric.
+     * Clone an existing metric into a new metric owned by your organization. Copies the metric configuration, tags, and active thresholds. Returns the new metric. Invalid regex syntax in the source configuration returns INVALID_ARGUMENT with regex_pattern field attribution; correct the source pattern before duplicating it.
      * @summary Duplicate a metric
      * @param {string} metricId ID of the metric to duplicate
      * @param {*} [options] Override http request option.
@@ -582,7 +582,7 @@ export interface MetricsApiInterface {
     duplicateMetricRaw(requestParameters: DuplicateMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIGetMetricResponse>>;
 
     /**
-     * Clone an existing metric into a new metric owned by your organization. Copies the metric configuration, tags, and active thresholds. Returns the new metric.
+     * Clone an existing metric into a new metric owned by your organization. Copies the metric configuration, tags, and active thresholds. Returns the new metric. Invalid regex syntax in the source configuration returns INVALID_ARGUMENT with regex_pattern field attribution; correct the source pattern before duplicating it.
      * Duplicate a metric
      */
     duplicateMetric(requestParameters: DuplicateMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetMetricResponse>;
@@ -1722,7 +1722,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Clone an existing metric into a new metric owned by your organization. Copies the metric configuration, tags, and active thresholds. Returns the new metric.
+     * Clone an existing metric into a new metric owned by your organization. Copies the metric configuration, tags, and active thresholds. Returns the new metric. Invalid regex syntax in the source configuration returns INVALID_ARGUMENT with regex_pattern field attribution; correct the source pattern before duplicating it.
      * Duplicate a metric
      */
     async duplicateMetricRaw(requestParameters: DuplicateMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalMetricsAPIGetMetricResponse>> {
@@ -1733,7 +1733,7 @@ export class MetricsApi extends runtime.BaseAPI implements MetricsApiInterface {
     }
 
     /**
-     * Clone an existing metric into a new metric owned by your organization. Copies the metric configuration, tags, and active thresholds. Returns the new metric.
+     * Clone an existing metric into a new metric owned by your organization. Copies the metric configuration, tags, and active thresholds. Returns the new metric. Invalid regex syntax in the source configuration returns INVALID_ARGUMENT with regex_pattern field attribution; correct the source pattern before duplicating it.
      * Duplicate a metric
      */
     async duplicateMetric(requestParameters: DuplicateMetricRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalMetricsAPIGetMetricResponse> {

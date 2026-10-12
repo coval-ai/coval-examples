@@ -27,13 +27,6 @@ import {
     CovalMetricsAPIThresholdSourceToJSON,
     CovalMetricsAPIThresholdSourceToJSONTyped,
 } from './CovalMetricsAPIThresholdSource.js';
-import type { CovalMetricsAPIResourceAttribution } from './CovalMetricsAPIResourceAttribution.js';
-import {
-    CovalMetricsAPIResourceAttributionFromJSON,
-    CovalMetricsAPIResourceAttributionFromJSONTyped,
-    CovalMetricsAPIResourceAttributionToJSON,
-    CovalMetricsAPIResourceAttributionToJSONTyped,
-} from './CovalMetricsAPIResourceAttribution.js';
 
 /**
  * Org-specific threshold for a metric
@@ -42,11 +35,29 @@ import {
  */
 export interface CovalMetricsAPIMetricThresholdResource {
     /**
-     * Authoring timestamps and user IDs. Unknown or deleted users are null.
-     * @type {CovalMetricsAPIResourceAttribution}
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
      * @memberof CovalMetricsAPIMetricThresholdResource
      */
-    readonly attribution?: CovalMetricsAPIResourceAttribution | null;
+    readonly created_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalMetricsAPIMetricThresholdResource
+     */
+    readonly created_by: string | null;
+    /**
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
+     * @memberof CovalMetricsAPIMetricThresholdResource
+     */
+    readonly updated_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalMetricsAPIMetricThresholdResource
+     */
+    readonly updated_by: string | null;
     /**
      * 26-character threshold ULID; null when no threshold is configured
      * @type {string}
@@ -109,6 +120,10 @@ export interface CovalMetricsAPIMetricThresholdResource {
  * Check if a given object implements the CovalMetricsAPIMetricThresholdResource interface.
  */
 export function instanceOfCovalMetricsAPIMetricThresholdResource(value: object): value is CovalMetricsAPIMetricThresholdResource {
+    if (!('created_at' in value) || value['created_at'] === undefined) return false;
+    if (!('created_by' in value) || value['created_by'] === undefined) return false;
+    if (!('updated_at' in value) || value['updated_at'] === undefined) return false;
+    if (!('updated_by' in value) || value['updated_by'] === undefined) return false;
     if (!('id' in value) || value['id'] === undefined) return false;
     return true;
 }
@@ -123,7 +138,10 @@ export function CovalMetricsAPIMetricThresholdResourceFromJSONTyped(json: any, i
     }
     return {
         
-        'attribution': json['attribution'] == null ? undefined : CovalMetricsAPIResourceAttributionFromJSON(json['attribution']),
+        'created_at': (json['created_at'] == null ? null : new Date(json['created_at'])),
+        'created_by': json['created_by'],
+        'updated_at': (json['updated_at'] == null ? null : new Date(json['updated_at'])),
+        'updated_by': json['updated_by'],
         'id': json['id'],
         'name': json['name'] == null ? undefined : json['name'],
         'comparison_operator': json['comparison_operator'] == null ? undefined : CovalMetricsAPIComparisonOperatorFromJSON(json['comparison_operator']),
@@ -140,7 +158,7 @@ export function CovalMetricsAPIMetricThresholdResourceToJSON(json: any): CovalMe
     return CovalMetricsAPIMetricThresholdResourceToJSONTyped(json, false);
 }
 
-export function CovalMetricsAPIMetricThresholdResourceToJSONTyped(value?: Omit<CovalMetricsAPIMetricThresholdResource, 'attribution'> | null, ignoreDiscriminator: boolean = false): any {
+export function CovalMetricsAPIMetricThresholdResourceToJSONTyped(value?: Omit<CovalMetricsAPIMetricThresholdResource, 'created_at'|'created_by'|'updated_at'|'updated_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

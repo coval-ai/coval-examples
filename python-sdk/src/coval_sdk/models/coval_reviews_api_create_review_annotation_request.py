@@ -31,7 +31,8 @@ class CovalReviewsAPICreateReviewAnnotationRequest(BaseModel):
     """ # noqa: E501
     simulation_output_id: Annotated[str, Field(min_length=1, strict=True)] = Field(description="Simulation output ID to link")
     metric_id: Annotated[str, Field(min_length=1, strict=True)] = Field(description="Metric ID to link")
-    assignee: Annotated[str, Field(min_length=1, strict=True)] = Field(description="Email of the reviewer to assign")
+    assignee_user_id: Optional[Annotated[str, Field(min_length=26, strict=True, max_length=26)]] = Field(default=None, description="Optional Coval reviewer User ULID, validated against organization membership. Null preserves email-based writes or uses authenticated self-review.")
+    assignee: Optional[Annotated[str, Field(min_length=1, strict=True)]] = Field(default=None, description="Legacy reviewer email; accepted without a matching user. New answers receive a User ID when safely resolved.")
     ground_truth_float_value: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Optional ground truth numeric value (auto-completes annotation)")
     ground_truth_string_value: Optional[StrictStr] = Field(default=None, description="Optional ground truth string value (auto-completes annotation)")
     ground_truth_subvalues_by_timestamp: Optional[List[Dict[str, Any]]] = Field(default=None, description="Optional ground truth subvalues")
@@ -40,7 +41,7 @@ class CovalReviewsAPICreateReviewAnnotationRequest(BaseModel):
     ground_truth_json: Optional[Any] = None
     ground_truth_set_value: Optional[List[StrictStr]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["simulation_output_id", "metric_id", "assignee", "ground_truth_float_value", "ground_truth_string_value", "ground_truth_subvalues_by_timestamp", "reviewer_notes", "annotations", "ground_truth_json", "ground_truth_set_value"]
+    __properties: ClassVar[List[str]] = ["simulation_output_id", "metric_id", "assignee_user_id", "assignee", "ground_truth_float_value", "ground_truth_string_value", "ground_truth_subvalues_by_timestamp", "reviewer_notes", "annotations", "ground_truth_json", "ground_truth_set_value"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -87,6 +88,16 @@ class CovalReviewsAPICreateReviewAnnotationRequest(BaseModel):
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
+
+        # set to None if assignee_user_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.assignee_user_id is None and "assignee_user_id" in self.model_fields_set:
+            _dict['assignee_user_id'] = None
+
+        # set to None if assignee (nullable) is None
+        # and model_fields_set contains the field
+        if self.assignee is None and "assignee" in self.model_fields_set:
+            _dict['assignee'] = None
 
         # set to None if ground_truth_float_value (nullable) is None
         # and model_fields_set contains the field
@@ -137,6 +148,7 @@ class CovalReviewsAPICreateReviewAnnotationRequest(BaseModel):
         _obj = cls.model_validate({
             "simulation_output_id": obj.get("simulation_output_id"),
             "metric_id": obj.get("metric_id"),
+            "assignee_user_id": obj.get("assignee_user_id"),
             "assignee": obj.get("assignee"),
             "ground_truth_float_value": obj.get("ground_truth_float_value"),
             "ground_truth_string_value": obj.get("ground_truth_string_value"),

@@ -19,6 +19,13 @@ import {
     CovalMetricsAPIAgentJudgeFrameEvidenceReferenceFromJSONTyped,
     CovalMetricsAPIAgentJudgeFrameEvidenceReferenceToJSON,
 } from './CovalMetricsAPIAgentJudgeFrameEvidenceReference.js';
+import type { CovalMetricsAPIAgentJudgeMetricOutputEvidenceReference } from './CovalMetricsAPIAgentJudgeMetricOutputEvidenceReference.js';
+import {
+    instanceOfCovalMetricsAPIAgentJudgeMetricOutputEvidenceReference,
+    CovalMetricsAPIAgentJudgeMetricOutputEvidenceReferenceFromJSON,
+    CovalMetricsAPIAgentJudgeMetricOutputEvidenceReferenceFromJSONTyped,
+    CovalMetricsAPIAgentJudgeMetricOutputEvidenceReferenceToJSON,
+} from './CovalMetricsAPIAgentJudgeMetricOutputEvidenceReference.js';
 import type { CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference } from './CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference.js';
 import {
     instanceOfCovalMetricsAPIAgentJudgeTraceSpanEvidenceReference,
@@ -32,7 +39,7 @@ import {
  * 
  * @export
  */
-export type CovalMetricsAPIAgentJudgeEvidenceReference = { type: 'frame' } & CovalMetricsAPIAgentJudgeFrameEvidenceReference | { type: 'trace_span' } & CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference;
+export type CovalMetricsAPIAgentJudgeEvidenceReference = { type: 'frame' } & CovalMetricsAPIAgentJudgeFrameEvidenceReference | { type: 'metric_output' } & CovalMetricsAPIAgentJudgeMetricOutputEvidenceReference | { type: 'trace_span' } & CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference;
 
 export function CovalMetricsAPIAgentJudgeEvidenceReferenceFromJSON(json: any): CovalMetricsAPIAgentJudgeEvidenceReference {
     return CovalMetricsAPIAgentJudgeEvidenceReferenceFromJSONTyped(json, false);
@@ -45,6 +52,8 @@ export function CovalMetricsAPIAgentJudgeEvidenceReferenceFromJSONTyped(json: an
     switch (json['type']) {
         case 'frame':
             return Object.assign({}, CovalMetricsAPIAgentJudgeFrameEvidenceReferenceFromJSONTyped(json, true), { type: 'frame' } as const);
+        case 'metric_output':
+            return Object.assign({}, CovalMetricsAPIAgentJudgeMetricOutputEvidenceReferenceFromJSONTyped(json, true), { type: 'metric_output' } as const);
         case 'trace_span':
             return Object.assign({}, CovalMetricsAPIAgentJudgeTraceSpanEvidenceReferenceFromJSONTyped(json, true), { type: 'trace_span' } as const);
         default:
@@ -63,6 +72,8 @@ export function CovalMetricsAPIAgentJudgeEvidenceReferenceToJSONTyped(value?: Co
     switch (value['type']) {
         case 'frame':
             return Object.assign({}, CovalMetricsAPIAgentJudgeFrameEvidenceReferenceToJSON(value), { type: 'frame' } as const);
+        case 'metric_output':
+            return Object.assign({}, CovalMetricsAPIAgentJudgeMetricOutputEvidenceReferenceToJSON(value), { type: 'metric_output' } as const);
         case 'trace_span':
             return Object.assign({}, CovalMetricsAPIAgentJudgeTraceSpanEvidenceReferenceToJSON(value), { type: 'trace_span' } as const);
         default:

@@ -27,13 +27,6 @@ import {
     CovalReportsAPIReportMetricConfigurationEntryToJSON,
     CovalReportsAPIReportMetricConfigurationEntryToJSONTyped,
 } from './CovalReportsAPIReportMetricConfigurationEntry.js';
-import type { CovalReportsAPIResourceAttribution } from './CovalReportsAPIResourceAttribution.js';
-import {
-    CovalReportsAPIResourceAttributionFromJSON,
-    CovalReportsAPIResourceAttributionFromJSONTyped,
-    CovalReportsAPIResourceAttributionToJSON,
-    CovalReportsAPIResourceAttributionToJSONTyped,
-} from './CovalReportsAPIResourceAttribution.js';
 
 /**
  * 
@@ -42,11 +35,29 @@ import {
  */
 export interface CovalReportsAPIReportDetail {
     /**
-     * Authoring timestamps and user IDs. Unknown or deleted users are null.
-     * @type {CovalReportsAPIResourceAttribution}
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
      * @memberof CovalReportsAPIReportDetail
      */
-    readonly attribution?: CovalReportsAPIResourceAttribution | null;
+    readonly created_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalReportsAPIReportDetail
+     */
+    readonly created_by: string | null;
+    /**
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
+     * @memberof CovalReportsAPIReportDetail
+     */
+    readonly updated_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalReportsAPIReportDetail
+     */
+    readonly updated_by: string | null;
     /**
      * The report's ULID.
      * @type {string}
@@ -102,12 +113,6 @@ export interface CovalReportsAPIReportDetail {
      */
     permissions: CovalReportsAPIReportDetailPermissionsEnum;
     /**
-     * Last report mutation time.
-     * @type {Date}
-     * @memberof CovalReportsAPIReportDetail
-     */
-    updated_at: Date;
-    /**
      * Opaque revision also returned as the response `ETag`. Send the
      * quoted ETag value in `If-Match` for `view_config` updates.
      * 
@@ -159,12 +164,15 @@ export type CovalReportsAPIReportDetailPermissionsEnum = typeof CovalReportsAPIR
  * Check if a given object implements the CovalReportsAPIReportDetail interface.
  */
 export function instanceOfCovalReportsAPIReportDetail(value: object): value is CovalReportsAPIReportDetail {
+    if (!('created_at' in value) || value['created_at'] === undefined) return false;
+    if (!('created_by' in value) || value['created_by'] === undefined) return false;
+    if (!('updated_at' in value) || value['updated_at'] === undefined) return false;
+    if (!('updated_by' in value) || value['updated_by'] === undefined) return false;
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('run_ids' in value) || value['run_ids'] === undefined) return false;
     if (!('compare_by' in value) || value['compare_by'] === undefined) return false;
     if (!('permissions' in value) || value['permissions'] === undefined) return false;
-    if (!('updated_at' in value) || value['updated_at'] === undefined) return false;
     if (!('revision' in value) || value['revision'] === undefined) return false;
     if (!('view_config' in value) || value['view_config'] === undefined) return false;
     if (!('metric_config' in value) || value['metric_config'] === undefined) return false;
@@ -181,7 +189,10 @@ export function CovalReportsAPIReportDetailFromJSONTyped(json: any, ignoreDiscri
     }
     return {
         
-        'attribution': json['attribution'] == null ? undefined : CovalReportsAPIResourceAttributionFromJSON(json['attribution']),
+        'created_at': (json['created_at'] == null ? null : new Date(json['created_at'])),
+        'created_by': json['created_by'],
+        'updated_at': (json['updated_at'] == null ? null : new Date(json['updated_at'])),
+        'updated_by': json['updated_by'],
         'id': json['id'],
         'name': json['name'],
         'run_ids': json['run_ids'],
@@ -191,7 +202,6 @@ export function CovalReportsAPIReportDetailFromJSONTyped(json: any, ignoreDiscri
         'metadata_key': json['metadata_key'] == null ? undefined : json['metadata_key'],
         'custom_dimension_id': json['custom_dimension_id'] == null ? undefined : json['custom_dimension_id'],
         'permissions': json['permissions'],
-        'updated_at': (new Date(json['updated_at'])),
         'revision': json['revision'],
         'view_config': CovalReportsAPIReportViewConfigurationFromJSON(json['view_config']),
         'metric_config': (mapValues(json['metric_config'], CovalReportsAPIReportMetricConfigurationEntryFromJSON)),
@@ -202,7 +212,7 @@ export function CovalReportsAPIReportDetailToJSON(json: any): CovalReportsAPIRep
     return CovalReportsAPIReportDetailToJSONTyped(json, false);
 }
 
-export function CovalReportsAPIReportDetailToJSONTyped(value?: Omit<CovalReportsAPIReportDetail, 'attribution'> | null, ignoreDiscriminator: boolean = false): any {
+export function CovalReportsAPIReportDetailToJSONTyped(value?: Omit<CovalReportsAPIReportDetail, 'created_at'|'created_by'|'updated_at'|'updated_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -218,7 +228,6 @@ export function CovalReportsAPIReportDetailToJSONTyped(value?: Omit<CovalReports
         'metadata_key': value['metadata_key'],
         'custom_dimension_id': value['custom_dimension_id'],
         'permissions': value['permissions'],
-        'updated_at': value['updated_at'].toISOString(),
         'revision': value['revision'],
         'view_config': CovalReportsAPIReportViewConfigurationToJSON(value['view_config']),
         'metric_config': (mapValues(value['metric_config'], CovalReportsAPIReportMetricConfigurationEntryToJSON)),

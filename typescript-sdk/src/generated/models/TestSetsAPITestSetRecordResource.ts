@@ -13,20 +13,36 @@
  */
 
 import { mapValues } from '../runtime.js';
-import type { TestSetsAPITestSetRecordResourceExpectedOutput } from './TestSetsAPITestSetRecordResourceExpectedOutput.js';
-import {
-    TestSetsAPITestSetRecordResourceExpectedOutputFromJSON,
-    TestSetsAPITestSetRecordResourceExpectedOutputFromJSONTyped,
-    TestSetsAPITestSetRecordResourceExpectedOutputToJSON,
-    TestSetsAPITestSetRecordResourceExpectedOutputToJSONTyped,
-} from './TestSetsAPITestSetRecordResourceExpectedOutput.js';
-
 /**
  * 
  * @export
  * @interface TestSetsAPITestSetRecordResource
  */
 export interface TestSetsAPITestSetRecordResource {
+    /**
+     * Authoring creation timestamp; null when unknown.
+     * @type {Date}
+     * @memberof TestSetsAPITestSetRecordResource
+     */
+    readonly created_at: Date | null;
+    /**
+     * Canonical creator user ID; null when unknown.
+     * @type {string}
+     * @memberof TestSetsAPITestSetRecordResource
+     */
+    readonly created_by: string | null;
+    /**
+     * Authoring update timestamp; null when unknown.
+     * @type {Date}
+     * @memberof TestSetsAPITestSetRecordResource
+     */
+    readonly updated_at: Date | null;
+    /**
+     * Canonical updater user ID; null when unknown.
+     * @type {string}
+     * @memberof TestSetsAPITestSetRecordResource
+     */
+    readonly updated_by: string | null;
     /**
      * 
      * @type {string}
@@ -52,11 +68,11 @@ export interface TestSetsAPITestSetRecordResource {
      */
     expected_behaviors?: Array<string>;
     /**
-     * 
-     * @type {TestSetsAPITestSetRecordResourceExpectedOutput}
+     * Expected output specification, if set.
+     * @type {any}
      * @memberof TestSetsAPITestSetRecordResource
      */
-    expected_output?: TestSetsAPITestSetRecordResourceExpectedOutput | null;
+    expected_output?: any | null;
     /**
      * 
      * @type {string}
@@ -93,6 +109,10 @@ export interface TestSetsAPITestSetRecordResource {
  * Check if a given object implements the TestSetsAPITestSetRecordResource interface.
  */
 export function instanceOfTestSetsAPITestSetRecordResource(value: object): value is TestSetsAPITestSetRecordResource {
+    if (!('created_at' in value) || value['created_at'] === undefined) return false;
+    if (!('created_by' in value) || value['created_by'] === undefined) return false;
+    if (!('updated_at' in value) || value['updated_at'] === undefined) return false;
+    if (!('updated_by' in value) || value['updated_by'] === undefined) return false;
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('input' in value) || value['input'] === undefined) return false;
     return true;
@@ -108,11 +128,15 @@ export function TestSetsAPITestSetRecordResourceFromJSONTyped(json: any, ignoreD
     }
     return {
         
+        'created_at': (json['created_at'] == null ? null : new Date(json['created_at'])),
+        'created_by': json['created_by'],
+        'updated_at': (json['updated_at'] == null ? null : new Date(json['updated_at'])),
+        'updated_by': json['updated_by'],
         'id': json['id'],
         'input': json['input'],
         'input_type': json['input_type'] == null ? undefined : json['input_type'],
         'expected_behaviors': json['expected_behaviors'] == null ? undefined : json['expected_behaviors'],
-        'expected_output': json['expected_output'] == null ? undefined : TestSetsAPITestSetRecordResourceExpectedOutputFromJSON(json['expected_output']),
+        'expected_output': json['expected_output'] == null ? undefined : json['expected_output'],
         'description': json['description'] == null ? undefined : json['description'],
         'user_notes': json['user_notes'] == null ? undefined : json['user_notes'],
         'create_time': json['create_time'] == null ? undefined : (new Date(json['create_time'])),
@@ -125,7 +149,7 @@ export function TestSetsAPITestSetRecordResourceToJSON(json: any): TestSetsAPITe
     return TestSetsAPITestSetRecordResourceToJSONTyped(json, false);
 }
 
-export function TestSetsAPITestSetRecordResourceToJSONTyped(value?: TestSetsAPITestSetRecordResource | null, ignoreDiscriminator: boolean = false): any {
+export function TestSetsAPITestSetRecordResourceToJSONTyped(value?: Omit<TestSetsAPITestSetRecordResource, 'created_at'|'created_by'|'updated_at'|'updated_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -136,7 +160,7 @@ export function TestSetsAPITestSetRecordResourceToJSONTyped(value?: TestSetsAPIT
         'input': value['input'],
         'input_type': value['input_type'],
         'expected_behaviors': value['expected_behaviors'],
-        'expected_output': TestSetsAPITestSetRecordResourceExpectedOutputToJSON(value['expected_output']),
+        'expected_output': value['expected_output'],
         'description': value['description'],
         'user_notes': value['user_notes'],
         'create_time': value['create_time'] == null ? value['create_time'] : value['create_time'].toISOString(),

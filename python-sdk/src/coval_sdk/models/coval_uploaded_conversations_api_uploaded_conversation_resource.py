@@ -36,6 +36,7 @@ class CovalUploadedConversationsAPIUploadedConversationResource(BaseModel):
     """
     Conversation resource object. 
     """ # noqa: E501
+    workspace_id: Optional[StrictStr] = Field(default=None, description="Effective authorized workspace for a single-resource GET. Derived from the owning run; legacy unassigned runs use the authenticated default workspace after access checks. Null means no workspace proof is supplied, including other resource views.")
     name: StrictStr = Field(description="Resource name in format \"conversations/{conversation_id}\"")
     conversation_id: Annotated[str, Field(min_length=22, strict=True, max_length=26)] = Field(description="Unique conversation identifier (22-26 characters)")
     status: CovalUploadedConversationsAPIConversationStatus
@@ -56,7 +57,7 @@ class CovalUploadedConversationsAPIUploadedConversationResource(BaseModel):
     error: Optional[StrictStr] = Field(default=None, description="Error message (only present if status=FAILED)")
     transcript: Optional[List[Dict[str, Any]]] = Field(default=None, description="Conversation transcript messages. Only included in single-resource GET, not LIST.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "conversation_id", "status", "create_time", "external_conversation_id", "occurred_at", "has_audio", "agent_id", "persona_id", "source", "destination", "progress", "metadata", "tags", "metric_ids", "metric_outputs", "metric_values", "error", "transcript"]
+    __properties: ClassVar[List[str]] = ["workspace_id", "name", "conversation_id", "status", "create_time", "external_conversation_id", "occurred_at", "has_audio", "agent_id", "persona_id", "source", "destination", "progress", "metadata", "tags", "metric_ids", "metric_outputs", "metric_values", "error", "transcript"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -127,6 +128,11 @@ class CovalUploadedConversationsAPIUploadedConversationResource(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if workspace_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.workspace_id is None and "workspace_id" in self.model_fields_set:
+            _dict['workspace_id'] = None
+
         # set to None if external_conversation_id (nullable) is None
         # and model_fields_set contains the field
         if self.external_conversation_id is None and "external_conversation_id" in self.model_fields_set:
@@ -194,6 +200,7 @@ class CovalUploadedConversationsAPIUploadedConversationResource(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "workspace_id": obj.get("workspace_id"),
             "name": obj.get("name"),
             "conversation_id": obj.get("conversation_id"),
             "status": obj.get("status"),

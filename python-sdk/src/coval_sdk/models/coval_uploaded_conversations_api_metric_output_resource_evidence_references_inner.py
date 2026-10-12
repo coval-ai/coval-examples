@@ -20,11 +20,12 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, f
 from typing import Any, List, Optional
 from coval_sdk.models.coval_uploaded_conversations_api_metric_output_resource_evidence_references_inner_one_of import CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf
 from coval_sdk.models.coval_uploaded_conversations_api_metric_output_resource_evidence_references_inner_one_of1 import CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1
+from coval_sdk.models.coval_uploaded_conversations_api_metric_output_resource_evidence_references_inner_one_of2 import CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-COVALUPLOADEDCONVERSATIONSAPIMETRICOUTPUTRESOURCEEVIDENCEREFERENCESINNER_ONE_OF_SCHEMAS = ["CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf", "CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1"]
+COVALUPLOADEDCONVERSATIONSAPIMETRICOUTPUTRESOURCEEVIDENCEREFERENCESINNER_ONE_OF_SCHEMAS = ["CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf", "CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1", "CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2"]
 
 class CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInner(BaseModel):
     """
@@ -34,8 +35,10 @@ class CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInner(B
     oneof_schema_1_validator: Optional[CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf] = None
     # data type: CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1
     oneof_schema_2_validator: Optional[CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1] = None
-    actual_instance: Optional[Union[CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf, CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1]] = None
-    one_of_schemas: Set[str] = { "CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf", "CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1" }
+    # data type: CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2
+    oneof_schema_3_validator: Optional[CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2] = None
+    actual_instance: Optional[Union[CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf, CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1, CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2]] = None
+    one_of_schemas: Set[str] = { "CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf", "CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1", "CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -68,12 +71,17 @@ class CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInner(B
             error_messages.append(f"Error! Input type `{type(v)}` is not `CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1`")
         else:
             match += 1
+        # validate data type: CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2
+        if not isinstance(v, CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2`")
+        else:
+            match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInner with oneOf schemas: CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf, CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInner with oneOf schemas: CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf, CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1, CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInner with oneOf schemas: CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf, CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInner with oneOf schemas: CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf, CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1, CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -100,13 +108,19 @@ class CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInner(B
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2
+        try:
+            instance.actual_instance = CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInner with oneOf schemas: CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf, CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInner with oneOf schemas: CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf, CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1, CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInner with oneOf schemas: CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf, CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInner with oneOf schemas: CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf, CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1, CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -120,7 +134,7 @@ class CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInner(B
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf, CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf, CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1, CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

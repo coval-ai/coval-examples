@@ -22,7 +22,6 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from coval_sdk.models.coval_run_templates_api_resource_attribution import CovalRunTemplatesAPIResourceAttribution
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -31,7 +30,10 @@ class CovalRunTemplatesAPIRunTemplateResource(BaseModel):
     """
     Run template configuration resource.
     """ # noqa: E501
-    attribution: Optional[CovalRunTemplatesAPIResourceAttribution] = Field(default=None, description="Authoring timestamps and user IDs. Unknown or deleted users are null.")
+    created_at: Optional[datetime] = Field(description="Authoring timestamp; null when unknown.")
+    created_by: Optional[StrictStr] = Field(description="Canonical author user ID; null when unknown.")
+    updated_at: Optional[datetime] = Field(description="Authoring timestamp; null when unknown.")
+    updated_by: Optional[StrictStr] = Field(description="Canonical author user ID; null when unknown.")
     name: StrictStr = Field(description="Resource name: \"run-templates/{id}\"")
     id: Annotated[str, Field(strict=True)] = Field(description="Run template resource ID")
     display_name: Annotated[str, Field(strict=True, max_length=200)] = Field(description="Human-readable template name")
@@ -50,9 +52,8 @@ class CovalRunTemplatesAPIRunTemplateResource(BaseModel):
     tags: Optional[List[StrictStr]] = Field(default=None, description="Tags associated with this run template")
     create_time: datetime = Field(description="Creation timestamp (ISO 8601)")
     update_time: Optional[datetime] = Field(default=None, description="Last update timestamp (ISO 8601)")
-    created_by_user_id: Optional[StrictStr] = Field(default=None, description="ULID of the user who created the template")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["attribution", "name", "id", "display_name", "description", "agent_ids", "persona_ids", "test_set_ids", "metric_ids", "mutation_ids", "iteration_count", "concurrency", "sub_sample_size", "sub_sample_seed", "test_case_ids", "metadata", "tags", "create_time", "update_time", "created_by_user_id"]
+    __properties: ClassVar[List[str]] = ["created_at", "created_by", "updated_at", "updated_by", "name", "id", "display_name", "description", "agent_ids", "persona_ids", "test_set_ids", "metric_ids", "mutation_ids", "iteration_count", "concurrency", "sub_sample_size", "sub_sample_seed", "test_case_ids", "metadata", "tags", "create_time", "update_time"]
 
     @field_validator('id')
     def id_validate_regular_expression(cls, value):
@@ -95,10 +96,16 @@ class CovalRunTemplatesAPIRunTemplateResource(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
         * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
-            "attribution",
+            "created_at",
+            "created_by",
+            "updated_at",
+            "updated_by",
             "additional_properties",
         ])
 
@@ -107,18 +114,30 @@ class CovalRunTemplatesAPIRunTemplateResource(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of attribution
-        if self.attribution:
-            _dict['attribution'] = self.attribution.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if attribution (nullable) is None
+        # set to None if created_at (nullable) is None
         # and model_fields_set contains the field
-        if self.attribution is None and "attribution" in self.model_fields_set:
-            _dict['attribution'] = None
+        if self.created_at is None and "created_at" in self.model_fields_set:
+            _dict['created_at'] = None
+
+        # set to None if created_by (nullable) is None
+        # and model_fields_set contains the field
+        if self.created_by is None and "created_by" in self.model_fields_set:
+            _dict['created_by'] = None
+
+        # set to None if updated_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.updated_at is None and "updated_at" in self.model_fields_set:
+            _dict['updated_at'] = None
+
+        # set to None if updated_by (nullable) is None
+        # and model_fields_set contains the field
+        if self.updated_by is None and "updated_by" in self.model_fields_set:
+            _dict['updated_by'] = None
 
         # set to None if sub_sample_seed (nullable) is None
         # and model_fields_set contains the field
@@ -135,11 +154,6 @@ class CovalRunTemplatesAPIRunTemplateResource(BaseModel):
         if self.update_time is None and "update_time" in self.model_fields_set:
             _dict['update_time'] = None
 
-        # set to None if created_by_user_id (nullable) is None
-        # and model_fields_set contains the field
-        if self.created_by_user_id is None and "created_by_user_id" in self.model_fields_set:
-            _dict['created_by_user_id'] = None
-
         return _dict
 
     @classmethod
@@ -152,7 +166,10 @@ class CovalRunTemplatesAPIRunTemplateResource(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "attribution": CovalRunTemplatesAPIResourceAttribution.from_dict(obj["attribution"]) if obj.get("attribution") is not None else None,
+            "created_at": obj.get("created_at"),
+            "created_by": obj.get("created_by"),
+            "updated_at": obj.get("updated_at"),
+            "updated_by": obj.get("updated_by"),
             "name": obj.get("name"),
             "id": obj.get("id"),
             "display_name": obj.get("display_name"),
@@ -170,8 +187,7 @@ class CovalRunTemplatesAPIRunTemplateResource(BaseModel):
             "metadata": obj.get("metadata"),
             "tags": obj.get("tags"),
             "create_time": obj.get("create_time"),
-            "update_time": obj.get("update_time"),
-            "created_by_user_id": obj.get("created_by_user_id")
+            "update_time": obj.get("update_time")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

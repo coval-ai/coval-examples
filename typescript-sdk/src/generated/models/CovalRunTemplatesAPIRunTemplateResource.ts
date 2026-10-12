@@ -13,14 +13,6 @@
  */
 
 import { mapValues } from '../runtime.js';
-import type { CovalRunTemplatesAPIResourceAttribution } from './CovalRunTemplatesAPIResourceAttribution.js';
-import {
-    CovalRunTemplatesAPIResourceAttributionFromJSON,
-    CovalRunTemplatesAPIResourceAttributionFromJSONTyped,
-    CovalRunTemplatesAPIResourceAttributionToJSON,
-    CovalRunTemplatesAPIResourceAttributionToJSONTyped,
-} from './CovalRunTemplatesAPIResourceAttribution.js';
-
 /**
  * Run template configuration resource.
  * @export
@@ -28,11 +20,29 @@ import {
  */
 export interface CovalRunTemplatesAPIRunTemplateResource {
     /**
-     * Authoring timestamps and user IDs. Unknown or deleted users are null.
-     * @type {CovalRunTemplatesAPIResourceAttribution}
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
      * @memberof CovalRunTemplatesAPIRunTemplateResource
      */
-    readonly attribution?: CovalRunTemplatesAPIResourceAttribution | null;
+    readonly created_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalRunTemplatesAPIRunTemplateResource
+     */
+    readonly created_by: string | null;
+    /**
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
+     * @memberof CovalRunTemplatesAPIRunTemplateResource
+     */
+    readonly updated_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalRunTemplatesAPIRunTemplateResource
+     */
+    readonly updated_by: string | null;
     /**
      * Resource name: "run-templates/{id}"
      * @type {string}
@@ -141,18 +151,16 @@ export interface CovalRunTemplatesAPIRunTemplateResource {
      * @memberof CovalRunTemplatesAPIRunTemplateResource
      */
     update_time?: Date | null;
-    /**
-     * ULID of the user who created the template
-     * @type {string}
-     * @memberof CovalRunTemplatesAPIRunTemplateResource
-     */
-    created_by_user_id?: string | null;
 }
 
 /**
  * Check if a given object implements the CovalRunTemplatesAPIRunTemplateResource interface.
  */
 export function instanceOfCovalRunTemplatesAPIRunTemplateResource(value: object): value is CovalRunTemplatesAPIRunTemplateResource {
+    if (!('created_at' in value) || value['created_at'] === undefined) return false;
+    if (!('created_by' in value) || value['created_by'] === undefined) return false;
+    if (!('updated_at' in value) || value['updated_at'] === undefined) return false;
+    if (!('updated_by' in value) || value['updated_by'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('display_name' in value) || value['display_name'] === undefined) return false;
@@ -171,7 +179,10 @@ export function CovalRunTemplatesAPIRunTemplateResourceFromJSONTyped(json: any, 
     }
     return {
         
-        'attribution': json['attribution'] == null ? undefined : CovalRunTemplatesAPIResourceAttributionFromJSON(json['attribution']),
+        'created_at': (json['created_at'] == null ? null : new Date(json['created_at'])),
+        'created_by': json['created_by'],
+        'updated_at': (json['updated_at'] == null ? null : new Date(json['updated_at'])),
+        'updated_by': json['updated_by'],
         'name': json['name'],
         'id': json['id'],
         'display_name': json['display_name'],
@@ -190,7 +201,6 @@ export function CovalRunTemplatesAPIRunTemplateResourceFromJSONTyped(json: any, 
         'tags': json['tags'] == null ? undefined : json['tags'],
         'create_time': (new Date(json['create_time'])),
         'update_time': json['update_time'] == null ? undefined : (new Date(json['update_time'])),
-        'created_by_user_id': json['created_by_user_id'] == null ? undefined : json['created_by_user_id'],
     };
 }
 
@@ -198,7 +208,7 @@ export function CovalRunTemplatesAPIRunTemplateResourceToJSON(json: any): CovalR
     return CovalRunTemplatesAPIRunTemplateResourceToJSONTyped(json, false);
 }
 
-export function CovalRunTemplatesAPIRunTemplateResourceToJSONTyped(value?: Omit<CovalRunTemplatesAPIRunTemplateResource, 'attribution'> | null, ignoreDiscriminator: boolean = false): any {
+export function CovalRunTemplatesAPIRunTemplateResourceToJSONTyped(value?: Omit<CovalRunTemplatesAPIRunTemplateResource, 'created_at'|'created_by'|'updated_at'|'updated_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -223,7 +233,6 @@ export function CovalRunTemplatesAPIRunTemplateResourceToJSONTyped(value?: Omit<
         'tags': value['tags'],
         'create_time': value['create_time'].toISOString(),
         'update_time': value['update_time'] == null ? value['update_time'] : value['update_time'].toISOString(),
-        'created_by_user_id': value['created_by_user_id'],
     };
 }
 

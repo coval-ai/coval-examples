@@ -29,10 +29,11 @@ class CovalReviewsAPICompleteReviewConversationRequest(BaseModel):
     """
     CovalReviewsAPICompleteReviewConversationRequest
     """ # noqa: E501
+    assignee_user_id: Optional[Annotated[str, Field(min_length=26, strict=True, max_length=26)]] = Field(default=None, description="Verified Coval reviewer User ID. Null retains the email selector or authenticated self-review; an email supplied alongside an ID must refer to the same reviewer.")
     simulation_output_id: Annotated[str, Field(min_length=1, strict=True)] = Field(description="Simulation output whose review conversation should be completed.")
     assignee: Optional[Annotated[str, Field(min_length=1, strict=True)]] = Field(default=None, description="Assignee to complete; defaults to the authenticated acting user.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["simulation_output_id", "assignee"]
+    __properties: ClassVar[List[str]] = ["assignee_user_id", "simulation_output_id", "assignee"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -80,6 +81,11 @@ class CovalReviewsAPICompleteReviewConversationRequest(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if assignee_user_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.assignee_user_id is None and "assignee_user_id" in self.model_fields_set:
+            _dict['assignee_user_id'] = None
+
         # set to None if assignee (nullable) is None
         # and model_fields_set contains the field
         if self.assignee is None and "assignee" in self.model_fields_set:
@@ -97,6 +103,7 @@ class CovalReviewsAPICompleteReviewConversationRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "assignee_user_id": obj.get("assignee_user_id"),
             "simulation_output_id": obj.get("simulation_output_id"),
             "assignee": obj.get("assignee")
         })

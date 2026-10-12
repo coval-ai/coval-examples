@@ -13,13 +13,6 @@
  */
 
 import { mapValues } from '../runtime.js';
-import type { CovalAgentsAPIResourceAttribution } from './CovalAgentsAPIResourceAttribution.js';
-import {
-    CovalAgentsAPIResourceAttributionFromJSON,
-    CovalAgentsAPIResourceAttributionFromJSONTyped,
-    CovalAgentsAPIResourceAttributionToJSON,
-    CovalAgentsAPIResourceAttributionToJSONTyped,
-} from './CovalAgentsAPIResourceAttribution.js';
 import type { CovalAgentsAPIAgentResourceModelType } from './CovalAgentsAPIAgentResourceModelType.js';
 import {
     CovalAgentsAPIAgentResourceModelTypeFromJSON,
@@ -38,11 +31,29 @@ import {
  */
 export interface CovalAgentsAPIAgentResource {
     /**
-     * Authoring timestamps and user IDs. Unknown or deleted users are null.
-     * @type {CovalAgentsAPIResourceAttribution}
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
      * @memberof CovalAgentsAPIAgentResource
      */
-    readonly attribution?: CovalAgentsAPIResourceAttribution | null;
+    readonly created_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalAgentsAPIAgentResource
+     */
+    readonly created_by: string | null;
+    /**
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
+     * @memberof CovalAgentsAPIAgentResource
+     */
+    readonly updated_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalAgentsAPIAgentResource
+     */
+    readonly updated_by: string | null;
     /**
      * Agent resource ID
      * @type {string}
@@ -153,6 +164,10 @@ export interface CovalAgentsAPIAgentResource {
  * Check if a given object implements the CovalAgentsAPIAgentResource interface.
  */
 export function instanceOfCovalAgentsAPIAgentResource(value: object): value is CovalAgentsAPIAgentResource {
+    if (!('created_at' in value) || value['created_at'] === undefined) return false;
+    if (!('created_by' in value) || value['created_by'] === undefined) return false;
+    if (!('updated_at' in value) || value['updated_at'] === undefined) return false;
+    if (!('updated_by' in value) || value['updated_by'] === undefined) return false;
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('customer_agent_id' in value) || value['customer_agent_id'] === undefined) return false;
     if (!('display_name' in value) || value['display_name'] === undefined) return false;
@@ -171,7 +186,10 @@ export function CovalAgentsAPIAgentResourceFromJSONTyped(json: any, ignoreDiscri
     }
     return {
         
-        'attribution': json['attribution'] == null ? undefined : CovalAgentsAPIResourceAttributionFromJSON(json['attribution']),
+        'created_at': (json['created_at'] == null ? null : new Date(json['created_at'])),
+        'created_by': json['created_by'],
+        'updated_at': (json['updated_at'] == null ? null : new Date(json['updated_at'])),
+        'updated_by': json['updated_by'],
         'id': json['id'],
         'customer_agent_id': json['customer_agent_id'],
         'display_name': json['display_name'],
@@ -196,7 +214,7 @@ export function CovalAgentsAPIAgentResourceToJSON(json: any): CovalAgentsAPIAgen
     return CovalAgentsAPIAgentResourceToJSONTyped(json, false);
 }
 
-export function CovalAgentsAPIAgentResourceToJSONTyped(value?: Omit<CovalAgentsAPIAgentResource, 'attribution'|'knowledge_base_ids'> | null, ignoreDiscriminator: boolean = false): any {
+export function CovalAgentsAPIAgentResourceToJSONTyped(value?: Omit<CovalAgentsAPIAgentResource, 'created_at'|'created_by'|'updated_at'|'updated_by'|'knowledge_base_ids'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

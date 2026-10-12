@@ -13,14 +13,6 @@
  */
 
 import { mapValues } from '../runtime.js';
-import type { TestSetsAPIResourceAttribution } from './TestSetsAPIResourceAttribution.js';
-import {
-    TestSetsAPIResourceAttributionFromJSON,
-    TestSetsAPIResourceAttributionFromJSONTyped,
-    TestSetsAPIResourceAttributionToJSON,
-    TestSetsAPIResourceAttributionToJSONTyped,
-} from './TestSetsAPIResourceAttribution.js';
-
 /**
  * Test set resource representation.
  * 
@@ -29,11 +21,29 @@ import {
  */
 export interface TestSetsAPITestSetResource {
     /**
-     * Authoring timestamps and user IDs. Unknown or deleted users are null.
-     * @type {TestSetsAPIResourceAttribution}
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
      * @memberof TestSetsAPITestSetResource
      */
-    readonly attribution?: TestSetsAPIResourceAttribution | null;
+    readonly created_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof TestSetsAPITestSetResource
+     */
+    readonly created_by: string | null;
+    /**
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
+     * @memberof TestSetsAPITestSetResource
+     */
+    readonly updated_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof TestSetsAPITestSetResource
+     */
+    readonly updated_by: string | null;
     /**
      * Resource name in format `test-sets/{id}`
      * @type {string}
@@ -112,6 +122,10 @@ export interface TestSetsAPITestSetResource {
  * Check if a given object implements the TestSetsAPITestSetResource interface.
  */
 export function instanceOfTestSetsAPITestSetResource(value: object): value is TestSetsAPITestSetResource {
+    if (!('created_at' in value) || value['created_at'] === undefined) return false;
+    if (!('created_by' in value) || value['created_by'] === undefined) return false;
+    if (!('updated_at' in value) || value['updated_at'] === undefined) return false;
+    if (!('updated_by' in value) || value['updated_by'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('slug' in value) || value['slug'] === undefined) return false;
@@ -130,7 +144,10 @@ export function TestSetsAPITestSetResourceFromJSONTyped(json: any, ignoreDiscrim
     }
     return {
         
-        'attribution': json['attribution'] == null ? undefined : TestSetsAPIResourceAttributionFromJSON(json['attribution']),
+        'created_at': (json['created_at'] == null ? null : new Date(json['created_at'])),
+        'created_by': json['created_by'],
+        'updated_at': (json['updated_at'] == null ? null : new Date(json['updated_at'])),
+        'updated_by': json['updated_by'],
         'name': json['name'],
         'id': json['id'],
         'slug': json['slug'],
@@ -150,7 +167,7 @@ export function TestSetsAPITestSetResourceToJSON(json: any): TestSetsAPITestSetR
     return TestSetsAPITestSetResourceToJSONTyped(json, false);
 }
 
-export function TestSetsAPITestSetResourceToJSONTyped(value?: Omit<TestSetsAPITestSetResource, 'attribution'> | null, ignoreDiscriminator: boolean = false): any {
+export function TestSetsAPITestSetResourceToJSONTyped(value?: Omit<TestSetsAPITestSetResource, 'created_at'|'created_by'|'updated_at'|'updated_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

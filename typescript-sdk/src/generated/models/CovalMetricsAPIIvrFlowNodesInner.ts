@@ -13,6 +13,21 @@
  */
 
 import { mapValues } from '../runtime.js';
+import type { CovalMetricsAPIIvrFlowNodesInnerPromptVariablesValue } from './CovalMetricsAPIIvrFlowNodesInnerPromptVariablesValue.js';
+import {
+    CovalMetricsAPIIvrFlowNodesInnerPromptVariablesValueFromJSON,
+    CovalMetricsAPIIvrFlowNodesInnerPromptVariablesValueFromJSONTyped,
+    CovalMetricsAPIIvrFlowNodesInnerPromptVariablesValueToJSON,
+    CovalMetricsAPIIvrFlowNodesInnerPromptVariablesValueToJSONTyped,
+} from './CovalMetricsAPIIvrFlowNodesInnerPromptVariablesValue.js';
+import type { CovalMetricsAPIIvrFlowNodesInnerDtmf } from './CovalMetricsAPIIvrFlowNodesInnerDtmf.js';
+import {
+    CovalMetricsAPIIvrFlowNodesInnerDtmfFromJSON,
+    CovalMetricsAPIIvrFlowNodesInnerDtmfFromJSONTyped,
+    CovalMetricsAPIIvrFlowNodesInnerDtmfToJSON,
+    CovalMetricsAPIIvrFlowNodesInnerDtmfToJSONTyped,
+} from './CovalMetricsAPIIvrFlowNodesInnerDtmf.js';
+
 /**
  * 
  * @export
@@ -26,11 +41,65 @@ export interface CovalMetricsAPIIvrFlowNodesInner {
      */
     id: string;
     /**
-     * Expected IVR prompt text for this node.
+     * Expected prompt. Numeric values, negation, menu mappings, and configured critical phrases are protected from fuzzy matching.
      * @type {string}
      * @memberof CovalMetricsAPIIvrFlowNodesInner
      */
     prompt: string;
+    /**
+     * Complete approved alternative prompts.
+     * @type {Array<string>}
+     * @memberof CovalMetricsAPIIvrFlowNodesInner
+     */
+    prompt_alternatives?: Array<string>;
+    /**
+     * Domain-specific phrases whose normalized occurrence counts must be preserved.
+     * @type {Array<string>}
+     * @memberof CovalMetricsAPIIvrFlowNodesInner
+     */
+    critical_values?: Array<string>;
+    /**
+     * Explicit named {placeholders}. Static text matches exactly after normalization; patterns apply only within the declared slot.
+     * @type {{ [key: string]: CovalMetricsAPIIvrFlowNodesInnerPromptVariablesValue; }}
+     * @memberof CovalMetricsAPIIvrFlowNodesInner
+     */
+    prompt_variables?: { [key: string]: CovalMetricsAPIIvrFlowNodesInnerPromptVariablesValue; };
+    /**
+     * Accepted caller modality. Legacy default is keypad, with voice also enabled for spoken fuzzy or explicitly voice-only branches.
+     * @type {CovalMetricsAPIIvrFlowNodesInnerInputModeEnum}
+     * @memberof CovalMetricsAPIIvrFlowNodesInner
+     */
+    input_mode?: CovalMetricsAPIIvrFlowNodesInnerInputModeEnum;
+    /**
+     * Response window after an observed prompt; required for no_input edges.
+     * @type {number}
+     * @memberof CovalMetricsAPIIvrFlowNodesInner
+     */
+    input_timeout_seconds?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CovalMetricsAPIIvrFlowNodesInner
+     */
+    voice_end_silence_seconds?: number;
+    /**
+     * Shared allowed invalid-input/no-input recovery attempts, reset by a valid caller transition. Required for retries_exhausted edges.
+     * @type {number}
+     * @memberof CovalMetricsAPIIvrFlowNodesInner
+     */
+    max_retries?: number;
+    /**
+     * Save the successful normalized input string in context under this name.
+     * @type {string}
+     * @memberof CovalMetricsAPIIvrFlowNodesInner
+     */
+    capture_input_as?: string;
+    /**
+     * 
+     * @type {CovalMetricsAPIIvrFlowNodesInnerDtmf}
+     * @memberof CovalMetricsAPIIvrFlowNodesInner
+     */
+    dtmf?: CovalMetricsAPIIvrFlowNodesInnerDtmf;
     /**
      * Marks the final node; a terminal node has no outgoing edges.
      * @type {boolean}
@@ -44,6 +113,18 @@ export interface CovalMetricsAPIIvrFlowNodesInner {
      */
     auto_advance_to?: string;
 }
+
+
+/**
+ * @export
+ */
+export const CovalMetricsAPIIvrFlowNodesInnerInputModeEnum = {
+    Dtmf: 'dtmf',
+    Voice: 'voice',
+    Both: 'both'
+} as const;
+export type CovalMetricsAPIIvrFlowNodesInnerInputModeEnum = typeof CovalMetricsAPIIvrFlowNodesInnerInputModeEnum[keyof typeof CovalMetricsAPIIvrFlowNodesInnerInputModeEnum];
+
 
 /**
  * Check if a given object implements the CovalMetricsAPIIvrFlowNodesInner interface.
@@ -66,6 +147,15 @@ export function CovalMetricsAPIIvrFlowNodesInnerFromJSONTyped(json: any, ignoreD
         
         'id': json['id'],
         'prompt': json['prompt'],
+        'prompt_alternatives': json['prompt_alternatives'] == null ? undefined : json['prompt_alternatives'],
+        'critical_values': json['critical_values'] == null ? undefined : json['critical_values'],
+        'prompt_variables': json['prompt_variables'] == null ? undefined : (mapValues(json['prompt_variables'], CovalMetricsAPIIvrFlowNodesInnerPromptVariablesValueFromJSON)),
+        'input_mode': json['input_mode'] == null ? undefined : json['input_mode'],
+        'input_timeout_seconds': json['input_timeout_seconds'] == null ? undefined : json['input_timeout_seconds'],
+        'voice_end_silence_seconds': json['voice_end_silence_seconds'] == null ? undefined : json['voice_end_silence_seconds'],
+        'max_retries': json['max_retries'] == null ? undefined : json['max_retries'],
+        'capture_input_as': json['capture_input_as'] == null ? undefined : json['capture_input_as'],
+        'dtmf': json['dtmf'] == null ? undefined : CovalMetricsAPIIvrFlowNodesInnerDtmfFromJSON(json['dtmf']),
         'terminal': json['terminal'] == null ? undefined : json['terminal'],
         'auto_advance_to': json['auto_advance_to'] == null ? undefined : json['auto_advance_to'],
     };
@@ -84,6 +174,15 @@ export function CovalMetricsAPIIvrFlowNodesInnerToJSONTyped(value?: CovalMetrics
         
         'id': value['id'],
         'prompt': value['prompt'],
+        'prompt_alternatives': value['prompt_alternatives'],
+        'critical_values': value['critical_values'],
+        'prompt_variables': value['prompt_variables'] == null ? undefined : (mapValues(value['prompt_variables'], CovalMetricsAPIIvrFlowNodesInnerPromptVariablesValueToJSON)),
+        'input_mode': value['input_mode'],
+        'input_timeout_seconds': value['input_timeout_seconds'],
+        'voice_end_silence_seconds': value['voice_end_silence_seconds'],
+        'max_retries': value['max_retries'],
+        'capture_input_as': value['capture_input_as'],
+        'dtmf': CovalMetricsAPIIvrFlowNodesInnerDtmfToJSON(value['dtmf']),
         'terminal': value['terminal'],
         'auto_advance_to': value['auto_advance_to'],
     };

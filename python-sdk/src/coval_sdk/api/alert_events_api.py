@@ -43,6 +43,7 @@ class AlertEventsApi:
     def list_alert_events(
         self,
         alert_id: Annotated[str, Field(strict=True, description="Alert ULID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         outcome: Annotated[Optional[StrictStr], Field(description="Filter events by outcome")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Token for fetching the next page of results")] = None,
@@ -65,6 +66,8 @@ class AlertEventsApi:
 
         :param alert_id: Alert ULID (required)
         :type alert_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param outcome: Filter events by outcome
         :type outcome: str
         :param page_size: Number of results per page
@@ -95,6 +98,7 @@ class AlertEventsApi:
 
         _param = self._list_alert_events_serialize(
             alert_id=alert_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             outcome=outcome,
             page_size=page_size,
             page_token=page_token,
@@ -126,6 +130,7 @@ class AlertEventsApi:
     def list_alert_events_with_http_info(
         self,
         alert_id: Annotated[str, Field(strict=True, description="Alert ULID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         outcome: Annotated[Optional[StrictStr], Field(description="Filter events by outcome")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Token for fetching the next page of results")] = None,
@@ -148,6 +153,8 @@ class AlertEventsApi:
 
         :param alert_id: Alert ULID (required)
         :type alert_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param outcome: Filter events by outcome
         :type outcome: str
         :param page_size: Number of results per page
@@ -178,6 +185,7 @@ class AlertEventsApi:
 
         _param = self._list_alert_events_serialize(
             alert_id=alert_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             outcome=outcome,
             page_size=page_size,
             page_token=page_token,
@@ -209,6 +217,7 @@ class AlertEventsApi:
     def list_alert_events_without_preload_content(
         self,
         alert_id: Annotated[str, Field(strict=True, description="Alert ULID")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.")] = None,
         outcome: Annotated[Optional[StrictStr], Field(description="Filter events by outcome")] = None,
         page_size: Annotated[Optional[Annotated[int, Field(le=100, strict=True, ge=1)]], Field(description="Number of results per page")] = None,
         page_token: Annotated[Optional[StrictStr], Field(description="Token for fetching the next page of results")] = None,
@@ -231,6 +240,8 @@ class AlertEventsApi:
 
         :param alert_id: Alert ULID (required)
         :type alert_id: str
+        :param x_coval_workspace_id: Workspace that scopes this operation. When omitted, the organization's active default workspace is used when one can be resolved.
+        :type x_coval_workspace_id: str
         :param outcome: Filter events by outcome
         :type outcome: str
         :param page_size: Number of results per page
@@ -261,6 +272,7 @@ class AlertEventsApi:
 
         _param = self._list_alert_events_serialize(
             alert_id=alert_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             outcome=outcome,
             page_size=page_size,
             page_token=page_token,
@@ -287,6 +299,7 @@ class AlertEventsApi:
     def _list_alert_events_serialize(
         self,
         alert_id,
+        x_coval_workspace_id,
         outcome,
         page_size,
         page_token,
@@ -327,6 +340,8 @@ class AlertEventsApi:
             _query_params.append(('page_token', page_token))
             
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 

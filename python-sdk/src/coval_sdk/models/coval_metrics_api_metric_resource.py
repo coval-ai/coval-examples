@@ -32,7 +32,6 @@ from coval_sdk.models.coval_metrics_api_metric_resource_expected_body import Cov
 from coval_sdk.models.coval_metrics_api_metric_runtime_config import CovalMetricsAPIMetricRuntimeConfig
 from coval_sdk.models.coval_metrics_api_metric_threshold_resource import CovalMetricsAPIMetricThresholdResource
 from coval_sdk.models.coval_metrics_api_metric_type import CovalMetricsAPIMetricType
-from coval_sdk.models.coval_metrics_api_resource_attribution import CovalMetricsAPIResourceAttribution
 from coval_sdk.models.coval_metrics_api_target_condition import CovalMetricsAPITargetCondition
 from typing import Optional, Set
 from typing_extensions import Self
@@ -42,7 +41,10 @@ class CovalMetricsAPIMetricResource(BaseModel):
     """
     Metric resource
     """ # noqa: E501
-    attribution: Optional[CovalMetricsAPIResourceAttribution] = Field(default=None, description="Authoring timestamps and user IDs. Unknown or deleted users are null.")
+    created_at: Optional[datetime] = Field(description="Authoring timestamp; null when unknown.")
+    created_by: Optional[StrictStr] = Field(description="Canonical author user ID; null when unknown.")
+    updated_at: Optional[datetime] = Field(description="Authoring timestamp; null when unknown.")
+    updated_by: Optional[StrictStr] = Field(description="Canonical author user ID; null when unknown.")
     name: StrictStr = Field(description="Resource name")
     id: StrictStr = Field(description="Metric ID")
     metric_name: StrictStr = Field(description="Display name")
@@ -52,6 +54,7 @@ class CovalMetricsAPIMetricResource(BaseModel):
     evaluation: Optional[CovalMetricsAPIMetricEvaluationResource] = Field(default=None, description="Current catalog evaluator metadata. Null means this manager has no catalog entry, not a broken metric. Use this to interpret built-in metrics whose legacy metric_type may be a compatibility fallback. A null prompt alone does not prove an unconfigured evaluator.")
     prompt: Optional[StrictStr] = Field(default=None, description="LLM evaluation prompt (for LLM-based metrics)")
     enabled_tools: Optional[List[CovalMetricsAPIAgentJudgeRuntimeTool]] = Field(default=None, description="Agentic LLM Judge tools. Null selects V1 defaults; an empty list disables all tools.")
+    dependency_metric_ids: Optional[Annotated[List[Annotated[str, Field(min_length=1, strict=True)]], Field(max_length=10)]] = Field(default=None, description="Configured Agent Judge metric dependencies. Null preserves legacy absence; an empty list means none.")
     categories: Optional[Annotated[List[StrictStr], Field(max_length=50)]] = Field(default=None, description="Classification categories (for categorical metrics)")
     min_value: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum score value (for numerical metrics)")
     max_value: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Maximum score value (for numerical metrics)")
@@ -83,10 +86,10 @@ class CovalMetricsAPIMetricResource(BaseModel):
     reporting_method: Optional[StrictStr] = Field(default=None, description="How the per-criterion verdicts are aggregated into the metric's value.")
     base_prompt_template: Optional[StrictStr] = Field(default=None, description="Custom prompt template used to evaluate each criterion.")
     include_traces: Optional[StrictBool] = Field(default=None, description="Whether OTel trace context is injected into the LLM judge prompt during evaluation. Supported for LLM judge metric types and `METRIC_COMPOSITE_EVALUATION` (`METRIC_LLM_BINARY`, `METRIC_CATEGORICAL`, `METRIC_NUMERICAL_LLM_JUDGE`, `METRIC_AUDIO_LLM_BINARY`, `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`, `METRIC_COMPOSITE_EVALUATION`). ")
+    audio_filter: Optional[Dict[str, Any]] = Field(default=None, description="The part of the recording an audio metric analyzes, returned as stored. `null` means the metric's default scope. A filter saved in the metric editor is returned as saved even where it predates this schema. ")
     runtime_config: Optional[CovalMetricsAPIMetricRuntimeConfig] = Field(default=None, description="LLM model and thinking configuration for this metric. Not supported for audio metric types (`METRIC_AUDIO_LLM_BINARY`, `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`), which always use the platform-default audio model. ")
     target_condition: Optional[CovalMetricsAPITargetCondition] = Field(default=None, description="Target condition for metric evaluation")
     tags: Optional[List[StrictStr]] = Field(default=None, description="Tags associated with this metric")
-    created_by: Optional[StrictStr] = Field(default=None, description="Creator email")
     create_time: datetime = Field(description="Creation timestamp")
     update_time: Optional[datetime] = Field(default=None, description="Last update timestamp")
     current_version: Optional[CovalMetricsAPICurrentMetricVersion] = Field(default=None, description="The metric's live version. Null for pre-versioning metrics that have not yet been saved or run under the versioning system. Full history at GET /v1/metrics/{metric_id}/versions.")
@@ -110,7 +113,7 @@ class CovalMetricsAPIMetricResource(BaseModel):
     threshold_preset: Optional[StrictStr] = Field(default=None, description="METRIC_VOLUME threshold preset: 'strict', 'normal', or 'lenient'.")
     value_source: Optional[StrictStr] = Field(default=None, description="Source of the aggregated value: 'attribute' (default) reads the configured span attribute; 'duration' aggregates the span's own duration converted to seconds.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["attribution", "name", "id", "metric_name", "description", "metric_type", "judge_mode", "evaluation", "prompt", "enabled_tools", "categories", "min_value", "max_value", "metadata_field_type", "metadata_field_key", "regex_pattern", "role", "min_pause_duration_seconds", "max_silence_duration_seconds", "min_silence_gap_seconds", "frequency_threshold", "direction", "success_sentiments", "percent_above", "success_end_reasons", "observation_name", "expected_body", "match_path", "min_volume_change_for_pitch_misalignment", "threshold", "operator", "ivr_flow", "sql_query", "aggregation_method", "unit", "criteria_source", "criteria_path", "criteria", "reporting_method", "base_prompt_template", "include_traces", "runtime_config", "target_condition", "tags", "created_by", "create_time", "update_time", "current_version", "case_insensitive", "detection_preset", "harmonics_to_noise_ratio_threshold_offset_db", "jitter_threshold_multiplier", "loud_threshold_db", "low_pitch_threshold_multiplier", "mad_z_score_threshold", "match_mode", "metric_attribute", "min_fry_segment_seconds", "organization_threshold", "pause_detection_preset", "pitch_change_threshold_hz", "position", "significant_changes_threshold_hz", "soft_threshold_db", "span_name", "threshold_preset", "value_source"]
+    __properties: ClassVar[List[str]] = ["created_at", "created_by", "updated_at", "updated_by", "name", "id", "metric_name", "description", "metric_type", "judge_mode", "evaluation", "prompt", "enabled_tools", "dependency_metric_ids", "categories", "min_value", "max_value", "metadata_field_type", "metadata_field_key", "regex_pattern", "role", "min_pause_duration_seconds", "max_silence_duration_seconds", "min_silence_gap_seconds", "frequency_threshold", "direction", "success_sentiments", "percent_above", "success_end_reasons", "observation_name", "expected_body", "match_path", "min_volume_change_for_pitch_misalignment", "threshold", "operator", "ivr_flow", "sql_query", "aggregation_method", "unit", "criteria_source", "criteria_path", "criteria", "reporting_method", "base_prompt_template", "include_traces", "audio_filter", "runtime_config", "target_condition", "tags", "create_time", "update_time", "current_version", "case_insensitive", "detection_preset", "harmonics_to_noise_ratio_threshold_offset_db", "jitter_threshold_multiplier", "loud_threshold_db", "low_pitch_threshold_multiplier", "mad_z_score_threshold", "match_mode", "metric_attribute", "min_fry_segment_seconds", "organization_threshold", "pause_detection_preset", "pitch_change_threshold_hz", "position", "significant_changes_threshold_hz", "soft_threshold_db", "span_name", "threshold_preset", "value_source"]
 
     @field_validator('role')
     def role_validate_enum(cls, value):
@@ -235,10 +238,16 @@ class CovalMetricsAPIMetricResource(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
         * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
-            "attribution",
+            "created_at",
+            "created_by",
+            "updated_at",
+            "updated_by",
             "additional_properties",
         ])
 
@@ -247,9 +256,6 @@ class CovalMetricsAPIMetricResource(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of attribution
-        if self.attribution:
-            _dict['attribution'] = self.attribution.to_dict()
         # override the default output from pydantic by calling `to_dict()` of evaluation
         if self.evaluation:
             _dict['evaluation'] = self.evaluation.to_dict()
@@ -276,10 +282,25 @@ class CovalMetricsAPIMetricResource(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if attribution (nullable) is None
+        # set to None if created_at (nullable) is None
         # and model_fields_set contains the field
-        if self.attribution is None and "attribution" in self.model_fields_set:
-            _dict['attribution'] = None
+        if self.created_at is None and "created_at" in self.model_fields_set:
+            _dict['created_at'] = None
+
+        # set to None if created_by (nullable) is None
+        # and model_fields_set contains the field
+        if self.created_by is None and "created_by" in self.model_fields_set:
+            _dict['created_by'] = None
+
+        # set to None if updated_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.updated_at is None and "updated_at" in self.model_fields_set:
+            _dict['updated_at'] = None
+
+        # set to None if updated_by (nullable) is None
+        # and model_fields_set contains the field
+        if self.updated_by is None and "updated_by" in self.model_fields_set:
+            _dict['updated_by'] = None
 
         # set to None if evaluation (nullable) is None
         # and model_fields_set contains the field
@@ -295,6 +316,11 @@ class CovalMetricsAPIMetricResource(BaseModel):
         # and model_fields_set contains the field
         if self.enabled_tools is None and "enabled_tools" in self.model_fields_set:
             _dict['enabled_tools'] = None
+
+        # set to None if dependency_metric_ids (nullable) is None
+        # and model_fields_set contains the field
+        if self.dependency_metric_ids is None and "dependency_metric_ids" in self.model_fields_set:
+            _dict['dependency_metric_ids'] = None
 
         # set to None if categories (nullable) is None
         # and model_fields_set contains the field
@@ -451,6 +477,11 @@ class CovalMetricsAPIMetricResource(BaseModel):
         if self.include_traces is None and "include_traces" in self.model_fields_set:
             _dict['include_traces'] = None
 
+        # set to None if audio_filter (nullable) is None
+        # and model_fields_set contains the field
+        if self.audio_filter is None and "audio_filter" in self.model_fields_set:
+            _dict['audio_filter'] = None
+
         # set to None if runtime_config (nullable) is None
         # and model_fields_set contains the field
         if self.runtime_config is None and "runtime_config" in self.model_fields_set:
@@ -460,11 +491,6 @@ class CovalMetricsAPIMetricResource(BaseModel):
         # and model_fields_set contains the field
         if self.target_condition is None and "target_condition" in self.model_fields_set:
             _dict['target_condition'] = None
-
-        # set to None if created_by (nullable) is None
-        # and model_fields_set contains the field
-        if self.created_by is None and "created_by" in self.model_fields_set:
-            _dict['created_by'] = None
 
         # set to None if update_time (nullable) is None
         # and model_fields_set contains the field
@@ -583,7 +609,10 @@ class CovalMetricsAPIMetricResource(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "attribution": CovalMetricsAPIResourceAttribution.from_dict(obj["attribution"]) if obj.get("attribution") is not None else None,
+            "created_at": obj.get("created_at"),
+            "created_by": obj.get("created_by"),
+            "updated_at": obj.get("updated_at"),
+            "updated_by": obj.get("updated_by"),
             "name": obj.get("name"),
             "id": obj.get("id"),
             "metric_name": obj.get("metric_name"),
@@ -593,6 +622,7 @@ class CovalMetricsAPIMetricResource(BaseModel):
             "evaluation": CovalMetricsAPIMetricEvaluationResource.from_dict(obj["evaluation"]) if obj.get("evaluation") is not None else None,
             "prompt": obj.get("prompt"),
             "enabled_tools": obj.get("enabled_tools"),
+            "dependency_metric_ids": obj.get("dependency_metric_ids"),
             "categories": obj.get("categories"),
             "min_value": obj.get("min_value"),
             "max_value": obj.get("max_value"),
@@ -624,10 +654,10 @@ class CovalMetricsAPIMetricResource(BaseModel):
             "reporting_method": obj.get("reporting_method"),
             "base_prompt_template": obj.get("base_prompt_template"),
             "include_traces": obj.get("include_traces"),
+            "audio_filter": obj.get("audio_filter"),
             "runtime_config": CovalMetricsAPIMetricRuntimeConfig.from_dict(obj["runtime_config"]) if obj.get("runtime_config") is not None else None,
             "target_condition": CovalMetricsAPITargetCondition.from_dict(obj["target_condition"]) if obj.get("target_condition") is not None else None,
             "tags": obj.get("tags"),
-            "created_by": obj.get("created_by"),
             "create_time": obj.get("create_time"),
             "update_time": obj.get("update_time"),
             "current_version": CovalMetricsAPICurrentMetricVersion.from_dict(obj["current_version"]) if obj.get("current_version") is not None else None,

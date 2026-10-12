@@ -66,6 +66,12 @@ export interface CovalReviewsAPIReviewAnnotationWithMetricVersionResource {
      */
     metric_id: string;
     /**
+     * Canonical Coval reviewer User ULID; null means reviewer attribution is unresolved.
+     * @type {string}
+     * @memberof CovalReviewsAPIReviewAnnotationWithMetricVersionResource
+     */
+    assignee_user_id?: string | null;
+    /**
      * Email of the assigned reviewer
      * @type {string}
      * @memberof CovalReviewsAPIReviewAnnotationWithMetricVersionResource
@@ -202,6 +208,7 @@ export function CovalReviewsAPIReviewAnnotationWithMetricVersionResourceFromJSON
         'id': json['id'],
         'simulation_output_id': json['simulation_output_id'],
         'metric_id': json['metric_id'],
+        'assignee_user_id': json['assignee_user_id'] == null ? undefined : json['assignee_user_id'],
         'assignee': json['assignee'],
         'ground_truth_float_value': json['ground_truth_float_value'] == null ? undefined : json['ground_truth_float_value'],
         'ground_truth_string_value': json['ground_truth_string_value'] == null ? undefined : json['ground_truth_string_value'],
@@ -237,6 +244,7 @@ export function CovalReviewsAPIReviewAnnotationWithMetricVersionResourceToJSONTy
         'id': value['id'],
         'simulation_output_id': value['simulation_output_id'],
         'metric_id': value['metric_id'],
+        'assignee_user_id': value['assignee_user_id'],
         'assignee': value['assignee'],
         'ground_truth_float_value': value['ground_truth_float_value'],
         'ground_truth_string_value': value['ground_truth_string_value'],

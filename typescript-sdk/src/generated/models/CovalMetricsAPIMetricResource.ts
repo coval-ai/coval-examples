@@ -90,13 +90,6 @@ import {
     CovalMetricsAPIMetricThresholdResourceToJSON,
     CovalMetricsAPIMetricThresholdResourceToJSONTyped,
 } from './CovalMetricsAPIMetricThresholdResource.js';
-import type { CovalMetricsAPIResourceAttribution } from './CovalMetricsAPIResourceAttribution.js';
-import {
-    CovalMetricsAPIResourceAttributionFromJSON,
-    CovalMetricsAPIResourceAttributionFromJSONTyped,
-    CovalMetricsAPIResourceAttributionToJSON,
-    CovalMetricsAPIResourceAttributionToJSONTyped,
-} from './CovalMetricsAPIResourceAttribution.js';
 
 /**
  * Metric resource
@@ -105,11 +98,29 @@ import {
  */
 export interface CovalMetricsAPIMetricResource {
     /**
-     * Authoring timestamps and user IDs. Unknown or deleted users are null.
-     * @type {CovalMetricsAPIResourceAttribution}
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
      * @memberof CovalMetricsAPIMetricResource
      */
-    readonly attribution?: CovalMetricsAPIResourceAttribution | null;
+    readonly created_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalMetricsAPIMetricResource
+     */
+    readonly created_by: string | null;
+    /**
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
+     * @memberof CovalMetricsAPIMetricResource
+     */
+    readonly updated_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalMetricsAPIMetricResource
+     */
+    readonly updated_by: string | null;
     /**
      * Resource name
      * @type {string}
@@ -164,6 +175,12 @@ export interface CovalMetricsAPIMetricResource {
      * @memberof CovalMetricsAPIMetricResource
      */
     enabled_tools?: Array<CovalMetricsAPIAgentJudgeRuntimeTool> | null;
+    /**
+     * Configured Agent Judge metric dependencies. Null preserves legacy absence; an empty list means none.
+     * @type {Array<string>}
+     * @memberof CovalMetricsAPIMetricResource
+     */
+    dependency_metric_ids?: Array<string> | null;
     /**
      * Classification categories (for categorical metrics)
      * @type {Array<string>}
@@ -355,6 +372,14 @@ export interface CovalMetricsAPIMetricResource {
      */
     include_traces?: boolean | null;
     /**
+     * The part of the recording an audio metric analyzes, returned as stored. `null` means the metric's default
+     * scope. A filter saved in the metric editor is returned as saved even where it predates this schema.
+     * 
+     * @type {object}
+     * @memberof CovalMetricsAPIMetricResource
+     */
+    audio_filter?: object | null;
+    /**
      * LLM model and thinking configuration for this metric.
      * Not supported for audio metric types (`METRIC_AUDIO_LLM_BINARY`,
      * `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`),
@@ -376,12 +401,6 @@ export interface CovalMetricsAPIMetricResource {
      * @memberof CovalMetricsAPIMetricResource
      */
     tags?: Array<string>;
-    /**
-     * Creator email
-     * @type {string}
-     * @memberof CovalMetricsAPIMetricResource
-     */
-    created_by?: string | null;
     /**
      * Creation timestamp
      * @type {Date}
@@ -620,6 +639,10 @@ export type CovalMetricsAPIMetricResourcePositionEnum = typeof CovalMetricsAPIMe
  * Check if a given object implements the CovalMetricsAPIMetricResource interface.
  */
 export function instanceOfCovalMetricsAPIMetricResource(value: object): value is CovalMetricsAPIMetricResource {
+    if (!('created_at' in value) || value['created_at'] === undefined) return false;
+    if (!('created_by' in value) || value['created_by'] === undefined) return false;
+    if (!('updated_at' in value) || value['updated_at'] === undefined) return false;
+    if (!('updated_by' in value) || value['updated_by'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('metric_name' in value) || value['metric_name'] === undefined) return false;
@@ -639,7 +662,10 @@ export function CovalMetricsAPIMetricResourceFromJSONTyped(json: any, ignoreDisc
     }
     return {
         
-        'attribution': json['attribution'] == null ? undefined : CovalMetricsAPIResourceAttributionFromJSON(json['attribution']),
+        'created_at': (json['created_at'] == null ? null : new Date(json['created_at'])),
+        'created_by': json['created_by'],
+        'updated_at': (json['updated_at'] == null ? null : new Date(json['updated_at'])),
+        'updated_by': json['updated_by'],
         'name': json['name'],
         'id': json['id'],
         'metric_name': json['metric_name'],
@@ -649,6 +675,7 @@ export function CovalMetricsAPIMetricResourceFromJSONTyped(json: any, ignoreDisc
         'evaluation': json['evaluation'] == null ? undefined : CovalMetricsAPIMetricEvaluationResourceFromJSON(json['evaluation']),
         'prompt': json['prompt'] == null ? undefined : json['prompt'],
         'enabled_tools': json['enabled_tools'] == null ? undefined : ((json['enabled_tools'] as Array<any>).map(CovalMetricsAPIAgentJudgeRuntimeToolFromJSON)),
+        'dependency_metric_ids': json['dependency_metric_ids'] == null ? undefined : json['dependency_metric_ids'],
         'categories': json['categories'] == null ? undefined : json['categories'],
         'min_value': json['min_value'] == null ? undefined : json['min_value'],
         'max_value': json['max_value'] == null ? undefined : json['max_value'],
@@ -680,10 +707,10 @@ export function CovalMetricsAPIMetricResourceFromJSONTyped(json: any, ignoreDisc
         'reporting_method': json['reporting_method'] == null ? undefined : json['reporting_method'],
         'base_prompt_template': json['base_prompt_template'] == null ? undefined : json['base_prompt_template'],
         'include_traces': json['include_traces'] == null ? undefined : json['include_traces'],
+        'audio_filter': json['audio_filter'] == null ? undefined : json['audio_filter'],
         'runtime_config': json['runtime_config'] == null ? undefined : CovalMetricsAPIMetricRuntimeConfigFromJSON(json['runtime_config']),
         'target_condition': json['target_condition'] == null ? undefined : CovalMetricsAPITargetConditionFromJSON(json['target_condition']),
         'tags': json['tags'] == null ? undefined : json['tags'],
-        'created_by': json['created_by'] == null ? undefined : json['created_by'],
         'create_time': (new Date(json['create_time'])),
         'update_time': json['update_time'] == null ? undefined : (new Date(json['update_time'])),
         'current_version': json['current_version'] == null ? undefined : CovalMetricsAPICurrentMetricVersionFromJSON(json['current_version']),
@@ -713,7 +740,7 @@ export function CovalMetricsAPIMetricResourceToJSON(json: any): CovalMetricsAPIM
     return CovalMetricsAPIMetricResourceToJSONTyped(json, false);
 }
 
-export function CovalMetricsAPIMetricResourceToJSONTyped(value?: Omit<CovalMetricsAPIMetricResource, 'attribution'> | null, ignoreDiscriminator: boolean = false): any {
+export function CovalMetricsAPIMetricResourceToJSONTyped(value?: Omit<CovalMetricsAPIMetricResource, 'created_at'|'created_by'|'updated_at'|'updated_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -729,6 +756,7 @@ export function CovalMetricsAPIMetricResourceToJSONTyped(value?: Omit<CovalMetri
         'evaluation': CovalMetricsAPIMetricEvaluationResourceToJSON(value['evaluation']),
         'prompt': value['prompt'],
         'enabled_tools': value['enabled_tools'] == null ? undefined : ((value['enabled_tools'] as Array<any>).map(CovalMetricsAPIAgentJudgeRuntimeToolToJSON)),
+        'dependency_metric_ids': value['dependency_metric_ids'],
         'categories': value['categories'],
         'min_value': value['min_value'],
         'max_value': value['max_value'],
@@ -760,10 +788,10 @@ export function CovalMetricsAPIMetricResourceToJSONTyped(value?: Omit<CovalMetri
         'reporting_method': value['reporting_method'],
         'base_prompt_template': value['base_prompt_template'],
         'include_traces': value['include_traces'],
+        'audio_filter': value['audio_filter'],
         'runtime_config': CovalMetricsAPIMetricRuntimeConfigToJSON(value['runtime_config']),
         'target_condition': CovalMetricsAPITargetConditionToJSON(value['target_condition']),
         'tags': value['tags'],
-        'created_by': value['created_by'],
         'create_time': value['create_time'].toISOString(),
         'update_time': value['update_time'] == null ? value['update_time'] : value['update_time'].toISOString(),
         'current_version': CovalMetricsAPICurrentMetricVersionToJSON(value['current_version']),

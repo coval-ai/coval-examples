@@ -18,23 +18,33 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
 
-class CovalMetricsAPIResourceAttribution(BaseModel):
+class CovalMetricsAPIIvrFlowNodesInnerDtmf(BaseModel):
     """
-    Authoring timestamps and nullable user IDs; unknown users remain null.
+    CovalMetricsAPIIvrFlowNodesInnerDtmf
     """ # noqa: E501
-    created_at: Optional[datetime] = None
-    created_by: Optional[StrictStr] = None
-    updated_at: Optional[datetime] = None
-    updated_by: Optional[StrictStr] = None
+    length: Optional[Annotated[int, Field(le=256, strict=True, ge=1)]] = None
+    max_digits: Optional[Annotated[int, Field(le=256, strict=True, ge=1)]] = 256
+    terminator: Optional[StrictStr] = Field(default=None, description="Required when configured; removed before branch matching.")
+    inter_digit_timeout_seconds: Optional[Union[Annotated[float, Field(le=60, strict=True, ge=0.1)], Annotated[int, Field(le=60, strict=True, ge=1)]]] = 2
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["created_at", "created_by", "updated_at", "updated_by"]
+    __properties: ClassVar[List[str]] = ["length", "max_digits", "terminator", "inter_digit_timeout_seconds"]
+
+    @field_validator('terminator')
+    def terminator_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['#', '*']):
+            raise ValueError("must be one of enum values ('#', '*')")
+        return value
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -54,7 +64,7 @@ class CovalMetricsAPIResourceAttribution(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CovalMetricsAPIResourceAttribution from a JSON string"""
+        """Create an instance of CovalMetricsAPIIvrFlowNodesInnerDtmf from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -82,31 +92,11 @@ class CovalMetricsAPIResourceAttribution(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if created_at (nullable) is None
-        # and model_fields_set contains the field
-        if self.created_at is None and "created_at" in self.model_fields_set:
-            _dict['created_at'] = None
-
-        # set to None if created_by (nullable) is None
-        # and model_fields_set contains the field
-        if self.created_by is None and "created_by" in self.model_fields_set:
-            _dict['created_by'] = None
-
-        # set to None if updated_at (nullable) is None
-        # and model_fields_set contains the field
-        if self.updated_at is None and "updated_at" in self.model_fields_set:
-            _dict['updated_at'] = None
-
-        # set to None if updated_by (nullable) is None
-        # and model_fields_set contains the field
-        if self.updated_by is None and "updated_by" in self.model_fields_set:
-            _dict['updated_by'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CovalMetricsAPIResourceAttribution from a dict"""
+        """Create an instance of CovalMetricsAPIIvrFlowNodesInnerDtmf from a dict"""
         if obj is None:
             return None
 
@@ -114,10 +104,10 @@ class CovalMetricsAPIResourceAttribution(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "created_at": obj.get("created_at"),
-            "created_by": obj.get("created_by"),
-            "updated_at": obj.get("updated_at"),
-            "updated_by": obj.get("updated_by")
+            "length": obj.get("length"),
+            "max_digits": obj.get("max_digits") if obj.get("max_digits") is not None else 256,
+            "terminator": obj.get("terminator"),
+            "inter_digit_timeout_seconds": obj.get("inter_digit_timeout_seconds") if obj.get("inter_digit_timeout_seconds") is not None else 2
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

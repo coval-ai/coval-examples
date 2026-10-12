@@ -655,7 +655,7 @@ class AgentsApi:
     ) -> CovalAgentsAPICreateAgentResponse:
         """Duplicate an agent
 
-        Clone an existing agent into a new agent owned by your organization. By default only the agent config is copied; set `include_associations` to also copy its metric and test-set associations. Returns the new agent in the same shape as create. 
+        Clone an existing agent into a new agent owned by your organization. By default only the agent config is copied; set `include_associations` to also copy its metric and test-set associations. Returns the new agent in the same shape as create. If an organization-owned metric association contains invalid regex syntax, duplication returns INVALID_ARGUMENT identifying the source metric to correct. 
 
         :param agent_id: ID of the agent to duplicate (required)
         :type agent_id: str
@@ -730,7 +730,7 @@ class AgentsApi:
     ) -> ApiResponse[CovalAgentsAPICreateAgentResponse]:
         """Duplicate an agent
 
-        Clone an existing agent into a new agent owned by your organization. By default only the agent config is copied; set `include_associations` to also copy its metric and test-set associations. Returns the new agent in the same shape as create. 
+        Clone an existing agent into a new agent owned by your organization. By default only the agent config is copied; set `include_associations` to also copy its metric and test-set associations. Returns the new agent in the same shape as create. If an organization-owned metric association contains invalid regex syntax, duplication returns INVALID_ARGUMENT identifying the source metric to correct. 
 
         :param agent_id: ID of the agent to duplicate (required)
         :type agent_id: str
@@ -805,7 +805,7 @@ class AgentsApi:
     ) -> RESTResponseType:
         """Duplicate an agent
 
-        Clone an existing agent into a new agent owned by your organization. By default only the agent config is copied; set `include_associations` to also copy its metric and test-set associations. Returns the new agent in the same shape as create. 
+        Clone an existing agent into a new agent owned by your organization. By default only the agent config is copied; set `include_associations` to also copy its metric and test-set associations. Returns the new agent in the same shape as create. If an organization-owned metric association contains invalid regex syntax, duplication returns INVALID_ARGUMENT identifying the source metric to correct. 
 
         :param agent_id: ID of the agent to duplicate (required)
         :type agent_id: str

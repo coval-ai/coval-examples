@@ -21,7 +21,6 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from coval_sdk.models.test_sets_api_test_set_record_resource_expected_output import TestSetsAPITestSetRecordResourceExpectedOutput
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -30,18 +29,22 @@ class TestSetsAPITestSetRecordResource(BaseModel):
     """
     TestSetsAPITestSetRecordResource
     """ # noqa: E501
+    created_at: Optional[datetime] = Field(description="Authoring creation timestamp; null when unknown.")
+    created_by: Optional[StrictStr] = Field(description="Canonical creator user ID; null when unknown.")
+    updated_at: Optional[datetime] = Field(description="Authoring update timestamp; null when unknown.")
+    updated_by: Optional[StrictStr] = Field(description="Canonical updater user ID; null when unknown.")
     id: StrictStr
     input: StrictStr = Field(description="Test case input string.")
     input_type: Optional[StrictStr] = None
     expected_behaviors: Optional[List[StrictStr]] = None
-    expected_output: Optional[TestSetsAPITestSetRecordResourceExpectedOutput] = None
+    expected_output: Optional[Any] = Field(default=None, description="Expected output specification, if set.")
     description: Optional[StrictStr] = None
     user_notes: Optional[StrictStr] = None
     create_time: Optional[datetime] = None
     update_time: Optional[datetime] = None
     test_set_id: Optional[StrictStr] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["id", "input", "input_type", "expected_behaviors", "expected_output", "description", "user_notes", "create_time", "update_time", "test_set_id"]
+    __properties: ClassVar[List[str]] = ["created_at", "created_by", "updated_at", "updated_by", "id", "input", "input_type", "expected_behaviors", "expected_output", "description", "user_notes", "create_time", "update_time", "test_set_id"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -73,9 +76,17 @@ class TestSetsAPITestSetRecordResource(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
         * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
+            "created_at",
+            "created_by",
+            "updated_at",
+            "updated_by",
             "additional_properties",
         ])
 
@@ -84,13 +95,30 @@ class TestSetsAPITestSetRecordResource(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of expected_output
-        if self.expected_output:
-            _dict['expected_output'] = self.expected_output.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
+
+        # set to None if created_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.created_at is None and "created_at" in self.model_fields_set:
+            _dict['created_at'] = None
+
+        # set to None if created_by (nullable) is None
+        # and model_fields_set contains the field
+        if self.created_by is None and "created_by" in self.model_fields_set:
+            _dict['created_by'] = None
+
+        # set to None if updated_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.updated_at is None and "updated_at" in self.model_fields_set:
+            _dict['updated_at'] = None
+
+        # set to None if updated_by (nullable) is None
+        # and model_fields_set contains the field
+        if self.updated_by is None and "updated_by" in self.model_fields_set:
+            _dict['updated_by'] = None
 
         # set to None if input_type (nullable) is None
         # and model_fields_set contains the field
@@ -139,11 +167,15 @@ class TestSetsAPITestSetRecordResource(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "created_at": obj.get("created_at"),
+            "created_by": obj.get("created_by"),
+            "updated_at": obj.get("updated_at"),
+            "updated_by": obj.get("updated_by"),
             "id": obj.get("id"),
             "input": obj.get("input"),
             "input_type": obj.get("input_type"),
             "expected_behaviors": obj.get("expected_behaviors"),
-            "expected_output": TestSetsAPITestSetRecordResourceExpectedOutput.from_dict(obj["expected_output"]) if obj.get("expected_output") is not None else None,
+            "expected_output": obj.get("expected_output"),
             "description": obj.get("description"),
             "user_notes": obj.get("user_notes"),
             "create_time": obj.get("create_time"),

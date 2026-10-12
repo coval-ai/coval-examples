@@ -13,13 +13,6 @@
  */
 
 import { mapValues } from '../runtime.js';
-import type { CovalReviewsAPIResourceAttribution } from './CovalReviewsAPIResourceAttribution.js';
-import {
-    CovalReviewsAPIResourceAttributionFromJSON,
-    CovalReviewsAPIResourceAttributionFromJSONTyped,
-    CovalReviewsAPIResourceAttributionToJSON,
-    CovalReviewsAPIResourceAttributionToJSONTyped,
-} from './CovalReviewsAPIResourceAttribution.js';
 import type { CovalReviewsAPIProjectType } from './CovalReviewsAPIProjectType.js';
 import {
     CovalReviewsAPIProjectTypeFromJSON,
@@ -42,11 +35,41 @@ import {
  */
 export interface CovalReviewsAPIReviewProjectResource {
     /**
-     * Authoring timestamps and user IDs. Unknown or deleted users are null.
-     * @type {CovalReviewsAPIResourceAttribution}
+     * Verified Coval User IDs keyed by compatibility reviewer email; missing entries remain unresolved.
+     * @type {{ [key: string]: string; }}
      * @memberof CovalReviewsAPIReviewProjectResource
      */
-    readonly attribution?: CovalReviewsAPIResourceAttribution | null;
+    reviewer_user_ids?: { [key: string]: string; };
+    /**
+     * Verified assigned reviewer IDs currently opting out of notifications.
+     * @type {Array<string>}
+     * @memberof CovalReviewsAPIReviewProjectResource
+     */
+    opted_out_assignee_user_ids?: Array<string>;
+    /**
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
+     * @memberof CovalReviewsAPIReviewProjectResource
+     */
+    readonly created_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalReviewsAPIReviewProjectResource
+     */
+    readonly created_by: string | null;
+    /**
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
+     * @memberof CovalReviewsAPIReviewProjectResource
+     */
+    readonly updated_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalReviewsAPIReviewProjectResource
+     */
+    readonly updated_by: string | null;
     /**
      * Resource name: review-projects/{id}
      * @type {string}
@@ -114,6 +137,12 @@ export interface CovalReviewsAPIReviewProjectResource {
      */
     enforced_collaboration?: boolean;
     /**
+     * Allow reviewers to skip linked metrics
+     * @type {boolean}
+     * @memberof CovalReviewsAPIReviewProjectResource
+     */
+    allow_metric_skipping?: boolean;
+    /**
      * Creation timestamp (ISO 8601)
      * @type {Date}
      * @memberof CovalReviewsAPIReviewProjectResource
@@ -143,6 +172,12 @@ export interface CovalReviewsAPIReviewProjectResource {
      * @memberof CovalReviewsAPIReviewProjectResource
      */
     linked_simulation_count?: number;
+    /**
+     * False pauses conversation triage for everyone while preserving categories, modes, and saved labels. True enables triage. Null uses legacy configuration-based activation.
+     * @type {boolean}
+     * @memberof CovalReviewsAPIReviewProjectResource
+     */
+    review_label_enabled?: boolean | null;
     /**
      * 
      * @type {CovalReviewsAPIReviewProjectResourceReviewLabelInputModeEnum}
@@ -188,6 +223,10 @@ export type CovalReviewsAPIReviewProjectResourceReviewLabelSelectionModeEnum = t
  * Check if a given object implements the CovalReviewsAPIReviewProjectResource interface.
  */
 export function instanceOfCovalReviewsAPIReviewProjectResource(value: object): value is CovalReviewsAPIReviewProjectResource {
+    if (!('created_at' in value) || value['created_at'] === undefined) return false;
+    if (!('created_by' in value) || value['created_by'] === undefined) return false;
+    if (!('updated_at' in value) || value['updated_at'] === undefined) return false;
+    if (!('updated_by' in value) || value['updated_by'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('display_name' in value) || value['display_name'] === undefined) return false;
@@ -211,7 +250,12 @@ export function CovalReviewsAPIReviewProjectResourceFromJSONTyped(json: any, ign
     }
     return {
         
-        'attribution': json['attribution'] == null ? undefined : CovalReviewsAPIResourceAttributionFromJSON(json['attribution']),
+        'reviewer_user_ids': json['reviewer_user_ids'] == null ? undefined : json['reviewer_user_ids'],
+        'opted_out_assignee_user_ids': json['opted_out_assignee_user_ids'] == null ? undefined : json['opted_out_assignee_user_ids'],
+        'created_at': (json['created_at'] == null ? null : new Date(json['created_at'])),
+        'created_by': json['created_by'],
+        'updated_at': (json['updated_at'] == null ? null : new Date(json['updated_at'])),
+        'updated_by': json['updated_by'],
         'name': json['name'],
         'id': json['id'],
         'display_name': json['display_name'],
@@ -223,11 +267,13 @@ export function CovalReviewsAPIReviewProjectResourceFromJSONTyped(json: any, ign
         'notifications': json['notifications'],
         'project_rules': json['project_rules'] == null ? undefined : ((json['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleFromJSON)),
         'enforced_collaboration': json['enforced_collaboration'] == null ? undefined : json['enforced_collaboration'],
+        'allow_metric_skipping': json['allow_metric_skipping'] == null ? undefined : json['allow_metric_skipping'],
         'create_time': (new Date(json['create_time'])),
         'update_time': (new Date(json['update_time'])),
         'blind_labeling_shown_metric_ids': json['blind_labeling_shown_metric_ids'] == null ? undefined : json['blind_labeling_shown_metric_ids'],
         'linked_metric_count': json['linked_metric_count'] == null ? undefined : json['linked_metric_count'],
         'linked_simulation_count': json['linked_simulation_count'] == null ? undefined : json['linked_simulation_count'],
+        'review_label_enabled': json['review_label_enabled'] == null ? undefined : json['review_label_enabled'],
         'review_label_input_mode': json['review_label_input_mode'] == null ? undefined : json['review_label_input_mode'],
         'review_label_options': json['review_label_options'] == null ? undefined : json['review_label_options'],
         'review_label_selection_mode': json['review_label_selection_mode'] == null ? undefined : json['review_label_selection_mode'],
@@ -238,13 +284,15 @@ export function CovalReviewsAPIReviewProjectResourceToJSON(json: any): CovalRevi
     return CovalReviewsAPIReviewProjectResourceToJSONTyped(json, false);
 }
 
-export function CovalReviewsAPIReviewProjectResourceToJSONTyped(value?: Omit<CovalReviewsAPIReviewProjectResource, 'attribution'> | null, ignoreDiscriminator: boolean = false): any {
+export function CovalReviewsAPIReviewProjectResourceToJSONTyped(value?: Omit<CovalReviewsAPIReviewProjectResource, 'created_at'|'created_by'|'updated_at'|'updated_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
 
     return {
         
+        'reviewer_user_ids': value['reviewer_user_ids'],
+        'opted_out_assignee_user_ids': value['opted_out_assignee_user_ids'],
         'name': value['name'],
         'id': value['id'],
         'display_name': value['display_name'],
@@ -256,11 +304,13 @@ export function CovalReviewsAPIReviewProjectResourceToJSONTyped(value?: Omit<Cov
         'notifications': value['notifications'],
         'project_rules': value['project_rules'] == null ? undefined : ((value['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleToJSON)),
         'enforced_collaboration': value['enforced_collaboration'],
+        'allow_metric_skipping': value['allow_metric_skipping'],
         'create_time': value['create_time'].toISOString(),
         'update_time': value['update_time'].toISOString(),
         'blind_labeling_shown_metric_ids': value['blind_labeling_shown_metric_ids'],
         'linked_metric_count': value['linked_metric_count'],
         'linked_simulation_count': value['linked_simulation_count'],
+        'review_label_enabled': value['review_label_enabled'],
         'review_label_input_mode': value['review_label_input_mode'],
         'review_label_options': value['review_label_options'],
         'review_label_selection_mode': value['review_label_selection_mode'],

@@ -22,7 +22,6 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from coval_sdk.models.test_cases_api_resource_attribution import TestCasesAPIResourceAttribution
 from coval_sdk.models.test_cases_api_test_case_resource_script_turns_inner import TestCasesAPITestCaseResourceScriptTurnsInner
 from typing import Optional, Set
 from typing_extensions import Self
@@ -32,7 +31,10 @@ class TestCasesAPITestCaseResource(BaseModel):
     """
     Test case resource.
     """ # noqa: E501
-    attribution: Optional[TestCasesAPIResourceAttribution] = Field(default=None, description="Authoring timestamps and user IDs. Unknown or deleted users are null.")
+    created_at: Optional[datetime] = Field(description="Authoring timestamp; null when unknown.")
+    created_by: Optional[StrictStr] = Field(description="Canonical author user ID; null when unknown.")
+    updated_at: Optional[datetime] = Field(description="Authoring timestamp; null when unknown.")
+    updated_by: Optional[StrictStr] = Field(description="Canonical author user ID; null when unknown.")
     name: StrictStr = Field(description="Resource name in format `test-cases/{id}`")
     id: Annotated[str, Field(min_length=22, strict=True, max_length=22)] = Field(description="Test case ID")
     test_set_id: Optional[Annotated[str, Field(min_length=8, strict=True, max_length=8)]] = Field(default=None, description="Test set ID (8-character ID)")
@@ -48,7 +50,7 @@ class TestCasesAPITestCaseResource(BaseModel):
     create_time: datetime = Field(description="Timestamp when test case was created")
     update_time: Optional[datetime] = Field(default=None, description="Timestamp when test case was last updated")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["attribution", "name", "id", "test_set_id", "input_str", "expected_behaviors", "expected_output_json", "description", "input_type", "script_turns", "simulation_metadata_input", "metric_input", "user_notes", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["created_at", "created_by", "updated_at", "updated_by", "name", "id", "test_set_id", "input_str", "expected_behaviors", "expected_output_json", "description", "input_type", "script_turns", "simulation_metadata_input", "metric_input", "user_notes", "create_time", "update_time"]
 
     @field_validator('input_type')
     def input_type_validate_enum(cls, value):
@@ -91,10 +93,16 @@ class TestCasesAPITestCaseResource(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
         * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
-            "attribution",
+            "created_at",
+            "created_by",
+            "updated_at",
+            "updated_by",
             "additional_properties",
         ])
 
@@ -103,9 +111,6 @@ class TestCasesAPITestCaseResource(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of attribution
-        if self.attribution:
-            _dict['attribution'] = self.attribution.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in script_turns (list)
         _items = []
         if self.script_turns:
@@ -118,10 +123,25 @@ class TestCasesAPITestCaseResource(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if attribution (nullable) is None
+        # set to None if created_at (nullable) is None
         # and model_fields_set contains the field
-        if self.attribution is None and "attribution" in self.model_fields_set:
-            _dict['attribution'] = None
+        if self.created_at is None and "created_at" in self.model_fields_set:
+            _dict['created_at'] = None
+
+        # set to None if created_by (nullable) is None
+        # and model_fields_set contains the field
+        if self.created_by is None and "created_by" in self.model_fields_set:
+            _dict['created_by'] = None
+
+        # set to None if updated_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.updated_at is None and "updated_at" in self.model_fields_set:
+            _dict['updated_at'] = None
+
+        # set to None if updated_by (nullable) is None
+        # and model_fields_set contains the field
+        if self.updated_by is None and "updated_by" in self.model_fields_set:
+            _dict['updated_by'] = None
 
         # set to None if test_set_id (nullable) is None
         # and model_fields_set contains the field
@@ -170,7 +190,10 @@ class TestCasesAPITestCaseResource(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "attribution": TestCasesAPIResourceAttribution.from_dict(obj["attribution"]) if obj.get("attribution") is not None else None,
+            "created_at": obj.get("created_at"),
+            "created_by": obj.get("created_by"),
+            "updated_at": obj.get("updated_at"),
+            "updated_by": obj.get("updated_by"),
             "name": obj.get("name"),
             "id": obj.get("id"),
             "test_set_id": obj.get("test_set_id"),

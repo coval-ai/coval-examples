@@ -60,6 +60,7 @@ export interface DeleteUploadedConversationRequest {
 
 export interface GetUploadedConversationRequest {
     conversationId: string;
+    xCovalWorkspaceId?: string;
     includeProgress?: boolean;
 }
 
@@ -136,6 +137,7 @@ export interface UploadedConversationsApiInterface {
     /**
      * Creates request options for getUploadedConversation without sending the request
      * @param {string} conversationId Unique conversation identifier (22-26 characters)
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this read. When omitted, the organization\&#39;s active default workspace is used when one can be resolved. The default workspace includes legacy conversations without a workspace; other workspaces require an exact match.
      * @param {boolean} [includeProgress] Include progress tracking information
      * @throws {RequiredError}
      * @memberof UploadedConversationsApiInterface
@@ -143,9 +145,10 @@ export interface UploadedConversationsApiInterface {
     getUploadedConversationRequestOpts(requestParameters: GetUploadedConversationRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Retrieve detailed information about a specific conversation. 
+     * Retrieve detailed information about a specific conversation in the authenticated workspace. Conversations in another workspace return 404. Only the default workspace can include legacy conversations without a workspace. 
      * @summary Get conversation details
      * @param {string} conversationId Unique conversation identifier (22-26 characters)
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this read. When omitted, the organization\&#39;s active default workspace is used when one can be resolved. The default workspace includes legacy conversations without a workspace; other workspaces require an exact match.
      * @param {boolean} [includeProgress] Include progress tracking information
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -154,7 +157,7 @@ export interface UploadedConversationsApiInterface {
     getUploadedConversationRaw(requestParameters: GetUploadedConversationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalUploadedConversationsAPIGetUploadedConversationResponse>>;
 
     /**
-     * Retrieve detailed information about a specific conversation. 
+     * Retrieve detailed information about a specific conversation in the authenticated workspace. Conversations in another workspace return 404. Only the default workspace can include legacy conversations without a workspace. 
      * Get conversation details
      */
     getUploadedConversation(requestParameters: GetUploadedConversationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalUploadedConversationsAPIGetUploadedConversationResponse>;
@@ -394,6 +397,10 @@ export class UploadedConversationsApi extends runtime.BaseAPI implements Uploade
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Uploaded_Conversations_API_ApiKeyAuth authentication
         }
@@ -411,7 +418,7 @@ export class UploadedConversationsApi extends runtime.BaseAPI implements Uploade
     }
 
     /**
-     * Retrieve detailed information about a specific conversation. 
+     * Retrieve detailed information about a specific conversation in the authenticated workspace. Conversations in another workspace return 404. Only the default workspace can include legacy conversations without a workspace. 
      * Get conversation details
      */
     async getUploadedConversationRaw(requestParameters: GetUploadedConversationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalUploadedConversationsAPIGetUploadedConversationResponse>> {
@@ -422,7 +429,7 @@ export class UploadedConversationsApi extends runtime.BaseAPI implements Uploade
     }
 
     /**
-     * Retrieve detailed information about a specific conversation. 
+     * Retrieve detailed information about a specific conversation in the authenticated workspace. Conversations in another workspace return 404. Only the default workspace can include legacy conversations without a workspace. 
      * Get conversation details
      */
     async getUploadedConversation(requestParameters: GetUploadedConversationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalUploadedConversationsAPIGetUploadedConversationResponse> {

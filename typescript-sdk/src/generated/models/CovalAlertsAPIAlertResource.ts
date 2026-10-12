@@ -13,13 +13,6 @@
  */
 
 import { mapValues } from '../runtime.js';
-import type { CovalAlertsAPIResourceAttribution } from './CovalAlertsAPIResourceAttribution.js';
-import {
-    CovalAlertsAPIResourceAttributionFromJSON,
-    CovalAlertsAPIResourceAttributionFromJSONTyped,
-    CovalAlertsAPIResourceAttributionToJSON,
-    CovalAlertsAPIResourceAttributionToJSONTyped,
-} from './CovalAlertsAPIResourceAttribution.js';
 import type { CovalAlertsAPIAlertResourceCustomerMetadataValue } from './CovalAlertsAPIAlertResourceCustomerMetadataValue.js';
 import {
     CovalAlertsAPIAlertResourceCustomerMetadataValueFromJSON,
@@ -70,11 +63,29 @@ import {
  */
 export interface CovalAlertsAPIAlertResource {
     /**
-     * Authoring timestamps and user IDs. Unknown or deleted users are null.
-     * @type {CovalAlertsAPIResourceAttribution}
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
      * @memberof CovalAlertsAPIAlertResource
      */
-    readonly attribution?: CovalAlertsAPIResourceAttribution | null;
+    readonly created_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalAlertsAPIAlertResource
+     */
+    readonly created_by: string | null;
+    /**
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
+     * @memberof CovalAlertsAPIAlertResource
+     */
+    readonly updated_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalAlertsAPIAlertResource
+     */
+    readonly updated_by: string | null;
     /**
      * Alert ULID
      * @type {string}
@@ -212,6 +223,10 @@ export type CovalAlertsAPIAlertResourceStatusEnum = typeof CovalAlertsAPIAlertRe
  * Check if a given object implements the CovalAlertsAPIAlertResource interface.
  */
 export function instanceOfCovalAlertsAPIAlertResource(value: object): value is CovalAlertsAPIAlertResource {
+    if (!('created_at' in value) || value['created_at'] === undefined) return false;
+    if (!('created_by' in value) || value['created_by'] === undefined) return false;
+    if (!('updated_at' in value) || value['updated_at'] === undefined) return false;
+    if (!('updated_by' in value) || value['updated_by'] === undefined) return false;
     if (!('ulid' in value) || value['ulid'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('status' in value) || value['status'] === undefined) return false;
@@ -235,7 +250,10 @@ export function CovalAlertsAPIAlertResourceFromJSONTyped(json: any, ignoreDiscri
     }
     return {
         
-        'attribution': json['attribution'] == null ? undefined : CovalAlertsAPIResourceAttributionFromJSON(json['attribution']),
+        'created_at': (json['created_at'] == null ? null : new Date(json['created_at'])),
+        'created_by': json['created_by'],
+        'updated_at': (json['updated_at'] == null ? null : new Date(json['updated_at'])),
+        'updated_by': json['updated_by'],
         'ulid': json['ulid'],
         'name': json['name'],
         'description': json['description'] == null ? undefined : json['description'],
@@ -263,7 +281,7 @@ export function CovalAlertsAPIAlertResourceToJSON(json: any): CovalAlertsAPIAler
     return CovalAlertsAPIAlertResourceToJSONTyped(json, false);
 }
 
-export function CovalAlertsAPIAlertResourceToJSONTyped(value?: Omit<CovalAlertsAPIAlertResource, 'attribution'> | null, ignoreDiscriminator: boolean = false): any {
+export function CovalAlertsAPIAlertResourceToJSONTyped(value?: Omit<CovalAlertsAPIAlertResource, 'created_at'|'created_by'|'updated_at'|'updated_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

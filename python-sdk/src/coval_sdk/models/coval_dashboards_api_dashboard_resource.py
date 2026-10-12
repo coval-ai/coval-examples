@@ -22,7 +22,6 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from coval_sdk.models.coval_dashboards_api_resource_attribution import CovalDashboardsAPIResourceAttribution
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -31,7 +30,10 @@ class CovalDashboardsAPIDashboardResource(BaseModel):
     """
     Dashboard resource
     """ # noqa: E501
-    attribution: Optional[CovalDashboardsAPIResourceAttribution] = Field(default=None, description="Authoring timestamps and user IDs. Unknown or deleted users are null.")
+    created_at: Optional[datetime] = Field(description="Authoring timestamp; null when unknown.")
+    created_by: Optional[StrictStr] = Field(description="Canonical author user ID; null when unknown.")
+    updated_at: Optional[datetime] = Field(description="Authoring timestamp; null when unknown.")
+    updated_by: Optional[StrictStr] = Field(description="Canonical author user ID; null when unknown.")
     name: StrictStr = Field(description="Resource name in format `dashboards/{id}`")
     display_name: Optional[Annotated[str, Field(strict=True, max_length=255)]] = Field(default=None, description="Human-readable dashboard name")
     description: Optional[StrictStr] = Field(default=None, description="Free-text dashboard description")
@@ -42,7 +44,7 @@ class CovalDashboardsAPIDashboardResource(BaseModel):
     create_time: datetime = Field(description="Creation timestamp (ISO 8601)")
     update_time: datetime = Field(description="Last update timestamp (ISO 8601)")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["attribution", "name", "display_name", "description", "is_default", "is_favorite", "position", "config", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["created_at", "created_by", "updated_at", "updated_by", "name", "display_name", "description", "is_default", "is_favorite", "position", "config", "create_time", "update_time"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -75,10 +77,16 @@ class CovalDashboardsAPIDashboardResource(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
         * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
-            "attribution",
+            "created_at",
+            "created_by",
+            "updated_at",
+            "updated_by",
             "additional_properties",
         ])
 
@@ -87,18 +95,30 @@ class CovalDashboardsAPIDashboardResource(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of attribution
-        if self.attribution:
-            _dict['attribution'] = self.attribution.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if attribution (nullable) is None
+        # set to None if created_at (nullable) is None
         # and model_fields_set contains the field
-        if self.attribution is None and "attribution" in self.model_fields_set:
-            _dict['attribution'] = None
+        if self.created_at is None and "created_at" in self.model_fields_set:
+            _dict['created_at'] = None
+
+        # set to None if created_by (nullable) is None
+        # and model_fields_set contains the field
+        if self.created_by is None and "created_by" in self.model_fields_set:
+            _dict['created_by'] = None
+
+        # set to None if updated_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.updated_at is None and "updated_at" in self.model_fields_set:
+            _dict['updated_at'] = None
+
+        # set to None if updated_by (nullable) is None
+        # and model_fields_set contains the field
+        if self.updated_by is None and "updated_by" in self.model_fields_set:
+            _dict['updated_by'] = None
 
         # set to None if display_name (nullable) is None
         # and model_fields_set contains the field
@@ -127,7 +147,10 @@ class CovalDashboardsAPIDashboardResource(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "attribution": CovalDashboardsAPIResourceAttribution.from_dict(obj["attribution"]) if obj.get("attribution") is not None else None,
+            "created_at": obj.get("created_at"),
+            "created_by": obj.get("created_by"),
+            "updated_at": obj.get("updated_at"),
+            "updated_by": obj.get("updated_by"),
             "name": obj.get("name"),
             "display_name": obj.get("display_name"),
             "description": obj.get("description"),

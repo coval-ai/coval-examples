@@ -30,7 +30,16 @@ import {
 
 /**
  * IVR flow tree for METRIC_IVR_FLOW_ADHERENCE. The walker matches each played IVR
- * prompt against the expected node and follows edges on the caller's input.
+ * prompt against the expected node and follows delivered keypad sequences, spoken
+ * input, and explicit timeout/recovery/conditional edges. Exactly one eligible edge
+ * must match; overlapping matches are ambiguous, never first-match-wins. The score
+ * remains the legacy fraction of matching prompt observations for compatibility.
+ * The result.stats custom entry named ivr_adherence (scoring_version 2) reports
+ * prompt_correctness, routing_correctness, and overall_status (passed, failed,
+ * or inconclusive). No completion or endpoint check is performed. Undefined
+ * behavior for intentionally invalid caller input is inconclusive, not an IVR
+ * failure; routing passes only when the destination response is observed.
+ * Dimension scores exclude inconclusive checks and are null if none are assessed.
  * 
  * @export
  * @interface CovalMetricsAPIIvrFlow
@@ -42,6 +51,18 @@ export interface CovalMetricsAPIIvrFlow {
      * @memberof CovalMetricsAPIIvrFlow
      */
     start_node: string;
+    /**
+     * Known context for branch conditions. Values are JSON scalars; strings are limited to 256 characters. Missing facts are unknown, not inferred.
+     * @type {{ [key: string]: any; }}
+     * @memberof CovalMetricsAPIIvrFlow
+     */
+    context?: { [key: string]: any; };
+    /**
+     * Optional flow-level threshold. Metric execution uses metric_metadata.match_threshold (default 0.85).
+     * @type {number}
+     * @memberof CovalMetricsAPIIvrFlow
+     */
+    match_threshold?: number;
     /**
      * 
      * @type {Array<CovalMetricsAPIIvrFlowNodesInner>}
@@ -76,6 +97,8 @@ export function CovalMetricsAPIIvrFlowFromJSONTyped(json: any, ignoreDiscriminat
     return {
         
         'start_node': json['start_node'],
+        'context': json['context'] == null ? undefined : json['context'],
+        'match_threshold': json['match_threshold'] == null ? undefined : json['match_threshold'],
         'nodes': ((json['nodes'] as Array<any>).map(CovalMetricsAPIIvrFlowNodesInnerFromJSON)),
         'edges': json['edges'] == null ? undefined : ((json['edges'] as Array<any>).map(CovalMetricsAPIIvrFlowEdgesInnerFromJSON)),
     };
@@ -93,6 +116,8 @@ export function CovalMetricsAPIIvrFlowToJSONTyped(value?: CovalMetricsAPIIvrFlow
     return {
         
         'start_node': value['start_node'],
+        'context': value['context'],
+        'match_threshold': value['match_threshold'],
         'nodes': ((value['nodes'] as Array<any>).map(CovalMetricsAPIIvrFlowNodesInnerToJSON)),
         'edges': value['edges'] == null ? undefined : ((value['edges'] as Array<any>).map(CovalMetricsAPIIvrFlowEdgesInnerToJSON)),
     };

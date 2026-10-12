@@ -39,7 +39,7 @@ class CovalMetricsAPISimpleMetricOutput(BaseModel):
     status: StrictStr = Field(description="Current status of the metric computation")
     status_reason: Optional[StrictStr] = Field(default=None, description="Stored reason for the current status, including the actionable reason a metric was skipped or failed. Null when no reason was recorded.")
     explanation: Optional[StrictStr] = Field(default=None, description="The LLM judge's reasoning for this metric output, as a flat string. Null for metrics that produce no explanation (non-judge metrics) or when the output is not yet computed.")
-    evidence_references: Optional[List[CovalMetricsAPIAgentJudgeEvidenceReference]] = Field(default=None, description="Stable frame or trace-span identities supporting an Agent Judge decision.")
+    evidence_references: Optional[List[CovalMetricsAPIAgentJudgeEvidenceReference]] = Field(default=None, description="Stable frame, trace-span, or metric-output identities supporting an Agent Judge decision.")
     subvalues_by_timestamp: Optional[List[CovalMetricsAPISubvalueByTimestamp]] = Field(default=None, description="Time-series metric values anchored to time ranges")
     result: Optional[Dict[str, Any]] = Field(default=None, description="Structured metric result. Its keys depend on the metric type. Null for metrics that produce no structured result.")
     runtime_metadata: Optional[Dict[str, Any]] = Field(default=None, description="How the metric was computed at runtime (model version, trace context). Null when not recorded.")

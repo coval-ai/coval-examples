@@ -22,7 +22,6 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from coval_sdk.models.test_sets_api_resource_attribution import TestSetsAPIResourceAttribution
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -31,7 +30,10 @@ class TestSetsAPITestSetResource(BaseModel):
     """
     Test set resource representation. 
     """ # noqa: E501
-    attribution: Optional[TestSetsAPIResourceAttribution] = Field(default=None, description="Authoring timestamps and user IDs. Unknown or deleted users are null.")
+    created_at: Optional[datetime] = Field(description="Authoring timestamp; null when unknown.")
+    created_by: Optional[StrictStr] = Field(description="Canonical author user ID; null when unknown.")
+    updated_at: Optional[datetime] = Field(description="Authoring timestamp; null when unknown.")
+    updated_by: Optional[StrictStr] = Field(description="Canonical author user ID; null when unknown.")
     name: StrictStr = Field(description="Resource name in format `test-sets/{id}`")
     id: Annotated[str, Field(min_length=8, strict=True, max_length=8)] = Field(description="Test set ID (8-character ID)")
     slug: Annotated[str, Field(min_length=1, strict=True, max_length=100)] = Field(description="URL-friendly identifier containing only lowercase letters, numbers, dashes, and underscores (unique per organization)")
@@ -45,7 +47,7 @@ class TestSetsAPITestSetResource(BaseModel):
     create_time: datetime = Field(description="Timestamp when test set was created")
     update_time: Optional[datetime] = Field(default=None, description="Timestamp when test set was last updated")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["attribution", "name", "id", "slug", "display_name", "description", "test_set_type", "test_set_metadata", "parameters", "test_case_count", "tags", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["created_at", "created_by", "updated_at", "updated_by", "name", "id", "slug", "display_name", "description", "test_set_type", "test_set_metadata", "parameters", "test_case_count", "tags", "create_time", "update_time"]
 
     @field_validator('slug')
     def slug_validate_regular_expression(cls, value):
@@ -88,10 +90,16 @@ class TestSetsAPITestSetResource(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
         * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
-            "attribution",
+            "created_at",
+            "created_by",
+            "updated_at",
+            "updated_by",
             "additional_properties",
         ])
 
@@ -100,18 +108,30 @@ class TestSetsAPITestSetResource(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of attribution
-        if self.attribution:
-            _dict['attribution'] = self.attribution.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if attribution (nullable) is None
+        # set to None if created_at (nullable) is None
         # and model_fields_set contains the field
-        if self.attribution is None and "attribution" in self.model_fields_set:
-            _dict['attribution'] = None
+        if self.created_at is None and "created_at" in self.model_fields_set:
+            _dict['created_at'] = None
+
+        # set to None if created_by (nullable) is None
+        # and model_fields_set contains the field
+        if self.created_by is None and "created_by" in self.model_fields_set:
+            _dict['created_by'] = None
+
+        # set to None if updated_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.updated_at is None and "updated_at" in self.model_fields_set:
+            _dict['updated_at'] = None
+
+        # set to None if updated_by (nullable) is None
+        # and model_fields_set contains the field
+        if self.updated_by is None and "updated_by" in self.model_fields_set:
+            _dict['updated_by'] = None
 
         # set to None if description (nullable) is None
         # and model_fields_set contains the field
@@ -145,7 +165,10 @@ class TestSetsAPITestSetResource(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "attribution": TestSetsAPIResourceAttribution.from_dict(obj["attribution"]) if obj.get("attribution") is not None else None,
+            "created_at": obj.get("created_at"),
+            "created_by": obj.get("created_by"),
+            "updated_at": obj.get("updated_at"),
+            "updated_by": obj.get("updated_by"),
             "name": obj.get("name"),
             "id": obj.get("id"),
             "slug": obj.get("slug"),

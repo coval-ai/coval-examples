@@ -13,14 +13,6 @@
  */
 
 import { mapValues } from '../runtime.js';
-import type { CovalAgentMutationsAPIResourceAttribution } from './CovalAgentMutationsAPIResourceAttribution.js';
-import {
-    CovalAgentMutationsAPIResourceAttributionFromJSON,
-    CovalAgentMutationsAPIResourceAttributionFromJSONTyped,
-    CovalAgentMutationsAPIResourceAttributionToJSON,
-    CovalAgentMutationsAPIResourceAttributionToJSONTyped,
-} from './CovalAgentMutationsAPIResourceAttribution.js';
-
 /**
  * Agent mutation resource representing a configuration variant.
  * @export
@@ -28,11 +20,29 @@ import {
  */
 export interface CovalAgentMutationsAPIMutationResource {
     /**
-     * Authoring timestamps and user IDs. Unknown or deleted users are null.
-     * @type {CovalAgentMutationsAPIResourceAttribution}
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
      * @memberof CovalAgentMutationsAPIMutationResource
      */
-    readonly attribution?: CovalAgentMutationsAPIResourceAttribution | null;
+    readonly created_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalAgentMutationsAPIMutationResource
+     */
+    readonly created_by: string | null;
+    /**
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
+     * @memberof CovalAgentMutationsAPIMutationResource
+     */
+    readonly updated_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalAgentMutationsAPIMutationResource
+     */
+    readonly updated_by: string | null;
     /**
      * Mutation ID (26-character ULID)
      * @type {string}
@@ -108,6 +118,10 @@ export type CovalAgentMutationsAPIMutationResourceStatusEnum = typeof CovalAgent
  * Check if a given object implements the CovalAgentMutationsAPIMutationResource interface.
  */
 export function instanceOfCovalAgentMutationsAPIMutationResource(value: object): value is CovalAgentMutationsAPIMutationResource {
+    if (!('created_at' in value) || value['created_at'] === undefined) return false;
+    if (!('created_by' in value) || value['created_by'] === undefined) return false;
+    if (!('updated_at' in value) || value['updated_at'] === undefined) return false;
+    if (!('updated_by' in value) || value['updated_by'] === undefined) return false;
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('agent_id' in value) || value['agent_id'] === undefined) return false;
     if (!('display_name' in value) || value['display_name'] === undefined) return false;
@@ -125,7 +139,10 @@ export function CovalAgentMutationsAPIMutationResourceFromJSONTyped(json: any, i
     }
     return {
         
-        'attribution': json['attribution'] == null ? undefined : CovalAgentMutationsAPIResourceAttributionFromJSON(json['attribution']),
+        'created_at': (json['created_at'] == null ? null : new Date(json['created_at'])),
+        'created_by': json['created_by'],
+        'updated_at': (json['updated_at'] == null ? null : new Date(json['updated_at'])),
+        'updated_by': json['updated_by'],
         'id': json['id'],
         'agent_id': json['agent_id'],
         'display_name': json['display_name'],
@@ -142,7 +159,7 @@ export function CovalAgentMutationsAPIMutationResourceToJSON(json: any): CovalAg
     return CovalAgentMutationsAPIMutationResourceToJSONTyped(json, false);
 }
 
-export function CovalAgentMutationsAPIMutationResourceToJSONTyped(value?: Omit<CovalAgentMutationsAPIMutationResource, 'attribution'> | null, ignoreDiscriminator: boolean = false): any {
+export function CovalAgentMutationsAPIMutationResourceToJSONTyped(value?: Omit<CovalAgentMutationsAPIMutationResource, 'created_at'|'created_by'|'updated_at'|'updated_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

@@ -135,7 +135,7 @@ export interface CovalAlertsAPIUpdateAlertRequest {
      */
     customer_metadata?: { [key: string]: CovalAlertsAPIAlertResourceCustomerMetadataValue; } | null;
     /**
-     * Replaces all existing conditions. An empty list requires nonempty customer_metadata filters; null or omission preserves conditions.
+     * Replaces all existing conditions. With ALL match mode, an empty list matches every conversation passing the remaining filters. ANY requires a metric condition or customer_metadata filter. Null or omission preserves conditions.
      * @type {Array<CovalAlertsAPIConditionInput>}
      * @memberof CovalAlertsAPIUpdateAlertRequest
      */

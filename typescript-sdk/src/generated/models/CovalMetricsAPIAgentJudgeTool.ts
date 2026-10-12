@@ -23,7 +23,10 @@ export const CovalMetricsAPIAgentJudgeTool = {
     SearchTranscriptRegex: 'search_transcript_regex',
     GetTraceSpans: 'get_trace_spans',
     QuerySimulationFrames: 'query_simulation_frames',
-    GetRunContext: 'get_run_context'
+    GetRunContext: 'get_run_context',
+    GetEvidenceManifest: 'get_evidence_manifest',
+    GetSimulationOutcome: 'get_simulation_outcome',
+    GetDependencyMetricOutputs: 'get_dependency_metric_outputs'
 } as const;
 export type CovalMetricsAPIAgentJudgeTool = typeof CovalMetricsAPIAgentJudgeTool[keyof typeof CovalMetricsAPIAgentJudgeTool];
 

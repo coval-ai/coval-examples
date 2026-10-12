@@ -28,7 +28,6 @@ from coval_sdk.models.coval_alerts_api_alert_evaluation_type import CovalAlertsA
 from coval_sdk.models.coval_alerts_api_alert_match_mode import CovalAlertsAPIAlertMatchMode
 from coval_sdk.models.coval_alerts_api_alert_resource_customer_metadata_value import CovalAlertsAPIAlertResourceCustomerMetadataValue
 from coval_sdk.models.coval_alerts_api_conversation_source_filter import CovalAlertsAPIConversationSourceFilter
-from coval_sdk.models.coval_alerts_api_resource_attribution import CovalAlertsAPIResourceAttribution
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -37,7 +36,10 @@ class CovalAlertsAPIAlertResource(BaseModel):
     """
     CovalAlertsAPIAlertResource
     """ # noqa: E501
-    attribution: Optional[CovalAlertsAPIResourceAttribution] = Field(default=None, description="Authoring timestamps and user IDs. Unknown or deleted users are null.")
+    created_at: Optional[datetime] = Field(description="Authoring timestamp; null when unknown.")
+    created_by: Optional[StrictStr] = Field(description="Canonical author user ID; null when unknown.")
+    updated_at: Optional[datetime] = Field(description="Authoring timestamp; null when unknown.")
+    updated_by: Optional[StrictStr] = Field(description="Canonical author user ID; null when unknown.")
     ulid: Annotated[str, Field(strict=True)] = Field(description="Alert ULID")
     name: Annotated[str, Field(strict=True, max_length=200)] = Field(description="Human-readable alert name")
     description: Optional[StrictStr] = Field(default='', description="Optional description")
@@ -59,7 +61,7 @@ class CovalAlertsAPIAlertResource(BaseModel):
     create_time: datetime = Field(description="Creation timestamp")
     update_time: datetime = Field(description="Last update timestamp")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["attribution", "ulid", "name", "description", "status", "enabled", "evaluation_type", "conversation_source", "match_mode", "cooldown_seconds", "custom_message_template", "agent_ids", "required_tags", "scheduled_run_ids", "customer_metadata", "trigger_count", "last_triggered_at", "conditions", "channels", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["created_at", "created_by", "updated_at", "updated_by", "ulid", "name", "description", "status", "enabled", "evaluation_type", "conversation_source", "match_mode", "cooldown_seconds", "custom_message_template", "agent_ids", "required_tags", "scheduled_run_ids", "customer_metadata", "trigger_count", "last_triggered_at", "conditions", "channels", "create_time", "update_time"]
 
     @field_validator('ulid')
     def ulid_validate_regular_expression(cls, value):
@@ -109,10 +111,16 @@ class CovalAlertsAPIAlertResource(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
         * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
-            "attribution",
+            "created_at",
+            "created_by",
+            "updated_at",
+            "updated_by",
             "additional_properties",
         ])
 
@@ -121,9 +129,6 @@ class CovalAlertsAPIAlertResource(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of attribution
-        if self.attribution:
-            _dict['attribution'] = self.attribution.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each value in customer_metadata (dict)
         _field_dict = {}
         if self.customer_metadata:
@@ -150,10 +155,25 @@ class CovalAlertsAPIAlertResource(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if attribution (nullable) is None
+        # set to None if created_at (nullable) is None
         # and model_fields_set contains the field
-        if self.attribution is None and "attribution" in self.model_fields_set:
-            _dict['attribution'] = None
+        if self.created_at is None and "created_at" in self.model_fields_set:
+            _dict['created_at'] = None
+
+        # set to None if created_by (nullable) is None
+        # and model_fields_set contains the field
+        if self.created_by is None and "created_by" in self.model_fields_set:
+            _dict['created_by'] = None
+
+        # set to None if updated_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.updated_at is None and "updated_at" in self.model_fields_set:
+            _dict['updated_at'] = None
+
+        # set to None if updated_by (nullable) is None
+        # and model_fields_set contains the field
+        if self.updated_by is None and "updated_by" in self.model_fields_set:
+            _dict['updated_by'] = None
 
         # set to None if custom_message_template (nullable) is None
         # and model_fields_set contains the field
@@ -192,7 +212,10 @@ class CovalAlertsAPIAlertResource(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "attribution": CovalAlertsAPIResourceAttribution.from_dict(obj["attribution"]) if obj.get("attribution") is not None else None,
+            "created_at": obj.get("created_at"),
+            "created_by": obj.get("created_by"),
+            "updated_at": obj.get("updated_at"),
+            "updated_by": obj.get("updated_by"),
             "ulid": obj.get("ulid"),
             "name": obj.get("name"),
             "description": obj.get("description") if obj.get("description") is not None else '',

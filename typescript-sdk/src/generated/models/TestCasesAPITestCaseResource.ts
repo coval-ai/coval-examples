@@ -13,13 +13,6 @@
  */
 
 import { mapValues } from '../runtime.js';
-import type { TestCasesAPIResourceAttribution } from './TestCasesAPIResourceAttribution.js';
-import {
-    TestCasesAPIResourceAttributionFromJSON,
-    TestCasesAPIResourceAttributionFromJSONTyped,
-    TestCasesAPIResourceAttributionToJSON,
-    TestCasesAPIResourceAttributionToJSONTyped,
-} from './TestCasesAPIResourceAttribution.js';
 import type { TestCasesAPITestCaseResourceScriptTurnsInner } from './TestCasesAPITestCaseResourceScriptTurnsInner.js';
 import {
     TestCasesAPITestCaseResourceScriptTurnsInnerFromJSON,
@@ -35,11 +28,29 @@ import {
  */
 export interface TestCasesAPITestCaseResource {
     /**
-     * Authoring timestamps and user IDs. Unknown or deleted users are null.
-     * @type {TestCasesAPIResourceAttribution}
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
      * @memberof TestCasesAPITestCaseResource
      */
-    readonly attribution?: TestCasesAPIResourceAttribution | null;
+    readonly created_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof TestCasesAPITestCaseResource
+     */
+    readonly created_by: string | null;
+    /**
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
+     * @memberof TestCasesAPITestCaseResource
+     */
+    readonly updated_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof TestCasesAPITestCaseResource
+     */
+    readonly updated_by: string | null;
     /**
      * Resource name in format `test-cases/{id}`
      * @type {string}
@@ -148,6 +159,10 @@ export type TestCasesAPITestCaseResourceInputTypeEnum = typeof TestCasesAPITestC
  * Check if a given object implements the TestCasesAPITestCaseResource interface.
  */
 export function instanceOfTestCasesAPITestCaseResource(value: object): value is TestCasesAPITestCaseResource {
+    if (!('created_at' in value) || value['created_at'] === undefined) return false;
+    if (!('created_by' in value) || value['created_by'] === undefined) return false;
+    if (!('updated_at' in value) || value['updated_at'] === undefined) return false;
+    if (!('updated_by' in value) || value['updated_by'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('input_str' in value) || value['input_str'] === undefined) return false;
@@ -165,7 +180,10 @@ export function TestCasesAPITestCaseResourceFromJSONTyped(json: any, ignoreDiscr
     }
     return {
         
-        'attribution': json['attribution'] == null ? undefined : TestCasesAPIResourceAttributionFromJSON(json['attribution']),
+        'created_at': (json['created_at'] == null ? null : new Date(json['created_at'])),
+        'created_by': json['created_by'],
+        'updated_at': (json['updated_at'] == null ? null : new Date(json['updated_at'])),
+        'updated_by': json['updated_by'],
         'name': json['name'],
         'id': json['id'],
         'test_set_id': json['test_set_id'] == null ? undefined : json['test_set_id'],
@@ -187,7 +205,7 @@ export function TestCasesAPITestCaseResourceToJSON(json: any): TestCasesAPITestC
     return TestCasesAPITestCaseResourceToJSONTyped(json, false);
 }
 
-export function TestCasesAPITestCaseResourceToJSONTyped(value?: Omit<TestCasesAPITestCaseResource, 'attribution'> | null, ignoreDiscriminator: boolean = false): any {
+export function TestCasesAPITestCaseResourceToJSONTyped(value?: Omit<TestCasesAPITestCaseResource, 'created_at'|'created_by'|'updated_at'|'updated_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

@@ -24,7 +24,6 @@ from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
 from coval_sdk.models.coval_personas_api_audio_degradation_config import CovalPersonasAPIAudioDegradationConfig
 from coval_sdk.models.coval_personas_api_multi_phone_config import CovalPersonasAPIMultiPhoneConfig
-from coval_sdk.models.coval_personas_api_resource_attribution import CovalPersonasAPIResourceAttribution
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -33,7 +32,10 @@ class CovalPersonasAPIPersonaResource(BaseModel):
     """
     Persona resource representation returned by API responses.
     """ # noqa: E501
-    attribution: Optional[CovalPersonasAPIResourceAttribution] = Field(default=None, description="Authoring timestamps and user IDs. Unknown or deleted users are null.")
+    created_at: Optional[datetime] = Field(description="Authoring timestamp; null when unknown.")
+    created_by: Optional[StrictStr] = Field(description="Canonical author user ID; null when unknown.")
+    updated_at: Optional[datetime] = Field(description="Authoring timestamp; null when unknown.")
+    updated_by: Optional[StrictStr] = Field(description="Canonical author user ID; null when unknown.")
     silent_mode: Optional[StrictBool] = Field(default=None, description="Keep the persona silent for the whole simulation. Null clears the override.")
     multi_phone_config: Optional[CovalPersonasAPIMultiPhoneConfig] = Field(default=None, description="Caller number selection from GET /v1/personas/phone-numbers. Omit to let the simulation select a random available number. Null clears it.")
     initialization_parameters: Optional[Dict[str, Any]] = Field(default=None, description="Persona-level initialization parameters. Null clears; an empty object replaces existing parameters. String values substitute into the initialization payload as JSON-escaped text (quote the \"{{persona.key}}\" placeholder); all other JSON values substitute as their JSON encoding.")
@@ -61,7 +63,7 @@ class CovalPersonasAPIPersonaResource(BaseModel):
     create_time: datetime = Field(description="Persona creation timestamp (ISO 8601)")
     update_time: Optional[datetime] = Field(default=None, description="Last update timestamp (ISO 8601)")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["attribution", "silent_mode", "multi_phone_config", "initialization_parameters", "custom_persona_data", "voice", "custom_voice_id", "resource_name", "id", "name", "persona_prompt", "voice_name", "language_code", "background_sound", "background_sound_volume", "voice_volume", "voice_speed", "wait_seconds", "conversation_initiation", "interruption_rate", "multi_language_stt", "hold_music_timeout_seconds", "situate_speaker", "audio_degradation", "tags", "create_time", "update_time"]
+    __properties: ClassVar[List[str]] = ["created_at", "created_by", "updated_at", "updated_by", "silent_mode", "multi_phone_config", "initialization_parameters", "custom_persona_data", "voice", "custom_voice_id", "resource_name", "id", "name", "persona_prompt", "voice_name", "language_code", "background_sound", "background_sound_volume", "voice_volume", "voice_speed", "wait_seconds", "conversation_initiation", "interruption_rate", "multi_language_stt", "hold_music_timeout_seconds", "situate_speaker", "audio_degradation", "tags", "create_time", "update_time"]
 
     @field_validator('voice')
     def voice_validate_enum(cls, value):
@@ -147,10 +149,16 @@ class CovalPersonasAPIPersonaResource(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
         * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
-            "attribution",
+            "created_at",
+            "created_by",
+            "updated_at",
+            "updated_by",
             "additional_properties",
         ])
 
@@ -159,9 +167,6 @@ class CovalPersonasAPIPersonaResource(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of attribution
-        if self.attribution:
-            _dict['attribution'] = self.attribution.to_dict()
         # override the default output from pydantic by calling `to_dict()` of multi_phone_config
         if self.multi_phone_config:
             _dict['multi_phone_config'] = self.multi_phone_config.to_dict()
@@ -173,10 +178,25 @@ class CovalPersonasAPIPersonaResource(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if attribution (nullable) is None
+        # set to None if created_at (nullable) is None
         # and model_fields_set contains the field
-        if self.attribution is None and "attribution" in self.model_fields_set:
-            _dict['attribution'] = None
+        if self.created_at is None and "created_at" in self.model_fields_set:
+            _dict['created_at'] = None
+
+        # set to None if created_by (nullable) is None
+        # and model_fields_set contains the field
+        if self.created_by is None and "created_by" in self.model_fields_set:
+            _dict['created_by'] = None
+
+        # set to None if updated_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.updated_at is None and "updated_at" in self.model_fields_set:
+            _dict['updated_at'] = None
+
+        # set to None if updated_by (nullable) is None
+        # and model_fields_set contains the field
+        if self.updated_by is None and "updated_by" in self.model_fields_set:
+            _dict['updated_by'] = None
 
         # set to None if silent_mode (nullable) is None
         # and model_fields_set contains the field
@@ -290,7 +310,10 @@ class CovalPersonasAPIPersonaResource(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "attribution": CovalPersonasAPIResourceAttribution.from_dict(obj["attribution"]) if obj.get("attribution") is not None else None,
+            "created_at": obj.get("created_at"),
+            "created_by": obj.get("created_by"),
+            "updated_at": obj.get("updated_at"),
+            "updated_by": obj.get("updated_by"),
             "silent_mode": obj.get("silent_mode"),
             "multi_phone_config": CovalPersonasAPIMultiPhoneConfig.from_dict(obj["multi_phone_config"]) if obj.get("multi_phone_config") is not None else None,
             "initialization_parameters": obj.get("initialization_parameters"),

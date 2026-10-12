@@ -19,12 +19,13 @@ import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
 from coval_sdk.models.coval_metrics_api_agent_judge_frame_evidence_reference import CovalMetricsAPIAgentJudgeFrameEvidenceReference
+from coval_sdk.models.coval_metrics_api_agent_judge_metric_output_evidence_reference import CovalMetricsAPIAgentJudgeMetricOutputEvidenceReference
 from coval_sdk.models.coval_metrics_api_agent_judge_trace_span_evidence_reference import CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-COVALMETRICSAPIAGENTJUDGEEVIDENCEREFERENCE_ONE_OF_SCHEMAS = ["CovalMetricsAPIAgentJudgeFrameEvidenceReference", "CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference"]
+COVALMETRICSAPIAGENTJUDGEEVIDENCEREFERENCE_ONE_OF_SCHEMAS = ["CovalMetricsAPIAgentJudgeFrameEvidenceReference", "CovalMetricsAPIAgentJudgeMetricOutputEvidenceReference", "CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference"]
 
 class CovalMetricsAPIAgentJudgeEvidenceReference(BaseModel):
     """
@@ -34,8 +35,10 @@ class CovalMetricsAPIAgentJudgeEvidenceReference(BaseModel):
     oneof_schema_1_validator: Optional[CovalMetricsAPIAgentJudgeFrameEvidenceReference] = None
     # data type: CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference
     oneof_schema_2_validator: Optional[CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference] = None
-    actual_instance: Optional[Union[CovalMetricsAPIAgentJudgeFrameEvidenceReference, CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference]] = None
-    one_of_schemas: Set[str] = { "CovalMetricsAPIAgentJudgeFrameEvidenceReference", "CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference" }
+    # data type: CovalMetricsAPIAgentJudgeMetricOutputEvidenceReference
+    oneof_schema_3_validator: Optional[CovalMetricsAPIAgentJudgeMetricOutputEvidenceReference] = None
+    actual_instance: Optional[Union[CovalMetricsAPIAgentJudgeFrameEvidenceReference, CovalMetricsAPIAgentJudgeMetricOutputEvidenceReference, CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference]] = None
+    one_of_schemas: Set[str] = { "CovalMetricsAPIAgentJudgeFrameEvidenceReference", "CovalMetricsAPIAgentJudgeMetricOutputEvidenceReference", "CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -71,12 +74,17 @@ class CovalMetricsAPIAgentJudgeEvidenceReference(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference`")
         else:
             match += 1
+        # validate data type: CovalMetricsAPIAgentJudgeMetricOutputEvidenceReference
+        if not isinstance(v, CovalMetricsAPIAgentJudgeMetricOutputEvidenceReference):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `CovalMetricsAPIAgentJudgeMetricOutputEvidenceReference`")
+        else:
+            match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in CovalMetricsAPIAgentJudgeEvidenceReference with oneOf schemas: CovalMetricsAPIAgentJudgeFrameEvidenceReference, CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in CovalMetricsAPIAgentJudgeEvidenceReference with oneOf schemas: CovalMetricsAPIAgentJudgeFrameEvidenceReference, CovalMetricsAPIAgentJudgeMetricOutputEvidenceReference, CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in CovalMetricsAPIAgentJudgeEvidenceReference with oneOf schemas: CovalMetricsAPIAgentJudgeFrameEvidenceReference, CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in CovalMetricsAPIAgentJudgeEvidenceReference with oneOf schemas: CovalMetricsAPIAgentJudgeFrameEvidenceReference, CovalMetricsAPIAgentJudgeMetricOutputEvidenceReference, CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -103,13 +111,19 @@ class CovalMetricsAPIAgentJudgeEvidenceReference(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into CovalMetricsAPIAgentJudgeMetricOutputEvidenceReference
+        try:
+            instance.actual_instance = CovalMetricsAPIAgentJudgeMetricOutputEvidenceReference.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into CovalMetricsAPIAgentJudgeEvidenceReference with oneOf schemas: CovalMetricsAPIAgentJudgeFrameEvidenceReference, CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into CovalMetricsAPIAgentJudgeEvidenceReference with oneOf schemas: CovalMetricsAPIAgentJudgeFrameEvidenceReference, CovalMetricsAPIAgentJudgeMetricOutputEvidenceReference, CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into CovalMetricsAPIAgentJudgeEvidenceReference with oneOf schemas: CovalMetricsAPIAgentJudgeFrameEvidenceReference, CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into CovalMetricsAPIAgentJudgeEvidenceReference with oneOf schemas: CovalMetricsAPIAgentJudgeFrameEvidenceReference, CovalMetricsAPIAgentJudgeMetricOutputEvidenceReference, CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -123,7 +137,7 @@ class CovalMetricsAPIAgentJudgeEvidenceReference(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], CovalMetricsAPIAgentJudgeFrameEvidenceReference, CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], CovalMetricsAPIAgentJudgeFrameEvidenceReference, CovalMetricsAPIAgentJudgeMetricOutputEvidenceReference, CovalMetricsAPIAgentJudgeTraceSpanEvidenceReference]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

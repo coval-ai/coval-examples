@@ -13,14 +13,6 @@
  */
 
 import { mapValues } from '../runtime.js';
-import type { CovalDashboardsAPIResourceAttribution } from './CovalDashboardsAPIResourceAttribution.js';
-import {
-    CovalDashboardsAPIResourceAttributionFromJSON,
-    CovalDashboardsAPIResourceAttributionFromJSONTyped,
-    CovalDashboardsAPIResourceAttributionToJSON,
-    CovalDashboardsAPIResourceAttributionToJSONTyped,
-} from './CovalDashboardsAPIResourceAttribution.js';
-
 /**
  * Dashboard resource
  * @export
@@ -28,11 +20,29 @@ import {
  */
 export interface CovalDashboardsAPIDashboardResource {
     /**
-     * Authoring timestamps and user IDs. Unknown or deleted users are null.
-     * @type {CovalDashboardsAPIResourceAttribution}
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
      * @memberof CovalDashboardsAPIDashboardResource
      */
-    readonly attribution?: CovalDashboardsAPIResourceAttribution | null;
+    readonly created_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalDashboardsAPIDashboardResource
+     */
+    readonly created_by: string | null;
+    /**
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
+     * @memberof CovalDashboardsAPIDashboardResource
+     */
+    readonly updated_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalDashboardsAPIDashboardResource
+     */
+    readonly updated_by: string | null;
     /**
      * Resource name in format `dashboards/{id}`
      * @type {string}
@@ -93,6 +103,10 @@ export interface CovalDashboardsAPIDashboardResource {
  * Check if a given object implements the CovalDashboardsAPIDashboardResource interface.
  */
 export function instanceOfCovalDashboardsAPIDashboardResource(value: object): value is CovalDashboardsAPIDashboardResource {
+    if (!('created_at' in value) || value['created_at'] === undefined) return false;
+    if (!('created_by' in value) || value['created_by'] === undefined) return false;
+    if (!('updated_at' in value) || value['updated_at'] === undefined) return false;
+    if (!('updated_by' in value) || value['updated_by'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('create_time' in value) || value['create_time'] === undefined) return false;
     if (!('update_time' in value) || value['update_time'] === undefined) return false;
@@ -109,7 +123,10 @@ export function CovalDashboardsAPIDashboardResourceFromJSONTyped(json: any, igno
     }
     return {
         
-        'attribution': json['attribution'] == null ? undefined : CovalDashboardsAPIResourceAttributionFromJSON(json['attribution']),
+        'created_at': (json['created_at'] == null ? null : new Date(json['created_at'])),
+        'created_by': json['created_by'],
+        'updated_at': (json['updated_at'] == null ? null : new Date(json['updated_at'])),
+        'updated_by': json['updated_by'],
         'name': json['name'],
         'display_name': json['display_name'] == null ? undefined : json['display_name'],
         'description': json['description'] == null ? undefined : json['description'],
@@ -126,7 +143,7 @@ export function CovalDashboardsAPIDashboardResourceToJSON(json: any): CovalDashb
     return CovalDashboardsAPIDashboardResourceToJSONTyped(json, false);
 }
 
-export function CovalDashboardsAPIDashboardResourceToJSONTyped(value?: Omit<CovalDashboardsAPIDashboardResource, 'attribution'> | null, ignoreDiscriminator: boolean = false): any {
+export function CovalDashboardsAPIDashboardResourceToJSONTyped(value?: Omit<CovalDashboardsAPIDashboardResource, 'created_at'|'created_by'|'updated_at'|'updated_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
