@@ -67,8 +67,11 @@ COMPATIBILITY_MODEL_ALIASES = (
 )
 
 # Preserve omission for optional partial-update fields, regardless of OpenAPI defaults.
+# Update endpoints are PATCH, so a default the generator bakes into the request model is
+# sent on every update and overwrites the saved value.
 UPDATE_REQUEST_OMISSION_FIELDS = (
   ("coval_reviews_api_update_review_project_request.py", "enforced_collaboration"),
+  ("coval_reviews_api_update_review_project_request.py", "allow_metric_skipping"),
 )
 
 
