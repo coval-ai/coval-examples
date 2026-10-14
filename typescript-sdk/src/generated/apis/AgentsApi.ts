@@ -172,7 +172,7 @@ export interface AgentsApiInterface {
     duplicateAgentRequestOpts(requestParameters: DuplicateAgentOperationRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Clone an existing agent into a new agent owned by your organization. By default only the agent config is copied; set `include_associations` to also copy its metric and test-set associations. Returns the new agent in the same shape as create. 
+     * Clone an existing agent into a new agent owned by your organization. By default only the agent config is copied; set `include_associations` to also copy its metric and test-set associations. Returns the new agent in the same shape as create. If an organization-owned metric association contains invalid regex syntax, duplication returns INVALID_ARGUMENT identifying the source metric to correct. 
      * @summary Duplicate an agent
      * @param {string} agentId ID of the agent to duplicate
      * @param {DuplicateAgentRequest} [duplicateAgentRequest] 
@@ -183,7 +183,7 @@ export interface AgentsApiInterface {
     duplicateAgentRaw(requestParameters: DuplicateAgentOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalAgentsAPICreateAgentResponse>>;
 
     /**
-     * Clone an existing agent into a new agent owned by your organization. By default only the agent config is copied; set `include_associations` to also copy its metric and test-set associations. Returns the new agent in the same shape as create. 
+     * Clone an existing agent into a new agent owned by your organization. By default only the agent config is copied; set `include_associations` to also copy its metric and test-set associations. Returns the new agent in the same shape as create. If an organization-owned metric association contains invalid regex syntax, duplication returns INVALID_ARGUMENT identifying the source metric to correct. 
      * Duplicate an agent
      */
     duplicateAgent(requestParameters: DuplicateAgentOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalAgentsAPICreateAgentResponse>;
@@ -480,7 +480,7 @@ export class AgentsApi extends runtime.BaseAPI implements AgentsApiInterface {
     }
 
     /**
-     * Clone an existing agent into a new agent owned by your organization. By default only the agent config is copied; set `include_associations` to also copy its metric and test-set associations. Returns the new agent in the same shape as create. 
+     * Clone an existing agent into a new agent owned by your organization. By default only the agent config is copied; set `include_associations` to also copy its metric and test-set associations. Returns the new agent in the same shape as create. If an organization-owned metric association contains invalid regex syntax, duplication returns INVALID_ARGUMENT identifying the source metric to correct. 
      * Duplicate an agent
      */
     async duplicateAgentRaw(requestParameters: DuplicateAgentOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalAgentsAPICreateAgentResponse>> {
@@ -491,7 +491,7 @@ export class AgentsApi extends runtime.BaseAPI implements AgentsApiInterface {
     }
 
     /**
-     * Clone an existing agent into a new agent owned by your organization. By default only the agent config is copied; set `include_associations` to also copy its metric and test-set associations. Returns the new agent in the same shape as create. 
+     * Clone an existing agent into a new agent owned by your organization. By default only the agent config is copied; set `include_associations` to also copy its metric and test-set associations. Returns the new agent in the same shape as create. If an organization-owned metric association contains invalid regex syntax, duplication returns INVALID_ARGUMENT identifying the source metric to correct. 
      * Duplicate an agent
      */
     async duplicateAgent(requestParameters: DuplicateAgentOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalAgentsAPICreateAgentResponse> {

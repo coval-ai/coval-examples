@@ -36,6 +36,7 @@ class CovalReviewsAPIReviewAnnotationWithMetricVersionResource(BaseModel):
     id: StrictStr = Field(description="Unique annotation ID")
     simulation_output_id: StrictStr = Field(description="Linked simulation output ID")
     metric_id: StrictStr = Field(description="Linked metric ID")
+    assignee_user_id: Optional[StrictStr] = Field(default=None, description="Canonical Coval reviewer User ULID; null means reviewer attribution is unresolved.")
     assignee: StrictStr = Field(description="Email of the assigned reviewer")
     ground_truth_float_value: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Reviewer-provided ground truth numeric value")
     ground_truth_string_value: Optional[StrictStr] = Field(default=None, description="Reviewer-provided ground truth string value")
@@ -54,7 +55,7 @@ class CovalReviewsAPIReviewAnnotationWithMetricVersionResource(BaseModel):
     metric_version_number: Optional[StrictInt] = None
     metric_version_ulid: Optional[StrictStr] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "id", "simulation_output_id", "metric_id", "assignee", "ground_truth_float_value", "ground_truth_string_value", "ground_truth_subvalues_by_timestamp", "reviewer_notes", "status", "completion_status", "priority", "create_time", "update_time", "annotations", "canonical_annotation_id", "ground_truth_json", "ground_truth_set_value", "project_annotation_id", "metric_version_number", "metric_version_ulid"]
+    __properties: ClassVar[List[str]] = ["name", "id", "simulation_output_id", "metric_id", "assignee_user_id", "assignee", "ground_truth_float_value", "ground_truth_string_value", "ground_truth_subvalues_by_timestamp", "reviewer_notes", "status", "completion_status", "priority", "create_time", "update_time", "annotations", "canonical_annotation_id", "ground_truth_json", "ground_truth_set_value", "project_annotation_id", "metric_version_number", "metric_version_ulid"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -101,6 +102,11 @@ class CovalReviewsAPIReviewAnnotationWithMetricVersionResource(BaseModel):
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
+
+        # set to None if assignee_user_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.assignee_user_id is None and "assignee_user_id" in self.model_fields_set:
+            _dict['assignee_user_id'] = None
 
         # set to None if ground_truth_float_value (nullable) is None
         # and model_fields_set contains the field
@@ -173,6 +179,7 @@ class CovalReviewsAPIReviewAnnotationWithMetricVersionResource(BaseModel):
             "id": obj.get("id"),
             "simulation_output_id": obj.get("simulation_output_id"),
             "metric_id": obj.get("metric_id"),
+            "assignee_user_id": obj.get("assignee_user_id"),
             "assignee": obj.get("assignee"),
             "ground_truth_float_value": obj.get("ground_truth_float_value"),
             "ground_truth_string_value": obj.get("ground_truth_string_value"),

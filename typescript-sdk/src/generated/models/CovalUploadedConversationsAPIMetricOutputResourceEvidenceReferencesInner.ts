@@ -26,13 +26,20 @@ import {
     CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1FromJSONTyped,
     CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1ToJSON,
 } from './CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1.js';
+import type { CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2 } from './CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2.js';
+import {
+    instanceOfCovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2,
+    CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2FromJSON,
+    CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2FromJSONTyped,
+    CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2ToJSON,
+} from './CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2.js';
 
 /**
  * @type CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInner
  * 
  * @export
  */
-export type CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInner = CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf | CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1;
+export type CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInner = CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf | CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1 | CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2;
 
 export function CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerFromJSON(json: any): CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInner {
     return CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerFromJSONTyped(json, false);
@@ -50,6 +57,9 @@ export function CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferen
     }
     if (instanceOfCovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1(json)) {
         return CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1FromJSONTyped(json, true);
+    }
+    if (instanceOfCovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2(json)) {
+        return CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2FromJSONTyped(json, true);
     }
     return {} as any;
 }
@@ -70,6 +80,9 @@ export function CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferen
     }
     if (instanceOfCovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1(value)) {
         return CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1ToJSON(value as CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf1);
+    }
+    if (instanceOfCovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2(value)) {
+        return CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2ToJSON(value as CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInnerOneOf2);
     }
     return {};
 }

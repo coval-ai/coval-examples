@@ -18,23 +18,22 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
 
-class CovalDashboardsAPIResourceAttribution(BaseModel):
+class CovalMetricsAPIIvrFlowNodesInnerPromptVariablesValue(BaseModel):
     """
-    Authoring timestamps and nullable user IDs; unknown users remain null.
+    CovalMetricsAPIIvrFlowNodesInnerPromptVariablesValue
     """ # noqa: E501
-    created_at: Optional[datetime] = None
-    created_by: Optional[StrictStr] = None
-    updated_at: Optional[datetime] = None
-    updated_by: Optional[StrictStr] = None
+    pattern: Annotated[str, Field(min_length=1, strict=True, max_length=512)] = Field(description="Full-match regex on normalized slot text. Each evaluation has a 50 ms deadline.")
+    max_characters: Optional[Annotated[int, Field(le=256, strict=True, ge=1)]] = 64
+    max_tokens: Optional[Annotated[int, Field(le=32, strict=True, ge=1)]] = 8
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["created_at", "created_by", "updated_at", "updated_by"]
+    __properties: ClassVar[List[str]] = ["pattern", "max_characters", "max_tokens"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -54,7 +53,7 @@ class CovalDashboardsAPIResourceAttribution(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CovalDashboardsAPIResourceAttribution from a JSON string"""
+        """Create an instance of CovalMetricsAPIIvrFlowNodesInnerPromptVariablesValue from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -82,31 +81,11 @@ class CovalDashboardsAPIResourceAttribution(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if created_at (nullable) is None
-        # and model_fields_set contains the field
-        if self.created_at is None and "created_at" in self.model_fields_set:
-            _dict['created_at'] = None
-
-        # set to None if created_by (nullable) is None
-        # and model_fields_set contains the field
-        if self.created_by is None and "created_by" in self.model_fields_set:
-            _dict['created_by'] = None
-
-        # set to None if updated_at (nullable) is None
-        # and model_fields_set contains the field
-        if self.updated_at is None and "updated_at" in self.model_fields_set:
-            _dict['updated_at'] = None
-
-        # set to None if updated_by (nullable) is None
-        # and model_fields_set contains the field
-        if self.updated_by is None and "updated_by" in self.model_fields_set:
-            _dict['updated_by'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CovalDashboardsAPIResourceAttribution from a dict"""
+        """Create an instance of CovalMetricsAPIIvrFlowNodesInnerPromptVariablesValue from a dict"""
         if obj is None:
             return None
 
@@ -114,10 +93,9 @@ class CovalDashboardsAPIResourceAttribution(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "created_at": obj.get("created_at"),
-            "created_by": obj.get("created_by"),
-            "updated_at": obj.get("updated_at"),
-            "updated_by": obj.get("updated_by")
+            "pattern": obj.get("pattern"),
+            "max_characters": obj.get("max_characters") if obj.get("max_characters") is not None else 64,
+            "max_tokens": obj.get("max_tokens") if obj.get("max_tokens") is not None else 8
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

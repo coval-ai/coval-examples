@@ -23,7 +23,6 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, Strict
 from typing import Any, ClassVar, Dict, List, Optional
 from coval_sdk.models.coval_reviews_api_project_rule import CovalReviewsAPIProjectRule
 from coval_sdk.models.coval_reviews_api_project_type import CovalReviewsAPIProjectType
-from coval_sdk.models.coval_reviews_api_resource_attribution import CovalReviewsAPIResourceAttribution
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -32,7 +31,12 @@ class CovalReviewsAPIReviewProjectResource(BaseModel):
     """
     A single review project resource.
     """ # noqa: E501
-    attribution: Optional[CovalReviewsAPIResourceAttribution] = Field(default=None, description="Authoring timestamps and user IDs. Unknown or deleted users are null.")
+    reviewer_user_ids: Optional[Dict[str, StrictStr]] = Field(default=None, description="Verified Coval User IDs keyed by compatibility reviewer email; missing entries remain unresolved.")
+    opted_out_assignee_user_ids: Optional[List[StrictStr]] = Field(default=None, description="Verified assigned reviewer IDs currently opting out of notifications.")
+    created_at: Optional[datetime] = Field(description="Authoring timestamp; null when unknown.")
+    created_by: Optional[StrictStr] = Field(description="Canonical author user ID; null when unknown.")
+    updated_at: Optional[datetime] = Field(description="Authoring timestamp; null when unknown.")
+    updated_by: Optional[StrictStr] = Field(description="Canonical author user ID; null when unknown.")
     name: StrictStr = Field(description="Resource name: review-projects/{id}")
     id: StrictStr = Field(description="Unique project ID (ULID)")
     display_name: StrictStr = Field(description="Human-readable project name")
@@ -44,16 +48,18 @@ class CovalReviewsAPIReviewProjectResource(BaseModel):
     notifications: StrictBool = Field(description="Whether notifications are enabled")
     project_rules: Optional[List[CovalReviewsAPIProjectRule]] = Field(default=None, description="Rules applied to this project (e.g. require notes on disagreement)")
     enforced_collaboration: Optional[StrictBool] = Field(default=False, description="Whether collaborative claims and explicit single-author completion are enforced")
+    allow_metric_skipping: Optional[StrictBool] = Field(default=False, description="Allow reviewers to skip linked metrics")
     create_time: datetime = Field(description="Creation timestamp (ISO 8601)")
     update_time: datetime = Field(description="Last update timestamp (ISO 8601)")
     blind_labeling_shown_metric_ids: Optional[List[StrictStr]] = None
     linked_metric_count: Optional[StrictInt] = 0
     linked_simulation_count: Optional[StrictInt] = 0
+    review_label_enabled: Optional[StrictBool] = Field(default=None, description="False pauses conversation triage for everyone while preserving categories, modes, and saved labels. True enables triage. Null uses legacy configuration-based activation.")
     review_label_input_mode: Optional[StrictStr] = None
     review_label_options: Optional[List[StrictStr]] = None
     review_label_selection_mode: Optional[StrictStr] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["attribution", "name", "id", "display_name", "description", "assignees", "linked_simulation_ids", "linked_metric_ids", "project_type", "notifications", "project_rules", "enforced_collaboration", "create_time", "update_time", "blind_labeling_shown_metric_ids", "linked_metric_count", "linked_simulation_count", "review_label_input_mode", "review_label_options", "review_label_selection_mode"]
+    __properties: ClassVar[List[str]] = ["reviewer_user_ids", "opted_out_assignee_user_ids", "created_at", "created_by", "updated_at", "updated_by", "name", "id", "display_name", "description", "assignees", "linked_simulation_ids", "linked_metric_ids", "project_type", "notifications", "project_rules", "enforced_collaboration", "allow_metric_skipping", "create_time", "update_time", "blind_labeling_shown_metric_ids", "linked_metric_count", "linked_simulation_count", "review_label_enabled", "review_label_input_mode", "review_label_options", "review_label_selection_mode"]
 
     @field_validator('review_label_input_mode')
     def review_label_input_mode_validate_enum(cls, value):
@@ -106,10 +112,16 @@ class CovalReviewsAPIReviewProjectResource(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
         * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
-            "attribution",
+            "created_at",
+            "created_by",
+            "updated_at",
+            "updated_by",
             "additional_properties",
         ])
 
@@ -118,18 +130,30 @@ class CovalReviewsAPIReviewProjectResource(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of attribution
-        if self.attribution:
-            _dict['attribution'] = self.attribution.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if attribution (nullable) is None
+        # set to None if created_at (nullable) is None
         # and model_fields_set contains the field
-        if self.attribution is None and "attribution" in self.model_fields_set:
-            _dict['attribution'] = None
+        if self.created_at is None and "created_at" in self.model_fields_set:
+            _dict['created_at'] = None
+
+        # set to None if created_by (nullable) is None
+        # and model_fields_set contains the field
+        if self.created_by is None and "created_by" in self.model_fields_set:
+            _dict['created_by'] = None
+
+        # set to None if updated_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.updated_at is None and "updated_at" in self.model_fields_set:
+            _dict['updated_at'] = None
+
+        # set to None if updated_by (nullable) is None
+        # and model_fields_set contains the field
+        if self.updated_by is None and "updated_by" in self.model_fields_set:
+            _dict['updated_by'] = None
 
         # set to None if description (nullable) is None
         # and model_fields_set contains the field
@@ -145,6 +169,11 @@ class CovalReviewsAPIReviewProjectResource(BaseModel):
         # and model_fields_set contains the field
         if self.blind_labeling_shown_metric_ids is None and "blind_labeling_shown_metric_ids" in self.model_fields_set:
             _dict['blind_labeling_shown_metric_ids'] = None
+
+        # set to None if review_label_enabled (nullable) is None
+        # and model_fields_set contains the field
+        if self.review_label_enabled is None and "review_label_enabled" in self.model_fields_set:
+            _dict['review_label_enabled'] = None
 
         # set to None if review_label_input_mode (nullable) is None
         # and model_fields_set contains the field
@@ -168,7 +197,12 @@ class CovalReviewsAPIReviewProjectResource(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "attribution": CovalReviewsAPIResourceAttribution.from_dict(obj["attribution"]) if obj.get("attribution") is not None else None,
+            "reviewer_user_ids": obj.get("reviewer_user_ids"),
+            "opted_out_assignee_user_ids": obj.get("opted_out_assignee_user_ids"),
+            "created_at": obj.get("created_at"),
+            "created_by": obj.get("created_by"),
+            "updated_at": obj.get("updated_at"),
+            "updated_by": obj.get("updated_by"),
             "name": obj.get("name"),
             "id": obj.get("id"),
             "display_name": obj.get("display_name"),
@@ -180,11 +214,13 @@ class CovalReviewsAPIReviewProjectResource(BaseModel):
             "notifications": obj.get("notifications"),
             "project_rules": obj.get("project_rules"),
             "enforced_collaboration": obj.get("enforced_collaboration") if obj.get("enforced_collaboration") is not None else False,
+            "allow_metric_skipping": obj.get("allow_metric_skipping") if obj.get("allow_metric_skipping") is not None else False,
             "create_time": obj.get("create_time"),
             "update_time": obj.get("update_time"),
             "blind_labeling_shown_metric_ids": obj.get("blind_labeling_shown_metric_ids"),
             "linked_metric_count": obj.get("linked_metric_count") if obj.get("linked_metric_count") is not None else 0,
             "linked_simulation_count": obj.get("linked_simulation_count") if obj.get("linked_simulation_count") is not None else 0,
+            "review_label_enabled": obj.get("review_label_enabled"),
             "review_label_input_mode": obj.get("review_label_input_mode"),
             "review_label_options": obj.get("review_label_options"),
             "review_label_selection_mode": obj.get("review_label_selection_mode")

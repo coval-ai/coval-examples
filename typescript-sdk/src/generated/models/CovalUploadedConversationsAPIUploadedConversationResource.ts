@@ -64,6 +64,12 @@ import {
  */
 export interface CovalUploadedConversationsAPIUploadedConversationResource {
     /**
+     * Effective authorized workspace for a single-resource GET. Derived from the owning run; legacy unassigned runs use the authenticated default workspace after access checks. Null means no workspace proof is supplied, including other resource views.
+     * @type {string}
+     * @memberof CovalUploadedConversationsAPIUploadedConversationResource
+     */
+    workspace_id?: string | null;
+    /**
      * Resource name in format "conversations/{conversation_id}"
      * @type {string}
      * @memberof CovalUploadedConversationsAPIUploadedConversationResource
@@ -216,6 +222,7 @@ export function CovalUploadedConversationsAPIUploadedConversationResourceFromJSO
     }
     return {
         
+        'workspace_id': json['workspace_id'] == null ? undefined : json['workspace_id'],
         'name': json['name'],
         'conversation_id': json['conversation_id'],
         'status': CovalUploadedConversationsAPIConversationStatusFromJSON(json['status']),
@@ -249,6 +256,7 @@ export function CovalUploadedConversationsAPIUploadedConversationResourceToJSONT
 
     return {
         
+        'workspace_id': value['workspace_id'],
         'name': value['name'],
         'conversation_id': value['conversation_id'],
         'status': CovalUploadedConversationsAPIConversationStatusToJSON(value['status']),

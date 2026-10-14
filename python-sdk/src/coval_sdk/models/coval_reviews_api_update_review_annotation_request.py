@@ -33,7 +33,7 @@ class CovalReviewsAPIUpdateReviewAnnotationRequest(BaseModel):
     ground_truth_string_value: Optional[StrictStr] = Field(default=None, description="Ground truth string value (auto-completes annotation)")
     ground_truth_subvalues_by_timestamp: Optional[List[Dict[str, Any]]] = Field(default=None, description="Ground truth subvalues")
     reviewer_notes: Optional[StrictStr] = Field(default=None, description="Reviewer notes")
-    priority: Optional[CovalReviewsAPIAnnotationPriority] = CovalReviewsAPIAnnotationPriority.PRIORITY_STANDARD
+    priority: Optional[CovalReviewsAPIAnnotationPriority] = None
     assignee: Optional[StrictStr] = Field(default=None, description="Reassign to a different reviewer")
     annotations: Optional[Any] = None
     ground_truth_json: Optional[Any] = None
@@ -143,7 +143,7 @@ class CovalReviewsAPIUpdateReviewAnnotationRequest(BaseModel):
             "ground_truth_string_value": obj.get("ground_truth_string_value"),
             "ground_truth_subvalues_by_timestamp": obj.get("ground_truth_subvalues_by_timestamp"),
             "reviewer_notes": obj.get("reviewer_notes"),
-            "priority": obj.get("priority") if obj.get("priority") is not None else CovalReviewsAPIAnnotationPriority.PRIORITY_STANDARD,
+            "priority": obj.get("priority"),
             "assignee": obj.get("assignee"),
             "annotations": obj.get("annotations"),
             "ground_truth_json": obj.get("ground_truth_json"),

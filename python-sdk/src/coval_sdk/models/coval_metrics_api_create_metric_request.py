@@ -22,6 +22,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, Stri
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
 from coval_sdk.models.coval_metrics_api_agent_judge_tool import CovalMetricsAPIAgentJudgeTool
+from coval_sdk.models.coval_metrics_api_audio_filter_config import CovalMetricsAPIAudioFilterConfig
 from coval_sdk.models.coval_metrics_api_create_metric_request_expected_body import CovalMetricsAPICreateMetricRequestExpectedBody
 from coval_sdk.models.coval_metrics_api_ivr_flow import CovalMetricsAPIIvrFlow
 from coval_sdk.models.coval_metrics_api_judge_mode import CovalMetricsAPIJudgeMode
@@ -43,6 +44,7 @@ class CovalMetricsAPICreateMetricRequest(BaseModel):
     judge_mode: Optional[CovalMetricsAPIJudgeMode] = Field(default='STANDARD', description="LLM Judge execution mode. Agentic mode is available for text LLM Judges only.")
     prompt: Optional[StrictStr] = Field(default=None, description="LLM evaluation prompt. Required for LLM-based metrics.")
     enabled_tools: Optional[List[CovalMetricsAPIAgentJudgeTool]] = Field(default=None, description="Agentic LLM Judge tools. Omit to use V1 defaults; pass an empty list to disable all tools.")
+    dependency_metric_ids: Optional[Annotated[List[Annotated[str, Field(min_length=1, strict=True)]], Field(max_length=10)]] = Field(default=None, description="Agent Judge metric dependencies. Omit for none; dependencies must be selected explicitly in runs.")
     categories: Optional[Annotated[List[StrictStr], Field(min_length=2, max_length=50)]] = Field(default=None, description="Categories for classification. Required for categorical metrics.")
     min_value: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum score. Required for numerical metrics.")
     max_value: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Maximum score. Required for numerical metrics.")
@@ -74,6 +76,7 @@ class CovalMetricsAPICreateMetricRequest(BaseModel):
     reporting_method: Optional[StrictStr] = Field(default=None, description="How per-criterion verdicts aggregate into the metric's value. Each criterion is judged independently as met or not met; `percentage_of_criteria_met` scores the fraction met among the criteria the judge could evaluate. ")
     base_prompt_template: Optional[Annotated[str, Field(strict=True, max_length=50000)]] = Field(default=None, description="Custom prompt template used to evaluate each criterion. Include a `{criterion}` placeholder; if it is omitted the criterion is appended to the prompt. ")
     include_traces: Optional[StrictBool] = Field(default=None, description="Inject OTel trace context into the LLM judge prompt during evaluation. Supported for LLM judge metric types and `METRIC_COMPOSITE_EVALUATION` (`METRIC_LLM_BINARY`, `METRIC_CATEGORICAL`, `METRIC_NUMERICAL_LLM_JUDGE`, `METRIC_AUDIO_LLM_BINARY`, `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`, `METRIC_COMPOSITE_EVALUATION`). ")
+    audio_filter: Optional[CovalMetricsAPIAudioFilterConfig] = Field(default=None, description="Restrict an audio metric to part of the recording, for example only the caller with `{\"include\": [{\"type\": \"speaker\", \"speakers\": [\"persona\"]}]}`. Omit or send `null` to use the metric's default scope. Supported for `METRIC_ABRUPT_PITCH_CHANGES`, `METRIC_AUDIO_LLM_BINARY`, `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`, `METRIC_CLIPPING_ARTIFACT`, `METRIC_CODEC_ARTIFACT`, `METRIC_CUSTOM_AGENT_NEEDS_REPROMPTING`, `METRIC_CUSTOM_AUDIO_FREQUENCY`, `METRIC_CUSTOM_AUDIO_SENTIMENT`, `METRIC_DROPOUT_ARTIFACT`, `METRIC_LOOP_DETECTION`, `METRIC_LUFS`, `METRIC_NON_EXPRESSIVE_PAUSES`, `METRIC_PAUSE_ANALYSIS`, `METRIC_PHONEME_STRETCH`, `METRIC_PITCH_VARIABILITY`, `METRIC_SPEAKING_TIME_PERCENTAGE`, `METRIC_SPECTROGRAM_PITCH_ANALYSIS`, `METRIC_SPEECH_ARTIFACT_ANOMALY`, `METRIC_SYLLABLE_RATE`, `METRIC_TERMINAL_CONTOUR`, `METRIC_TIMBRE_DRIFT`, `METRIC_VOCAL_FRY`, `METRIC_VOICE_QUALITY`, `METRIC_VOLUME`, `METRIC_VOLUME_PITCH_MISALIGNMENT`; rejected with 400 for any other type. ")
     runtime_config: Optional[CovalMetricsAPIMetricRuntimeConfig] = Field(default=None, description="Override the LLM model used for metric evaluation. If omitted, the platform default model is used. Use `GET /v1/models/metric` to list available models. Not supported for audio metric types (`METRIC_AUDIO_LLM_BINARY`, `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`), which always use the platform-default audio model. ")
     target_condition: Optional[CovalMetricsAPITargetCondition] = Field(default=None, description="Target condition for metric evaluation")
     tags: Optional[List[StrictStr]] = Field(default=None, description="Tags to associate with this metric. Null or omitted creates the metric with no tags. Pass [] for an empty tag list.")
@@ -97,7 +100,7 @@ class CovalMetricsAPICreateMetricRequest(BaseModel):
     threshold_preset: Optional[StrictStr] = Field(default=None, description="METRIC_VOLUME threshold preset (recommended). 'strict' flags more level outliers, 'normal' is the default, 'lenient' flags fewer. Omit to use 'normal'.")
     value_source: Optional[StrictStr] = Field(default=None, description="Source of the aggregated value for METRIC_CUSTOM_TRACE: 'attribute' (default) reads the configured span attribute; 'duration' aggregates the span's own duration in seconds.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["metric_name", "description", "metric_type", "judge_mode", "prompt", "enabled_tools", "categories", "min_value", "max_value", "metadata_field_type", "metadata_field_key", "regex_pattern", "role", "min_pause_duration_seconds", "max_silence_duration_seconds", "min_silence_gap_seconds", "frequency_threshold", "direction", "success_sentiments", "percent_above", "success_end_reasons", "observation_name", "expected_body", "match_path", "min_volume_change_for_pitch_misalignment", "threshold", "operator", "ivr_flow", "sql_query", "aggregation_method", "unit", "criteria_source", "criteria_path", "criteria", "reporting_method", "base_prompt_template", "include_traces", "runtime_config", "target_condition", "tags", "case_insensitive", "detection_preset", "harmonics_to_noise_ratio_threshold_offset_db", "jitter_threshold_multiplier", "loud_threshold_db", "low_pitch_threshold_multiplier", "mad_z_score_threshold", "match_mode", "metric_attribute", "metric_metadata", "min_fry_segment_seconds", "pause_detection_preset", "pitch_change_threshold_hz", "position", "significant_changes_threshold_hz", "soft_threshold_db", "span_name", "threshold_preset", "value_source"]
+    __properties: ClassVar[List[str]] = ["metric_name", "description", "metric_type", "judge_mode", "prompt", "enabled_tools", "dependency_metric_ids", "categories", "min_value", "max_value", "metadata_field_type", "metadata_field_key", "regex_pattern", "role", "min_pause_duration_seconds", "max_silence_duration_seconds", "min_silence_gap_seconds", "frequency_threshold", "direction", "success_sentiments", "percent_above", "success_end_reasons", "observation_name", "expected_body", "match_path", "min_volume_change_for_pitch_misalignment", "threshold", "operator", "ivr_flow", "sql_query", "aggregation_method", "unit", "criteria_source", "criteria_path", "criteria", "reporting_method", "base_prompt_template", "include_traces", "audio_filter", "runtime_config", "target_condition", "tags", "case_insensitive", "detection_preset", "harmonics_to_noise_ratio_threshold_offset_db", "jitter_threshold_multiplier", "loud_threshold_db", "low_pitch_threshold_multiplier", "mad_z_score_threshold", "match_mode", "metric_attribute", "metric_metadata", "min_fry_segment_seconds", "pause_detection_preset", "pitch_change_threshold_hz", "position", "significant_changes_threshold_hz", "soft_threshold_db", "span_name", "threshold_preset", "value_source"]
 
     @field_validator('role')
     def role_validate_enum(cls, value):
@@ -268,6 +271,9 @@ class CovalMetricsAPICreateMetricRequest(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of ivr_flow
         if self.ivr_flow:
             _dict['ivr_flow'] = self.ivr_flow.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of audio_filter
+        if self.audio_filter:
+            _dict['audio_filter'] = self.audio_filter.to_dict()
         # override the default output from pydantic by calling `to_dict()` of runtime_config
         if self.runtime_config:
             _dict['runtime_config'] = self.runtime_config.to_dict()
@@ -284,6 +290,11 @@ class CovalMetricsAPICreateMetricRequest(BaseModel):
         if self.enabled_tools is None and "enabled_tools" in self.model_fields_set:
             _dict['enabled_tools'] = None
 
+        # set to None if dependency_metric_ids (nullable) is None
+        # and model_fields_set contains the field
+        if self.dependency_metric_ids is None and "dependency_metric_ids" in self.model_fields_set:
+            _dict['dependency_metric_ids'] = None
+
         # set to None if aggregation_method (nullable) is None
         # and model_fields_set contains the field
         if self.aggregation_method is None and "aggregation_method" in self.model_fields_set:
@@ -293,6 +304,11 @@ class CovalMetricsAPICreateMetricRequest(BaseModel):
         # and model_fields_set contains the field
         if self.unit is None and "unit" in self.model_fields_set:
             _dict['unit'] = None
+
+        # set to None if audio_filter (nullable) is None
+        # and model_fields_set contains the field
+        if self.audio_filter is None and "audio_filter" in self.model_fields_set:
+            _dict['audio_filter'] = None
 
         # set to None if target_condition (nullable) is None
         # and model_fields_set contains the field
@@ -417,6 +433,7 @@ class CovalMetricsAPICreateMetricRequest(BaseModel):
             "judge_mode": obj.get("judge_mode") if obj.get("judge_mode") is not None else 'STANDARD',
             "prompt": obj.get("prompt"),
             "enabled_tools": obj.get("enabled_tools"),
+            "dependency_metric_ids": obj.get("dependency_metric_ids"),
             "categories": obj.get("categories"),
             "min_value": obj.get("min_value"),
             "max_value": obj.get("max_value"),
@@ -448,6 +465,7 @@ class CovalMetricsAPICreateMetricRequest(BaseModel):
             "reporting_method": obj.get("reporting_method"),
             "base_prompt_template": obj.get("base_prompt_template"),
             "include_traces": obj.get("include_traces"),
+            "audio_filter": CovalMetricsAPIAudioFilterConfig.from_dict(obj["audio_filter"]) if obj.get("audio_filter") is not None else None,
             "runtime_config": CovalMetricsAPIMetricRuntimeConfig.from_dict(obj["runtime_config"]) if obj.get("runtime_config") is not None else None,
             "target_condition": CovalMetricsAPITargetCondition.from_dict(obj["target_condition"]) if obj.get("target_condition") is not None else None,
             "tags": obj.get("tags"),

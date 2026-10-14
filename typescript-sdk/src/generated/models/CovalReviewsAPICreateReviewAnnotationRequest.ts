@@ -32,11 +32,17 @@ export interface CovalReviewsAPICreateReviewAnnotationRequest {
      */
     metric_id: string;
     /**
-     * Email of the reviewer to assign
+     * Optional Coval reviewer User ULID, validated against organization membership. Null preserves email-based writes or uses authenticated self-review.
      * @type {string}
      * @memberof CovalReviewsAPICreateReviewAnnotationRequest
      */
-    assignee: string;
+    assignee_user_id?: string | null;
+    /**
+     * Legacy reviewer email; accepted without a matching user. New answers receive a User ID when safely resolved.
+     * @type {string}
+     * @memberof CovalReviewsAPICreateReviewAnnotationRequest
+     */
+    assignee?: string | null;
     /**
      * Optional ground truth numeric value (auto-completes annotation)
      * @type {number}
@@ -87,7 +93,6 @@ export interface CovalReviewsAPICreateReviewAnnotationRequest {
 export function instanceOfCovalReviewsAPICreateReviewAnnotationRequest(value: object): value is CovalReviewsAPICreateReviewAnnotationRequest {
     if (!('simulation_output_id' in value) || value['simulation_output_id'] === undefined) return false;
     if (!('metric_id' in value) || value['metric_id'] === undefined) return false;
-    if (!('assignee' in value) || value['assignee'] === undefined) return false;
     return true;
 }
 
@@ -103,7 +108,8 @@ export function CovalReviewsAPICreateReviewAnnotationRequestFromJSONTyped(json: 
         
         'simulation_output_id': json['simulation_output_id'],
         'metric_id': json['metric_id'],
-        'assignee': json['assignee'],
+        'assignee_user_id': json['assignee_user_id'] == null ? undefined : json['assignee_user_id'],
+        'assignee': json['assignee'] == null ? undefined : json['assignee'],
         'ground_truth_float_value': json['ground_truth_float_value'] == null ? undefined : json['ground_truth_float_value'],
         'ground_truth_string_value': json['ground_truth_string_value'] == null ? undefined : json['ground_truth_string_value'],
         'ground_truth_subvalues_by_timestamp': json['ground_truth_subvalues_by_timestamp'] == null ? undefined : json['ground_truth_subvalues_by_timestamp'],
@@ -127,6 +133,7 @@ export function CovalReviewsAPICreateReviewAnnotationRequestToJSONTyped(value?: 
         
         'simulation_output_id': value['simulation_output_id'],
         'metric_id': value['metric_id'],
+        'assignee_user_id': value['assignee_user_id'],
         'assignee': value['assignee'],
         'ground_truth_float_value': value['ground_truth_float_value'],
         'ground_truth_string_value': value['ground_truth_string_value'],

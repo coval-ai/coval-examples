@@ -28,6 +28,18 @@ import {
  */
 export interface CovalReviewsAPIUpdateReviewProjectRequest {
     /**
+     * Verified Coval reviewer User IDs, mutually exclusive with emails. Null leaves membership unchanged.
+     * @type {Array<string>}
+     * @memberof CovalReviewsAPIUpdateReviewProjectRequest
+     */
+    assignee_user_ids?: Array<string> | null;
+    /**
+     * Assigned reviewer IDs opting out of notifications, mutually exclusive with email opt-outs. Null leaves preferences unchanged; an empty list clears them. Authenticated users may change only their own preference.
+     * @type {Array<string>}
+     * @memberof CovalReviewsAPIUpdateReviewProjectRequest
+     */
+    opted_out_assignee_user_ids?: Array<string> | null;
+    /**
      * Updated project name
      * @type {string}
      * @memberof CovalReviewsAPIUpdateReviewProjectRequest
@@ -106,11 +118,23 @@ export interface CovalReviewsAPIUpdateReviewProjectRequest {
      */
     enforced_collaboration?: boolean;
     /**
+     * Allow reviewers to skip linked metrics
+     * @type {boolean}
+     * @memberof CovalReviewsAPIUpdateReviewProjectRequest
+     */
+    allow_metric_skipping?: boolean;
+    /**
      * 
      * @type {string}
      * @memberof CovalReviewsAPIUpdateReviewProjectRequest
      */
     project_type?: string | null;
+    /**
+     * False pauses conversation triage for everyone while preserving categories, modes, and saved labels. True enables triage. Null uses legacy configuration-based activation. Omission leaves the enabled state unchanged. For legacy clients, explicitly sending empty categories and both modes as null without this field pauses triage while preserving configuration. When all three configuration fields are supplied without this field, a valid enabled configuration is treated as enabled.
+     * @type {boolean}
+     * @memberof CovalReviewsAPIUpdateReviewProjectRequest
+     */
+    review_label_enabled?: boolean | null;
     /**
      * 
      * @type {CovalReviewsAPIUpdateReviewProjectRequestReviewLabelInputModeEnum}
@@ -178,6 +202,8 @@ export function CovalReviewsAPIUpdateReviewProjectRequestFromJSONTyped(json: any
     }
     return {
         
+        'assignee_user_ids': json['assignee_user_ids'] == null ? undefined : json['assignee_user_ids'],
+        'opted_out_assignee_user_ids': json['opted_out_assignee_user_ids'] == null ? undefined : json['opted_out_assignee_user_ids'],
         'display_name': json['display_name'] == null ? undefined : json['display_name'],
         'description': json['description'] == null ? undefined : json['description'],
         'assignees': json['assignees'] == null ? undefined : json['assignees'],
@@ -191,7 +217,9 @@ export function CovalReviewsAPIUpdateReviewProjectRequestFromJSONTyped(json: any
         'blind_labeling_shown_metric_ids': json['blind_labeling_shown_metric_ids'] == null ? undefined : json['blind_labeling_shown_metric_ids'],
         'opted_out_assignees': json['opted_out_assignees'] == null ? undefined : json['opted_out_assignees'],
         'enforced_collaboration': json['enforced_collaboration'] == null ? undefined : json['enforced_collaboration'],
+        'allow_metric_skipping': json['allow_metric_skipping'] == null ? undefined : json['allow_metric_skipping'],
         'project_type': json['project_type'] == null ? undefined : json['project_type'],
+        'review_label_enabled': json['review_label_enabled'] == null ? undefined : json['review_label_enabled'],
         'review_label_input_mode': json['review_label_input_mode'] == null ? undefined : json['review_label_input_mode'],
         'review_label_options': json['review_label_options'] == null ? undefined : json['review_label_options'],
         'review_label_selection_mode': json['review_label_selection_mode'] == null ? undefined : json['review_label_selection_mode'],
@@ -209,6 +237,8 @@ export function CovalReviewsAPIUpdateReviewProjectRequestToJSONTyped(value?: Cov
 
     return {
         
+        'assignee_user_ids': value['assignee_user_ids'],
+        'opted_out_assignee_user_ids': value['opted_out_assignee_user_ids'],
         'display_name': value['display_name'],
         'description': value['description'],
         'assignees': value['assignees'],
@@ -222,7 +252,9 @@ export function CovalReviewsAPIUpdateReviewProjectRequestToJSONTyped(value?: Cov
         'blind_labeling_shown_metric_ids': value['blind_labeling_shown_metric_ids'],
         'opted_out_assignees': value['opted_out_assignees'],
         'enforced_collaboration': value['enforced_collaboration'],
+        'allow_metric_skipping': value['allow_metric_skipping'],
         'project_type': value['project_type'],
+        'review_label_enabled': value['review_label_enabled'],
         'review_label_input_mode': value['review_label_input_mode'],
         'review_label_options': value['review_label_options'],
         'review_label_selection_mode': value['review_label_selection_mode'],

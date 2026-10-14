@@ -62,6 +62,13 @@ import {
     CovalMetricsAPIIvrFlowToJSON,
     CovalMetricsAPIIvrFlowToJSONTyped,
 } from './CovalMetricsAPIIvrFlow.js';
+import type { CovalMetricsAPIAudioFilterConfig } from './CovalMetricsAPIAudioFilterConfig.js';
+import {
+    CovalMetricsAPIAudioFilterConfigFromJSON,
+    CovalMetricsAPIAudioFilterConfigFromJSONTyped,
+    CovalMetricsAPIAudioFilterConfigToJSON,
+    CovalMetricsAPIAudioFilterConfigToJSONTyped,
+} from './CovalMetricsAPIAudioFilterConfig.js';
 import type { CovalMetricsAPIAgentJudgeTool } from './CovalMetricsAPIAgentJudgeTool.js';
 import {
     CovalMetricsAPIAgentJudgeToolFromJSON,
@@ -112,6 +119,12 @@ export interface CovalMetricsAPICreateMetricRequest {
      * @memberof CovalMetricsAPICreateMetricRequest
      */
     enabled_tools?: Array<CovalMetricsAPIAgentJudgeTool> | null;
+    /**
+     * Agent Judge metric dependencies. Omit for none; dependencies must be selected explicitly in runs.
+     * @type {Array<string>}
+     * @memberof CovalMetricsAPICreateMetricRequest
+     */
+    dependency_metric_ids?: Array<string> | null;
     /**
      * Categories for classification. Required for categorical metrics.
      * @type {Array<string>}
@@ -324,6 +337,15 @@ export interface CovalMetricsAPICreateMetricRequest {
      * @memberof CovalMetricsAPICreateMetricRequest
      */
     include_traces?: boolean;
+    /**
+     * Restrict an audio metric to part of the recording, for example only the caller with
+     * `{"include": [{"type": "speaker", "speakers": ["persona"]}]}`. Omit or send `null` to use the metric's
+     * default scope. Supported for `METRIC_ABRUPT_PITCH_CHANGES`, `METRIC_AUDIO_LLM_BINARY`, `METRIC_AUDIO_LLM_CATEGORICAL`, `METRIC_AUDIO_LLM_NUMERICAL`, `METRIC_CLIPPING_ARTIFACT`, `METRIC_CODEC_ARTIFACT`, `METRIC_CUSTOM_AGENT_NEEDS_REPROMPTING`, `METRIC_CUSTOM_AUDIO_FREQUENCY`, `METRIC_CUSTOM_AUDIO_SENTIMENT`, `METRIC_DROPOUT_ARTIFACT`, `METRIC_LOOP_DETECTION`, `METRIC_LUFS`, `METRIC_NON_EXPRESSIVE_PAUSES`, `METRIC_PAUSE_ANALYSIS`, `METRIC_PHONEME_STRETCH`, `METRIC_PITCH_VARIABILITY`, `METRIC_SPEAKING_TIME_PERCENTAGE`, `METRIC_SPECTROGRAM_PITCH_ANALYSIS`, `METRIC_SPEECH_ARTIFACT_ANOMALY`, `METRIC_SYLLABLE_RATE`, `METRIC_TERMINAL_CONTOUR`, `METRIC_TIMBRE_DRIFT`, `METRIC_VOCAL_FRY`, `METRIC_VOICE_QUALITY`, `METRIC_VOLUME`, `METRIC_VOLUME_PITCH_MISALIGNMENT`; rejected with 400 for any other type.
+     * 
+     * @type {CovalMetricsAPIAudioFilterConfig}
+     * @memberof CovalMetricsAPICreateMetricRequest
+     */
+    audio_filter?: CovalMetricsAPIAudioFilterConfig | null;
     /**
      * Override the LLM model used for metric evaluation. If omitted, the platform default
      * model is used. Use `GET /v1/models/metric` to list available models.
@@ -621,6 +643,7 @@ export function CovalMetricsAPICreateMetricRequestFromJSONTyped(json: any, ignor
         'judge_mode': json['judge_mode'] == null ? undefined : CovalMetricsAPIJudgeModeFromJSON(json['judge_mode']),
         'prompt': json['prompt'] == null ? undefined : json['prompt'],
         'enabled_tools': json['enabled_tools'] == null ? undefined : ((json['enabled_tools'] as Array<any>).map(CovalMetricsAPIAgentJudgeToolFromJSON)),
+        'dependency_metric_ids': json['dependency_metric_ids'] == null ? undefined : json['dependency_metric_ids'],
         'categories': json['categories'] == null ? undefined : json['categories'],
         'min_value': json['min_value'] == null ? undefined : json['min_value'],
         'max_value': json['max_value'] == null ? undefined : json['max_value'],
@@ -652,6 +675,7 @@ export function CovalMetricsAPICreateMetricRequestFromJSONTyped(json: any, ignor
         'reporting_method': json['reporting_method'] == null ? undefined : json['reporting_method'],
         'base_prompt_template': json['base_prompt_template'] == null ? undefined : json['base_prompt_template'],
         'include_traces': json['include_traces'] == null ? undefined : json['include_traces'],
+        'audio_filter': json['audio_filter'] == null ? undefined : CovalMetricsAPIAudioFilterConfigFromJSON(json['audio_filter']),
         'runtime_config': json['runtime_config'] == null ? undefined : CovalMetricsAPIMetricRuntimeConfigFromJSON(json['runtime_config']),
         'target_condition': json['target_condition'] == null ? undefined : CovalMetricsAPITargetConditionFromJSON(json['target_condition']),
         'tags': json['tags'] == null ? undefined : json['tags'],
@@ -694,6 +718,7 @@ export function CovalMetricsAPICreateMetricRequestToJSONTyped(value?: CovalMetri
         'judge_mode': CovalMetricsAPIJudgeModeToJSON(value['judge_mode']),
         'prompt': value['prompt'],
         'enabled_tools': value['enabled_tools'] == null ? undefined : ((value['enabled_tools'] as Array<any>).map(CovalMetricsAPIAgentJudgeToolToJSON)),
+        'dependency_metric_ids': value['dependency_metric_ids'],
         'categories': value['categories'],
         'min_value': value['min_value'],
         'max_value': value['max_value'],
@@ -725,6 +750,7 @@ export function CovalMetricsAPICreateMetricRequestToJSONTyped(value?: CovalMetri
         'reporting_method': value['reporting_method'],
         'base_prompt_template': value['base_prompt_template'],
         'include_traces': value['include_traces'],
+        'audio_filter': CovalMetricsAPIAudioFilterConfigToJSON(value['audio_filter']),
         'runtime_config': CovalMetricsAPIMetricRuntimeConfigToJSON(value['runtime_config']),
         'target_condition': CovalMetricsAPITargetConditionToJSON(value['target_condition']),
         'tags': value['tags'],

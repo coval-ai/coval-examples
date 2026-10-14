@@ -26,6 +26,7 @@ import {
 
 export interface ListAlertEventsRequest {
     alertId: string;
+    xCovalWorkspaceId?: string;
     outcome?: ListAlertEventsOutcomeEnum;
     pageSize?: number;
     pageToken?: string;
@@ -41,6 +42,7 @@ export interface AlertEventsApiInterface {
     /**
      * Creates request options for listAlertEvents without sending the request
      * @param {string} alertId Alert ULID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {'TRIGGERED' | 'NOT_MET' | 'SUPPRESSED' | 'ERROR'} [outcome] Filter events by outcome
      * @param {number} [pageSize] Number of results per page
      * @param {string} [pageToken] Token for fetching the next page of results
@@ -53,6 +55,7 @@ export interface AlertEventsApiInterface {
      * Returns evaluation events for an alert, ordered by most recent first.  Every run completion that evaluates this alert produces an event, regardless of outcome (TRIGGERED, NOT_MET, SUPPRESSED, ERROR). 
      * @summary List alert events
      * @param {string} alertId Alert ULID
+     * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
      * @param {'TRIGGERED' | 'NOT_MET' | 'SUPPRESSED' | 'ERROR'} [outcome] Filter events by outcome
      * @param {number} [pageSize] Number of results per page
      * @param {string} [pageToken] Token for fetching the next page of results
@@ -101,6 +104,10 @@ export class AlertEventsApi extends runtime.BaseAPI implements AlertEventsApiInt
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xCovalWorkspaceId'] != null) {
+            headerParameters['X-Coval-Workspace-Id'] = String(requestParameters['xCovalWorkspaceId']);
+        }
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Alerts_API_ApiKeyAuth authentication

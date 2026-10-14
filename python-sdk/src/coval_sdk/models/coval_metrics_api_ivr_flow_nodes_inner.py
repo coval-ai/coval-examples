@@ -18,8 +18,11 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing_extensions import Annotated
+from coval_sdk.models.coval_metrics_api_ivr_flow_nodes_inner_dtmf import CovalMetricsAPIIvrFlowNodesInnerDtmf
+from coval_sdk.models.coval_metrics_api_ivr_flow_nodes_inner_prompt_variables_value import CovalMetricsAPIIvrFlowNodesInnerPromptVariablesValue
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -29,11 +32,30 @@ class CovalMetricsAPIIvrFlowNodesInner(BaseModel):
     CovalMetricsAPIIvrFlowNodesInner
     """ # noqa: E501
     id: StrictStr
-    prompt: StrictStr = Field(description="Expected IVR prompt text for this node.")
+    prompt: Annotated[str, Field(strict=True, max_length=4000)] = Field(description="Expected prompt. Numeric values, negation, menu mappings, and configured critical phrases are protected from fuzzy matching.")
+    prompt_alternatives: Optional[Annotated[List[Annotated[str, Field(min_length=1, strict=True, max_length=4000)]], Field(max_length=16)]] = Field(default=None, description="Complete approved alternative prompts.")
+    critical_values: Optional[Annotated[List[Annotated[str, Field(min_length=1, strict=True, max_length=4000)]], Field(max_length=32)]] = Field(default=None, description="Domain-specific phrases whose normalized occurrence counts must be preserved.")
+    prompt_variables: Optional[Dict[str, CovalMetricsAPIIvrFlowNodesInnerPromptVariablesValue]] = Field(default=None, description="Explicit named {placeholders}. Static text matches exactly after normalization; patterns apply only within the declared slot.")
+    input_mode: Optional[StrictStr] = Field(default=None, description="Accepted caller modality. Legacy default is keypad, with voice also enabled for spoken fuzzy or explicitly voice-only branches.")
+    input_timeout_seconds: Optional[Union[Annotated[float, Field(le=3600, strict=True, ge=0.1)], Annotated[int, Field(le=3600, strict=True, ge=1)]]] = Field(default=None, description="Response window after an observed prompt; required for no_input edges.")
+    voice_end_silence_seconds: Optional[Union[Annotated[float, Field(le=3600, strict=True, ge=0.1)], Annotated[int, Field(le=3600, strict=True, ge=1)]]] = 1
+    max_retries: Optional[Annotated[int, Field(le=100, strict=True, ge=0)]] = Field(default=None, description="Shared allowed invalid-input/no-input recovery attempts, reset by a valid caller transition. Required for retries_exhausted edges.")
+    capture_input_as: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=128)]] = Field(default=None, description="Save the successful normalized input string in context under this name.")
+    dtmf: Optional[CovalMetricsAPIIvrFlowNodesInnerDtmf] = None
     terminal: Optional[StrictBool] = Field(default=None, description="Marks the final node; a terminal node has no outgoing edges.")
     auto_advance_to: Optional[StrictStr] = Field(default=None, description="Node id the flow advances to without caller input.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["id", "prompt", "terminal", "auto_advance_to"]
+    __properties: ClassVar[List[str]] = ["id", "prompt", "prompt_alternatives", "critical_values", "prompt_variables", "input_mode", "input_timeout_seconds", "voice_end_silence_seconds", "max_retries", "capture_input_as", "dtmf", "terminal", "auto_advance_to"]
+
+    @field_validator('input_mode')
+    def input_mode_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['dtmf', 'voice', 'both']):
+            raise ValueError("must be one of enum values ('dtmf', 'voice', 'both')")
+        return value
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -76,6 +98,16 @@ class CovalMetricsAPIIvrFlowNodesInner(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each value in prompt_variables (dict)
+        _field_dict = {}
+        if self.prompt_variables:
+            for _key_prompt_variables in self.prompt_variables:
+                if self.prompt_variables[_key_prompt_variables]:
+                    _field_dict[_key_prompt_variables] = self.prompt_variables[_key_prompt_variables].to_dict()
+            _dict['prompt_variables'] = _field_dict
+        # override the default output from pydantic by calling `to_dict()` of dtmf
+        if self.dtmf:
+            _dict['dtmf'] = self.dtmf.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -95,6 +127,20 @@ class CovalMetricsAPIIvrFlowNodesInner(BaseModel):
         _obj = cls.model_validate({
             "id": obj.get("id"),
             "prompt": obj.get("prompt"),
+            "prompt_alternatives": obj.get("prompt_alternatives"),
+            "critical_values": obj.get("critical_values"),
+            "prompt_variables": dict(
+                (_k, CovalMetricsAPIIvrFlowNodesInnerPromptVariablesValue.from_dict(_v))
+                for _k, _v in obj["prompt_variables"].items()
+            )
+            if obj.get("prompt_variables") is not None
+            else None,
+            "input_mode": obj.get("input_mode"),
+            "input_timeout_seconds": obj.get("input_timeout_seconds"),
+            "voice_end_silence_seconds": obj.get("voice_end_silence_seconds") if obj.get("voice_end_silence_seconds") is not None else 1,
+            "max_retries": obj.get("max_retries"),
+            "capture_input_as": obj.get("capture_input_as"),
+            "dtmf": CovalMetricsAPIIvrFlowNodesInnerDtmf.from_dict(obj["dtmf"]) if obj.get("dtmf") is not None else None,
             "terminal": obj.get("terminal"),
             "auto_advance_to": obj.get("auto_advance_to")
         })

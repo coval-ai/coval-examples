@@ -2708,7 +2708,7 @@ class MetricsApi:
     ) -> CovalMetricsAPIGetMetricResponse:
         """Duplicate a metric
 
-        Clone an existing metric into a new metric owned by your organization. Copies the metric configuration, tags, and active thresholds. Returns the new metric.
+        Clone an existing metric into a new metric owned by your organization. Copies the metric configuration, tags, and active thresholds. Returns the new metric. Invalid regex syntax in the source configuration returns INVALID_ARGUMENT with regex_pattern field attribution; correct the source pattern before duplicating it.
 
         :param metric_id: ID of the metric to duplicate (required)
         :type metric_id: str
@@ -2744,6 +2744,7 @@ class MetricsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '201': "CovalMetricsAPIGetMetricResponse",
+            '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
@@ -2778,7 +2779,7 @@ class MetricsApi:
     ) -> ApiResponse[CovalMetricsAPIGetMetricResponse]:
         """Duplicate a metric
 
-        Clone an existing metric into a new metric owned by your organization. Copies the metric configuration, tags, and active thresholds. Returns the new metric.
+        Clone an existing metric into a new metric owned by your organization. Copies the metric configuration, tags, and active thresholds. Returns the new metric. Invalid regex syntax in the source configuration returns INVALID_ARGUMENT with regex_pattern field attribution; correct the source pattern before duplicating it.
 
         :param metric_id: ID of the metric to duplicate (required)
         :type metric_id: str
@@ -2814,6 +2815,7 @@ class MetricsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '201': "CovalMetricsAPIGetMetricResponse",
+            '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
@@ -2848,7 +2850,7 @@ class MetricsApi:
     ) -> RESTResponseType:
         """Duplicate a metric
 
-        Clone an existing metric into a new metric owned by your organization. Copies the metric configuration, tags, and active thresholds. Returns the new metric.
+        Clone an existing metric into a new metric owned by your organization. Copies the metric configuration, tags, and active thresholds. Returns the new metric. Invalid regex syntax in the source configuration returns INVALID_ARGUMENT with regex_pattern field attribution; correct the source pattern before duplicating it.
 
         :param metric_id: ID of the metric to duplicate (required)
         :type metric_id: str
@@ -2884,6 +2886,7 @@ class MetricsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '201': "CovalMetricsAPIGetMetricResponse",
+            '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",

@@ -12,137 +12,27 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from '../runtime.js';
-import type { CovalReviewsAPIProjectType } from './CovalReviewsAPIProjectType.js';
+import type { CovalReviewsAPICreateReviewProjectRequestOneOf } from './CovalReviewsAPICreateReviewProjectRequestOneOf.js';
 import {
-    CovalReviewsAPIProjectTypeFromJSON,
-    CovalReviewsAPIProjectTypeFromJSONTyped,
-    CovalReviewsAPIProjectTypeToJSON,
-    CovalReviewsAPIProjectTypeToJSONTyped,
-} from './CovalReviewsAPIProjectType.js';
-import type { CovalReviewsAPIProjectRule } from './CovalReviewsAPIProjectRule.js';
+    instanceOfCovalReviewsAPICreateReviewProjectRequestOneOf,
+    CovalReviewsAPICreateReviewProjectRequestOneOfFromJSON,
+    CovalReviewsAPICreateReviewProjectRequestOneOfFromJSONTyped,
+    CovalReviewsAPICreateReviewProjectRequestOneOfToJSON,
+} from './CovalReviewsAPICreateReviewProjectRequestOneOf.js';
+import type { CovalReviewsAPICreateReviewProjectRequestOneOf1 } from './CovalReviewsAPICreateReviewProjectRequestOneOf1.js';
 import {
-    CovalReviewsAPIProjectRuleFromJSON,
-    CovalReviewsAPIProjectRuleFromJSONTyped,
-    CovalReviewsAPIProjectRuleToJSON,
-    CovalReviewsAPIProjectRuleToJSONTyped,
-} from './CovalReviewsAPIProjectRule.js';
+    instanceOfCovalReviewsAPICreateReviewProjectRequestOneOf1,
+    CovalReviewsAPICreateReviewProjectRequestOneOf1FromJSON,
+    CovalReviewsAPICreateReviewProjectRequestOneOf1FromJSONTyped,
+    CovalReviewsAPICreateReviewProjectRequestOneOf1ToJSON,
+} from './CovalReviewsAPICreateReviewProjectRequestOneOf1.js';
 
 /**
- * 
- * @export
- * @interface CovalReviewsAPICreateReviewProjectRequest
- */
-export interface CovalReviewsAPICreateReviewProjectRequest {
-    /**
-     * Project name
-     * @type {string}
-     * @memberof CovalReviewsAPICreateReviewProjectRequest
-     */
-    display_name: string;
-    /**
-     * Optional project description
-     * @type {string}
-     * @memberof CovalReviewsAPICreateReviewProjectRequest
-     */
-    description?: string | null;
-    /**
-     * Reviewer emails (at least one required)
-     * @type {Array<string>}
-     * @memberof CovalReviewsAPICreateReviewProjectRequest
-     */
-    assignees: Array<string>;
-    /**
-     * Simulation output IDs (at least one required)
-     * @type {Array<string>}
-     * @memberof CovalReviewsAPICreateReviewProjectRequest
-     */
-    linked_simulation_ids?: Array<string>;
-    /**
-     * Metric IDs (at least one required)
-     * @type {Array<string>}
-     * @memberof CovalReviewsAPICreateReviewProjectRequest
-     */
-    linked_metric_ids?: Array<string>;
-    /**
-     * 
-     * @type {CovalReviewsAPIProjectType}
-     * @memberof CovalReviewsAPICreateReviewProjectRequest
-     */
-    project_type?: CovalReviewsAPIProjectType;
-    /**
-     * Enable notifications for assignees
-     * @type {boolean}
-     * @memberof CovalReviewsAPICreateReviewProjectRequest
-     */
-    notifications?: boolean;
-    /**
-     * Rules to apply to this project
-     * @type {Array<CovalReviewsAPIProjectRule>}
-     * @memberof CovalReviewsAPICreateReviewProjectRequest
-     */
-    project_rules?: Array<CovalReviewsAPIProjectRule> | null;
-    /**
-     * Metric IDs whose machine score stays visible during blind labeling
-     * @type {Array<string>}
-     * @memberof CovalReviewsAPICreateReviewProjectRequest
-     */
-    blind_labeling_shown_metric_ids?: Array<string> | null;
-    /**
-     * Enforce claims and explicit single-author completion for collaborative projects
-     * @type {boolean}
-     * @memberof CovalReviewsAPICreateReviewProjectRequest
-     */
-    enforced_collaboration?: boolean;
-    /**
-     * 
-     * @type {CovalReviewsAPICreateReviewProjectRequestReviewLabelInputModeEnum}
-     * @memberof CovalReviewsAPICreateReviewProjectRequest
-     */
-    review_label_input_mode?: CovalReviewsAPICreateReviewProjectRequestReviewLabelInputModeEnum | null;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof CovalReviewsAPICreateReviewProjectRequest
-     */
-    review_label_options?: Array<string> | null;
-    /**
-     * 
-     * @type {CovalReviewsAPICreateReviewProjectRequestReviewLabelSelectionModeEnum}
-     * @memberof CovalReviewsAPICreateReviewProjectRequest
-     */
-    review_label_selection_mode?: CovalReviewsAPICreateReviewProjectRequestReviewLabelSelectionModeEnum | null;
-}
-
-
-/**
+ * @type CovalReviewsAPICreateReviewProjectRequest
+ * Select at least one reviewer by legacy email or verified Coval User ID. Nonempty emails and User IDs cannot be combined.
  * @export
  */
-export const CovalReviewsAPICreateReviewProjectRequestReviewLabelInputModeEnum = {
-    OptionOnly: 'OPTION_ONLY',
-    CustomOnly: 'CUSTOM_ONLY',
-    OptionOrCustom: 'OPTION_OR_CUSTOM'
-} as const;
-export type CovalReviewsAPICreateReviewProjectRequestReviewLabelInputModeEnum = typeof CovalReviewsAPICreateReviewProjectRequestReviewLabelInputModeEnum[keyof typeof CovalReviewsAPICreateReviewProjectRequestReviewLabelInputModeEnum];
-
-/**
- * @export
- */
-export const CovalReviewsAPICreateReviewProjectRequestReviewLabelSelectionModeEnum = {
-    Single: 'SINGLE',
-    Multiple: 'MULTIPLE'
-} as const;
-export type CovalReviewsAPICreateReviewProjectRequestReviewLabelSelectionModeEnum = typeof CovalReviewsAPICreateReviewProjectRequestReviewLabelSelectionModeEnum[keyof typeof CovalReviewsAPICreateReviewProjectRequestReviewLabelSelectionModeEnum];
-
-
-/**
- * Check if a given object implements the CovalReviewsAPICreateReviewProjectRequest interface.
- */
-export function instanceOfCovalReviewsAPICreateReviewProjectRequest(value: object): value is CovalReviewsAPICreateReviewProjectRequest {
-    if (!('display_name' in value) || value['display_name'] === undefined) return false;
-    if (!('assignees' in value) || value['assignees'] === undefined) return false;
-    return true;
-}
+export type CovalReviewsAPICreateReviewProjectRequest = CovalReviewsAPICreateReviewProjectRequestOneOf | CovalReviewsAPICreateReviewProjectRequestOneOf1;
 
 export function CovalReviewsAPICreateReviewProjectRequestFromJSON(json: any): CovalReviewsAPICreateReviewProjectRequest {
     return CovalReviewsAPICreateReviewProjectRequestFromJSONTyped(json, false);
@@ -152,25 +42,19 @@ export function CovalReviewsAPICreateReviewProjectRequestFromJSONTyped(json: any
     if (json == null) {
         return json;
     }
-    return {
-        
-        'display_name': json['display_name'],
-        'description': json['description'] == null ? undefined : json['description'],
-        'assignees': json['assignees'],
-        'linked_simulation_ids': json['linked_simulation_ids'] == null ? undefined : json['linked_simulation_ids'],
-        'linked_metric_ids': json['linked_metric_ids'] == null ? undefined : json['linked_metric_ids'],
-        'project_type': json['project_type'] == null ? undefined : CovalReviewsAPIProjectTypeFromJSON(json['project_type']),
-        'notifications': json['notifications'] == null ? undefined : json['notifications'],
-        'project_rules': json['project_rules'] == null ? undefined : ((json['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleFromJSON)),
-        'blind_labeling_shown_metric_ids': json['blind_labeling_shown_metric_ids'] == null ? undefined : json['blind_labeling_shown_metric_ids'],
-        'enforced_collaboration': json['enforced_collaboration'] == null ? undefined : json['enforced_collaboration'],
-        'review_label_input_mode': json['review_label_input_mode'] == null ? undefined : json['review_label_input_mode'],
-        'review_label_options': json['review_label_options'] == null ? undefined : json['review_label_options'],
-        'review_label_selection_mode': json['review_label_selection_mode'] == null ? undefined : json['review_label_selection_mode'],
-    };
+    if (typeof json !== 'object') {
+        return json;
+    }
+    if (instanceOfCovalReviewsAPICreateReviewProjectRequestOneOf(json)) {
+        return CovalReviewsAPICreateReviewProjectRequestOneOfFromJSONTyped(json, true);
+    }
+    if (instanceOfCovalReviewsAPICreateReviewProjectRequestOneOf1(json)) {
+        return CovalReviewsAPICreateReviewProjectRequestOneOf1FromJSONTyped(json, true);
+    }
+    return {} as any;
 }
 
-export function CovalReviewsAPICreateReviewProjectRequestToJSON(json: any): CovalReviewsAPICreateReviewProjectRequest {
+export function CovalReviewsAPICreateReviewProjectRequestToJSON(json: any): any {
     return CovalReviewsAPICreateReviewProjectRequestToJSONTyped(json, false);
 }
 
@@ -178,22 +62,32 @@ export function CovalReviewsAPICreateReviewProjectRequestToJSONTyped(value?: Cov
     if (value == null) {
         return value;
     }
-
-    return {
-        
-        'display_name': value['display_name'],
-        'description': value['description'],
-        'assignees': value['assignees'],
-        'linked_simulation_ids': value['linked_simulation_ids'],
-        'linked_metric_ids': value['linked_metric_ids'],
-        'project_type': CovalReviewsAPIProjectTypeToJSON(value['project_type']),
-        'notifications': value['notifications'],
-        'project_rules': value['project_rules'] == null ? undefined : ((value['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleToJSON)),
-        'blind_labeling_shown_metric_ids': value['blind_labeling_shown_metric_ids'],
-        'enforced_collaboration': value['enforced_collaboration'],
-        'review_label_input_mode': value['review_label_input_mode'],
-        'review_label_options': value['review_label_options'],
-        'review_label_selection_mode': value['review_label_selection_mode'],
-    };
+    if (typeof value !== 'object') {
+        return value;
+    }
+    if (instanceOfCovalReviewsAPICreateReviewProjectRequestOneOf(value)) {
+        return CovalReviewsAPICreateReviewProjectRequestOneOfToJSON(value as CovalReviewsAPICreateReviewProjectRequestOneOf);
+    }
+    if (instanceOfCovalReviewsAPICreateReviewProjectRequestOneOf1(value)) {
+        return CovalReviewsAPICreateReviewProjectRequestOneOf1ToJSON(value as CovalReviewsAPICreateReviewProjectRequestOneOf1);
+    }
+    return {};
 }
 
+
+
+/** @export */
+export const CovalReviewsAPICreateReviewProjectRequestReviewLabelInputModeEnum = {
+    OPTIONONLY: "OPTION_ONLY" as const,
+    CUSTOMONLY: "CUSTOM_ONLY" as const,
+    OPTIONORCUSTOM: "OPTION_OR_CUSTOM" as const,
+} as const;
+export type CovalReviewsAPICreateReviewProjectRequestReviewLabelInputModeEnum = typeof CovalReviewsAPICreateReviewProjectRequestReviewLabelInputModeEnum[keyof typeof CovalReviewsAPICreateReviewProjectRequestReviewLabelInputModeEnum];
+
+
+/** @export */
+export const CovalReviewsAPICreateReviewProjectRequestReviewLabelSelectionModeEnum = {
+    SINGLE: "SINGLE" as const,
+    MULTIPLE: "MULTIPLE" as const,
+} as const;
+export type CovalReviewsAPICreateReviewProjectRequestReviewLabelSelectionModeEnum = typeof CovalReviewsAPICreateReviewProjectRequestReviewLabelSelectionModeEnum[keyof typeof CovalReviewsAPICreateReviewProjectRequestReviewLabelSelectionModeEnum];

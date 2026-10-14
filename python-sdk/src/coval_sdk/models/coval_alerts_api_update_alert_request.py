@@ -47,7 +47,7 @@ class CovalAlertsAPIUpdateAlertRequest(BaseModel):
     required_tags: Optional[List[StrictStr]] = None
     scheduled_run_ids: Optional[List[StrictStr]] = None
     customer_metadata: Optional[Dict[str, CovalAlertsAPIAlertResourceCustomerMetadataValue]] = Field(default=None, description="Exact scalar Run customer metadata filters, joined by AND. Literal keys are 1–256 characters; values are case-sensitive text. A list of values matches when the metadata equals any one of them. Numbers and booleans use JSON text; missing, null, array, and object values do not match. Omission or null leaves filters unchanged. An empty object clears filters only if at least one metric condition remains.")
-    conditions: Optional[List[CovalAlertsAPIConditionInput]] = Field(default=None, description="Replaces all existing conditions. An empty list requires nonempty customer_metadata filters; null or omission preserves conditions.")
+    conditions: Optional[List[CovalAlertsAPIConditionInput]] = Field(default=None, description="Replaces all existing conditions. With ALL match mode, an empty list matches every conversation passing the remaining filters. ANY requires a metric condition or customer_metadata filter. Null or omission preserves conditions.")
     channels: Optional[List[CovalAlertsAPIChannelInput]] = Field(default=None, description="Replaces all channels; at most one HUMAN_REVIEW channel is allowed. Null or omission preserves channels.")
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["enabled", "name", "description", "evaluation_type", "conversation_source", "match_mode", "cooldown_seconds", "custom_message_template", "agent_ids", "required_tags", "scheduled_run_ids", "customer_metadata", "conditions", "channels"]

@@ -33,6 +33,9 @@ class CovalMetricsAPIAgentJudgeTool(str, Enum):
     GET_TRACE_SPANS = 'get_trace_spans'
     QUERY_SIMULATION_FRAMES = 'query_simulation_frames'
     GET_RUN_CONTEXT = 'get_run_context'
+    GET_EVIDENCE_MANIFEST = 'get_evidence_manifest'
+    GET_SIMULATION_OUTCOME = 'get_simulation_outcome'
+    GET_DEPENDENCY_METRIC_OUTPUTS = 'get_dependency_metric_outputs'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

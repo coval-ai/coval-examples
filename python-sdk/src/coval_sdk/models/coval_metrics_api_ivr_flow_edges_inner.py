@@ -20,6 +20,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
@@ -30,10 +31,33 @@ class CovalMetricsAPIIvrFlowEdgesInner(BaseModel):
     """ # noqa: E501
     source: StrictStr
     destination: StrictStr
-    input: StrictStr = Field(description="Expected caller input; a regex when match_type is 'regex'.")
+    event: Optional[StrictStr] = Field(default='input', description="Non-input events omit input text. Conditional nodes cannot also have input or recovery branches. Repeat-menu behavior is an input edge back to the same node.")
+    input_mode: Optional[StrictStr] = 'both'
+    when: Optional[Dict[str, Any]] = Field(default=None, description="AND of exact JSON scalar equalities against context. Required and non-empty for condition events. Missing values produce unknown_condition. last_input is available during input selection.")
+    input: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=256)]] = Field(default=None, description="Required for input events only. Keypad input excludes the configured terminator; spoken input is normalized. Regexes have a 50 ms execution deadline.")
     match_type: Optional[StrictStr] = 'literal'
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["source", "destination", "input", "match_type"]
+    __properties: ClassVar[List[str]] = ["source", "destination", "event", "input_mode", "when", "input", "match_type"]
+
+    @field_validator('event')
+    def event_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['input', 'no_input', 'invalid_input', 'retries_exhausted', 'condition']):
+            raise ValueError("must be one of enum values ('input', 'no_input', 'invalid_input', 'retries_exhausted', 'condition')")
+        return value
+
+    @field_validator('input_mode')
+    def input_mode_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['dtmf', 'voice', 'both']):
+            raise ValueError("must be one of enum values ('dtmf', 'voice', 'both')")
+        return value
 
     @field_validator('match_type')
     def match_type_validate_enum(cls, value):
@@ -105,6 +129,9 @@ class CovalMetricsAPIIvrFlowEdgesInner(BaseModel):
         _obj = cls.model_validate({
             "source": obj.get("source"),
             "destination": obj.get("destination"),
+            "event": obj.get("event") if obj.get("event") is not None else 'input',
+            "input_mode": obj.get("input_mode") if obj.get("input_mode") is not None else 'both',
+            "when": obj.get("when"),
             "input": obj.get("input"),
             "match_type": obj.get("match_type") if obj.get("match_type") is not None else 'literal'
         })

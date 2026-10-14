@@ -13,14 +13,6 @@
  */
 
 import { mapValues } from '../runtime.js';
-import type { CovalScheduledRunsAPIResourceAttribution } from './CovalScheduledRunsAPIResourceAttribution.js';
-import {
-    CovalScheduledRunsAPIResourceAttributionFromJSON,
-    CovalScheduledRunsAPIResourceAttributionFromJSONTyped,
-    CovalScheduledRunsAPIResourceAttributionToJSON,
-    CovalScheduledRunsAPIResourceAttributionToJSONTyped,
-} from './CovalScheduledRunsAPIResourceAttribution.js';
-
 /**
  * Scheduled run configuration resource.
  * @export
@@ -28,11 +20,29 @@ import {
  */
 export interface CovalScheduledRunsAPIScheduledRunResource {
     /**
-     * Authoring timestamps and user IDs. Unknown or deleted users are null.
-     * @type {CovalScheduledRunsAPIResourceAttribution}
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
      * @memberof CovalScheduledRunsAPIScheduledRunResource
      */
-    readonly attribution?: CovalScheduledRunsAPIResourceAttribution | null;
+    readonly created_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalScheduledRunsAPIScheduledRunResource
+     */
+    readonly created_by: string | null;
+    /**
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
+     * @memberof CovalScheduledRunsAPIScheduledRunResource
+     */
+    readonly updated_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalScheduledRunsAPIScheduledRunResource
+     */
+    readonly updated_by: string | null;
     /**
      * Resource name: "scheduled-runs/{id}"
      * @type {string}
@@ -116,6 +126,10 @@ export interface CovalScheduledRunsAPIScheduledRunResource {
  * Check if a given object implements the CovalScheduledRunsAPIScheduledRunResource interface.
  */
 export function instanceOfCovalScheduledRunsAPIScheduledRunResource(value: object): value is CovalScheduledRunsAPIScheduledRunResource {
+    if (!('created_at' in value) || value['created_at'] === undefined) return false;
+    if (!('created_by' in value) || value['created_by'] === undefined) return false;
+    if (!('updated_at' in value) || value['updated_at'] === undefined) return false;
+    if (!('updated_by' in value) || value['updated_by'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('display_name' in value) || value['display_name'] === undefined) return false;
@@ -135,7 +149,10 @@ export function CovalScheduledRunsAPIScheduledRunResourceFromJSONTyped(json: any
     }
     return {
         
-        'attribution': json['attribution'] == null ? undefined : CovalScheduledRunsAPIResourceAttributionFromJSON(json['attribution']),
+        'created_at': (json['created_at'] == null ? null : new Date(json['created_at'])),
+        'created_by': json['created_by'],
+        'updated_at': (json['updated_at'] == null ? null : new Date(json['updated_at'])),
+        'updated_by': json['updated_by'],
         'name': json['name'],
         'id': json['id'],
         'display_name': json['display_name'],
@@ -154,7 +171,7 @@ export function CovalScheduledRunsAPIScheduledRunResourceToJSON(json: any): Cova
     return CovalScheduledRunsAPIScheduledRunResourceToJSONTyped(json, false);
 }
 
-export function CovalScheduledRunsAPIScheduledRunResourceToJSONTyped(value?: Omit<CovalScheduledRunsAPIScheduledRunResource, 'attribution'> | null, ignoreDiscriminator: boolean = false): any {
+export function CovalScheduledRunsAPIScheduledRunResourceToJSONTyped(value?: Omit<CovalScheduledRunsAPIScheduledRunResource, 'created_at'|'created_by'|'updated_at'|'updated_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

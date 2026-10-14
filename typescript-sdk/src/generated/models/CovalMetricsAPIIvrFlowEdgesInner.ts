@@ -32,11 +32,29 @@ export interface CovalMetricsAPIIvrFlowEdgesInner {
      */
     destination: string;
     /**
-     * Expected caller input; a regex when match_type is 'regex'.
+     * Non-input events omit input text. Conditional nodes cannot also have input or recovery branches. Repeat-menu behavior is an input edge back to the same node.
+     * @type {CovalMetricsAPIIvrFlowEdgesInnerEventEnum}
+     * @memberof CovalMetricsAPIIvrFlowEdgesInner
+     */
+    event?: CovalMetricsAPIIvrFlowEdgesInnerEventEnum;
+    /**
+     * 
+     * @type {CovalMetricsAPIIvrFlowEdgesInnerInputModeEnum}
+     * @memberof CovalMetricsAPIIvrFlowEdgesInner
+     */
+    input_mode?: CovalMetricsAPIIvrFlowEdgesInnerInputModeEnum;
+    /**
+     * AND of exact JSON scalar equalities against context. Required and non-empty for condition events. Missing values produce unknown_condition. last_input is available during input selection.
+     * @type {{ [key: string]: any; }}
+     * @memberof CovalMetricsAPIIvrFlowEdgesInner
+     */
+    when?: { [key: string]: any; };
+    /**
+     * Required for input events only. Keypad input excludes the configured terminator; spoken input is normalized. Regexes have a 50 ms execution deadline.
      * @type {string}
      * @memberof CovalMetricsAPIIvrFlowEdgesInner
      */
-    input: string;
+    input?: string;
     /**
      * 
      * @type {CovalMetricsAPIIvrFlowEdgesInnerMatchTypeEnum}
@@ -45,6 +63,28 @@ export interface CovalMetricsAPIIvrFlowEdgesInner {
     match_type?: CovalMetricsAPIIvrFlowEdgesInnerMatchTypeEnum;
 }
 
+
+/**
+ * @export
+ */
+export const CovalMetricsAPIIvrFlowEdgesInnerEventEnum = {
+    Input: 'input',
+    NoInput: 'no_input',
+    InvalidInput: 'invalid_input',
+    RetriesExhausted: 'retries_exhausted',
+    Condition: 'condition'
+} as const;
+export type CovalMetricsAPIIvrFlowEdgesInnerEventEnum = typeof CovalMetricsAPIIvrFlowEdgesInnerEventEnum[keyof typeof CovalMetricsAPIIvrFlowEdgesInnerEventEnum];
+
+/**
+ * @export
+ */
+export const CovalMetricsAPIIvrFlowEdgesInnerInputModeEnum = {
+    Dtmf: 'dtmf',
+    Voice: 'voice',
+    Both: 'both'
+} as const;
+export type CovalMetricsAPIIvrFlowEdgesInnerInputModeEnum = typeof CovalMetricsAPIIvrFlowEdgesInnerInputModeEnum[keyof typeof CovalMetricsAPIIvrFlowEdgesInnerInputModeEnum];
 
 /**
  * @export
@@ -63,7 +103,6 @@ export type CovalMetricsAPIIvrFlowEdgesInnerMatchTypeEnum = typeof CovalMetricsA
 export function instanceOfCovalMetricsAPIIvrFlowEdgesInner(value: object): value is CovalMetricsAPIIvrFlowEdgesInner {
     if (!('source' in value) || value['source'] === undefined) return false;
     if (!('destination' in value) || value['destination'] === undefined) return false;
-    if (!('input' in value) || value['input'] === undefined) return false;
     return true;
 }
 
@@ -79,7 +118,10 @@ export function CovalMetricsAPIIvrFlowEdgesInnerFromJSONTyped(json: any, ignoreD
         
         'source': json['source'],
         'destination': json['destination'],
-        'input': json['input'],
+        'event': json['event'] == null ? undefined : json['event'],
+        'input_mode': json['input_mode'] == null ? undefined : json['input_mode'],
+        'when': json['when'] == null ? undefined : json['when'],
+        'input': json['input'] == null ? undefined : json['input'],
         'match_type': json['match_type'] == null ? undefined : json['match_type'],
     };
 }
@@ -97,6 +139,9 @@ export function CovalMetricsAPIIvrFlowEdgesInnerToJSONTyped(value?: CovalMetrics
         
         'source': value['source'],
         'destination': value['destination'],
+        'event': value['event'],
+        'input_mode': value['input_mode'],
+        'when': value['when'],
         'input': value['input'],
         'match_type': value['match_type'],
     };

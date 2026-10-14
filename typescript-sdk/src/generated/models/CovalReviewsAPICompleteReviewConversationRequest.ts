@@ -20,6 +20,12 @@ import { mapValues } from '../runtime.js';
  */
 export interface CovalReviewsAPICompleteReviewConversationRequest {
     /**
+     * Verified Coval reviewer User ID. Null retains the email selector or authenticated self-review; an email supplied alongside an ID must refer to the same reviewer.
+     * @type {string}
+     * @memberof CovalReviewsAPICompleteReviewConversationRequest
+     */
+    assignee_user_id?: string | null;
+    /**
      * Simulation output whose review conversation should be completed.
      * @type {string}
      * @memberof CovalReviewsAPICompleteReviewConversationRequest
@@ -51,6 +57,7 @@ export function CovalReviewsAPICompleteReviewConversationRequestFromJSONTyped(js
     }
     return {
         
+        'assignee_user_id': json['assignee_user_id'] == null ? undefined : json['assignee_user_id'],
         'simulation_output_id': json['simulation_output_id'],
         'assignee': json['assignee'] == null ? undefined : json['assignee'],
     };
@@ -67,6 +74,7 @@ export function CovalReviewsAPICompleteReviewConversationRequestToJSONTyped(valu
 
     return {
         
+        'assignee_user_id': value['assignee_user_id'],
         'simulation_output_id': value['simulation_output_id'],
         'assignee': value['assignee'],
     };

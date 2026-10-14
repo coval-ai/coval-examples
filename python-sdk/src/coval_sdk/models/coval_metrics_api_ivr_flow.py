@@ -19,7 +19,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
 from coval_sdk.models.coval_metrics_api_ivr_flow_edges_inner import CovalMetricsAPIIvrFlowEdgesInner
 from coval_sdk.models.coval_metrics_api_ivr_flow_nodes_inner import CovalMetricsAPIIvrFlowNodesInner
@@ -29,13 +29,15 @@ from pydantic_core import to_jsonable_python
 
 class CovalMetricsAPIIvrFlow(BaseModel):
     """
-    IVR flow tree for METRIC_IVR_FLOW_ADHERENCE. The walker matches each played IVR prompt against the expected node and follows edges on the caller's input. 
+    IVR flow tree for METRIC_IVR_FLOW_ADHERENCE. The walker matches each played IVR prompt against the expected node and follows delivered keypad sequences, spoken input, and explicit timeout/recovery/conditional edges. Exactly one eligible edge must match; overlapping matches are ambiguous, never first-match-wins. The score remains the legacy fraction of matching prompt observations for compatibility. The result.stats custom entry named ivr_adherence (scoring_version 2) reports prompt_correctness, routing_correctness, and overall_status (passed, failed, or inconclusive). No completion or endpoint check is performed. Undefined behavior for intentionally invalid caller input is inconclusive, not an IVR failure; routing passes only when the destination response is observed. Dimension scores exclude inconclusive checks and are null if none are assessed. 
     """ # noqa: E501
     start_node: StrictStr = Field(description="Id of the node the flow enters first.")
-    nodes: Annotated[List[CovalMetricsAPIIvrFlowNodesInner], Field(min_length=1)]
-    edges: Optional[List[CovalMetricsAPIIvrFlowEdgesInner]] = None
+    context: Optional[Dict[str, Any]] = Field(default=None, description="Known context for branch conditions. Values are JSON scalars; strings are limited to 256 characters. Missing facts are unknown, not inferred.")
+    match_threshold: Optional[Union[Annotated[float, Field(le=1, strict=True, gt=0)], Annotated[int, Field(le=1, strict=True, gt=0)]]] = Field(default=None, description="Optional flow-level threshold. Metric execution uses metric_metadata.match_threshold (default 0.85).")
+    nodes: Annotated[List[CovalMetricsAPIIvrFlowNodesInner], Field(min_length=1, max_length=512)]
+    edges: Optional[Annotated[List[CovalMetricsAPIIvrFlowEdgesInner], Field(max_length=4096)]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["start_node", "nodes", "edges"]
+    __properties: ClassVar[List[str]] = ["start_node", "context", "match_threshold", "nodes", "edges"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -110,6 +112,8 @@ class CovalMetricsAPIIvrFlow(BaseModel):
 
         _obj = cls.model_validate({
             "start_node": obj.get("start_node"),
+            "context": obj.get("context"),
+            "match_threshold": obj.get("match_threshold"),
             "nodes": [CovalMetricsAPIIvrFlowNodesInner.from_dict(_item) for _item in obj["nodes"]] if obj.get("nodes") is not None else None,
             "edges": [CovalMetricsAPIIvrFlowEdgesInner.from_dict(_item) for _item in obj["edges"]] if obj.get("edges") is not None else None
         })

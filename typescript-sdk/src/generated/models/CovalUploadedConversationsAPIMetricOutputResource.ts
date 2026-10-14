@@ -85,7 +85,7 @@ export interface CovalUploadedConversationsAPIMetricOutputResource {
      */
     explanation?: string | null;
     /**
-     * Stable frame or trace-span identities supporting an Agent Judge decision.
+     * Stable frame, trace-span, or metric-output identities supporting an Agent Judge decision.
      * @type {Array<CovalUploadedConversationsAPIMetricOutputResourceEvidenceReferencesInner>}
      * @memberof CovalUploadedConversationsAPIMetricOutputResource
      */

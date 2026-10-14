@@ -320,6 +320,7 @@ class UploadedConversationsApi:
     def get_uploaded_conversation(
         self,
         conversation_id: Annotated[str, Field(min_length=22, strict=True, max_length=26, description="Unique conversation identifier (22-26 characters)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this read. When omitted, the organization's active default workspace is used when one can be resolved. The default workspace includes legacy conversations without a workspace; other workspaces require an exact match.")] = None,
         include_progress: Annotated[Optional[StrictBool], Field(description="Include progress tracking information")] = None,
         _request_timeout: Union[
             None,
@@ -336,10 +337,12 @@ class UploadedConversationsApi:
     ) -> CovalUploadedConversationsAPIGetUploadedConversationResponse:
         """Get conversation details
 
-        Retrieve detailed information about a specific conversation. 
+        Retrieve detailed information about a specific conversation in the authenticated workspace. Conversations in another workspace return 404. Only the default workspace can include legacy conversations without a workspace. 
 
         :param conversation_id: Unique conversation identifier (22-26 characters) (required)
         :type conversation_id: str
+        :param x_coval_workspace_id: Workspace that scopes this read. When omitted, the organization's active default workspace is used when one can be resolved. The default workspace includes legacy conversations without a workspace; other workspaces require an exact match.
+        :type x_coval_workspace_id: str
         :param include_progress: Include progress tracking information
         :type include_progress: bool
         :param _request_timeout: timeout setting for this request. If one
@@ -366,6 +369,7 @@ class UploadedConversationsApi:
 
         _param = self._get_uploaded_conversation_serialize(
             conversation_id=conversation_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             include_progress=include_progress,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -394,6 +398,7 @@ class UploadedConversationsApi:
     def get_uploaded_conversation_with_http_info(
         self,
         conversation_id: Annotated[str, Field(min_length=22, strict=True, max_length=26, description="Unique conversation identifier (22-26 characters)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this read. When omitted, the organization's active default workspace is used when one can be resolved. The default workspace includes legacy conversations without a workspace; other workspaces require an exact match.")] = None,
         include_progress: Annotated[Optional[StrictBool], Field(description="Include progress tracking information")] = None,
         _request_timeout: Union[
             None,
@@ -410,10 +415,12 @@ class UploadedConversationsApi:
     ) -> ApiResponse[CovalUploadedConversationsAPIGetUploadedConversationResponse]:
         """Get conversation details
 
-        Retrieve detailed information about a specific conversation. 
+        Retrieve detailed information about a specific conversation in the authenticated workspace. Conversations in another workspace return 404. Only the default workspace can include legacy conversations without a workspace. 
 
         :param conversation_id: Unique conversation identifier (22-26 characters) (required)
         :type conversation_id: str
+        :param x_coval_workspace_id: Workspace that scopes this read. When omitted, the organization's active default workspace is used when one can be resolved. The default workspace includes legacy conversations without a workspace; other workspaces require an exact match.
+        :type x_coval_workspace_id: str
         :param include_progress: Include progress tracking information
         :type include_progress: bool
         :param _request_timeout: timeout setting for this request. If one
@@ -440,6 +447,7 @@ class UploadedConversationsApi:
 
         _param = self._get_uploaded_conversation_serialize(
             conversation_id=conversation_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             include_progress=include_progress,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -468,6 +476,7 @@ class UploadedConversationsApi:
     def get_uploaded_conversation_without_preload_content(
         self,
         conversation_id: Annotated[str, Field(min_length=22, strict=True, max_length=26, description="Unique conversation identifier (22-26 characters)")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace that scopes this read. When omitted, the organization's active default workspace is used when one can be resolved. The default workspace includes legacy conversations without a workspace; other workspaces require an exact match.")] = None,
         include_progress: Annotated[Optional[StrictBool], Field(description="Include progress tracking information")] = None,
         _request_timeout: Union[
             None,
@@ -484,10 +493,12 @@ class UploadedConversationsApi:
     ) -> RESTResponseType:
         """Get conversation details
 
-        Retrieve detailed information about a specific conversation. 
+        Retrieve detailed information about a specific conversation in the authenticated workspace. Conversations in another workspace return 404. Only the default workspace can include legacy conversations without a workspace. 
 
         :param conversation_id: Unique conversation identifier (22-26 characters) (required)
         :type conversation_id: str
+        :param x_coval_workspace_id: Workspace that scopes this read. When omitted, the organization's active default workspace is used when one can be resolved. The default workspace includes legacy conversations without a workspace; other workspaces require an exact match.
+        :type x_coval_workspace_id: str
         :param include_progress: Include progress tracking information
         :type include_progress: bool
         :param _request_timeout: timeout setting for this request. If one
@@ -514,6 +525,7 @@ class UploadedConversationsApi:
 
         _param = self._get_uploaded_conversation_serialize(
             conversation_id=conversation_id,
+            x_coval_workspace_id=x_coval_workspace_id,
             include_progress=include_progress,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -537,6 +549,7 @@ class UploadedConversationsApi:
     def _get_uploaded_conversation_serialize(
         self,
         conversation_id,
+        x_coval_workspace_id,
         include_progress,
         _request_auth,
         _content_type,
@@ -567,6 +580,8 @@ class UploadedConversationsApi:
             _query_params.append(('include_progress', include_progress))
             
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -1366,6 +1381,7 @@ class UploadedConversationsApi:
             '401': "CovalUploadedConversationsAPIErrorResponse",
             '404': "CovalUploadedConversationsAPIErrorResponse",
             '500': "CovalUploadedConversationsAPIErrorResponse",
+            '503': "CovalUploadedConversationsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1481,6 +1497,7 @@ class UploadedConversationsApi:
             '401': "CovalUploadedConversationsAPIErrorResponse",
             '404': "CovalUploadedConversationsAPIErrorResponse",
             '500': "CovalUploadedConversationsAPIErrorResponse",
+            '503': "CovalUploadedConversationsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1596,6 +1613,7 @@ class UploadedConversationsApi:
             '401': "CovalUploadedConversationsAPIErrorResponse",
             '404': "CovalUploadedConversationsAPIErrorResponse",
             '500': "CovalUploadedConversationsAPIErrorResponse",
+            '503': "CovalUploadedConversationsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
             *_param,

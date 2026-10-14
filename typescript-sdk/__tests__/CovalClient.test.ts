@@ -384,3 +384,81 @@ describe('updateRun oneOf response handling', () => {
     expect(run.tags).toEqual(['escalated']);
   });
 });
+
+describe('request bodies', () => {
+  // Update endpoints are PATCH: anything a request serializes without the caller setting it
+  // overwrites the saved value, so unset fields must stay off the wire.
+  const audioFilter: generatedModels.CovalMetricsAPIAudioFilterConfig = {
+    include: [{ type: 'speaker', speakers: ['persona'] }],
+  };
+
+  const sentBody = async (send: (client: CovalClient) => Promise<unknown>): Promise<unknown> => {
+    let body: unknown;
+    const fakeFetch = vi.fn(async (_input: RequestInfo | URL, init?: RequestInit) => {
+      body = JSON.parse(String(init?.body));
+      return new Response('{}', { status: 200, headers: { 'content-type': 'application/json' } });
+    }) as unknown as typeof fetch;
+
+    await send(new CovalClient({ apiKey: 'test-key', fetch: fakeFetch, retry: false }));
+    return body;
+  };
+
+  const updateReviewProject = (request: generatedModels.CovalReviewsAPIUpdateReviewProjectRequest) =>
+    sentBody((client) =>
+      client.reviewProjects.updateReviewProject({
+        projectId: 'project-1',
+        covalReviewsAPIUpdateReviewProjectRequest: request,
+      }),
+    );
+
+  const updateMetric = (request: generatedModels.CovalMetricsAPIUpdateMetricRequest) =>
+    sentBody((client) =>
+      client.metrics.updateMetric({ metricId: 'metric-1', covalMetricsAPIUpdateMetricRequest: request }),
+    );
+
+  const createMetric = (request: generatedModels.CovalMetricsAPICreateMetricRequest) =>
+    sentBody((client) => client.metrics.createMetric({ covalMetricsAPICreateMetricRequest: request }));
+
+  it('sends only the name when a review project is renamed', async () => {
+    expect(await updateReviewProject({ display_name: 'Renamed project' })).toEqual({
+      display_name: 'Renamed project',
+    });
+  });
+
+  it('keeps falsy, null, and empty review project settings on the wire when they are set', async () => {
+    const settings = {
+      allow_metric_skipping: false,
+      review_label_enabled: null,
+      opted_out_assignee_user_ids: [],
+    };
+
+    expect(await updateReviewProject(settings)).toEqual(settings);
+  });
+
+  it('separates omitted, null, empty, and set metric update fields', async () => {
+    expect(await updateMetric({ metric_name: 'Renamed' })).toEqual({ metric_name: 'Renamed' });
+    expect(await updateMetric({ audio_filter: null, dependency_metric_ids: [] })).toEqual({
+      audio_filter: null,
+      dependency_metric_ids: [],
+    });
+    expect(await updateMetric({ audio_filter: audioFilter, dependency_metric_ids: ['metric-a'] })).toEqual({
+      audio_filter: audioFilter,
+      dependency_metric_ids: ['metric-a'],
+    });
+  });
+
+  it('sends the audio filter and dependencies on metric create only when set', async () => {
+    const base = {
+      metric_name: 'Caller volume',
+      description: 'Caller loudness',
+      metric_type: generatedModels.CovalMetricsAPIMetricType.MetricVolume,
+    };
+
+    expect(await createMetric(base)).toEqual(base);
+    expect(await createMetric({ ...base, audio_filter: audioFilter, dependency_metric_ids: ['metric-a'] })).toEqual({
+      ...base,
+      audio_filter: audioFilter,
+      dependency_metric_ids: ['metric-a'],
+    });
+  });
+});

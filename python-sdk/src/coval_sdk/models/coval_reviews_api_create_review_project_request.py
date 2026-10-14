@@ -14,166 +14,125 @@
 
 
 from __future__ import annotations
-import pprint
-import re  # noqa: F401
 import json
+import pprint
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
+from typing import Any, List, Optional
+from coval_sdk.models.coval_reviews_api_create_review_project_request_one_of import CovalReviewsAPICreateReviewProjectRequestOneOf
+from coval_sdk.models.coval_reviews_api_create_review_project_request_one_of1 import CovalReviewsAPICreateReviewProjectRequestOneOf1
+from pydantic import StrictStr, Field
+from typing import Union, List, Set, Optional, Dict
+from typing_extensions import Literal, Self
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
-from typing_extensions import Annotated
-from coval_sdk.models.coval_reviews_api_project_rule import CovalReviewsAPIProjectRule
-from coval_sdk.models.coval_reviews_api_project_type import CovalReviewsAPIProjectType
-from typing import Optional, Set
-from typing_extensions import Self
-from pydantic_core import to_jsonable_python
+COVALREVIEWSAPICREATEREVIEWPROJECTREQUEST_ONE_OF_SCHEMAS = ["CovalReviewsAPICreateReviewProjectRequestOneOf", "CovalReviewsAPICreateReviewProjectRequestOneOf1"]
 
 class CovalReviewsAPICreateReviewProjectRequest(BaseModel):
     """
-    CovalReviewsAPICreateReviewProjectRequest
-    """ # noqa: E501
-    display_name: Annotated[str, Field(min_length=1, strict=True, max_length=200)] = Field(description="Project name")
-    description: Optional[StrictStr] = Field(default=None, description="Optional project description")
-    assignees: Annotated[List[StrictStr], Field(min_length=1)] = Field(description="Reviewer emails (at least one required)")
-    linked_simulation_ids: Optional[Annotated[List[StrictStr], Field(min_length=1)]] = Field(default=None, description="Simulation output IDs (at least one required)")
-    linked_metric_ids: Optional[Annotated[List[StrictStr], Field(min_length=1, max_length=25)]] = Field(default=None, description="Metric IDs (at least one required)")
-    project_type: Optional[CovalReviewsAPIProjectType] = CovalReviewsAPIProjectType.PROJECT_INDIVIDUAL
-    notifications: Optional[StrictBool] = Field(default=True, description="Enable notifications for assignees")
-    project_rules: Optional[List[CovalReviewsAPIProjectRule]] = Field(default=None, description="Rules to apply to this project")
-    blind_labeling_shown_metric_ids: Optional[List[StrictStr]] = Field(default=None, description="Metric IDs whose machine score stays visible during blind labeling")
-    enforced_collaboration: Optional[StrictBool] = Field(default=False, description="Enforce claims and explicit single-author completion for collaborative projects")
-    review_label_input_mode: Optional[StrictStr] = None
-    review_label_options: Optional[List[StrictStr]] = None
-    review_label_selection_mode: Optional[StrictStr] = None
-    additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["display_name", "description", "assignees", "linked_simulation_ids", "linked_metric_ids", "project_type", "notifications", "project_rules", "blind_labeling_shown_metric_ids", "enforced_collaboration", "review_label_input_mode", "review_label_options", "review_label_selection_mode"]
-
-    @field_validator('review_label_input_mode')
-    def review_label_input_mode_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['OPTION_ONLY', 'CUSTOM_ONLY', 'OPTION_OR_CUSTOM']):
-            raise ValueError("must be one of enum values ('OPTION_ONLY', 'CUSTOM_ONLY', 'OPTION_OR_CUSTOM')")
-        return value
-
-    @field_validator('review_label_selection_mode')
-    def review_label_selection_mode_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['SINGLE', 'MULTIPLE']):
-            raise ValueError("must be one of enum values ('SINGLE', 'MULTIPLE')")
-        return value
+    Select at least one reviewer by legacy email or verified Coval User ID. Nonempty emails and User IDs cannot be combined.
+    """
+    # data type: CovalReviewsAPICreateReviewProjectRequestOneOf
+    oneof_schema_1_validator: Optional[CovalReviewsAPICreateReviewProjectRequestOneOf] = None
+    # data type: CovalReviewsAPICreateReviewProjectRequestOneOf1
+    oneof_schema_2_validator: Optional[CovalReviewsAPICreateReviewProjectRequestOneOf1] = None
+    actual_instance: Optional[Union[CovalReviewsAPICreateReviewProjectRequestOneOf, CovalReviewsAPICreateReviewProjectRequestOneOf1]] = None
+    one_of_schemas: Set[str] = { "CovalReviewsAPICreateReviewProjectRequestOneOf", "CovalReviewsAPICreateReviewProjectRequestOneOf1" }
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
 
 
-    def to_str(self) -> str:
-        """Returns the string representation of the model using alias"""
-        return pprint.pformat(self.model_dump(by_alias=True))
+    def __init__(self, *args, **kwargs) -> None:
+        if args:
+            if len(args) > 1:
+                raise ValueError("If a position argument is used, only 1 is allowed to set `actual_instance`")
+            if kwargs:
+                raise ValueError("If a position argument is used, keyword arguments cannot be used.")
+            super().__init__(actual_instance=args[0])
+        else:
+            super().__init__(**kwargs)
+
+    @field_validator('actual_instance')
+    def actual_instance_must_validate_oneof(cls, v):
+        instance = CovalReviewsAPICreateReviewProjectRequest.model_construct()
+        error_messages = []
+        match = 0
+        # validate data type: CovalReviewsAPICreateReviewProjectRequestOneOf
+        if not isinstance(v, CovalReviewsAPICreateReviewProjectRequestOneOf):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `CovalReviewsAPICreateReviewProjectRequestOneOf`")
+        else:
+            match += 1
+        # validate data type: CovalReviewsAPICreateReviewProjectRequestOneOf1
+        if not isinstance(v, CovalReviewsAPICreateReviewProjectRequestOneOf1):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `CovalReviewsAPICreateReviewProjectRequestOneOf1`")
+        else:
+            match += 1
+        if match > 1:
+            # more than 1 match
+            raise ValueError("Multiple matches found when setting `actual_instance` in CovalReviewsAPICreateReviewProjectRequest with oneOf schemas: CovalReviewsAPICreateReviewProjectRequestOneOf, CovalReviewsAPICreateReviewProjectRequestOneOf1. Details: " + ", ".join(error_messages))
+        elif match == 0:
+            # no match
+            raise ValueError("No match found when setting `actual_instance` in CovalReviewsAPICreateReviewProjectRequest with oneOf schemas: CovalReviewsAPICreateReviewProjectRequestOneOf, CovalReviewsAPICreateReviewProjectRequestOneOf1. Details: " + ", ".join(error_messages))
+        else:
+            return v
+
+    @classmethod
+    def from_dict(cls, obj: Union[str, Dict[str, Any]]) -> Self:
+        return cls.from_json(json.dumps(obj))
+
+    @classmethod
+    def from_json(cls, json_str: str) -> Self:
+        """Returns the object represented by the json string"""
+        instance = cls.model_construct()
+        error_messages = []
+        match = 0
+
+        # deserialize data into CovalReviewsAPICreateReviewProjectRequestOneOf
+        try:
+            instance.actual_instance = CovalReviewsAPICreateReviewProjectRequestOneOf.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into CovalReviewsAPICreateReviewProjectRequestOneOf1
+        try:
+            instance.actual_instance = CovalReviewsAPICreateReviewProjectRequestOneOf1.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+
+        if match > 1:
+            # more than 1 match
+            raise ValueError("Multiple matches found when deserializing the JSON string into CovalReviewsAPICreateReviewProjectRequest with oneOf schemas: CovalReviewsAPICreateReviewProjectRequestOneOf, CovalReviewsAPICreateReviewProjectRequestOneOf1. Details: " + ", ".join(error_messages))
+        elif match == 0:
+            # no match
+            raise ValueError("No match found when deserializing the JSON string into CovalReviewsAPICreateReviewProjectRequest with oneOf schemas: CovalReviewsAPICreateReviewProjectRequestOneOf, CovalReviewsAPICreateReviewProjectRequestOneOf1. Details: " + ", ".join(error_messages))
+        else:
+            return instance
 
     def to_json(self) -> str:
-        """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        """Returns the JSON representation of the actual instance"""
+        if self.actual_instance is None:
+            return "null"
 
-    @classmethod
-    def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CovalReviewsAPICreateReviewProjectRequest from a JSON string"""
-        return cls.from_dict(json.loads(json_str))
+        if hasattr(self.actual_instance, "to_json") and callable(self.actual_instance.to_json):
+            return self.actual_instance.to_json()
+        else:
+            return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Dict[str, Any]:
-        """Return the dictionary representation of the model using alias.
-
-        This has the following differences from calling pydantic's
-        `self.model_dump(by_alias=True)`:
-
-        * `None` is only added to the output dict for nullable fields that
-          were set at model initialization. Other fields with value `None`
-          are ignored.
-        * Fields in `self.additional_properties` are added to the output dict.
-        """
-        excluded_fields: Set[str] = set([
-            "additional_properties",
-        ])
-
-        _dict = self.model_dump(
-            by_alias=True,
-            exclude=excluded_fields,
-            exclude_none=True,
-        )
-        # puts key-value pairs in additional_properties in the top level
-        if self.additional_properties is not None:
-            for _key, _value in self.additional_properties.items():
-                _dict[_key] = _value
-
-        # set to None if description (nullable) is None
-        # and model_fields_set contains the field
-        if self.description is None and "description" in self.model_fields_set:
-            _dict['description'] = None
-
-        # set to None if project_rules (nullable) is None
-        # and model_fields_set contains the field
-        if self.project_rules is None and "project_rules" in self.model_fields_set:
-            _dict['project_rules'] = None
-
-        # set to None if blind_labeling_shown_metric_ids (nullable) is None
-        # and model_fields_set contains the field
-        if self.blind_labeling_shown_metric_ids is None and "blind_labeling_shown_metric_ids" in self.model_fields_set:
-            _dict['blind_labeling_shown_metric_ids'] = None
-
-        # set to None if review_label_input_mode (nullable) is None
-        # and model_fields_set contains the field
-        if self.review_label_input_mode is None and "review_label_input_mode" in self.model_fields_set:
-            _dict['review_label_input_mode'] = None
-
-        # set to None if review_label_options (nullable) is None
-        # and model_fields_set contains the field
-        if self.review_label_options is None and "review_label_options" in self.model_fields_set:
-            _dict['review_label_options'] = None
-
-        # set to None if review_label_selection_mode (nullable) is None
-        # and model_fields_set contains the field
-        if self.review_label_selection_mode is None and "review_label_selection_mode" in self.model_fields_set:
-            _dict['review_label_selection_mode'] = None
-
-        return _dict
-
-    @classmethod
-    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CovalReviewsAPICreateReviewProjectRequest from a dict"""
-        if obj is None:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], CovalReviewsAPICreateReviewProjectRequestOneOf, CovalReviewsAPICreateReviewProjectRequestOneOf1]]:
+        """Returns the dict representation of the actual instance"""
+        if self.actual_instance is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        if hasattr(self.actual_instance, "to_dict") and callable(self.actual_instance.to_dict):
+            return self.actual_instance.to_dict()
+        else:
+            # primitive type
+            return self.actual_instance
 
-        _obj = cls.model_validate({
-            "display_name": obj.get("display_name"),
-            "description": obj.get("description"),
-            "assignees": obj.get("assignees"),
-            "linked_simulation_ids": obj.get("linked_simulation_ids"),
-            "linked_metric_ids": obj.get("linked_metric_ids"),
-            "project_type": obj.get("project_type") if obj.get("project_type") is not None else CovalReviewsAPIProjectType.PROJECT_INDIVIDUAL,
-            "notifications": obj.get("notifications") if obj.get("notifications") is not None else True,
-            "project_rules": obj.get("project_rules"),
-            "blind_labeling_shown_metric_ids": obj.get("blind_labeling_shown_metric_ids"),
-            "enforced_collaboration": obj.get("enforced_collaboration") if obj.get("enforced_collaboration") is not None else False,
-            "review_label_input_mode": obj.get("review_label_input_mode"),
-            "review_label_options": obj.get("review_label_options"),
-            "review_label_selection_mode": obj.get("review_label_selection_mode")
-        })
-        # store additional fields in additional_properties
-        for _key in obj.keys():
-            if _key not in cls.__properties:
-                _obj.additional_properties[_key] = obj.get(_key)
-
-        return _obj
+    def to_str(self) -> str:
+        """Returns the string representation of the actual instance"""
+        return pprint.pformat(self.model_dump())
 
 

@@ -20,13 +20,6 @@ import {
     CovalPersonasAPIMultiPhoneConfigToJSON,
     CovalPersonasAPIMultiPhoneConfigToJSONTyped,
 } from './CovalPersonasAPIMultiPhoneConfig.js';
-import type { CovalPersonasAPIResourceAttribution } from './CovalPersonasAPIResourceAttribution.js';
-import {
-    CovalPersonasAPIResourceAttributionFromJSON,
-    CovalPersonasAPIResourceAttributionFromJSONTyped,
-    CovalPersonasAPIResourceAttributionToJSON,
-    CovalPersonasAPIResourceAttributionToJSONTyped,
-} from './CovalPersonasAPIResourceAttribution.js';
 import type { CovalPersonasAPIAudioDegradationConfig } from './CovalPersonasAPIAudioDegradationConfig.js';
 import {
     CovalPersonasAPIAudioDegradationConfigFromJSON,
@@ -42,11 +35,29 @@ import {
  */
 export interface CovalPersonasAPIPersonaResource {
     /**
-     * Authoring timestamps and user IDs. Unknown or deleted users are null.
-     * @type {CovalPersonasAPIResourceAttribution}
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
      * @memberof CovalPersonasAPIPersonaResource
      */
-    readonly attribution?: CovalPersonasAPIResourceAttribution | null;
+    readonly created_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalPersonasAPIPersonaResource
+     */
+    readonly created_by: string | null;
+    /**
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
+     * @memberof CovalPersonasAPIPersonaResource
+     */
+    readonly updated_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalPersonasAPIPersonaResource
+     */
+    readonly updated_by: string | null;
     /**
      * Keep the persona silent for the whole simulation. Null clears the override.
      * @type {boolean}
@@ -272,6 +283,10 @@ export type CovalPersonasAPIPersonaResourceSituateSpeakerEnum = typeof CovalPers
  * Check if a given object implements the CovalPersonasAPIPersonaResource interface.
  */
 export function instanceOfCovalPersonasAPIPersonaResource(value: object): value is CovalPersonasAPIPersonaResource {
+    if (!('created_at' in value) || value['created_at'] === undefined) return false;
+    if (!('created_by' in value) || value['created_by'] === undefined) return false;
+    if (!('updated_at' in value) || value['updated_at'] === undefined) return false;
+    if (!('updated_by' in value) || value['updated_by'] === undefined) return false;
     if (!('resource_name' in value) || value['resource_name'] === undefined) return false;
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
@@ -289,7 +304,10 @@ export function CovalPersonasAPIPersonaResourceFromJSONTyped(json: any, ignoreDi
     }
     return {
         
-        'attribution': json['attribution'] == null ? undefined : CovalPersonasAPIResourceAttributionFromJSON(json['attribution']),
+        'created_at': (json['created_at'] == null ? null : new Date(json['created_at'])),
+        'created_by': json['created_by'],
+        'updated_at': (json['updated_at'] == null ? null : new Date(json['updated_at'])),
+        'updated_by': json['updated_by'],
         'silent_mode': json['silent_mode'] == null ? undefined : json['silent_mode'],
         'multi_phone_config': json['multi_phone_config'] == null ? undefined : CovalPersonasAPIMultiPhoneConfigFromJSON(json['multi_phone_config']),
         'initialization_parameters': json['initialization_parameters'] == null ? undefined : json['initialization_parameters'],
@@ -323,7 +341,7 @@ export function CovalPersonasAPIPersonaResourceToJSON(json: any): CovalPersonasA
     return CovalPersonasAPIPersonaResourceToJSONTyped(json, false);
 }
 
-export function CovalPersonasAPIPersonaResourceToJSONTyped(value?: Omit<CovalPersonasAPIPersonaResource, 'attribution'> | null, ignoreDiscriminator: boolean = false): any {
+export function CovalPersonasAPIPersonaResourceToJSONTyped(value?: Omit<CovalPersonasAPIPersonaResource, 'created_at'|'created_by'|'updated_at'|'updated_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

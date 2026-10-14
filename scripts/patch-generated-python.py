@@ -67,9 +67,14 @@ COMPATIBILITY_MODEL_ALIASES = (
 )
 
 # Preserve omission for optional partial-update fields, regardless of OpenAPI defaults.
-UPDATE_REQUEST_OMISSION_FIELDS = (
-  ("coval_reviews_api_update_review_project_request.py", "enforced_collaboration"),
-)
+# Update endpoints are PATCH, so a default the generator bakes into the request model is
+# sent on every update and overwrites the saved value.
+UPDATE_REQUEST_MODELS = "*_update_*_request.py"
+
+# `name: annotation = value` for a class field. Skips `__properties` and fields without a default.
+FIELD_DECLARATION = re.compile(r"^    (?P<name>[a-z][a-z0-9_]*): (?P<annotation>.+?) = (?P<value>.+)$", re.MULTILINE)
+# The `default=` argument of `Field(default=..., description=...)`.
+FIELD_DEFAULT = re.compile(r"^Field\(default=(?P<default>[^,)]+)(?P<rest>[,)].*)$")
 
 
 def replace_marked_block(contents: str, start_marker: str, end_marker: str, lines: list[str]) -> str:
@@ -262,41 +267,43 @@ def patch_missing_list_import() -> int:
 
 
 def patch_update_request_omission_fields() -> int:
-  ensured = 0
-  for filename, field_name in UPDATE_REQUEST_OMISSION_FIELDS:
-    path = MODELS / filename
-    if not path.exists():
-      raise RuntimeError(f"Generated update-request model is missing: {path}")
+  paths = sorted(MODELS.glob(UPDATE_REQUEST_MODELS))
+  if not paths:
+    raise RuntimeError(f"No generated update-request models matched {UPDATE_REQUEST_MODELS}")
 
+  cleared_total = 0
+  for path in paths:
     contents = path.read_text()
-    default_pattern = re.compile(
-      rf"^(?P<prefix>\s*{re.escape(field_name)}: .* = Field\(default=)"
-      r"(?P<default>False|None)(?P<suffix>, description=.*)$",
-      re.MULTILINE,
-    )
-    default_match = default_pattern.search(contents)
-    if default_match is None:
-      raise RuntimeError(
-        f"Generated update-request default anchor changed: {path}:{field_name}"
-      )
-    if default_match.group("default") == "False":
-      contents = (
-        f"{contents[:default_match.start()]}{default_match.group('prefix')}None"
-        f"{default_match.group('suffix')}{contents[default_match.end():]}"
-      )
+    cleared: list[tuple[str, str]] = []
 
-    fallback = f'"{field_name}": obj.get("{field_name}") if obj.get("{field_name}") is not None else False'
-    direct = f'"{field_name}": obj.get("{field_name}")'
-    if fallback in contents:
-      contents = contents.replace(fallback, direct, 1)
-    elif direct not in contents:
-      raise RuntimeError(
-        f"Generated update-request deserialization anchor changed: {path}:{field_name}"
-      )
+    def clear_default(match: re.Match[str], cleared: list[tuple[str, str]] = cleared) -> str:
+      name, value = match.group("name"), match.group("value")
+      if name == "additional_properties" or value == "None":
+        return match.group(0)
+      if value.startswith("Field("):
+        field = FIELD_DEFAULT.match(value)
+        if field is None or field.group("default") == "None":
+          return match.group(0)  # required, or already omitted
+        default, value = field.group("default"), f"Field(default=None{field.group('rest')}"
+      else:
+        default, value = value, "None"
+      cleared.append((name, default))
+      return f"    {name}: {match.group('annotation')} = {value}"
 
-    path.write_text(contents)
-    ensured += 1
-  return ensured
+    contents = FIELD_DECLARATION.sub(clear_default, contents)
+    for name, default in cleared:
+      # from_dict re-applies the default for a missing key, which would put it back.
+      fallback = f'"{name}": obj.get("{name}") if obj.get("{name}") is not None else {default}'
+      direct = f'"{name}": obj.get("{name}")'
+      if fallback in contents:
+        contents = contents.replace(fallback, direct, 1)
+      elif direct not in contents:
+        raise RuntimeError(f"Generated update-request deserialization anchor changed: {path}:{name}")
+
+    if cleared:
+      path.write_text(contents)
+    cleared_total += len(cleared)
+  return cleared_total
 
 
 def _patch_oneof_response_compatibility(path: Path, discriminated_from_dict: str) -> None:
@@ -413,7 +420,7 @@ def main() -> None:
   INIT.write_text(contents)
   print(f"  Ensured ApiClient and {patched_lists} collection-response list deserializers are patched.")
   print(f"  Added the missing List import to {patched_imports} generated models.")
-  print(f"  Preserved omission for {patched_update_fields} generated update-request fields.")
+  print(f"  Cleared {patched_update_fields} OpenAPI defaults from generated update-request fields.")
   print(f"  Synchronized {api_count} CovalClient API properties.")
   print(f"  Added {compatibility_aliases} generated-model compatibility alias modules.")
   print("  Exported CovalClient, InvalidListItemWarning, and paginate from coval_sdk.")

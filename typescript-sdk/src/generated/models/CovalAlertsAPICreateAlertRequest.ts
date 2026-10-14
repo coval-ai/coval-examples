@@ -129,7 +129,7 @@ export interface CovalAlertsAPICreateAlertRequest {
      */
     customer_metadata?: { [key: string]: CovalAlertsAPIAlertResourceCustomerMetadataValue; };
     /**
-     * Metric conditions. May be empty only when customer_metadata is nonempty.
+     * Metric conditions. With ALL match mode, an empty list matches every conversation passing the remaining filters. ANY requires a metric condition or customer_metadata filter.
      * @type {Array<CovalAlertsAPIConditionInput>}
      * @memberof CovalAlertsAPICreateAlertRequest
      */

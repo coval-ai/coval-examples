@@ -20,13 +20,6 @@ import {
     CovalReportsAPICompareByToJSON,
     CovalReportsAPICompareByToJSONTyped,
 } from './CovalReportsAPICompareBy.js';
-import type { CovalReportsAPIResourceAttribution } from './CovalReportsAPIResourceAttribution.js';
-import {
-    CovalReportsAPIResourceAttributionFromJSON,
-    CovalReportsAPIResourceAttributionFromJSONTyped,
-    CovalReportsAPIResourceAttributionToJSON,
-    CovalReportsAPIResourceAttributionToJSONTyped,
-} from './CovalReportsAPIResourceAttribution.js';
 import type { CovalReportsAPIReportPermission } from './CovalReportsAPIReportPermission.js';
 import {
     CovalReportsAPIReportPermissionFromJSON,
@@ -42,11 +35,29 @@ import {
  */
 export interface CovalReportsAPIReport {
     /**
-     * Authoring timestamps and user IDs. Unknown or deleted users are null.
-     * @type {CovalReportsAPIResourceAttribution}
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
      * @memberof CovalReportsAPIReport
      */
-    readonly attribution?: CovalReportsAPIResourceAttribution | null;
+    readonly created_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalReportsAPIReport
+     */
+    readonly created_by: string | null;
+    /**
+     * Authoring timestamp; null when unknown.
+     * @type {Date}
+     * @memberof CovalReportsAPIReport
+     */
+    readonly updated_at: Date | null;
+    /**
+     * Canonical author user ID; null when unknown.
+     * @type {string}
+     * @memberof CovalReportsAPIReport
+     */
+    readonly updated_by: string | null;
     /**
      * The report's ULID. Open it in the app at /<organization>/reports/<id>.
      * @type {string}
@@ -109,6 +120,10 @@ export interface CovalReportsAPIReport {
  * Check if a given object implements the CovalReportsAPIReport interface.
  */
 export function instanceOfCovalReportsAPIReport(value: object): value is CovalReportsAPIReport {
+    if (!('created_at' in value) || value['created_at'] === undefined) return false;
+    if (!('created_by' in value) || value['created_by'] === undefined) return false;
+    if (!('updated_at' in value) || value['updated_at'] === undefined) return false;
+    if (!('updated_by' in value) || value['updated_by'] === undefined) return false;
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('run_ids' in value) || value['run_ids'] === undefined) return false;
@@ -127,7 +142,10 @@ export function CovalReportsAPIReportFromJSONTyped(json: any, ignoreDiscriminato
     }
     return {
         
-        'attribution': json['attribution'] == null ? undefined : CovalReportsAPIResourceAttributionFromJSON(json['attribution']),
+        'created_at': (json['created_at'] == null ? null : new Date(json['created_at'])),
+        'created_by': json['created_by'],
+        'updated_at': (json['updated_at'] == null ? null : new Date(json['updated_at'])),
+        'updated_by': json['updated_by'],
         'id': json['id'],
         'name': json['name'],
         'run_ids': json['run_ids'],
@@ -144,7 +162,7 @@ export function CovalReportsAPIReportToJSON(json: any): CovalReportsAPIReport {
     return CovalReportsAPIReportToJSONTyped(json, false);
 }
 
-export function CovalReportsAPIReportToJSONTyped(value?: Omit<CovalReportsAPIReport, 'attribution'> | null, ignoreDiscriminator: boolean = false): any {
+export function CovalReportsAPIReportToJSONTyped(value?: Omit<CovalReportsAPIReport, 'created_at'|'created_by'|'updated_at'|'updated_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
