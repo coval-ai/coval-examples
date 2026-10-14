@@ -24,6 +24,7 @@
  * - **MODEL_TYPE_EMAIL**: Email-based text agents
  * - **MODEL_TYPE_SMS**: SMS messaging agents (requires phone_number in E.164 format)
  * - **MODEL_TYPE_WEBSOCKET**: WebSocket voice agents (requires metadata.endpoint wss:// URL in direct mode; metadata.initialization_json is optional)
+ * - **MODEL_TYPE_SDK_WEBSOCKET**: Voice agents that connect outbound to the Cloudflare Durable Object relay using Coval Agent SDK.
  * - **MODEL_TYPE_LIVEKIT**: LiveKit agents (requires metadata.generate_token_endpoint and metadata.livekit_url)
  * - **MODEL_TYPE_DAILY**: Pipecat Cloud agents (requires metadata.pipecat_api_key and metadata.agent_name)
  * - **MODEL_TYPE_OPENAI_REALTIME**: OpenAI Realtime voice-to-voice agents
@@ -42,6 +43,7 @@ export const CovalAgentsAPISimulatorType = {
     ModelTypeEmail: 'MODEL_TYPE_EMAIL',
     ModelTypeSms: 'MODEL_TYPE_SMS',
     ModelTypeWebsocket: 'MODEL_TYPE_WEBSOCKET',
+    ModelTypeSdkWebsocket: 'MODEL_TYPE_SDK_WEBSOCKET',
     ModelTypeLivekit: 'MODEL_TYPE_LIVEKIT',
     ModelTypeDaily: 'MODEL_TYPE_DAILY',
     ModelTypeOpenaiRealtime: 'MODEL_TYPE_OPENAI_REALTIME',

@@ -44,7 +44,7 @@ export interface CovalMetricsAPIRecentlyDeletedMetricResource {
      */
     delete_time?: Date | null;
     /**
-     * Who deleted the metric (email address)
+     * Canonical user ID of the last editor at deletion, or null when unknown
      * @type {string}
      * @memberof CovalMetricsAPIRecentlyDeletedMetricResource
      */

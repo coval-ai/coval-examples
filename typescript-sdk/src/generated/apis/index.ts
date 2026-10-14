@@ -14,6 +14,7 @@ export * from './MonitorEventsApi.js';
 export * from './MonitorsApi.js';
 export * from './MutationsApi.js';
 export * from './OrganizationConversationsConfigApi.js';
+export * from './OrganizationUsersApi.js';
 export * from './PersonasApi.js';
 export * from './ReportsApi.js';
 export * from './ReviewAnnotationsApi.js';

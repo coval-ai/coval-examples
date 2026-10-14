@@ -28,6 +28,7 @@ from coval_sdk.api import (
   MonitorsApi,
   MutationsApi,
   OrganizationConversationsConfigApi,
+  OrganizationUsersApi,
   PersonasApi,
   ReportsApi,
   ReviewAnnotationsApi,
@@ -71,6 +72,7 @@ API_PROPERTY_NAMES = (
   "monitors",
   "mutations",
   "organization_conversations_config",
+  "organization_users",
   "personas",
   "reports",
   "review_annotations",
@@ -269,6 +271,7 @@ class CovalClient:
     self.monitors = MonitorsApi(self.api_client)
     self.mutations = MutationsApi(self.api_client)
     self.organization_conversations_config = OrganizationConversationsConfigApi(self.api_client)
+    self.organization_users = OrganizationUsersApi(self.api_client)
     self.personas = PersonasApi(self.api_client)
     self.reports = ReportsApi(self.api_client)
     self.review_annotations = ReviewAnnotationsApi(self.api_client)

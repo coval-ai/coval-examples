@@ -40,7 +40,7 @@ class CovalMetricsAPIMetricVersionResource(BaseModel):
     judge_mode: Optional[CovalMetricsAPIJudgeMode] = None
     metric_metadata: Optional[Dict[str, Any]] = Field(default=None, description="Verbatim scoring-config snapshot for this version")
     label: Optional[StrictStr] = Field(default=None, description="Optional user-supplied tag")
-    created_by: StrictStr = Field(description="Who created this version (email address)")
+    created_by: StrictStr = Field(description="Version author: canonical user ID for system-materialized versions; other entries may contain an email address or an empty string when unknown")
     create_time: Optional[datetime] = Field(default=None, description="When this version became current")
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["name", "ulid", "version_number", "change_type", "metric_type", "judge_mode", "metric_metadata", "label", "created_by", "create_time"]

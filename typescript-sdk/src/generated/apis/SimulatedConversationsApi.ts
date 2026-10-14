@@ -58,6 +58,16 @@ import {
     CovalSimulatedConversationsAPIUpdateSimulatedConversationResponseFromJSON,
     CovalSimulatedConversationsAPIUpdateSimulatedConversationResponseToJSON,
 } from '../models/CovalSimulatedConversationsAPIUpdateSimulatedConversationResponse.js';
+import {
+    type GetSimulationAttribute200Response,
+    GetSimulationAttribute200ResponseFromJSON,
+    GetSimulationAttribute200ResponseToJSON,
+} from '../models/GetSimulationAttribute200Response.js';
+import {
+    type GetSimulationConnect200Response,
+    GetSimulationConnect200ResponseFromJSON,
+    GetSimulationConnect200ResponseToJSON,
+} from '../models/GetSimulationConnect200Response.js';
 
 export interface DeleteSimulatedConversationRequest {
     simulationId: string;
@@ -68,6 +78,15 @@ export interface GetSimulatedConversationRequest {
 }
 
 export interface GetSimulatedConversationAudioRequest {
+    simulationId: string;
+}
+
+export interface GetSimulationAttributeRequest {
+    simulationId: string;
+    attributeName: string;
+}
+
+export interface GetSimulationConnectRequest {
     simulationId: string;
 }
 
@@ -171,6 +190,56 @@ export interface SimulatedConversationsApiInterface {
      * Get audio file URL
      */
     getSimulatedConversationAudio(requestParameters: GetSimulatedConversationAudioRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalSimulatedConversationsAPIGetSimulatedConversationAudioResponse>;
+
+    /**
+     * Creates request options for getSimulationAttribute without sending the request
+     * @param {string} simulationId 
+     * @param {string} attributeName 
+     * @throws {RequiredError}
+     * @memberof SimulatedConversationsApiInterface
+     */
+    getSimulationAttributeRequestOpts(requestParameters: GetSimulationAttributeRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Returns an exact, case-sensitive top-level attribute from the simulation\'s current active test case. Names are literal keys, including dots, rather than paths. URL-encode names when necessary.  Requires simulations:read permission. The simulation, run, test case and test set must be accessible in the authenticated organization and workspace. A resolved workspace is required. Select one with X-Coval-Workspace-Id when the organization has no default workspace. Legacy unassigned rows are accessible only through the default workspace. Monitoring conversations and deleted runs are excluded. This endpoint can be used while a simulation is running or after it finishes.  JSON values return directly without an envelope. Null is a successful JSON value, while an absent attribute returns 404. Changes to the test case are visible on subsequent requests. This endpoint does not capture a snapshot or persist tool-call events.  An object with type: image_ref is reserved for image references and must contain attachment: <name>, matching exactly one media attachment on the test case. Image responses contain raw PNG/JPEG bytes, with a maximum size of 4 MiB. Ordinary objects without that marker return unchanged.  This deliberately returns content instead of an AIP-131 resource envelope: customer tool handlers consume the fixture directly, including image bytes. Both JSON and image response content are limited to 4 MiB. 
+     * @summary Retrieve a named simulation attribute
+     * @param {string} simulationId 
+     * @param {string} attributeName 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SimulatedConversationsApiInterface
+     */
+    getSimulationAttributeRaw(requestParameters: GetSimulationAttributeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetSimulationAttribute200Response>>;
+
+    /**
+     * Returns an exact, case-sensitive top-level attribute from the simulation\'s current active test case. Names are literal keys, including dots, rather than paths. URL-encode names when necessary.  Requires simulations:read permission. The simulation, run, test case and test set must be accessible in the authenticated organization and workspace. A resolved workspace is required. Select one with X-Coval-Workspace-Id when the organization has no default workspace. Legacy unassigned rows are accessible only through the default workspace. Monitoring conversations and deleted runs are excluded. This endpoint can be used while a simulation is running or after it finishes.  JSON values return directly without an envelope. Null is a successful JSON value, while an absent attribute returns 404. Changes to the test case are visible on subsequent requests. This endpoint does not capture a snapshot or persist tool-call events.  An object with type: image_ref is reserved for image references and must contain attachment: <name>, matching exactly one media attachment on the test case. Image responses contain raw PNG/JPEG bytes, with a maximum size of 4 MiB. Ordinary objects without that marker return unchanged.  This deliberately returns content instead of an AIP-131 resource envelope: customer tool handlers consume the fixture directly, including image bytes. Both JSON and image response content are limited to 4 MiB. 
+     * Retrieve a named simulation attribute
+     */
+    getSimulationAttribute(requestParameters: GetSimulationAttributeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetSimulationAttribute200Response>;
+
+    /**
+     * Creates request options for getSimulationConnect without sending the request
+     * @param {string} simulationId The simulation execution ID.
+     * @throws {RequiredError}
+     * @memberof SimulatedConversationsApiInterface
+     */
+    getSimulationConnectRequestOpts(requestParameters: GetSimulationConnectRequest): Promise<runtime.RequestOpts>;
+
+    /**
+     * Returns the current SDK WebSocket connection state for a simulation. A READY response includes a short-lived, one-use token and a WSS URL. Poll until READY or a terminal status. The token is never returned after a successful connection, and responses must not be cached. 
+     * @summary Discover SDK WebSocket connection
+     * @param {string} simulationId The simulation execution ID.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SimulatedConversationsApiInterface
+     */
+    getSimulationConnectRaw(requestParameters: GetSimulationConnectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetSimulationConnect200Response>>;
+
+    /**
+     * Returns the current SDK WebSocket connection state for a simulation. A READY response includes a short-lived, one-use token and a WSS URL. Poll until READY or a terminal status. The token is never returned after a successful connection, and responses must not be cached. 
+     * Discover SDK WebSocket connection
+     */
+    getSimulationConnect(requestParameters: GetSimulationConnectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetSimulationConnect200Response>;
 
     /**
      * Creates request options for listSimulatedConversations without sending the request
@@ -437,6 +506,116 @@ export class SimulatedConversationsApi extends runtime.BaseAPI implements Simula
      */
     async getSimulatedConversationAudio(requestParameters: GetSimulatedConversationAudioRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalSimulatedConversationsAPIGetSimulatedConversationAudioResponse> {
         const response = await this.getSimulatedConversationAudioRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for getSimulationAttribute without sending the request
+     */
+    async getSimulationAttributeRequestOpts(requestParameters: GetSimulationAttributeRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['simulationId'] == null) {
+            throw new runtime.RequiredError(
+                'simulationId',
+                'Required parameter "simulationId" was null or undefined when calling getSimulationAttribute().'
+            );
+        }
+
+        if (requestParameters['attributeName'] == null) {
+            throw new runtime.RequiredError(
+                'attributeName',
+                'Required parameter "attributeName" was null or undefined when calling getSimulationAttribute().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Simulated_Conversations_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/simulations/{simulation_id}/attributes/{attribute_name}`;
+        urlPath = urlPath.replace('{simulation_id}', encodeURIComponent(String(requestParameters['simulationId'])));
+        urlPath = urlPath.replace('{attribute_name}', encodeURIComponent(String(requestParameters['attributeName'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Returns an exact, case-sensitive top-level attribute from the simulation\'s current active test case. Names are literal keys, including dots, rather than paths. URL-encode names when necessary.  Requires simulations:read permission. The simulation, run, test case and test set must be accessible in the authenticated organization and workspace. A resolved workspace is required. Select one with X-Coval-Workspace-Id when the organization has no default workspace. Legacy unassigned rows are accessible only through the default workspace. Monitoring conversations and deleted runs are excluded. This endpoint can be used while a simulation is running or after it finishes.  JSON values return directly without an envelope. Null is a successful JSON value, while an absent attribute returns 404. Changes to the test case are visible on subsequent requests. This endpoint does not capture a snapshot or persist tool-call events.  An object with type: image_ref is reserved for image references and must contain attachment: <name>, matching exactly one media attachment on the test case. Image responses contain raw PNG/JPEG bytes, with a maximum size of 4 MiB. Ordinary objects without that marker return unchanged.  This deliberately returns content instead of an AIP-131 resource envelope: customer tool handlers consume the fixture directly, including image bytes. Both JSON and image response content are limited to 4 MiB. 
+     * Retrieve a named simulation attribute
+     */
+    async getSimulationAttributeRaw(requestParameters: GetSimulationAttributeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetSimulationAttribute200Response>> {
+        const requestOptions = await this.getSimulationAttributeRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetSimulationAttribute200ResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Returns an exact, case-sensitive top-level attribute from the simulation\'s current active test case. Names are literal keys, including dots, rather than paths. URL-encode names when necessary.  Requires simulations:read permission. The simulation, run, test case and test set must be accessible in the authenticated organization and workspace. A resolved workspace is required. Select one with X-Coval-Workspace-Id when the organization has no default workspace. Legacy unassigned rows are accessible only through the default workspace. Monitoring conversations and deleted runs are excluded. This endpoint can be used while a simulation is running or after it finishes.  JSON values return directly without an envelope. Null is a successful JSON value, while an absent attribute returns 404. Changes to the test case are visible on subsequent requests. This endpoint does not capture a snapshot or persist tool-call events.  An object with type: image_ref is reserved for image references and must contain attachment: <name>, matching exactly one media attachment on the test case. Image responses contain raw PNG/JPEG bytes, with a maximum size of 4 MiB. Ordinary objects without that marker return unchanged.  This deliberately returns content instead of an AIP-131 resource envelope: customer tool handlers consume the fixture directly, including image bytes. Both JSON and image response content are limited to 4 MiB. 
+     * Retrieve a named simulation attribute
+     */
+    async getSimulationAttribute(requestParameters: GetSimulationAttributeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetSimulationAttribute200Response> {
+        const response = await this.getSimulationAttributeRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for getSimulationConnect without sending the request
+     */
+    async getSimulationConnectRequestOpts(requestParameters: GetSimulationConnectRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['simulationId'] == null) {
+            throw new runtime.RequiredError(
+                'simulationId',
+                'Required parameter "simulationId" was null or undefined when calling getSimulationConnect().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-API-Key"] = await this.configuration.apiKey("X-API-Key"); // Coval_Simulated_Conversations_API_ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/simulations/{simulation_id}/connect`;
+        urlPath = urlPath.replace('{simulation_id}', encodeURIComponent(String(requestParameters['simulationId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     * Returns the current SDK WebSocket connection state for a simulation. A READY response includes a short-lived, one-use token and a WSS URL. Poll until READY or a terminal status. The token is never returned after a successful connection, and responses must not be cached. 
+     * Discover SDK WebSocket connection
+     */
+    async getSimulationConnectRaw(requestParameters: GetSimulationConnectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetSimulationConnect200Response>> {
+        const requestOptions = await this.getSimulationConnectRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetSimulationConnect200ResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Returns the current SDK WebSocket connection state for a simulation. A READY response includes a short-lived, one-use token and a WSS URL. Poll until READY or a terminal status. The token is never returned after a successful connection, and responses must not be cached. 
+     * Discover SDK WebSocket connection
+     */
+    async getSimulationConnect(requestParameters: GetSimulationConnectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetSimulationConnect200Response> {
+        const response = await this.getSimulationConnectRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
