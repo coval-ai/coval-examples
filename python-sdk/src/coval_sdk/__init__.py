@@ -15,7 +15,7 @@
 """  # noqa: E501
 
 
-__version__ = "0.9.0"
+__version__ = "0.9.1"
 
 # Define package exports
 __all__ = [
@@ -39,6 +39,7 @@ __all__ = [
     "MonitorsApi",
     "MutationsApi",
     "OrganizationConversationsConfigApi",
+    "OrganizationUsersApi",
     "PersonasApi",
     "ReportsApi",
     "ReviewAnnotationsApi",
@@ -305,6 +306,8 @@ __all__ = [
     "CovalOrganizationAPIError",
     "CovalOrganizationAPIErrorDetail",
     "CovalOrganizationAPIErrorResponse",
+    "CovalOrganizationAPIListOrganizationUsersResponse",
+    "CovalOrganizationAPIOrganizationUser",
     "CovalOrganizationAPIUpdateConversationMetricsRequest",
     "CovalPersonasAPIAudioDegradationConfig",
     "CovalPersonasAPIBackgroundSoundResource",
@@ -575,6 +578,8 @@ __all__ = [
     "GetConversationMetric200Response",
     "GetRun200Response",
     "GetSimulatedConversationMetric200Response",
+    "GetSimulationAttribute200Response",
+    "GetSimulationConnect200Response",
     "GetTraceQualitySummary200Response",
     "GetTraceQualitySummary200ResponseTarget",
     "GetUploadedConversationMetric200Response",
@@ -648,6 +653,7 @@ from coval_sdk.api.monitor_events_api import MonitorEventsApi as MonitorEventsAp
 from coval_sdk.api.monitors_api import MonitorsApi as MonitorsApi
 from coval_sdk.api.mutations_api import MutationsApi as MutationsApi
 from coval_sdk.api.organization_conversations_config_api import OrganizationConversationsConfigApi as OrganizationConversationsConfigApi
+from coval_sdk.api.organization_users_api import OrganizationUsersApi as OrganizationUsersApi
 from coval_sdk.api.personas_api import PersonasApi as PersonasApi
 from coval_sdk.api.reports_api import ReportsApi as ReportsApi
 from coval_sdk.api.review_annotations_api import ReviewAnnotationsApi as ReviewAnnotationsApi
@@ -918,6 +924,8 @@ from coval_sdk.models.coval_organization_api_conversation_metrics_config import 
 from coval_sdk.models.coval_organization_api_error import CovalOrganizationAPIError as CovalOrganizationAPIError
 from coval_sdk.models.coval_organization_api_error_detail import CovalOrganizationAPIErrorDetail as CovalOrganizationAPIErrorDetail
 from coval_sdk.models.coval_organization_api_error_response import CovalOrganizationAPIErrorResponse as CovalOrganizationAPIErrorResponse
+from coval_sdk.models.coval_organization_api_list_organization_users_response import CovalOrganizationAPIListOrganizationUsersResponse as CovalOrganizationAPIListOrganizationUsersResponse
+from coval_sdk.models.coval_organization_api_organization_user import CovalOrganizationAPIOrganizationUser as CovalOrganizationAPIOrganizationUser
 from coval_sdk.models.coval_organization_api_update_conversation_metrics_request import CovalOrganizationAPIUpdateConversationMetricsRequest as CovalOrganizationAPIUpdateConversationMetricsRequest
 from coval_sdk.models.coval_personas_api_audio_degradation_config import CovalPersonasAPIAudioDegradationConfig as CovalPersonasAPIAudioDegradationConfig
 from coval_sdk.models.coval_personas_api_background_sound_resource import CovalPersonasAPIBackgroundSoundResource as CovalPersonasAPIBackgroundSoundResource
@@ -1188,6 +1196,8 @@ from coval_sdk.models.duplicate_agent_request import DuplicateAgentRequest as Du
 from coval_sdk.models.get_conversation_metric200_response import GetConversationMetric200Response as GetConversationMetric200Response
 from coval_sdk.models.get_run200_response import GetRun200Response as GetRun200Response
 from coval_sdk.models.get_simulated_conversation_metric200_response import GetSimulatedConversationMetric200Response as GetSimulatedConversationMetric200Response
+from coval_sdk.models.get_simulation_attribute200_response import GetSimulationAttribute200Response as GetSimulationAttribute200Response
+from coval_sdk.models.get_simulation_connect200_response import GetSimulationConnect200Response as GetSimulationConnect200Response
 from coval_sdk.models.get_trace_quality_summary200_response import GetTraceQualitySummary200Response as GetTraceQualitySummary200Response
 from coval_sdk.models.get_trace_quality_summary200_response_target import GetTraceQualitySummary200ResponseTarget as GetTraceQualitySummary200ResponseTarget
 from coval_sdk.models.get_uploaded_conversation_metric200_response import GetUploadedConversationMetric200Response as GetUploadedConversationMetric200Response

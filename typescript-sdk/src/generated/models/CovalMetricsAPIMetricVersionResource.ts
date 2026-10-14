@@ -90,7 +90,7 @@ export interface CovalMetricsAPIMetricVersionResource {
      */
     label?: string | null;
     /**
-     * Who created this version (email address)
+     * Version author: canonical user ID for system-materialized versions; other entries may contain an email address or an empty string when unknown
      * @type {string}
      * @memberof CovalMetricsAPIMetricVersionResource
      */

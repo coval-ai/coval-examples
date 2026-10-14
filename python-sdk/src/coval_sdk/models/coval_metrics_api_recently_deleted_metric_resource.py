@@ -33,7 +33,7 @@ class CovalMetricsAPIRecentlyDeletedMetricResource(BaseModel):
     id: StrictStr = Field(description="Metric ID (22-char ShortUUID)")
     metric_name: StrictStr = Field(description="User-facing metric name")
     delete_time: Optional[datetime] = Field(default=None, description="When the metric was deleted")
-    deleted_by: Optional[StrictStr] = Field(default=None, description="Who deleted the metric (email address)")
+    deleted_by: Optional[StrictStr] = Field(default=None, description="Canonical user ID of the last editor at deletion, or null when unknown")
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["name", "id", "metric_name", "delete_time", "deleted_by"]
 

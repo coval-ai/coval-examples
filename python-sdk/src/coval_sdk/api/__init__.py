@@ -15,6 +15,7 @@ from coval_sdk.api.monitor_events_api import MonitorEventsApi
 from coval_sdk.api.monitors_api import MonitorsApi
 from coval_sdk.api.mutations_api import MutationsApi
 from coval_sdk.api.organization_conversations_config_api import OrganizationConversationsConfigApi
+from coval_sdk.api.organization_users_api import OrganizationUsersApi
 from coval_sdk.api.personas_api import PersonasApi
 from coval_sdk.api.reports_api import ReportsApi
 from coval_sdk.api.review_annotations_api import ReviewAnnotationsApi
