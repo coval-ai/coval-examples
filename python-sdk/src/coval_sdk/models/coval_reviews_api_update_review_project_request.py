@@ -266,6 +266,8 @@ class CovalReviewsAPIUpdateReviewProjectRequest(BaseModel):
             "review_label_options": obj.get("review_label_options"),
             "review_label_selection_mode": obj.get("review_label_selection_mode")
         })
+        # Only supplied PATCH fields may be serialized, including explicit nulls.
+        _obj.model_fields_set.intersection_update(obj)
         # store additional fields in additional_properties
         for _key in obj.keys():
             if _key not in cls.__properties:

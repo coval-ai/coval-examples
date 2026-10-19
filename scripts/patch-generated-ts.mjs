@@ -371,6 +371,18 @@ if (emptyAliases.length > 0) {
   process.exit(1);
 }
 
+// The skip policy distinguishes null (all metrics) from omission (keep policy).
+const projectUpdateModel = join(MODELS_DIR, 'CovalReviewsAPIUpdateReviewProjectRequest.ts');
+let projectUpdateContents = readFileSync(projectUpdateModel, 'utf8');
+const skipPolicyBefore = "'skippable_metric_ids': json['skippable_metric_ids'] == null ? undefined : json['skippable_metric_ids'],";
+const skipPolicyAfter = "'skippable_metric_ids': json['skippable_metric_ids'],";
+if (projectUpdateContents.includes(skipPolicyBefore)) {
+  projectUpdateContents = projectUpdateContents.replace(skipPolicyBefore, skipPolicyAfter);
+} else if (!projectUpdateContents.includes(skipPolicyAfter)) {
+  throw new Error('Generated review project skip-policy deserialization anchor changed');
+}
+writeFileSync(projectUpdateModel, projectUpdateContents);
+
 const compatibilityAliases = patchCompatibilityModelAliases();
 const updateRunOneOfPatches = patchUpdateRunOneOfOrdering();
 

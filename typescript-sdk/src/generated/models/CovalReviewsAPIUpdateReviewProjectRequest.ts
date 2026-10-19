@@ -224,7 +224,7 @@ export function CovalReviewsAPIUpdateReviewProjectRequestFromJSONTyped(json: any
         'opted_out_assignees': json['opted_out_assignees'] == null ? undefined : json['opted_out_assignees'],
         'enforced_collaboration': json['enforced_collaboration'] == null ? undefined : json['enforced_collaboration'],
         'allow_metric_skipping': json['allow_metric_skipping'] == null ? undefined : json['allow_metric_skipping'],
-        'skippable_metric_ids': json['skippable_metric_ids'] == null ? undefined : json['skippable_metric_ids'],
+        'skippable_metric_ids': json['skippable_metric_ids'],
         'project_type': json['project_type'] == null ? undefined : json['project_type'],
         'review_label_enabled': json['review_label_enabled'] == null ? undefined : json['review_label_enabled'],
         'review_label_input_mode': json['review_label_input_mode'] == null ? undefined : json['review_label_input_mode'],

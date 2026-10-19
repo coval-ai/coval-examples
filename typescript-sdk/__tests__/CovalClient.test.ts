@@ -462,3 +462,13 @@ describe('request bodies', () => {
     });
   });
 });
+
+
+describe('review project PATCH serialization', () => {
+  it.each([undefined, null, [], ['metric-1']])('preserves skip policy %j', (value) => {
+    const payload = value === undefined ? { display_name: 'Renamed' } : { skippable_metric_ids: value };
+    const model = generatedModels.CovalReviewsAPIUpdateReviewProjectRequestFromJSON(payload);
+    const serialized = generatedModels.CovalReviewsAPIUpdateReviewProjectRequestToJSON(model);
+    expect(JSON.parse(JSON.stringify(serialized))).toEqual(payload);
+  });
+});

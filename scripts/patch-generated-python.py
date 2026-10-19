@@ -300,7 +300,18 @@ def patch_update_request_omission_fields() -> int:
       elif direct not in contents:
         raise RuntimeError(f"Generated update-request deserialization anchor changed: {path}:{name}")
 
-    if cleared:
+    if path.name == "coval_reviews_api_update_review_project_request.py":
+      anchor = "        # store additional fields in additional_properties\n"
+      preserve = (
+        "        # Only supplied PATCH fields may be serialized, including explicit nulls.\n"
+        "        _obj.model_fields_set.intersection_update(obj)\n"
+      )
+      if preserve not in contents:
+        if anchor not in contents:
+          raise RuntimeError(f"Generated update-request field-set anchor changed: {path}")
+        contents = contents.replace(anchor, preserve + anchor, 1)
+
+    if cleared or path.name == "coval_reviews_api_update_review_project_request.py":
       path.write_text(contents)
     cleared_total += len(cleared)
   return cleared_total
