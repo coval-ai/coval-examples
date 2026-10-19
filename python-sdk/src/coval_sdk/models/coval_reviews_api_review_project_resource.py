@@ -21,6 +21,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from coval_sdk.models.coval_reviews_api_project_rule import CovalReviewsAPIProjectRule
 from coval_sdk.models.coval_reviews_api_project_type import CovalReviewsAPIProjectType
 from typing import Optional, Set
@@ -49,6 +50,7 @@ class CovalReviewsAPIReviewProjectResource(BaseModel):
     project_rules: Optional[List[CovalReviewsAPIProjectRule]] = Field(default=None, description="Rules applied to this project (e.g. require notes on disagreement)")
     enforced_collaboration: Optional[StrictBool] = Field(default=False, description="Whether collaborative claims and explicit single-author completion are enforced")
     allow_metric_skipping: Optional[StrictBool] = Field(default=False, description="Allow reviewers to skip linked metrics")
+    skippable_metric_ids: Optional[List[Annotated[str, Field(min_length=1, strict=True, max_length=200)]]] = Field(default=None, description="Metric IDs eligible for skipping. Null means all linked metrics; an empty list means none.")
     create_time: datetime = Field(description="Creation timestamp (ISO 8601)")
     update_time: datetime = Field(description="Last update timestamp (ISO 8601)")
     blind_labeling_shown_metric_ids: Optional[List[StrictStr]] = None
@@ -59,7 +61,7 @@ class CovalReviewsAPIReviewProjectResource(BaseModel):
     review_label_options: Optional[List[StrictStr]] = None
     review_label_selection_mode: Optional[StrictStr] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["reviewer_user_ids", "opted_out_assignee_user_ids", "created_at", "created_by", "updated_at", "updated_by", "name", "id", "display_name", "description", "assignees", "linked_simulation_ids", "linked_metric_ids", "project_type", "notifications", "project_rules", "enforced_collaboration", "allow_metric_skipping", "create_time", "update_time", "blind_labeling_shown_metric_ids", "linked_metric_count", "linked_simulation_count", "review_label_enabled", "review_label_input_mode", "review_label_options", "review_label_selection_mode"]
+    __properties: ClassVar[List[str]] = ["reviewer_user_ids", "opted_out_assignee_user_ids", "created_at", "created_by", "updated_at", "updated_by", "name", "id", "display_name", "description", "assignees", "linked_simulation_ids", "linked_metric_ids", "project_type", "notifications", "project_rules", "enforced_collaboration", "allow_metric_skipping", "skippable_metric_ids", "create_time", "update_time", "blind_labeling_shown_metric_ids", "linked_metric_count", "linked_simulation_count", "review_label_enabled", "review_label_input_mode", "review_label_options", "review_label_selection_mode"]
 
     @field_validator('review_label_input_mode')
     def review_label_input_mode_validate_enum(cls, value):
@@ -165,6 +167,11 @@ class CovalReviewsAPIReviewProjectResource(BaseModel):
         if self.project_rules is None and "project_rules" in self.model_fields_set:
             _dict['project_rules'] = None
 
+        # set to None if skippable_metric_ids (nullable) is None
+        # and model_fields_set contains the field
+        if self.skippable_metric_ids is None and "skippable_metric_ids" in self.model_fields_set:
+            _dict['skippable_metric_ids'] = None
+
         # set to None if blind_labeling_shown_metric_ids (nullable) is None
         # and model_fields_set contains the field
         if self.blind_labeling_shown_metric_ids is None and "blind_labeling_shown_metric_ids" in self.model_fields_set:
@@ -215,6 +222,7 @@ class CovalReviewsAPIReviewProjectResource(BaseModel):
             "project_rules": obj.get("project_rules"),
             "enforced_collaboration": obj.get("enforced_collaboration") if obj.get("enforced_collaboration") is not None else False,
             "allow_metric_skipping": obj.get("allow_metric_skipping") if obj.get("allow_metric_skipping") is not None else False,
+            "skippable_metric_ids": obj.get("skippable_metric_ids"),
             "create_time": obj.get("create_time"),
             "update_time": obj.get("update_time"),
             "blind_labeling_shown_metric_ids": obj.get("blind_labeling_shown_metric_ids"),

@@ -124,6 +124,12 @@ export interface CovalReviewsAPIUpdateReviewProjectRequest {
      */
     allow_metric_skipping?: boolean;
     /**
+     * Metric IDs eligible for skipping. Null means all linked metrics; omission preserves the current value.
+     * @type {Array<string>}
+     * @memberof CovalReviewsAPIUpdateReviewProjectRequest
+     */
+    skippable_metric_ids?: Array<string> | null;
+    /**
      * 
      * @type {string}
      * @memberof CovalReviewsAPIUpdateReviewProjectRequest
@@ -218,6 +224,7 @@ export function CovalReviewsAPIUpdateReviewProjectRequestFromJSONTyped(json: any
         'opted_out_assignees': json['opted_out_assignees'] == null ? undefined : json['opted_out_assignees'],
         'enforced_collaboration': json['enforced_collaboration'] == null ? undefined : json['enforced_collaboration'],
         'allow_metric_skipping': json['allow_metric_skipping'] == null ? undefined : json['allow_metric_skipping'],
+        'skippable_metric_ids': json['skippable_metric_ids'] == null ? undefined : json['skippable_metric_ids'],
         'project_type': json['project_type'] == null ? undefined : json['project_type'],
         'review_label_enabled': json['review_label_enabled'] == null ? undefined : json['review_label_enabled'],
         'review_label_input_mode': json['review_label_input_mode'] == null ? undefined : json['review_label_input_mode'],
@@ -253,6 +260,7 @@ export function CovalReviewsAPIUpdateReviewProjectRequestToJSONTyped(value?: Cov
         'opted_out_assignees': value['opted_out_assignees'],
         'enforced_collaboration': value['enforced_collaboration'],
         'allow_metric_skipping': value['allow_metric_skipping'],
+        'skippable_metric_ids': value['skippable_metric_ids'],
         'project_type': value['project_type'],
         'review_label_enabled': value['review_label_enabled'],
         'review_label_input_mode': value['review_label_input_mode'],

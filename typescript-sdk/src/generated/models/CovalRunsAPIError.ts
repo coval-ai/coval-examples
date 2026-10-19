@@ -56,6 +56,7 @@ export const CovalRunsAPIErrorCodeEnum = {
     Unauthenticated: 'UNAUTHENTICATED',
     PermissionDenied: 'PERMISSION_DENIED',
     NotFound: 'NOT_FOUND',
+    FailedPrecondition: 'FAILED_PRECONDITION',
     Internal: 'INTERNAL'
 } as const;
 export type CovalRunsAPIErrorCodeEnum = typeof CovalRunsAPIErrorCodeEnum[keyof typeof CovalRunsAPIErrorCodeEnum];

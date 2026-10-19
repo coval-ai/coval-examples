@@ -28,13 +28,13 @@ import {
  */
 export interface CovalReviewsAPIUpdateReviewAnnotationRequest {
     /**
-     * Ground truth numeric value (auto-completes annotation)
+     * Ground truth numeric value; completion also depends on applicable project rules
      * @type {number}
      * @memberof CovalReviewsAPIUpdateReviewAnnotationRequest
      */
     ground_truth_float_value?: number | null;
     /**
-     * Ground truth string value (auto-completes annotation)
+     * Ground truth string value; completion also depends on applicable project rules
      * @type {string}
      * @memberof CovalReviewsAPIUpdateReviewAnnotationRequest
      */
@@ -58,7 +58,11 @@ export interface CovalReviewsAPIUpdateReviewAnnotationRequest {
      */
     priority?: CovalReviewsAPIAnnotationPriority;
     /**
-     * Reassign to a different reviewer
+     * Existing reviewer email, retained for compatibility. Omission, null,
+     * or the current value leaves the reviewer unchanged. A different
+     * non-null value is rejected with HTTP 400 (`INVALID_ARGUMENT`);
+     * create an annotation for that reviewer instead.
+     * 
      * @type {string}
      * @memberof CovalReviewsAPIUpdateReviewAnnotationRequest
      */

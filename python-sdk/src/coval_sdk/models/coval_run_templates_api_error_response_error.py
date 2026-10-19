@@ -38,8 +38,8 @@ class CovalRunTemplatesAPIErrorResponseError(BaseModel):
     @field_validator('code')
     def code_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['INVALID_ARGUMENT', 'UNAUTHENTICATED', 'NOT_FOUND', 'CONFLICT', 'INTERNAL']):
-            raise ValueError("must be one of enum values ('INVALID_ARGUMENT', 'UNAUTHENTICATED', 'NOT_FOUND', 'CONFLICT', 'INTERNAL')")
+        if value not in set(['INVALID_ARGUMENT', 'UNAUTHENTICATED', 'NOT_FOUND', 'CONFLICT', 'FAILED_PRECONDITION', 'INTERNAL']):
+            raise ValueError("must be one of enum values ('INVALID_ARGUMENT', 'UNAUTHENTICATED', 'NOT_FOUND', 'CONFLICT', 'FAILED_PRECONDITION', 'INTERNAL')")
         return value
 
     model_config = ConfigDict(

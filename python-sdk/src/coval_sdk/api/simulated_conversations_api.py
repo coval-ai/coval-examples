@@ -861,8 +861,9 @@ class SimulatedConversationsApi:
     @validate_call
     def get_simulation_attribute(
         self,
-        simulation_id: Annotated[str, Field(strict=True, max_length=512)],
-        attribute_name: Annotated[str, Field(strict=True, max_length=512)],
+        simulation_id: Annotated[str, Field(strict=True, max_length=512, description="Simulation output ID for the conversation. Pass {{simulation_output_id}} to your backend through a supported connection field and use the received value here. ")],
+        attribute_name: Annotated[str, Field(strict=True, max_length=512, description="Exact, case-sensitive top-level key in the test case's expected_output_json. Dots are literal characters. URL-encode special characters. ")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace containing the simulation. Omit to use the organization's default workspace. A resolved, accessible workspace is required. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -878,12 +879,14 @@ class SimulatedConversationsApi:
     ) -> GetSimulationAttribute200Response:
         """Retrieve a named simulation attribute
 
-        Returns an exact, case-sensitive top-level attribute from the simulation's current active test case. Names are literal keys, including dots, rather than paths. URL-encode names when necessary.  Requires simulations:read permission. The simulation, run, test case and test set must be accessible in the authenticated organization and workspace. A resolved workspace is required. Select one with X-Coval-Workspace-Id when the organization has no default workspace. Legacy unassigned rows are accessible only through the default workspace. Monitoring conversations and deleted runs are excluded. This endpoint can be used while a simulation is running or after it finishes.  JSON values return directly without an envelope. Null is a successful JSON value, while an absent attribute returns 404. Changes to the test case are visible on subsequent requests. This endpoint does not capture a snapshot or persist tool-call events.  An object with type: image_ref is reserved for image references and must contain attachment: <name>, matching exactly one media attachment on the test case. Image responses contain raw PNG/JPEG bytes, with a maximum size of 4 MiB. Ordinary objects without that marker return unchanged.  This deliberately returns content instead of an AIP-131 resource envelope: customer tool handlers consume the fixture directly, including image bytes. Both JSON and image response content are limited to 4 MiB. 
+        Returns an exact, case-sensitive top-level attribute from the simulation's current active test case. Names are literal keys, including dots, rather than paths. URL-encode names when necessary.  Requires simulations:read permission. The simulation, run, test case and test set must be accessible in the authenticated organization and workspace. A resolved workspace is required. Select one with X-Coval-Workspace-Id when the organization has no default workspace. Legacy unassigned rows are accessible only through the default workspace. Monitoring conversations and deleted runs are excluded. This endpoint can be used while a simulation is running or after it finishes.  JSON values return directly without an envelope. Null is a successful JSON value, while an absent attribute returns 404. Changes to the test case are visible on subsequent requests. This endpoint does not capture a snapshot or persist tool-call events.  An object with type: image_ref is reserved for image references and must contain attachment: <name>, matching exactly one media attachment on the test case. Image responses contain raw PNG/JPEG bytes, with a maximum size of 4 MiB. Ordinary objects without that marker return unchanged.  This deliberately returns content instead of an AIP-131 resource envelope: customer tool handlers consume the fixture directly, including image bytes. Both JSON and image response content are limited to 4 MiB.  See [Retrieve test-case attributes during a simulation](https://docs.coval.ai/concepts/attributes/overview#retrieve-test-case-attributes-during-a-simulation) for attribute setup, passing the simulation ID to your backend, and request examples. 
 
-        :param simulation_id: (required)
+        :param simulation_id: Simulation output ID for the conversation. Pass {{simulation_output_id}} to your backend through a supported connection field and use the received value here.  (required)
         :type simulation_id: str
-        :param attribute_name: (required)
+        :param attribute_name: Exact, case-sensitive top-level key in the test case's expected_output_json. Dots are literal characters. URL-encode special characters.  (required)
         :type attribute_name: str
+        :param x_coval_workspace_id: Workspace containing the simulation. Omit to use the organization's default workspace. A resolved, accessible workspace is required. 
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -909,6 +912,7 @@ class SimulatedConversationsApi:
         _param = self._get_simulation_attribute_serialize(
             simulation_id=simulation_id,
             attribute_name=attribute_name,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -940,8 +944,9 @@ class SimulatedConversationsApi:
     @validate_call
     def get_simulation_attribute_with_http_info(
         self,
-        simulation_id: Annotated[str, Field(strict=True, max_length=512)],
-        attribute_name: Annotated[str, Field(strict=True, max_length=512)],
+        simulation_id: Annotated[str, Field(strict=True, max_length=512, description="Simulation output ID for the conversation. Pass {{simulation_output_id}} to your backend through a supported connection field and use the received value here. ")],
+        attribute_name: Annotated[str, Field(strict=True, max_length=512, description="Exact, case-sensitive top-level key in the test case's expected_output_json. Dots are literal characters. URL-encode special characters. ")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace containing the simulation. Omit to use the organization's default workspace. A resolved, accessible workspace is required. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -957,12 +962,14 @@ class SimulatedConversationsApi:
     ) -> ApiResponse[GetSimulationAttribute200Response]:
         """Retrieve a named simulation attribute
 
-        Returns an exact, case-sensitive top-level attribute from the simulation's current active test case. Names are literal keys, including dots, rather than paths. URL-encode names when necessary.  Requires simulations:read permission. The simulation, run, test case and test set must be accessible in the authenticated organization and workspace. A resolved workspace is required. Select one with X-Coval-Workspace-Id when the organization has no default workspace. Legacy unassigned rows are accessible only through the default workspace. Monitoring conversations and deleted runs are excluded. This endpoint can be used while a simulation is running or after it finishes.  JSON values return directly without an envelope. Null is a successful JSON value, while an absent attribute returns 404. Changes to the test case are visible on subsequent requests. This endpoint does not capture a snapshot or persist tool-call events.  An object with type: image_ref is reserved for image references and must contain attachment: <name>, matching exactly one media attachment on the test case. Image responses contain raw PNG/JPEG bytes, with a maximum size of 4 MiB. Ordinary objects without that marker return unchanged.  This deliberately returns content instead of an AIP-131 resource envelope: customer tool handlers consume the fixture directly, including image bytes. Both JSON and image response content are limited to 4 MiB. 
+        Returns an exact, case-sensitive top-level attribute from the simulation's current active test case. Names are literal keys, including dots, rather than paths. URL-encode names when necessary.  Requires simulations:read permission. The simulation, run, test case and test set must be accessible in the authenticated organization and workspace. A resolved workspace is required. Select one with X-Coval-Workspace-Id when the organization has no default workspace. Legacy unassigned rows are accessible only through the default workspace. Monitoring conversations and deleted runs are excluded. This endpoint can be used while a simulation is running or after it finishes.  JSON values return directly without an envelope. Null is a successful JSON value, while an absent attribute returns 404. Changes to the test case are visible on subsequent requests. This endpoint does not capture a snapshot or persist tool-call events.  An object with type: image_ref is reserved for image references and must contain attachment: <name>, matching exactly one media attachment on the test case. Image responses contain raw PNG/JPEG bytes, with a maximum size of 4 MiB. Ordinary objects without that marker return unchanged.  This deliberately returns content instead of an AIP-131 resource envelope: customer tool handlers consume the fixture directly, including image bytes. Both JSON and image response content are limited to 4 MiB.  See [Retrieve test-case attributes during a simulation](https://docs.coval.ai/concepts/attributes/overview#retrieve-test-case-attributes-during-a-simulation) for attribute setup, passing the simulation ID to your backend, and request examples. 
 
-        :param simulation_id: (required)
+        :param simulation_id: Simulation output ID for the conversation. Pass {{simulation_output_id}} to your backend through a supported connection field and use the received value here.  (required)
         :type simulation_id: str
-        :param attribute_name: (required)
+        :param attribute_name: Exact, case-sensitive top-level key in the test case's expected_output_json. Dots are literal characters. URL-encode special characters.  (required)
         :type attribute_name: str
+        :param x_coval_workspace_id: Workspace containing the simulation. Omit to use the organization's default workspace. A resolved, accessible workspace is required. 
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -988,6 +995,7 @@ class SimulatedConversationsApi:
         _param = self._get_simulation_attribute_serialize(
             simulation_id=simulation_id,
             attribute_name=attribute_name,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1019,8 +1027,9 @@ class SimulatedConversationsApi:
     @validate_call
     def get_simulation_attribute_without_preload_content(
         self,
-        simulation_id: Annotated[str, Field(strict=True, max_length=512)],
-        attribute_name: Annotated[str, Field(strict=True, max_length=512)],
+        simulation_id: Annotated[str, Field(strict=True, max_length=512, description="Simulation output ID for the conversation. Pass {{simulation_output_id}} to your backend through a supported connection field and use the received value here. ")],
+        attribute_name: Annotated[str, Field(strict=True, max_length=512, description="Exact, case-sensitive top-level key in the test case's expected_output_json. Dots are literal characters. URL-encode special characters. ")],
+        x_coval_workspace_id: Annotated[Optional[Annotated[str, Field(min_length=1, strict=True, max_length=26)]], Field(description="Workspace containing the simulation. Omit to use the organization's default workspace. A resolved, accessible workspace is required. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1036,12 +1045,14 @@ class SimulatedConversationsApi:
     ) -> RESTResponseType:
         """Retrieve a named simulation attribute
 
-        Returns an exact, case-sensitive top-level attribute from the simulation's current active test case. Names are literal keys, including dots, rather than paths. URL-encode names when necessary.  Requires simulations:read permission. The simulation, run, test case and test set must be accessible in the authenticated organization and workspace. A resolved workspace is required. Select one with X-Coval-Workspace-Id when the organization has no default workspace. Legacy unassigned rows are accessible only through the default workspace. Monitoring conversations and deleted runs are excluded. This endpoint can be used while a simulation is running or after it finishes.  JSON values return directly without an envelope. Null is a successful JSON value, while an absent attribute returns 404. Changes to the test case are visible on subsequent requests. This endpoint does not capture a snapshot or persist tool-call events.  An object with type: image_ref is reserved for image references and must contain attachment: <name>, matching exactly one media attachment on the test case. Image responses contain raw PNG/JPEG bytes, with a maximum size of 4 MiB. Ordinary objects without that marker return unchanged.  This deliberately returns content instead of an AIP-131 resource envelope: customer tool handlers consume the fixture directly, including image bytes. Both JSON and image response content are limited to 4 MiB. 
+        Returns an exact, case-sensitive top-level attribute from the simulation's current active test case. Names are literal keys, including dots, rather than paths. URL-encode names when necessary.  Requires simulations:read permission. The simulation, run, test case and test set must be accessible in the authenticated organization and workspace. A resolved workspace is required. Select one with X-Coval-Workspace-Id when the organization has no default workspace. Legacy unassigned rows are accessible only through the default workspace. Monitoring conversations and deleted runs are excluded. This endpoint can be used while a simulation is running or after it finishes.  JSON values return directly without an envelope. Null is a successful JSON value, while an absent attribute returns 404. Changes to the test case are visible on subsequent requests. This endpoint does not capture a snapshot or persist tool-call events.  An object with type: image_ref is reserved for image references and must contain attachment: <name>, matching exactly one media attachment on the test case. Image responses contain raw PNG/JPEG bytes, with a maximum size of 4 MiB. Ordinary objects without that marker return unchanged.  This deliberately returns content instead of an AIP-131 resource envelope: customer tool handlers consume the fixture directly, including image bytes. Both JSON and image response content are limited to 4 MiB.  See [Retrieve test-case attributes during a simulation](https://docs.coval.ai/concepts/attributes/overview#retrieve-test-case-attributes-during-a-simulation) for attribute setup, passing the simulation ID to your backend, and request examples. 
 
-        :param simulation_id: (required)
+        :param simulation_id: Simulation output ID for the conversation. Pass {{simulation_output_id}} to your backend through a supported connection field and use the received value here.  (required)
         :type simulation_id: str
-        :param attribute_name: (required)
+        :param attribute_name: Exact, case-sensitive top-level key in the test case's expected_output_json. Dots are literal characters. URL-encode special characters.  (required)
         :type attribute_name: str
+        :param x_coval_workspace_id: Workspace containing the simulation. Omit to use the organization's default workspace. A resolved, accessible workspace is required. 
+        :type x_coval_workspace_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1067,6 +1078,7 @@ class SimulatedConversationsApi:
         _param = self._get_simulation_attribute_serialize(
             simulation_id=simulation_id,
             attribute_name=attribute_name,
+            x_coval_workspace_id=x_coval_workspace_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1095,6 +1107,7 @@ class SimulatedConversationsApi:
         self,
         simulation_id,
         attribute_name,
+        x_coval_workspace_id,
         _request_auth,
         _content_type,
         _headers,
@@ -1122,6 +1135,8 @@ class SimulatedConversationsApi:
             _path_params['attribute_name'] = attribute_name
         # process the query parameters
         # process the header parameters
+        if x_coval_workspace_id is not None:
+            _header_params['X-Coval-Workspace-Id'] = x_coval_workspace_id
         # process the form parameters
         # process the body parameter
 
@@ -1509,6 +1524,7 @@ class SimulatedConversationsApi:
             '200': "CovalSimulatedConversationsAPIListSimulatedConversationsResponse",
             '400': "CovalSimulatedConversationsAPIErrorResponse",
             '401': "CovalSimulatedConversationsAPIErrorResponse",
+            '412': "CovalSimulatedConversationsAPIErrorResponse",
             '500': "CovalSimulatedConversationsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -1595,6 +1611,7 @@ class SimulatedConversationsApi:
             '200': "CovalSimulatedConversationsAPIListSimulatedConversationsResponse",
             '400': "CovalSimulatedConversationsAPIErrorResponse",
             '401': "CovalSimulatedConversationsAPIErrorResponse",
+            '412': "CovalSimulatedConversationsAPIErrorResponse",
             '500': "CovalSimulatedConversationsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -1681,6 +1698,7 @@ class SimulatedConversationsApi:
             '200': "CovalSimulatedConversationsAPIListSimulatedConversationsResponse",
             '400': "CovalSimulatedConversationsAPIErrorResponse",
             '401': "CovalSimulatedConversationsAPIErrorResponse",
+            '412': "CovalSimulatedConversationsAPIErrorResponse",
             '500': "CovalSimulatedConversationsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(

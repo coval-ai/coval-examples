@@ -46,13 +46,14 @@ class CovalReviewsAPIUpdateReviewProjectRequest(BaseModel):
     opted_out_assignees: Optional[List[StrictStr]] = Field(default=None, description="Assignees who opted out of notifications")
     enforced_collaboration: Optional[StrictBool] = Field(default=None, description="Enforce claims and explicit single-author completion for collaborative projects")
     allow_metric_skipping: Optional[StrictBool] = Field(default=None, description="Allow reviewers to skip linked metrics")
+    skippable_metric_ids: Optional[Annotated[List[Annotated[str, Field(min_length=1, strict=True, max_length=200)]], Field(max_length=25)]] = Field(default=None, description="Metric IDs eligible for skipping. Null means all linked metrics; omission preserves the current value.")
     project_type: Optional[StrictStr] = None
     review_label_enabled: Optional[StrictBool] = Field(default=None, description="False pauses conversation triage for everyone while preserving categories, modes, and saved labels. True enables triage. Null uses legacy configuration-based activation. Omission leaves the enabled state unchanged. For legacy clients, explicitly sending empty categories and both modes as null without this field pauses triage while preserving configuration. When all three configuration fields are supplied without this field, a valid enabled configuration is treated as enabled.")
     review_label_input_mode: Optional[StrictStr] = None
     review_label_options: Optional[List[StrictStr]] = None
     review_label_selection_mode: Optional[StrictStr] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["assignee_user_ids", "opted_out_assignee_user_ids", "display_name", "description", "assignees", "linked_simulation_ids", "add_linked_simulation_ids", "remove_linked_simulation_ids", "linked_metric_ids", "metric_addition_completion_action", "notifications", "project_rules", "blind_labeling_shown_metric_ids", "opted_out_assignees", "enforced_collaboration", "allow_metric_skipping", "project_type", "review_label_enabled", "review_label_input_mode", "review_label_options", "review_label_selection_mode"]
+    __properties: ClassVar[List[str]] = ["assignee_user_ids", "opted_out_assignee_user_ids", "display_name", "description", "assignees", "linked_simulation_ids", "add_linked_simulation_ids", "remove_linked_simulation_ids", "linked_metric_ids", "metric_addition_completion_action", "notifications", "project_rules", "blind_labeling_shown_metric_ids", "opted_out_assignees", "enforced_collaboration", "allow_metric_skipping", "skippable_metric_ids", "project_type", "review_label_enabled", "review_label_input_mode", "review_label_options", "review_label_selection_mode"]
 
     @field_validator('metric_addition_completion_action')
     def metric_addition_completion_action_validate_enum(cls, value):
@@ -200,6 +201,11 @@ class CovalReviewsAPIUpdateReviewProjectRequest(BaseModel):
         if self.opted_out_assignees is None and "opted_out_assignees" in self.model_fields_set:
             _dict['opted_out_assignees'] = None
 
+        # set to None if skippable_metric_ids (nullable) is None
+        # and model_fields_set contains the field
+        if self.skippable_metric_ids is None and "skippable_metric_ids" in self.model_fields_set:
+            _dict['skippable_metric_ids'] = None
+
         # set to None if project_type (nullable) is None
         # and model_fields_set contains the field
         if self.project_type is None and "project_type" in self.model_fields_set:
@@ -253,6 +259,7 @@ class CovalReviewsAPIUpdateReviewProjectRequest(BaseModel):
             "opted_out_assignees": obj.get("opted_out_assignees"),
             "enforced_collaboration": obj.get("enforced_collaboration"),
             "allow_metric_skipping": obj.get("allow_metric_skipping"),
+            "skippable_metric_ids": obj.get("skippable_metric_ids"),
             "project_type": obj.get("project_type"),
             "review_label_enabled": obj.get("review_label_enabled"),
             "review_label_input_mode": obj.get("review_label_input_mode"),

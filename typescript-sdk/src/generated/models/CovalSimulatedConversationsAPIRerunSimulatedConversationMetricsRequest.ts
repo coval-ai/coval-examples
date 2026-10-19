@@ -26,7 +26,7 @@ export interface CovalSimulatedConversationsAPIRerunSimulatedConversationMetrics
      */
     simulation_ids: Array<string>;
     /**
-     * Metric IDs (22-character ShortUUIDs) to run against every simulation. Up to 500 per call.
+     * Metric IDs (22 characters, allowing letters, digits, and hyphens) to run against every simulation. Up to 500 per call.
      * @type {Array<string>}
      * @memberof CovalSimulatedConversationsAPIRerunSimulatedConversationMetricsRequest
      */

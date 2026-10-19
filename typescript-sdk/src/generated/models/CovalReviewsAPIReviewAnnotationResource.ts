@@ -36,7 +36,7 @@ import {
 } from './CovalReviewsAPIAnnotationStatus.js';
 
 /**
- * A single review annotation resource.
+ * Saved review data for a simulation output, metric, and reviewer.
  * @export
  * @interface CovalReviewsAPIReviewAnnotationResource
  */
@@ -48,7 +48,7 @@ export interface CovalReviewsAPIReviewAnnotationResource {
      */
     name: string;
     /**
-     * Unique annotation ID
+     * Saved annotation ID used for GET, PATCH, and DELETE; not a project assignment ID
      * @type {string}
      * @memberof CovalReviewsAPIReviewAnnotationResource
      */

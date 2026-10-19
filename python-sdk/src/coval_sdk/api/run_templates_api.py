@@ -106,6 +106,7 @@ class RunTemplatesApi:
             '400': "CovalRunTemplatesAPIErrorResponse",
             '401': "CovalRunTemplatesAPIErrorResponse",
             '404': "CovalRunTemplatesAPIErrorResponse",
+            '412': "CovalRunTemplatesAPIErrorResponse",
             '500': "CovalRunTemplatesAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -181,6 +182,7 @@ class RunTemplatesApi:
             '400': "CovalRunTemplatesAPIErrorResponse",
             '401': "CovalRunTemplatesAPIErrorResponse",
             '404': "CovalRunTemplatesAPIErrorResponse",
+            '412': "CovalRunTemplatesAPIErrorResponse",
             '500': "CovalRunTemplatesAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -256,6 +258,7 @@ class RunTemplatesApi:
             '400': "CovalRunTemplatesAPIErrorResponse",
             '401': "CovalRunTemplatesAPIErrorResponse",
             '404': "CovalRunTemplatesAPIErrorResponse",
+            '412': "CovalRunTemplatesAPIErrorResponse",
             '500': "CovalRunTemplatesAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -1312,6 +1315,7 @@ class RunTemplatesApi:
             '400': "CovalRunTemplatesAPIErrorResponse",
             '401': "CovalRunTemplatesAPIErrorResponse",
             '404': "CovalRunTemplatesAPIErrorResponse",
+            '412': "CovalRunTemplatesAPIErrorResponse",
             '500': "CovalRunTemplatesAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -1391,6 +1395,7 @@ class RunTemplatesApi:
             '400': "CovalRunTemplatesAPIErrorResponse",
             '401': "CovalRunTemplatesAPIErrorResponse",
             '404': "CovalRunTemplatesAPIErrorResponse",
+            '412': "CovalRunTemplatesAPIErrorResponse",
             '500': "CovalRunTemplatesAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -1470,6 +1475,7 @@ class RunTemplatesApi:
             '400': "CovalRunTemplatesAPIErrorResponse",
             '401': "CovalRunTemplatesAPIErrorResponse",
             '404': "CovalRunTemplatesAPIErrorResponse",
+            '412': "CovalRunTemplatesAPIErrorResponse",
             '500': "CovalRunTemplatesAPIErrorResponse",
         }
         response_data = self.api_client.call_api(

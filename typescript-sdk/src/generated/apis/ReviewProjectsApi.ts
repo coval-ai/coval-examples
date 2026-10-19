@@ -184,7 +184,7 @@ export interface ReviewProjectsApiInterface {
     createReviewProjectRequestOpts(requestParameters: CreateReviewProjectRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Create a new review project. Automatically generates annotations for every (simulation, metric, assignee) combination. 
+     * Create a new review project defining assignments for the configured (simulation, metric, assignee) combinations. Assignments track review work separately from saved annotations. Submit review data with POST `/review-annotations` and use the returned annotation ID for later edits. 
      * @summary Create review project
      * @param {CovalReviewsAPICreateReviewProjectRequest} covalReviewsAPICreateReviewProjectRequest 
      * @param {string} [xCovalWorkspaceId] Workspace that scopes this operation. When omitted, the organization\&#39;s active default workspace is used when one can be resolved.
@@ -195,7 +195,7 @@ export interface ReviewProjectsApiInterface {
     createReviewProjectRaw(requestParameters: CreateReviewProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReviewsAPICreateReviewProjectResponse>>;
 
     /**
-     * Create a new review project. Automatically generates annotations for every (simulation, metric, assignee) combination. 
+     * Create a new review project defining assignments for the configured (simulation, metric, assignee) combinations. Assignments track review work separately from saved annotations. Submit review data with POST `/review-annotations` and use the returned annotation ID for later edits. 
      * Create review project
      */
     createReviewProject(requestParameters: CreateReviewProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPICreateReviewProjectResponse>;
@@ -526,7 +526,7 @@ export class ReviewProjectsApi extends runtime.BaseAPI implements ReviewProjects
     }
 
     /**
-     * Create a new review project. Automatically generates annotations for every (simulation, metric, assignee) combination. 
+     * Create a new review project defining assignments for the configured (simulation, metric, assignee) combinations. Assignments track review work separately from saved annotations. Submit review data with POST `/review-annotations` and use the returned annotation ID for later edits. 
      * Create review project
      */
     async createReviewProjectRaw(requestParameters: CreateReviewProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReviewsAPICreateReviewProjectResponse>> {
@@ -537,7 +537,7 @@ export class ReviewProjectsApi extends runtime.BaseAPI implements ReviewProjects
     }
 
     /**
-     * Create a new review project. Automatically generates annotations for every (simulation, metric, assignee) combination. 
+     * Create a new review project defining assignments for the configured (simulation, metric, assignee) combinations. Assignments track review work separately from saved annotations. Submit review data with POST `/review-annotations` and use the returned annotation ID for later edits. 
      * Create review project
      */
     async createReviewProject(requestParameters: CreateReviewProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPICreateReviewProjectResponse> {

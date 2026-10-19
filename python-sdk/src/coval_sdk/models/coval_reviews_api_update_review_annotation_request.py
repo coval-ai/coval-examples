@@ -29,12 +29,12 @@ class CovalReviewsAPIUpdateReviewAnnotationRequest(BaseModel):
     """
     CovalReviewsAPIUpdateReviewAnnotationRequest
     """ # noqa: E501
-    ground_truth_float_value: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Ground truth numeric value (auto-completes annotation)")
-    ground_truth_string_value: Optional[StrictStr] = Field(default=None, description="Ground truth string value (auto-completes annotation)")
+    ground_truth_float_value: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Ground truth numeric value; completion also depends on applicable project rules")
+    ground_truth_string_value: Optional[StrictStr] = Field(default=None, description="Ground truth string value; completion also depends on applicable project rules")
     ground_truth_subvalues_by_timestamp: Optional[List[Dict[str, Any]]] = Field(default=None, description="Ground truth subvalues")
     reviewer_notes: Optional[StrictStr] = Field(default=None, description="Reviewer notes")
     priority: Optional[CovalReviewsAPIAnnotationPriority] = None
-    assignee: Optional[StrictStr] = Field(default=None, description="Reassign to a different reviewer")
+    assignee: Optional[StrictStr] = Field(default=None, description="Existing reviewer email, retained for compatibility. Omission, null, or the current value leaves the reviewer unchanged. A different non-null value is rejected with HTTP 400 (`INVALID_ARGUMENT`); create an annotation for that reviewer instead. ")
     annotations: Optional[Any] = None
     ground_truth_json: Optional[Any] = None
     ground_truth_set_value: Optional[List[StrictStr]] = None

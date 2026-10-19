@@ -397,7 +397,7 @@ class ReviewProjectsApi:
     ) -> CovalReviewsAPICreateReviewProjectResponse:
         """Create review project
 
-        Create a new review project. Automatically generates annotations for every (simulation, metric, assignee) combination. 
+        Create a new review project defining assignments for the configured (simulation, metric, assignee) combinations. Assignments track review work separately from saved annotations. Submit review data with POST `/review-annotations` and use the returned annotation ID for later edits. 
 
         :param coval_reviews_api_create_review_project_request: (required)
         :type coval_reviews_api_create_review_project_request: CovalReviewsAPICreateReviewProjectRequest
@@ -471,7 +471,7 @@ class ReviewProjectsApi:
     ) -> ApiResponse[CovalReviewsAPICreateReviewProjectResponse]:
         """Create review project
 
-        Create a new review project. Automatically generates annotations for every (simulation, metric, assignee) combination. 
+        Create a new review project defining assignments for the configured (simulation, metric, assignee) combinations. Assignments track review work separately from saved annotations. Submit review data with POST `/review-annotations` and use the returned annotation ID for later edits. 
 
         :param coval_reviews_api_create_review_project_request: (required)
         :type coval_reviews_api_create_review_project_request: CovalReviewsAPICreateReviewProjectRequest
@@ -545,7 +545,7 @@ class ReviewProjectsApi:
     ) -> RESTResponseType:
         """Create review project
 
-        Create a new review project. Automatically generates annotations for every (simulation, metric, assignee) combination. 
+        Create a new review project defining assignments for the configured (simulation, metric, assignee) combinations. Assignments track review work separately from saved annotations. Submit review data with POST `/review-annotations` and use the returned annotation ID for later edits. 
 
         :param coval_reviews_api_create_review_project_request: (required)
         :type coval_reviews_api_create_review_project_request: CovalReviewsAPICreateReviewProjectRequest

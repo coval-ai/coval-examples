@@ -14,7 +14,7 @@
 
 
 /**
- * Project type: COLLABORATIVE (shared annotations) or INDIVIDUAL (per-assignee annotations)
+ * Project review workflow type: PROJECT_COLLABORATIVE or PROJECT_INDIVIDUAL
  * @export
  */
 export const CovalReviewsAPIProjectType = {
