@@ -33,8 +33,8 @@ class CovalReviewsAPICreateReviewAnnotationRequest(BaseModel):
     metric_id: Annotated[str, Field(min_length=1, strict=True)] = Field(description="Metric ID to link")
     assignee_user_id: Optional[Annotated[str, Field(min_length=26, strict=True, max_length=26)]] = Field(default=None, description="Optional Coval reviewer User ULID, validated against organization membership. Null preserves email-based writes or uses authenticated self-review.")
     assignee: Optional[Annotated[str, Field(min_length=1, strict=True)]] = Field(default=None, description="Legacy reviewer email; accepted without a matching user. New answers receive a User ID when safely resolved.")
-    ground_truth_float_value: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Optional ground truth numeric value (auto-completes annotation)")
-    ground_truth_string_value: Optional[StrictStr] = Field(default=None, description="Optional ground truth string value (auto-completes annotation)")
+    ground_truth_float_value: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Optional ground truth numeric value; completion also depends on applicable project rules")
+    ground_truth_string_value: Optional[StrictStr] = Field(default=None, description="Optional ground truth string value; completion also depends on applicable project rules")
     ground_truth_subvalues_by_timestamp: Optional[List[Dict[str, Any]]] = Field(default=None, description="Optional ground truth subvalues")
     reviewer_notes: Optional[StrictStr] = Field(default=None, description="Optional reviewer notes")
     annotations: Optional[Any] = None

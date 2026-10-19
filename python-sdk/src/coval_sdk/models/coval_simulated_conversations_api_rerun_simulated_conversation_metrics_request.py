@@ -18,7 +18,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import Any, ClassVar, Dict, List
 from typing_extensions import Annotated
 from typing import Optional, Set
@@ -30,7 +30,7 @@ class CovalSimulatedConversationsAPIRerunSimulatedConversationMetricsRequest(Bas
     CovalSimulatedConversationsAPIRerunSimulatedConversationMetricsRequest
     """ # noqa: E501
     simulation_ids: Annotated[List[Annotated[str, Field(min_length=22, strict=True, max_length=22)]], Field(min_length=1, max_length=100)] = Field(description="Simulation IDs (22-character ShortUUIDs) to re-score. Up to 100 per call.")
-    metric_ids: Annotated[List[Annotated[str, Field(min_length=22, strict=True, max_length=22)]], Field(min_length=1, max_length=500)] = Field(description="Metric IDs (22-character ShortUUIDs) to run against every simulation. Up to 500 per call.")
+    metric_ids: Annotated[List[Annotated[str, Field(min_length=22, strict=True, max_length=22)]], Field(min_length=1, max_length=500)] = Field(description="Metric IDs (22 characters, allowing letters, digits, and hyphens) to run against every simulation. Up to 500 per call.")
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["simulation_ids", "metric_ids"]
 

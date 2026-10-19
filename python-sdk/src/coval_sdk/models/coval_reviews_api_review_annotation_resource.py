@@ -30,10 +30,10 @@ from pydantic_core import to_jsonable_python
 
 class CovalReviewsAPIReviewAnnotationResource(BaseModel):
     """
-    A single review annotation resource.
+    Saved review data for a simulation output, metric, and reviewer.
     """ # noqa: E501
     name: StrictStr = Field(description="Resource name: review-annotations/{id}")
-    id: StrictStr = Field(description="Unique annotation ID")
+    id: StrictStr = Field(description="Saved annotation ID used for GET, PATCH, and DELETE; not a project assignment ID")
     simulation_output_id: StrictStr = Field(description="Linked simulation output ID")
     metric_id: StrictStr = Field(description="Linked metric ID")
     assignee_user_id: Optional[StrictStr] = Field(default=None, description="Canonical Coval reviewer User ULID; null means reviewer attribution is unresolved.")

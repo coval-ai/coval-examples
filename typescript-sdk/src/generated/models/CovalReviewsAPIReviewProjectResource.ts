@@ -143,6 +143,12 @@ export interface CovalReviewsAPIReviewProjectResource {
      */
     allow_metric_skipping?: boolean;
     /**
+     * Metric IDs eligible for skipping. Null means all linked metrics; an empty list means none.
+     * @type {Array<string>}
+     * @memberof CovalReviewsAPIReviewProjectResource
+     */
+    skippable_metric_ids?: Array<string> | null;
+    /**
      * Creation timestamp (ISO 8601)
      * @type {Date}
      * @memberof CovalReviewsAPIReviewProjectResource
@@ -268,6 +274,7 @@ export function CovalReviewsAPIReviewProjectResourceFromJSONTyped(json: any, ign
         'project_rules': json['project_rules'] == null ? undefined : ((json['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleFromJSON)),
         'enforced_collaboration': json['enforced_collaboration'] == null ? undefined : json['enforced_collaboration'],
         'allow_metric_skipping': json['allow_metric_skipping'] == null ? undefined : json['allow_metric_skipping'],
+        'skippable_metric_ids': json['skippable_metric_ids'] == null ? undefined : json['skippable_metric_ids'],
         'create_time': (new Date(json['create_time'])),
         'update_time': (new Date(json['update_time'])),
         'blind_labeling_shown_metric_ids': json['blind_labeling_shown_metric_ids'] == null ? undefined : json['blind_labeling_shown_metric_ids'],
@@ -305,6 +312,7 @@ export function CovalReviewsAPIReviewProjectResourceToJSONTyped(value?: Omit<Cov
         'project_rules': value['project_rules'] == null ? undefined : ((value['project_rules'] as Array<any>).map(CovalReviewsAPIProjectRuleToJSON)),
         'enforced_collaboration': value['enforced_collaboration'],
         'allow_metric_skipping': value['allow_metric_skipping'],
+        'skippable_metric_ids': value['skippable_metric_ids'],
         'create_time': value['create_time'].toISOString(),
         'update_time': value['update_time'].toISOString(),
         'blind_labeling_shown_metric_ids': value['blind_labeling_shown_metric_ids'],

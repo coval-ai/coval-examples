@@ -1208,6 +1208,7 @@ class RunsApi:
             '200': "ListRuns200Response",
             '400': "ListRuns400Response",
             '401': "ListRuns400Response",
+            '412': "ListRuns400Response",
             '500': "ListRuns400Response",
         }
         response_data = self.api_client.call_api(
@@ -1294,6 +1295,7 @@ class RunsApi:
             '200': "ListRuns200Response",
             '400': "ListRuns400Response",
             '401': "ListRuns400Response",
+            '412': "ListRuns400Response",
             '500': "ListRuns400Response",
         }
         response_data = self.api_client.call_api(
@@ -1380,6 +1382,7 @@ class RunsApi:
             '200': "ListRuns200Response",
             '400': "ListRuns400Response",
             '401': "ListRuns400Response",
+            '412': "ListRuns400Response",
             '500': "ListRuns400Response",
         }
         response_data = self.api_client.call_api(

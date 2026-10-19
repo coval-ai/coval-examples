@@ -44,13 +44,13 @@ export interface CovalReviewsAPICreateReviewAnnotationRequest {
      */
     assignee?: string | null;
     /**
-     * Optional ground truth numeric value (auto-completes annotation)
+     * Optional ground truth numeric value; completion also depends on applicable project rules
      * @type {number}
      * @memberof CovalReviewsAPICreateReviewAnnotationRequest
      */
     ground_truth_float_value?: number | null;
     /**
-     * Optional ground truth string value (auto-completes annotation)
+     * Optional ground truth string value; completion also depends on applicable project rules
      * @type {string}
      * @memberof CovalReviewsAPICreateReviewAnnotationRequest
      */

@@ -48,7 +48,7 @@ export interface CovalReviewsAPIReviewAnnotationWithMetricVersionResource {
      */
     name: string;
     /**
-     * Unique annotation ID
+     * Saved annotation ID used for GET, PATCH, and DELETE; not a project assignment ID
      * @type {string}
      * @memberof CovalReviewsAPIReviewAnnotationWithMetricVersionResource
      */

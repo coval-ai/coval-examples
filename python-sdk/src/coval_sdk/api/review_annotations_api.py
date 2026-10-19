@@ -51,7 +51,7 @@ class ReviewAnnotationsApi:
     def create_review_annotation(
         self,
         coval_reviews_api_create_review_annotation_request: CovalReviewsAPICreateReviewAnnotationRequest,
-        project_id: Annotated[Optional[StrictStr], Field(description="Optional project ID to apply project-rule-aware completion status")] = None,
+        project_id: Annotated[Optional[StrictStr], Field(description="Optional project ID. The simulation output, metric, and reviewer must match an assignment in this project. Applies project rules to the returned completion status. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -67,11 +67,11 @@ class ReviewAnnotationsApi:
     ) -> CovalReviewsAPICreateReviewAnnotationResponse:
         """Create review annotation
 
-        Create a new review annotation for your organization.
+        Create or update the saved annotation for a simulation output, metric, and reviewer. Project creation does not create these annotation records. Use the returned `review_annotation.id` with PATCH for later partial updates. Repeating POST replaces the saved answer fields, including clearing omitted optional answer fields. 
 
         :param coval_reviews_api_create_review_annotation_request: (required)
         :type coval_reviews_api_create_review_annotation_request: CovalReviewsAPICreateReviewAnnotationRequest
-        :param project_id: Optional project ID to apply project-rule-aware completion status
+        :param project_id: Optional project ID. The simulation output, metric, and reviewer must match an assignment in this project. Applies project rules to the returned completion status. 
         :type project_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -126,7 +126,7 @@ class ReviewAnnotationsApi:
     def create_review_annotation_with_http_info(
         self,
         coval_reviews_api_create_review_annotation_request: CovalReviewsAPICreateReviewAnnotationRequest,
-        project_id: Annotated[Optional[StrictStr], Field(description="Optional project ID to apply project-rule-aware completion status")] = None,
+        project_id: Annotated[Optional[StrictStr], Field(description="Optional project ID. The simulation output, metric, and reviewer must match an assignment in this project. Applies project rules to the returned completion status. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -142,11 +142,11 @@ class ReviewAnnotationsApi:
     ) -> ApiResponse[CovalReviewsAPICreateReviewAnnotationResponse]:
         """Create review annotation
 
-        Create a new review annotation for your organization.
+        Create or update the saved annotation for a simulation output, metric, and reviewer. Project creation does not create these annotation records. Use the returned `review_annotation.id` with PATCH for later partial updates. Repeating POST replaces the saved answer fields, including clearing omitted optional answer fields. 
 
         :param coval_reviews_api_create_review_annotation_request: (required)
         :type coval_reviews_api_create_review_annotation_request: CovalReviewsAPICreateReviewAnnotationRequest
-        :param project_id: Optional project ID to apply project-rule-aware completion status
+        :param project_id: Optional project ID. The simulation output, metric, and reviewer must match an assignment in this project. Applies project rules to the returned completion status. 
         :type project_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -201,7 +201,7 @@ class ReviewAnnotationsApi:
     def create_review_annotation_without_preload_content(
         self,
         coval_reviews_api_create_review_annotation_request: CovalReviewsAPICreateReviewAnnotationRequest,
-        project_id: Annotated[Optional[StrictStr], Field(description="Optional project ID to apply project-rule-aware completion status")] = None,
+        project_id: Annotated[Optional[StrictStr], Field(description="Optional project ID. The simulation output, metric, and reviewer must match an assignment in this project. Applies project rules to the returned completion status. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -217,11 +217,11 @@ class ReviewAnnotationsApi:
     ) -> RESTResponseType:
         """Create review annotation
 
-        Create a new review annotation for your organization.
+        Create or update the saved annotation for a simulation output, metric, and reviewer. Project creation does not create these annotation records. Use the returned `review_annotation.id` with PATCH for later partial updates. Repeating POST replaces the saved answer fields, including clearing omitted optional answer fields. 
 
         :param coval_reviews_api_create_review_annotation_request: (required)
         :type coval_reviews_api_create_review_annotation_request: CovalReviewsAPICreateReviewAnnotationRequest
-        :param project_id: Optional project ID to apply project-rule-aware completion status
+        :param project_id: Optional project ID. The simulation output, metric, and reviewer must match an assignment in this project. Applies project rules to the returned completion status. 
         :type project_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1258,6 +1258,7 @@ class ReviewAnnotationsApi:
             '400': "CovalReviewsAPIErrorResponse",
             '401': "CovalReviewsAPIErrorResponse",
             '403': "CovalReviewsAPIErrorResponse",
+            '412': "CovalReviewsAPIErrorResponse",
             '500': "CovalReviewsAPIErrorResponse",
             '503': "CovalReviewsAPIErrorResponse",
         }
@@ -1334,6 +1335,7 @@ class ReviewAnnotationsApi:
             '400': "CovalReviewsAPIErrorResponse",
             '401': "CovalReviewsAPIErrorResponse",
             '403': "CovalReviewsAPIErrorResponse",
+            '412': "CovalReviewsAPIErrorResponse",
             '500': "CovalReviewsAPIErrorResponse",
             '503': "CovalReviewsAPIErrorResponse",
         }
@@ -1410,6 +1412,7 @@ class ReviewAnnotationsApi:
             '400': "CovalReviewsAPIErrorResponse",
             '401': "CovalReviewsAPIErrorResponse",
             '403': "CovalReviewsAPIErrorResponse",
+            '412': "CovalReviewsAPIErrorResponse",
             '500': "CovalReviewsAPIErrorResponse",
             '503': "CovalReviewsAPIErrorResponse",
         }
@@ -1513,7 +1516,7 @@ class ReviewAnnotationsApi:
     ) -> CovalReviewsAPIListReviewAnnotationsResponse:
         """List review annotations
 
-        List review annotations for your organization with optional filtering, sorting, and pagination.
+        List saved review annotations for your organization with optional filtering, sorting, and pagination. A `project_id` filter returns saved annotations matching that project's assignments; it does not list unannotated assignments. A project can have assigned review work and an empty annotation list. 
 
         :param page_size: Maximum number of results per page
         :type page_size: int
@@ -1595,7 +1598,7 @@ class ReviewAnnotationsApi:
     ) -> ApiResponse[CovalReviewsAPIListReviewAnnotationsResponse]:
         """List review annotations
 
-        List review annotations for your organization with optional filtering, sorting, and pagination.
+        List saved review annotations for your organization with optional filtering, sorting, and pagination. A `project_id` filter returns saved annotations matching that project's assignments; it does not list unannotated assignments. A project can have assigned review work and an empty annotation list. 
 
         :param page_size: Maximum number of results per page
         :type page_size: int
@@ -1677,7 +1680,7 @@ class ReviewAnnotationsApi:
     ) -> RESTResponseType:
         """List review annotations
 
-        List review annotations for your organization with optional filtering, sorting, and pagination.
+        List saved review annotations for your organization with optional filtering, sorting, and pagination. A `project_id` filter returns saved annotations matching that project's assignments; it does not list unannotated assignments. A project can have assigned review work and an empty annotation list. 
 
         :param page_size: Maximum number of results per page
         :type page_size: int
@@ -1819,7 +1822,7 @@ class ReviewAnnotationsApi:
         self,
         annotation_id: Annotated[StrictStr, Field(description="The annotation ID")],
         coval_reviews_api_update_review_annotation_request: CovalReviewsAPIUpdateReviewAnnotationRequest,
-        project_id: Annotated[Optional[StrictStr], Field(description="Optional project ID to apply project-rule-aware completion status")] = None,
+        project_id: Annotated[Optional[StrictStr], Field(description="Optional project ID. The annotation must match an assignment in this project. Applies project rules to the returned completion status. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1835,13 +1838,13 @@ class ReviewAnnotationsApi:
     ) -> CovalReviewsAPIUpdateReviewAnnotationResponse:
         """Update review annotation
 
-        Partially update a review annotation. Providing a ground truth value auto-sets `completion_status` to `COMPLETED`. 
+        Partially update an existing saved review annotation using its annotation ID. Create the annotation with POST before attempting to update it; project assignment IDs cannot be used as annotation IDs. The reviewer cannot be changed. A different non-null `assignee` returns HTTP 400 (`INVALID_ARGUMENT`); create an annotation for that reviewer instead. Completion status is derived from saved ground truth and, when `project_id` is supplied, the applicable project rules. 
 
         :param annotation_id: The annotation ID (required)
         :type annotation_id: str
         :param coval_reviews_api_update_review_annotation_request: (required)
         :type coval_reviews_api_update_review_annotation_request: CovalReviewsAPIUpdateReviewAnnotationRequest
-        :param project_id: Optional project ID to apply project-rule-aware completion status
+        :param project_id: Optional project ID. The annotation must match an assignment in this project. Applies project rules to the returned completion status. 
         :type project_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1898,7 +1901,7 @@ class ReviewAnnotationsApi:
         self,
         annotation_id: Annotated[StrictStr, Field(description="The annotation ID")],
         coval_reviews_api_update_review_annotation_request: CovalReviewsAPIUpdateReviewAnnotationRequest,
-        project_id: Annotated[Optional[StrictStr], Field(description="Optional project ID to apply project-rule-aware completion status")] = None,
+        project_id: Annotated[Optional[StrictStr], Field(description="Optional project ID. The annotation must match an assignment in this project. Applies project rules to the returned completion status. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1914,13 +1917,13 @@ class ReviewAnnotationsApi:
     ) -> ApiResponse[CovalReviewsAPIUpdateReviewAnnotationResponse]:
         """Update review annotation
 
-        Partially update a review annotation. Providing a ground truth value auto-sets `completion_status` to `COMPLETED`. 
+        Partially update an existing saved review annotation using its annotation ID. Create the annotation with POST before attempting to update it; project assignment IDs cannot be used as annotation IDs. The reviewer cannot be changed. A different non-null `assignee` returns HTTP 400 (`INVALID_ARGUMENT`); create an annotation for that reviewer instead. Completion status is derived from saved ground truth and, when `project_id` is supplied, the applicable project rules. 
 
         :param annotation_id: The annotation ID (required)
         :type annotation_id: str
         :param coval_reviews_api_update_review_annotation_request: (required)
         :type coval_reviews_api_update_review_annotation_request: CovalReviewsAPIUpdateReviewAnnotationRequest
-        :param project_id: Optional project ID to apply project-rule-aware completion status
+        :param project_id: Optional project ID. The annotation must match an assignment in this project. Applies project rules to the returned completion status. 
         :type project_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1977,7 +1980,7 @@ class ReviewAnnotationsApi:
         self,
         annotation_id: Annotated[StrictStr, Field(description="The annotation ID")],
         coval_reviews_api_update_review_annotation_request: CovalReviewsAPIUpdateReviewAnnotationRequest,
-        project_id: Annotated[Optional[StrictStr], Field(description="Optional project ID to apply project-rule-aware completion status")] = None,
+        project_id: Annotated[Optional[StrictStr], Field(description="Optional project ID. The annotation must match an assignment in this project. Applies project rules to the returned completion status. ")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1993,13 +1996,13 @@ class ReviewAnnotationsApi:
     ) -> RESTResponseType:
         """Update review annotation
 
-        Partially update a review annotation. Providing a ground truth value auto-sets `completion_status` to `COMPLETED`. 
+        Partially update an existing saved review annotation using its annotation ID. Create the annotation with POST before attempting to update it; project assignment IDs cannot be used as annotation IDs. The reviewer cannot be changed. A different non-null `assignee` returns HTTP 400 (`INVALID_ARGUMENT`); create an annotation for that reviewer instead. Completion status is derived from saved ground truth and, when `project_id` is supplied, the applicable project rules. 
 
         :param annotation_id: The annotation ID (required)
         :type annotation_id: str
         :param coval_reviews_api_update_review_annotation_request: (required)
         :type coval_reviews_api_update_review_annotation_request: CovalReviewsAPIUpdateReviewAnnotationRequest
-        :param project_id: Optional project ID to apply project-rule-aware completion status
+        :param project_id: Optional project ID. The annotation must match an assignment in this project. Applies project rules to the returned completion status. 
         :type project_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request

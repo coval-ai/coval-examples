@@ -56,6 +56,7 @@ export const CovalRunTemplatesAPIErrorResponseErrorCodeEnum = {
     Unauthenticated: 'UNAUTHENTICATED',
     NotFound: 'NOT_FOUND',
     Conflict: 'CONFLICT',
+    FailedPrecondition: 'FAILED_PRECONDITION',
     Internal: 'INTERNAL'
 } as const;
 export type CovalRunTemplatesAPIErrorResponseErrorCodeEnum = typeof CovalRunTemplatesAPIErrorResponseErrorCodeEnum[keyof typeof CovalRunTemplatesAPIErrorResponseErrorCodeEnum];

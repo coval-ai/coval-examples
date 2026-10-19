@@ -161,7 +161,7 @@ def test_client_can_restore_strict_response_validation() -> None:
 
 def test_top_level_exports_and_version_match() -> None:
   assert coval_sdk.CovalClient is CovalClient
-  assert coval_sdk.__version__ == "0.9.1"
+  assert coval_sdk.__version__ == "0.9.2"
 
 
 def test_update_run_response_preserves_simulation_run_fields() -> None:
@@ -523,3 +523,14 @@ def test_a_silently_stranded_connection_is_not_reused() -> None:
   finally:
     client.close()
     server.close()
+
+
+@pytest.mark.parametrize("value", [None, [], ["metric-1"]])
+def test_review_project_patch_preserves_skip_policy_values(value) -> None:
+  model = generated_models.CovalReviewsAPIUpdateReviewProjectRequest
+  assert model.from_dict({"skippable_metric_ids": value}).to_dict() == {"skippable_metric_ids": value}
+
+
+def test_review_project_patch_does_not_reset_omitted_skip_policy() -> None:
+  model = generated_models.CovalReviewsAPIUpdateReviewProjectRequest
+  assert model.from_dict({"display_name": "Renamed"}).to_dict() == {"display_name": "Renamed"}

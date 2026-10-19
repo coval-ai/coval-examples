@@ -110,17 +110,17 @@ export interface ReviewAnnotationsApiInterface {
     /**
      * Creates request options for createReviewAnnotation without sending the request
      * @param {CovalReviewsAPICreateReviewAnnotationRequest} covalReviewsAPICreateReviewAnnotationRequest 
-     * @param {string} [projectId] Optional project ID to apply project-rule-aware completion status
+     * @param {string} [projectId] Optional project ID. The simulation output, metric, and reviewer must match an assignment in this project. Applies project rules to the returned completion status. 
      * @throws {RequiredError}
      * @memberof ReviewAnnotationsApiInterface
      */
     createReviewAnnotationRequestOpts(requestParameters: CreateReviewAnnotationRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Create a new review annotation for your organization.
+     * Create or update the saved annotation for a simulation output, metric, and reviewer. Project creation does not create these annotation records. Use the returned `review_annotation.id` with PATCH for later partial updates. Repeating POST replaces the saved answer fields, including clearing omitted optional answer fields. 
      * @summary Create review annotation
      * @param {CovalReviewsAPICreateReviewAnnotationRequest} covalReviewsAPICreateReviewAnnotationRequest 
-     * @param {string} [projectId] Optional project ID to apply project-rule-aware completion status
+     * @param {string} [projectId] Optional project ID. The simulation output, metric, and reviewer must match an assignment in this project. Applies project rules to the returned completion status. 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ReviewAnnotationsApiInterface
@@ -128,7 +128,7 @@ export interface ReviewAnnotationsApiInterface {
     createReviewAnnotationRaw(requestParameters: CreateReviewAnnotationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReviewsAPICreateReviewAnnotationResponse>>;
 
     /**
-     * Create a new review annotation for your organization.
+     * Create or update the saved annotation for a simulation output, metric, and reviewer. Project creation does not create these annotation records. Use the returned `review_annotation.id` with PATCH for later partial updates. Repeating POST replaces the saved answer fields, including clearing omitted optional answer fields. 
      * Create review annotation
      */
     createReviewAnnotation(requestParameters: CreateReviewAnnotationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPICreateReviewAnnotationResponse>;
@@ -245,7 +245,7 @@ export interface ReviewAnnotationsApiInterface {
     listReviewAnnotationsRequestOpts(requestParameters: ListReviewAnnotationsRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * List review annotations for your organization with optional filtering, sorting, and pagination.
+     * List saved review annotations for your organization with optional filtering, sorting, and pagination. A `project_id` filter returns saved annotations matching that project\'s assignments; it does not list unannotated assignments. A project can have assigned review work and an empty annotation list. 
      * @summary List review annotations
      * @param {number} [pageSize] Maximum number of results per page
      * @param {string} [pageToken] Opaque pagination token from previous response
@@ -258,7 +258,7 @@ export interface ReviewAnnotationsApiInterface {
     listReviewAnnotationsRaw(requestParameters: ListReviewAnnotationsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReviewsAPIListReviewAnnotationsResponse>>;
 
     /**
-     * List review annotations for your organization with optional filtering, sorting, and pagination.
+     * List saved review annotations for your organization with optional filtering, sorting, and pagination. A `project_id` filter returns saved annotations matching that project\'s assignments; it does not list unannotated assignments. A project can have assigned review work and an empty annotation list. 
      * List review annotations
      */
     listReviewAnnotations(requestParameters: ListReviewAnnotationsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPIListReviewAnnotationsResponse>;
@@ -267,18 +267,18 @@ export interface ReviewAnnotationsApiInterface {
      * Creates request options for updateReviewAnnotation without sending the request
      * @param {string} annotationId The annotation ID
      * @param {CovalReviewsAPIUpdateReviewAnnotationRequest} covalReviewsAPIUpdateReviewAnnotationRequest 
-     * @param {string} [projectId] Optional project ID to apply project-rule-aware completion status
+     * @param {string} [projectId] Optional project ID. The annotation must match an assignment in this project. Applies project rules to the returned completion status. 
      * @throws {RequiredError}
      * @memberof ReviewAnnotationsApiInterface
      */
     updateReviewAnnotationRequestOpts(requestParameters: UpdateReviewAnnotationRequest): Promise<runtime.RequestOpts>;
 
     /**
-     * Partially update a review annotation. Providing a ground truth value auto-sets `completion_status` to `COMPLETED`. 
+     * Partially update an existing saved review annotation using its annotation ID. Create the annotation with POST before attempting to update it; project assignment IDs cannot be used as annotation IDs. The reviewer cannot be changed. A different non-null `assignee` returns HTTP 400 (`INVALID_ARGUMENT`); create an annotation for that reviewer instead. Completion status is derived from saved ground truth and, when `project_id` is supplied, the applicable project rules. 
      * @summary Update review annotation
      * @param {string} annotationId The annotation ID
      * @param {CovalReviewsAPIUpdateReviewAnnotationRequest} covalReviewsAPIUpdateReviewAnnotationRequest 
-     * @param {string} [projectId] Optional project ID to apply project-rule-aware completion status
+     * @param {string} [projectId] Optional project ID. The annotation must match an assignment in this project. Applies project rules to the returned completion status. 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ReviewAnnotationsApiInterface
@@ -286,7 +286,7 @@ export interface ReviewAnnotationsApiInterface {
     updateReviewAnnotationRaw(requestParameters: UpdateReviewAnnotationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReviewsAPIUpdateReviewAnnotationResponse>>;
 
     /**
-     * Partially update a review annotation. Providing a ground truth value auto-sets `completion_status` to `COMPLETED`. 
+     * Partially update an existing saved review annotation using its annotation ID. Create the annotation with POST before attempting to update it; project assignment IDs cannot be used as annotation IDs. The reviewer cannot be changed. A different non-null `assignee` returns HTTP 400 (`INVALID_ARGUMENT`); create an annotation for that reviewer instead. Completion status is derived from saved ground truth and, when `project_id` is supplied, the applicable project rules. 
      * Update review annotation
      */
     updateReviewAnnotation(requestParameters: UpdateReviewAnnotationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPIUpdateReviewAnnotationResponse>;
@@ -336,7 +336,7 @@ export class ReviewAnnotationsApi extends runtime.BaseAPI implements ReviewAnnot
     }
 
     /**
-     * Create a new review annotation for your organization.
+     * Create or update the saved annotation for a simulation output, metric, and reviewer. Project creation does not create these annotation records. Use the returned `review_annotation.id` with PATCH for later partial updates. Repeating POST replaces the saved answer fields, including clearing omitted optional answer fields. 
      * Create review annotation
      */
     async createReviewAnnotationRaw(requestParameters: CreateReviewAnnotationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReviewsAPICreateReviewAnnotationResponse>> {
@@ -347,7 +347,7 @@ export class ReviewAnnotationsApi extends runtime.BaseAPI implements ReviewAnnot
     }
 
     /**
-     * Create a new review annotation for your organization.
+     * Create or update the saved annotation for a simulation output, metric, and reviewer. Project creation does not create these annotation records. Use the returned `review_annotation.id` with PATCH for later partial updates. Repeating POST replaces the saved answer fields, including clearing omitted optional answer fields. 
      * Create review annotation
      */
     async createReviewAnnotation(requestParameters: CreateReviewAnnotationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPICreateReviewAnnotationResponse> {
@@ -605,7 +605,7 @@ export class ReviewAnnotationsApi extends runtime.BaseAPI implements ReviewAnnot
     }
 
     /**
-     * List review annotations for your organization with optional filtering, sorting, and pagination.
+     * List saved review annotations for your organization with optional filtering, sorting, and pagination. A `project_id` filter returns saved annotations matching that project\'s assignments; it does not list unannotated assignments. A project can have assigned review work and an empty annotation list. 
      * List review annotations
      */
     async listReviewAnnotationsRaw(requestParameters: ListReviewAnnotationsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReviewsAPIListReviewAnnotationsResponse>> {
@@ -616,7 +616,7 @@ export class ReviewAnnotationsApi extends runtime.BaseAPI implements ReviewAnnot
     }
 
     /**
-     * List review annotations for your organization with optional filtering, sorting, and pagination.
+     * List saved review annotations for your organization with optional filtering, sorting, and pagination. A `project_id` filter returns saved annotations matching that project\'s assignments; it does not list unannotated assignments. A project can have assigned review work and an empty annotation list. 
      * List review annotations
      */
     async listReviewAnnotations(requestParameters: ListReviewAnnotationsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPIListReviewAnnotationsResponse> {
@@ -670,7 +670,7 @@ export class ReviewAnnotationsApi extends runtime.BaseAPI implements ReviewAnnot
     }
 
     /**
-     * Partially update a review annotation. Providing a ground truth value auto-sets `completion_status` to `COMPLETED`. 
+     * Partially update an existing saved review annotation using its annotation ID. Create the annotation with POST before attempting to update it; project assignment IDs cannot be used as annotation IDs. The reviewer cannot be changed. A different non-null `assignee` returns HTTP 400 (`INVALID_ARGUMENT`); create an annotation for that reviewer instead. Completion status is derived from saved ground truth and, when `project_id` is supplied, the applicable project rules. 
      * Update review annotation
      */
     async updateReviewAnnotationRaw(requestParameters: UpdateReviewAnnotationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CovalReviewsAPIUpdateReviewAnnotationResponse>> {
@@ -681,7 +681,7 @@ export class ReviewAnnotationsApi extends runtime.BaseAPI implements ReviewAnnot
     }
 
     /**
-     * Partially update a review annotation. Providing a ground truth value auto-sets `completion_status` to `COMPLETED`. 
+     * Partially update an existing saved review annotation using its annotation ID. Create the annotation with POST before attempting to update it; project assignment IDs cannot be used as annotation IDs. The reviewer cannot be changed. A different non-null `assignee` returns HTTP 400 (`INVALID_ARGUMENT`); create an annotation for that reviewer instead. Completion status is derived from saved ground truth and, when `project_id` is supplied, the applicable project rules. 
      * Update review annotation
      */
     async updateReviewAnnotation(requestParameters: UpdateReviewAnnotationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CovalReviewsAPIUpdateReviewAnnotationResponse> {

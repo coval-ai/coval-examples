@@ -422,6 +422,7 @@ class MetricsApi:
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -497,6 +498,7 @@ class MetricsApi:
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -572,6 +574,7 @@ class MetricsApi:
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -1021,6 +1024,7 @@ class MetricsApi:
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
             '503': "CovalMetricsAPIErrorResponse",
         }
@@ -1094,6 +1098,7 @@ class MetricsApi:
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
             '503': "CovalMetricsAPIErrorResponse",
         }
@@ -1167,6 +1172,7 @@ class MetricsApi:
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
             '503': "CovalMetricsAPIErrorResponse",
         }
@@ -1317,6 +1323,7 @@ class MetricsApi:
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
             '409': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -1393,6 +1400,7 @@ class MetricsApi:
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
             '409': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -1469,6 +1477,7 @@ class MetricsApi:
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
             '409': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -1619,6 +1628,7 @@ class MetricsApi:
             '200': "object",
             '401': "CovalMetricsAPIErrorResponse",
             '409': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -1693,6 +1703,7 @@ class MetricsApi:
             '200': "object",
             '401': "CovalMetricsAPIErrorResponse",
             '409': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -1767,6 +1778,7 @@ class MetricsApi:
             '200': "object",
             '401': "CovalMetricsAPIErrorResponse",
             '409': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -2465,6 +2477,7 @@ class MetricsApi:
             '200': "object",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -2539,6 +2552,7 @@ class MetricsApi:
             '200': "object",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -2613,6 +2627,7 @@ class MetricsApi:
             '200': "object",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -2747,6 +2762,7 @@ class MetricsApi:
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -2818,6 +2834,7 @@ class MetricsApi:
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -2889,6 +2906,7 @@ class MetricsApi:
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -3023,6 +3041,7 @@ class MetricsApi:
             '200': "CovalMetricsAPIGetMetricResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -3097,6 +3116,7 @@ class MetricsApi:
             '200': "CovalMetricsAPIGetMetricResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -3171,6 +3191,7 @@ class MetricsApi:
             '200': "CovalMetricsAPIGetMetricResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -3984,6 +4005,7 @@ class MetricsApi:
             '200': "CovalMetricsAPIGetThresholdResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -4054,6 +4076,7 @@ class MetricsApi:
             '200': "CovalMetricsAPIGetThresholdResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -4124,6 +4147,7 @@ class MetricsApi:
             '200': "CovalMetricsAPIGetThresholdResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -5496,6 +5520,7 @@ class MetricsApi:
             '200': "CovalMetricsAPIListMetricTagsResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
             '503': "CovalMetricsAPIErrorResponse",
         }
@@ -5563,6 +5588,7 @@ class MetricsApi:
             '200': "CovalMetricsAPIListMetricTagsResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
             '503': "CovalMetricsAPIErrorResponse",
         }
@@ -5630,6 +5656,7 @@ class MetricsApi:
             '200': "CovalMetricsAPIListMetricTagsResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
             '503': "CovalMetricsAPIErrorResponse",
         }
@@ -6018,6 +6045,7 @@ class MetricsApi:
             '200': "CovalMetricsAPIListThresholdsResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -6096,6 +6124,7 @@ class MetricsApi:
             '200': "CovalMetricsAPIListThresholdsResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -6174,6 +6203,7 @@ class MetricsApi:
             '200': "CovalMetricsAPIListThresholdsResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -6314,6 +6344,7 @@ class MetricsApi:
             '200': "CovalMetricsAPIListMetricVersionsResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -6384,6 +6415,7 @@ class MetricsApi:
             '200': "CovalMetricsAPIListMetricVersionsResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -6454,6 +6486,7 @@ class MetricsApi:
             '200': "CovalMetricsAPIListMetricVersionsResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -6607,6 +6640,7 @@ class MetricsApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CovalMetricsAPIListMetricsResponse",
             '401': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -6700,6 +6734,7 @@ class MetricsApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CovalMetricsAPIListMetricsResponse",
             '401': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -6793,6 +6828,7 @@ class MetricsApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CovalMetricsAPIListMetricsResponse",
             '401': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -6949,6 +6985,7 @@ class MetricsApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CovalMetricsAPIListRecentlyDeletedMetricsResponse",
             '401': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -7014,6 +7051,7 @@ class MetricsApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CovalMetricsAPIListRecentlyDeletedMetricsResponse",
             '401': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -7079,6 +7117,7 @@ class MetricsApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CovalMetricsAPIListRecentlyDeletedMetricsResponse",
             '401': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -7206,6 +7245,7 @@ class MetricsApi:
             '200': "CovalMetricsAPIGetMetricResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -7276,6 +7316,7 @@ class MetricsApi:
             '200': "CovalMetricsAPIGetMetricResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -7346,6 +7387,7 @@ class MetricsApi:
             '200': "CovalMetricsAPIGetMetricResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -7481,6 +7523,7 @@ class MetricsApi:
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -7556,6 +7599,7 @@ class MetricsApi:
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -7631,6 +7675,7 @@ class MetricsApi:
             '400': "CovalMetricsAPIErrorResponse",
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -7771,6 +7816,7 @@ class MetricsApi:
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
             '503': "CovalMetricsAPIErrorResponse",
         }
@@ -7849,6 +7895,7 @@ class MetricsApi:
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
             '503': "CovalMetricsAPIErrorResponse",
         }
@@ -7927,6 +7974,7 @@ class MetricsApi:
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
             '503': "CovalMetricsAPIErrorResponse",
         }
@@ -8376,6 +8424,7 @@ class MetricsApi:
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -8456,6 +8505,7 @@ class MetricsApi:
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -8536,6 +8586,7 @@ class MetricsApi:
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -9007,6 +9058,7 @@ class MetricsApi:
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
             '503': "CovalMetricsAPIErrorResponse",
         }
@@ -9084,6 +9136,7 @@ class MetricsApi:
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
             '503': "CovalMetricsAPIErrorResponse",
         }
@@ -9161,6 +9214,7 @@ class MetricsApi:
             '401': "CovalMetricsAPIErrorResponse",
             '403': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
             '503': "CovalMetricsAPIErrorResponse",
         }
@@ -9314,6 +9368,7 @@ class MetricsApi:
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
             '409': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -9390,6 +9445,7 @@ class MetricsApi:
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
             '409': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
@@ -9466,6 +9522,7 @@ class MetricsApi:
             '401': "CovalMetricsAPIErrorResponse",
             '404': "CovalMetricsAPIErrorResponse",
             '409': "CovalMetricsAPIErrorResponse",
+            '412': "CovalMetricsAPIErrorResponse",
             '500': "CovalMetricsAPIErrorResponse",
         }
         response_data = self.api_client.call_api(
