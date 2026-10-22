@@ -52,7 +52,8 @@ STAGE_DIRECTION = re.compile(r"\[[^\]]*\]|\*[^*]+\*")
 BOLD = re.compile(r"\*\*([^*]+)\*\*")
 # gpt-oss occasionally voices its tool-call channel or a note to itself; drop the whole piece.
 INTERNAL = re.compile(
-    r"\bcommentary\b|\bto=functions\b|waiting for (?:the )?(?:user|caller)", re.IGNORECASE
+    r"\bcommentary\b|\bto=functions\b|waiting for (?:the )?(?:user|caller)|^\W*end of (?:the )?call\W*$",
+    re.IGNORECASE,
 )
 # Unicode hyphens and dashes ("555‑0142") read as words or quantities; Aura reads "-" digit by digit.
 DASHES = str.maketrans({"\u2010": "-", "\u2011": "-", "\u2012": "-", "\u2013": "-"})
