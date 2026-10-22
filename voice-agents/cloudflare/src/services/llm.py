@@ -47,8 +47,11 @@ ABBREVIATION = re.compile(
 # writes past that (often the caller's side of the conversation) is dropped, not voiced.
 MAX_SPOKEN_SENTENCES = 6
 # Stage directions and control tokens the model sometimes writes: "[pauses]", "*Call ends*",
-# "<|end_of_call|>".
-STAGE_DIRECTION = re.compile(r"\[[^\]]*\]|\*[^*]+\*|(?:<|&lt;)\|[^|]*\|(?:>|&gt;)")
+# "<|end_of_call|>", "(waiting for your preferred day and time.)".
+STAGE_DIRECTION = re.compile(
+    r"\[[^\]]*\]|\*[^*]+\*|(?:<|&lt;)\|[^|]*\|(?:>|&gt;)|\((?:waiting|awaiting|pause|note)\b[^)]*\)",
+    re.IGNORECASE,
+)
 # Markdown bold ("**Margherita**") keeps its words; only single-starred text is a stage direction.
 BOLD = re.compile(r"\*\*([^*]+)\*\*")
 # gpt-oss occasionally voices its tool-call channel or a note to itself; drop the whole piece.
@@ -404,6 +407,7 @@ class WorkersAILLM(LLMService):
         buffer = b""
         pending = ""
         finished = False
+        asked = False
         text, spoken, calls, usage = [], [], {}, {}
         while not (finished and not calls):
             async with asyncio.timeout(LLM_TIMEOUT_SECONDS):
@@ -450,7 +454,8 @@ class WorkersAILLM(LLMService):
                         pending = pending[match.end() :]
                         spoken.append(sentence)
                         await self._speak(sentence, generation)
-                        finished = "?" in match.group() or (len(spoken) >= MAX_SPOKEN_SENTENCES)
+                        asked = "?" in match.group()
+                        finished = asked or len(spoken) >= MAX_SPOKEN_SENTENCES
                     self.speech_history.set_text(generation, "".join(spoken) + pending)
                 for call in delta.get("tool_calls") or []:
                     entry = calls.setdefault(
@@ -473,6 +478,10 @@ class WorkersAILLM(LLMService):
             await self._speak(pending, generation)
             spoken.append(pending)
         tool_calls = [calls[index] for index in sorted(calls)]
+        if asked or "".join(spoken).rstrip().endswith("?"):
+            # A reply that asks the caller something waits for the answer; gpt-oss sometimes
+            # also calls the tool that needs that answer (an identity check before the number).
+            tool_calls = []
         if not tool_calls and not SPEAKABLE.search("".join(spoken)):
             # gpt-oss sometimes ends a turn after tool results with no text at all; retry it.
             raise DegenerateReply("Model streamed an empty reply")
