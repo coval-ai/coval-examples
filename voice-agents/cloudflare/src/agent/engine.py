@@ -56,6 +56,7 @@ class CovalEngine:
         self.audio_in = asyncio.Queue(maxsize=MAX_QUEUED_FRAMES)
         self.simulation_id = None
         self.started_at = time.time()
+        self.tools_running = 0
         self.last_activity = time.monotonic()
         self.flux_bytes = 0
         self.hang_up_generation = None
@@ -265,14 +266,29 @@ class CovalEngine:
 
     async def _watch(self):
         silence = self.vertical.silence_timeout_seconds
+        nudged = False
         while self.active:
             await asyncio.sleep(0.5)
-            busy = self.user_speaking or self.control.llm_pending or self.control.tts_pending
+            busy = (
+                self.user_speaking
+                or self.control.llm_pending
+                or self.control.tts_pending
+                or self.tools_running
+            )
             if busy:
                 self.last_activity = time.monotonic()
+            if self.user_speaking:
+                nudged = False
+            quiet = time.monotonic() - self.last_activity
             if time.time() - self.started_at > self.vertical.max_duration_seconds:
                 self._stop_soon("exceeded-max-duration")
-            elif time.monotonic() - self.last_activity > silence:
+            elif not nudged and quiet > silence / 2:
+                # Check in once before hanging up on a silent caller.
+                nudged = True
+                await self.tts.queue_frame(
+                    TTSSpeakFrame("Are you still there?", append_to_context=True)
+                )
+            elif quiet > silence:
                 self._stop_soon("silence-timed-out")
             elif not self.pipeline_ready or not self.runner_task or self.runner_task.done():
                 self._stop_soon("pipeline-stopped")

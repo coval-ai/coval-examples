@@ -54,6 +54,7 @@ def _register(owner, spec: dict) -> FunctionSchema:
     async def execute(params: FunctionCallParams):
         arguments = _clean(params.arguments)
         started = time.time()
+        owner.tools_running += 1
         try:
             if handler is None:
                 result = {"error": "UNKNOWN_TOOL", "message": f"Unknown tool: {name}"}
@@ -64,6 +65,8 @@ def _register(owner, spec: dict) -> FunctionSchema:
         except Exception as exc:
             log.bind(call_id=owner.call_id).error("tool_failed", tool=name, **exception_fields(exc))
             result = {"error": "TOOL_EXCEPTION", "message": "The action failed and did not happen."}
+        finally:
+            owner.tools_running -= 1
         owner.record_tool(name, params.tool_call_id, arguments, result, started, time.time())
         await params.result_callback(result)
 
