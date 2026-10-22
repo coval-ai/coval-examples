@@ -82,13 +82,25 @@ def launch(args: argparse.Namespace) -> None:
     manifest = json.loads(args.manifest.read_text())
     stamp = time.strftime("%Y%m%d-%H%M%S")
     pairs = []
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / f"parity-{stamp}.json"
+
+    # Saved after every pair, so a later failure never loses runs that already launched.
+    def save() -> None:
+        summary = {"stamp": stamp, "cases": args.cases, "seed": args.seed, "pairs": pairs}
+        path.write_text(json.dumps(summary, indent=2))
+
     for twin in manifest["twins"]:
         if not (twin.get("cloudflare_agent_id") and twin.get("source_agent_id")):
             continue
         if args.only and twin["org"] != args.only:
             continue
         key = coval_key(twin["org"])
-        config = run_config(key, twin)
+        try:
+            config = run_config(key, twin)
+        except RuntimeError as exc:
+            print(f"{twin['org']:18} {twin['slug']:15} skipped: {exc}")
+            continue
         pair = {**twin, **config, "runs": {}}
         for label, agent_id in (
             ("source", twin["source_agent_id"]),
@@ -98,7 +110,6 @@ def launch(args: argparse.Namespace) -> None:
                 "agent_id": agent_id,
                 "persona_id": config["persona_id"],
                 "test_set_id": config["test_set_id"],
-                "metric_ids": config["metric_ids"],
                 "options": {
                     "sub_sample_size": args.cases,
                     "sub_sample_seed": args.seed,
@@ -109,17 +120,19 @@ def launch(args: argparse.Namespace) -> None:
                     "tags": ["cloudflare-parity", f"parity:{stamp}", f"parity-side:{label}"],
                 },
             }
-            run = call(key, "POST", "/runs", body)["run"]
+            # An empty list is rejected; omitting it applies the agent's default metrics.
+            if config["metric_ids"]:
+                body["metric_ids"] = config["metric_ids"]
+            try:
+                run = call(key, "POST", "/runs", body)["run"]
+            except RuntimeError as exc:
+                print(f"{twin['org']:18} {twin['slug']:15} {label:10} failed: {exc}")
+                continue
             pair["runs"][label] = run["run_id"]
             print(f"{twin['org']:18} {twin['slug']:15} {label:10} run {run['run_id']}")
-        pairs.append(pair)
-    OUT.mkdir(parents=True, exist_ok=True)
-    path = OUT / f"parity-{stamp}.json"
-    path.write_text(
-        json.dumps(
-            {"stamp": stamp, "cases": args.cases, "seed": args.seed, "pairs": pairs}, indent=2
-        )
-    )
+        if pair["runs"]:
+            pairs.append(pair)
+            save()
     print(f"saved {path}")
 
 
@@ -191,6 +204,14 @@ def report(args: argparse.Namespace) -> None:
             if not token:
                 break
         sides = {label: collect(key, run_id) for label, run_id in pair["runs"].items()}
+        for metric_id in set(sides["source"]["values"]) | set(sides["cloudflare"]["values"]):
+            if metric_id not in names:
+                # Built-in metrics are not in the org's metric list.
+                try:
+                    metric = call(key, "GET", f"/metrics/{metric_id}")
+                    names[metric_id] = metric.get("metric", metric).get("metric_name", metric_id)
+                except RuntimeError:
+                    names[metric_id] = metric_id
         print(f"\n## {pair['org']} / {pair['slug']}")
         for label, side in sides.items():
             print(
