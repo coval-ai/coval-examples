@@ -8,6 +8,7 @@ import random
 import re
 from datetime import UTC, datetime, timedelta
 
+from agent.config import UTC_OFFSET_MINUTES
 from verticals.base import ToolOutcome, Vertical, load_assistant
 from verticals.registry import register
 
@@ -219,8 +220,9 @@ def place_order(args, _state):
         "message": f"Order {order_id} placed for {quantity}x {item['name']}.",
     }
     if fulfillment == "store_pickup":
-        eta = datetime.now(UTC) + timedelta(hours=4)
-        result["pickup_eta"] = eta.strftime("%Y-%m-%d %H:%M UTC")
+        # Store-local time: the model misread "18:49 UTC" as the next morning and refused same-day pickup.
+        eta = datetime.now(UTC) + timedelta(hours=4, minutes=UTC_OFFSET_MINUTES)
+        result["pickup_eta"] = eta.strftime("%A %B %-d, %-I:%M %p Pacific")
         result["store_name"] = STORES[store_id]["name"]
     return result
 
