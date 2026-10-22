@@ -59,6 +59,8 @@ class CovalEngine:
         self.last_activity = time.monotonic()
         self.flux_bytes = 0
         self.hang_up_generation = None
+        # True until the greeting has played; see provider_event in agent/pipeline.py.
+        self.greeting_active = True
         self.ended_reason = ""
         self.finish_task = None
         # Per-call scratch space for a vertical's failure-mode ground truth.
@@ -86,6 +88,7 @@ class CovalEngine:
             self.last_activity = now
         elif kind == "assistant_response_finished":
             self.last_activity = now
+            self.greeting_active = False
             if self.hang_up_generation is not None and event.get("generation") == (
                 self.hang_up_generation
             ):
@@ -250,9 +253,15 @@ class CovalEngine:
         greeting = TTSSpeakFrame(self.vertical.first_message, append_to_context=True)
         greeting.workers_generation = self.control.generation
         await self.tts.queue_frame(greeting)
+        self.background(self._end_greeting_window(), "greeting-window")
         await self.flux.start()
         self.background(self._receive_audio(), "coval-audio-input")
         self.background(self._watch(), "coval-call-watchdog")
+
+    async def _end_greeting_window(self):
+        # A backstop in case the greeting never reports that it finished playing.
+        await asyncio.sleep(15)
+        self.greeting_active = False
 
     async def _watch(self):
         silence = self.vertical.silence_timeout_seconds

@@ -335,6 +335,15 @@ async def provider_event(owner, payload):
             owner._provider_turns.move_to_end(turn_index)
             while len(owner._provider_turns) > MAX_RECENT_PROVIDER_TURNS:
                 owner._provider_turns.popitem(last=False)
+        if kind == "StartOfTurn" and getattr(owner, "greeting_active", False):
+            # The greeting is not interruptible: background noise (an airport announcement, say)
+            # would otherwise cut it off. Speech that starts during it is dropped with its end.
+            if turn is not None:
+                turn["ignored"] = True
+            owner.event("turn_ignored_during_greeting", turn=turn_index)
+            return
+        if kind == "EndOfTurn" and turn is not None and turn.get("ignored"):
+            return
         if kind == "StartOfTurn":
             if turn is not None and (turn["started"] or turn["ended"]):
                 owner.stats["pipeline"]["duplicate_provider_events"] += 1

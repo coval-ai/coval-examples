@@ -38,6 +38,27 @@ LLM_TIMEOUT_SECONDS = 12
 # sentence tokenizer, so the TTS service can't aggregate streamed text itself.
 SENTENCE_END = re.compile(r"[.!?]+[\"')\]]*\s")
 MIN_SPOKEN_CHARS = 12
+# A spoken reply ends at its first question or after this many sentences; anything the model
+# writes past that (often the caller's side of the conversation) is dropped, not voiced.
+MAX_SPOKEN_SENTENCES = 4
+# Stage directions the model sometimes writes, e.g. "[pauses]" or "*Call ends*".
+STAGE_DIRECTION = re.compile(r"\[[^\]]*\]|\*[^*]+\*")
+SPEAKABLE = re.compile(r"[A-Za-z0-9]")
+
+
+class DegenerateReply(ValueError):
+    """The model streamed text with no words in it (gpt-oss sometimes emits a run of "!")."""
+
+
+def date_context(today) -> str:
+    """Today's date with its weekday and the next two weeks, so the model never does weekday math."""
+    days = ", ".join(
+        (today + timedelta(days=offset)).strftime("%a %b %-d") for offset in range(1, 15)
+    )
+    return (
+        f"Today is {today.strftime('%A, %B %-d, %Y')} ({today.isoformat()}). "
+        f"The next 14 days: {days}."
+    )
 
 
 class WorkersAIAdapter(BaseLLMAdapter):
@@ -182,8 +203,7 @@ class WorkersAILLM(LLMService):
                 context.add_message(
                     {
                         "role": "user",
-                        "content": "<runtime_context>\n"
-                        f"Current local date: {local_date.isoformat()}.\n"
+                        "content": f"<runtime_context>\n{date_context(local_date)}\n"
                         "</runtime_context>",
                     }
                 )
@@ -216,7 +236,13 @@ class WorkersAILLM(LLMService):
             streamed = getattr(self.model, "streaming", False)
             try:
                 if streamed:
-                    reply, usage = await self._stream(params, generation, record)
+                    try:
+                        reply, usage = await self._stream(params, generation, record)
+                    except DegenerateReply:
+                        # One fresh attempt; a second wordless reply falls back below.
+                        record["degenerate_retries"] = record.get("degenerate_retries", 0) + 1
+                        self.log.warning("llm_degenerate_reply", generation=generation)
+                        reply, usage = await self._stream(params, generation, record)
                 else:
                     result = await run_inference(
                         self.env.AI,
@@ -361,8 +387,9 @@ class WorkersAILLM(LLMService):
         started = time.monotonic()
         buffer = b""
         pending = ""
-        text, calls, usage = [], {}, {}
-        while True:
+        finished = False
+        text, spoken, calls, usage = [], [], {}, {}
+        while not (finished and not calls):
             async with asyncio.timeout(LLM_TIMEOUT_SECONDS):
                 part = await reader.read()
             if part.done:
@@ -382,22 +409,34 @@ class WorkersAILLM(LLMService):
                 choices = chunk.get("choices") or []
                 delta = (choices[0].get("delta") or {}) if choices else {}
                 content = delta.get("content")
-                if isinstance(content, str) and content:
+                if isinstance(content, str) and content and not finished:
                     if not text:
                         record["first_text_ms"] = round((time.monotonic() - started) * 1000, 1)
                     text.append(content)
-                    self.speech_history.set_text(generation, "".join(text))
-                    pending += content.replace("*", "").replace("#", "").replace("`", "")
-                    while match := next(
-                        (
-                            m
-                            for m in SENTENCE_END.finditer(pending)
-                            if m.start() >= MIN_SPOKEN_CHARS
-                        ),
-                        None,
+                    pending += content
+                    if len(pending) >= 24 and not SPEAKABLE.search(pending[-24:]):
+                        if not spoken:
+                            raise DegenerateReply("Model streamed a reply with no words")
+                        # A wordless tail after real sentences ends the reply.
+                        pending, finished = "", True
+                    while not finished and (
+                        match := next(
+                            (
+                                m
+                                for m in SENTENCE_END.finditer(pending)
+                                if m.start() >= MIN_SPOKEN_CHARS
+                            ),
+                            None,
+                        )
                     ):
-                        await self._speak(pending[: match.end()], generation)
+                        sentence = pending[: match.end()]
                         pending = pending[match.end() :]
+                        spoken.append(sentence)
+                        await self._speak(sentence, generation)
+                        finished = sentence.rstrip().endswith("?") or (
+                            len(spoken) >= MAX_SPOKEN_SENTENCES
+                        )
+                    self.speech_history.set_text(generation, "".join(spoken) + pending)
                 for call in delta.get("tool_calls") or []:
                     entry = calls.setdefault(
                         call.get("index", len(calls)),
@@ -407,12 +446,24 @@ class WorkersAILLM(LLMService):
                     function = call.get("function") or {}
                     entry["function"]["name"] += function.get("name") or ""
                     entry["function"]["arguments"] += function.get("arguments") or ""
-        await self._speak(pending, generation)
+                if finished and not calls:
+                    break
+        if finished:
+            # Stop the model; nothing it writes past this point will be spoken.
+            try:
+                await reader.cancel()
+            except Exception:
+                pass
+        else:
+            await self._speak(pending, generation)
+            spoken.append(pending)
         tool_calls = [calls[index] for index in sorted(calls)]
-        return reply_from("".join(text), tool_calls or None), usage
+        # The conversation keeps only what was voiced, so a cut-off reply stays cut off.
+        return reply_from("".join(spoken), tool_calls or None), usage
 
     async def _speak(self, piece, generation):
-        if not piece.strip() or generation != self.control.generation:
+        piece = STAGE_DIRECTION.sub("", piece).replace("#", "").replace("`", "")
+        if not SPEAKABLE.search(piece) or generation != self.control.generation:
             return
         speech = TTSSpeakFrame(text=piece.strip(), append_to_context=True)
         speech.workers_generation = generation
