@@ -1,0 +1,9 @@
+node_modules/
+python_modules/
+.venv/
+.venv-workers/
+.wrangler/
+.dev.vars
+__pycache__/
+scripts/out/
+coval-agents.json
