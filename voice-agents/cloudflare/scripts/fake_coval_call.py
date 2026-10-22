@@ -92,7 +92,7 @@ async def run(base: str, slug: str, org: str, lines: list[str]) -> None:
                     return
                 await asyncio.sleep(0.02)
 
-        async def wait_for_reply(timeout: float = 25.0) -> float | None:
+        async def wait_for_reply(timeout: float = 60.0) -> float | None:
             began = time.time()
             heard = None
             while time.time() - began < timeout and not closed.is_set():
