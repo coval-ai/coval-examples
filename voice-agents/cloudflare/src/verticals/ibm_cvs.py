@@ -563,6 +563,13 @@ def check_drug_interaction(args, _state):
 
 def _normalize_day(value: str) -> str:
     text = str(value or "").strip().lower()
+    # gpt-oss sends ISO dates ("2026-10-27") where the Vapi model sent weekday names.
+    iso = re.search(r"\d{4}-\d{2}-\d{2}", text)
+    if iso:
+        try:
+            return date.fromisoformat(iso.group()).strftime("%A")
+        except ValueError:
+            pass
     for name in ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"):
         if text.startswith(name[:3]) or name in text:
             return name.capitalize()

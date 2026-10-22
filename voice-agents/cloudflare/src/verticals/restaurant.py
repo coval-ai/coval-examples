@@ -104,12 +104,14 @@ def book_reservation(args, _state):
 
 
 def modify_reservation(args, _state):
+    # Fields the caller didn't change stay as booked; the webhook's defaults (Friday, 7 PM, two
+    # guests) silently rewrote them when the model left them out.
     return {
         "success": True,
         "reservation_id": args.get("reservation_id", "RES-UNKNOWN"),
-        "new_date": args.get("new_date", "Friday"),
-        "new_time": args.get("new_time", "7:00 PM"),
-        "new_party_size": args.get("new_party_size", 2),
+        "new_date": args.get("new_date") or "unchanged",
+        "new_time": args.get("new_time") or "unchanged",
+        "new_party_size": args.get("new_party_size") or "unchanged",
         "message": "Your reservation has been updated. You'll receive a fresh confirmation by "
         "text.",
     }
