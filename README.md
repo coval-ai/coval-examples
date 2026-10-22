@@ -6,9 +6,11 @@
   <img src="coval-logo.png" alt="Coval Logo" width="200">
 </p>
 
-SDKs and examples for integrating with Coval's API.
+Examples for integrating with Coval's API.
 
-## Examples
+The Python and TypeScript SDKs are maintained in [coval-ai/coval-sdk](https://github.com/coval-ai/coval-sdk). Their package names and imports are unchanged. For source installs, use the new repository; older revisions remain available here in Git history.
+
+## SDKs
 
 ### TypeScript SDK
 
@@ -19,7 +21,7 @@ hand-written wrapper for auth, retries, pagination, and typed errors.
 npm install @coval/sdk
 ```
 
-[View TypeScript SDK](./typescript-sdk)
+[View TypeScript SDK](https://github.com/coval-ai/coval-sdk/tree/main/typescript-sdk)
 
 ### Python SDK
 
@@ -30,7 +32,9 @@ wrapper for auth, safe retries, pagination, and all public v1 API resources.
 pip install coval-sdk
 ```
 
-[View Python SDK](./python-sdk)
+[View Python SDK](https://github.com/coval-ai/coval-sdk/tree/main/python-sdk)
+
+## Examples
 
 ### Upload Conversations
 
