@@ -336,13 +336,12 @@ async def provider_event(owner, payload):
             while len(owner._provider_turns) > MAX_RECENT_PROVIDER_TURNS:
                 owner._provider_turns.popitem(last=False)
         if kind == "StartOfTurn" and getattr(owner, "greeting_active", False):
-            # The greeting is not interruptible: background noise (an airport announcement, say)
-            # would otherwise cut it off. Speech that starts during it is dropped with its end.
+            # The greeting is not interrupted by speech that starts during it (often background
+            # noise, such as an airport announcement). The turn is deferred: its start is sent
+            # together with its end, so the caller is still answered once they finish.
             if turn is not None:
-                turn["ignored"] = True
-            owner.event("turn_ignored_during_greeting", turn=turn_index)
-            return
-        if kind == "EndOfTurn" and turn is not None and turn.get("ignored"):
+                turn["deferred"] = True
+            owner.event("turn_deferred_during_greeting", turn=turn_index)
             return
         if kind == "StartOfTurn":
             if turn is not None and (turn["started"] or turn["ended"]):
@@ -363,13 +362,14 @@ async def provider_event(owner, payload):
         text = payload.get("transcript", "")
         if not isinstance(text, str) or len(text) > MAX_TRANSCRIPT_CHARS:
             raise ValueError("Flux transcript is invalid or exceeds the session limit")
+        deferred = turn is not None and turn.pop("deferred", False)
         if turn is not None:
             turn["ended"] = True
         owner.user_speaking = False
         owner.on_end_of_turn(text, payload)
         owner.stats["pipeline"]["provider_end_events"] += 1
         owner.event("FluxEndOfTurn", turn=turn_index)
-        frames = []
+        frames = [ProposedUserStartedSpeakingFrame()] if deferred and text else []
         if text:
             frames.append(
                 TranscriptionFrame(

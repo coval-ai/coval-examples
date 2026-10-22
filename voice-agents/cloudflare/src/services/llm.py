@@ -36,13 +36,26 @@ HOLD_ON_SECONDS = 4
 LLM_TIMEOUT_SECONDS = 12
 # Where a streamed reply is cut into spoken pieces. The Workers build of Pipecat has no
 # sentence tokenizer, so the TTS service can't aggregate streamed text itself.
-SENTENCE_END = re.compile(r"[.!?]+[\"')\]]*\s")
+# A sentence ends at punctuation followed by a space, or run straight into a capital letter.
+SENTENCE_END = re.compile(r"[.!?]+[\"')\]]*(?:\s|(?=[A-Z]))")
 MIN_SPOKEN_CHARS = 12
+# Periods that don't end a sentence ("Dr. Chen", "9 a.m. tomorrow").
+ABBREVIATION = re.compile(
+    r"(?:\b(?:Dr|Mr|Mrs|Ms|St|Jr|Sr|vs|etc|e\.g|i\.e|a\.m|p\.m)|\b[A-Za-z])\.$"
+)
 # A spoken reply ends at its first question or after this many sentences; anything the model
 # writes past that (often the caller's side of the conversation) is dropped, not voiced.
 MAX_SPOKEN_SENTENCES = 4
 # Stage directions the model sometimes writes, e.g. "[pauses]" or "*Call ends*".
 STAGE_DIRECTION = re.compile(r"\[[^\]]*\]|\*[^*]+\*")
+# Markdown bold ("**Margherita**") keeps its words; only single-starred text is a stage direction.
+BOLD = re.compile(r"\*\*([^*]+)\*\*")
+# gpt-oss occasionally voices its tool-call channel or a note to itself; drop the whole piece.
+INTERNAL = re.compile(
+    r"\bcommentary\b|\bto=functions\b|waiting for (?:the )?(?:user|caller)", re.IGNORECASE
+)
+# Unicode hyphens and dashes ("555‑0142") read as words or quantities; Aura reads "-" digit by digit.
+DASHES = str.maketrans({"\u2010": "-", "\u2011": "-", "\u2012": "-", "\u2013": "-"})
 SPEAKABLE = re.compile(r"[A-Za-z0-9]")
 
 
@@ -425,6 +438,7 @@ class WorkersAILLM(LLMService):
                                 m
                                 for m in SENTENCE_END.finditer(pending)
                                 if m.start() >= MIN_SPOKEN_CHARS
+                                and not ABBREVIATION.search(pending[: m.start() + 1])
                             ),
                             None,
                         )
@@ -462,7 +476,11 @@ class WorkersAILLM(LLMService):
         return reply_from("".join(spoken), tool_calls or None), usage
 
     async def _speak(self, piece, generation):
-        piece = STAGE_DIRECTION.sub("", piece).replace("#", "").replace("`", "")
+        if INTERNAL.search(piece):
+            return
+        piece = BOLD.sub(r"\1", piece.translate(DASHES))
+        piece = STAGE_DIRECTION.sub("", piece)
+        piece = piece.replace("*", "").replace("#", "").replace("`", "")
         if not SPEAKABLE.search(piece) or generation != self.control.generation:
             return
         speech = TTSSpeakFrame(text=piece.strip(), append_to_context=True)
