@@ -222,7 +222,8 @@ def place_order(args, _state):
     if fulfillment == "store_pickup":
         # Store-local time: the model misread "18:49 UTC" as the next morning and refused same-day pickup.
         eta = datetime.now(UTC) + timedelta(hours=4, minutes=UTC_OFFSET_MINUTES)
-        result["pickup_eta"] = eta.strftime("%A %B %-d, %-I:%M %p Pacific")
+        hour = eta.hour % 12 or 12
+        result["pickup_eta"] = f"{eta:%A %B} {eta.day}, {hour}:{eta:%M %p} Pacific"
         result["store_name"] = STORES[store_id]["name"]
     return result
 
