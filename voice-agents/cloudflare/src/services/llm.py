@@ -71,7 +71,8 @@ def date_context(today) -> str:
     )
     return (
         f"Today is {today.strftime('%A, %B %-d, %Y')} ({today.isoformat()}). "
-        f"The next 14 days: {days}."
+        f"The next 14 days: {days}. A date the caller gives without a year is its next "
+        "occurrence on or after today; never use a date before today."
     )
 
 
