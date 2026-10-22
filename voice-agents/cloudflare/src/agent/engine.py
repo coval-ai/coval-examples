@@ -245,13 +245,14 @@ class CovalEngine:
         )
         self.active = True
         await start_pipeline(self)
-        await self.flux.start()
-        self.background(self._receive_audio(), "coval-audio-input")
-        self.background(self._watch(), "coval-call-watchdog")
-        # Coval's caller waits for the agent to speak first.
+        # Coval's caller waits for the agent to speak first, so the greeting starts
+        # synthesizing while the speech recognizer connects.
         greeting = TTSSpeakFrame(self.vertical.first_message, append_to_context=True)
         greeting.workers_generation = self.control.generation
         await self.tts.queue_frame(greeting)
+        await self.flux.start()
+        self.background(self._receive_audio(), "coval-audio-input")
+        self.background(self._watch(), "coval-call-watchdog")
 
     async def _watch(self):
         silence = self.vertical.silence_timeout_seconds
@@ -414,6 +415,7 @@ class CovalEngine:
             index += 1
             for record in llm:
                 elapsed = record.get("elapsed_ms", 0) / 1000
+                first_text = record.get("first_text_ms")
                 usage = record.get("usage") or {}
                 tracer.record(
                     "llm",
@@ -425,8 +427,9 @@ class CovalEngine:
                         "llm.finish_reason": "tool_calls"
                         if record.get("outcome") == "tools"
                         else "stop",
-                        # Replies are not streamed, so the first byte is the whole reply.
-                        "metrics.ttfb": elapsed,
+                        # Streamed text replies report their first token; tool calls the whole reply.
+                        "metrics.ttfb": first_text / 1000 if first_text is not None else elapsed,
+                        "llm.duration_seconds": elapsed,
                         "gen_ai.usage.input_tokens": usage.get("prompt_tokens"),
                         "gen_ai.usage.output_tokens": usage.get("completion_tokens"),
                         "llm.outcome": record.get("outcome"),

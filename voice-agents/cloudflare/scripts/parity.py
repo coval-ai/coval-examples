@@ -106,6 +106,8 @@ def launch(args: argparse.Namespace) -> None:
             ("source", twin["source_agent_id"]),
             ("cloudflare", twin["cloudflare_agent_id"]),
         ):
+            if label not in args.sides:
+                continue
             body = {
                 "agent_id": agent_id,
                 "persona_id": config["persona_id"],
@@ -203,6 +205,8 @@ def report(args: argparse.Namespace) -> None:
             token = page.get("next_page_token")
             if not token:
                 break
+        if set(pair["runs"]) != {"source", "cloudflare"}:
+            continue
         sides = {label: collect(key, run_id) for label, run_id in pair["runs"].items()}
         for metric_id in set(sides["source"]["values"]) | set(sides["cloudflare"]["values"]):
             if metric_id not in names:
@@ -263,6 +267,13 @@ def main() -> None:
     launch_parser = sub.add_parser("launch")
     launch_parser.add_argument("--manifest", type=Path, default=Path("coval-agents.json"))
     launch_parser.add_argument("--only")
+    launch_parser.add_argument(
+        "--sides",
+        nargs="+",
+        default=["source", "cloudflare"],
+        choices=["source", "cloudflare"],
+        help="Re-run one side only, e.g. after changing the Cloudflare agent",
+    )
     launch_parser.add_argument("--cases", type=int, default=6)
     launch_parser.add_argument("--seed", type=int, default=42)
     report_parser = sub.add_parser("report")

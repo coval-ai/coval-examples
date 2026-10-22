@@ -48,7 +48,7 @@ class WorkersAIModel(ABC):
         return {}
 
 
-def _reply(text, calls) -> ModelReply:
+def reply_from(text, calls) -> ModelReply:
     if calls:
         if not isinstance(calls, list) or len(calls) > MAX_TOOL_CALLS:
             raise ValueError("Tool call limit reached")
@@ -95,11 +95,13 @@ class ChatCompletionsModel(WorkersAIModel):
     model_id: str
     request_options: dict = field(default_factory=dict)
     max_tool_calls: int = MAX_TOOL_CALLS
+    # Streamed replies are spoken a sentence at a time while the rest is still being written.
+    streaming: bool = False
 
     def build_request(self, parameters, *, allow_tools):
         request = {
             **parameters,
-            "stream": False,
+            "stream": self.streaming,
             "max_completion_tokens": MAX_REPLY_TOKENS,
             "temperature": 0.3,
             **self.request_options,
@@ -116,7 +118,7 @@ class ChatCompletionsModel(WorkersAIModel):
             raise ValueError(f"Incomplete model reply: {choice.finish_reason}")
         # The response can contain separate reasoning fields. Only the final
         # message content and structured function calls cross into the pipeline.
-        return _reply(choice.message.content, choice.message.tool_calls)
+        return reply_from(choice.message.content, choice.message.tool_calls)
 
     def get_usage(self, response):
         usage = response.get("usage") if isinstance(response, dict) else None
@@ -148,6 +150,7 @@ _MODELS: dict[str, WorkersAIModel] = {
         ChatCompletionsModel(
             "@cf/openai/gpt-oss-120b",
             request_options={"reasoning_effort": "low"},
+            streaming=True,
         ),
     )
 }

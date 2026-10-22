@@ -2,6 +2,7 @@
 
 import asyncio
 import json
+import re
 import time
 import uuid
 from datetime import datetime, timedelta, timezone
@@ -27,12 +28,16 @@ from pipecat.utils.text.markdown_text_filter import MarkdownTextFilter
 from agent.speech_history import SpeechHistory
 from server.observability import exception_fields, log
 from services.inference import InferenceError, run_inference
-from services.models import TextReply, ToolReply, WorkersAIModel
+from services.models import TextReply, ToolReply, WorkersAIModel, reply_from
 
 # After this long without a reply, the agent says a short holding line.
 HOLD_ON_SECONDS = 4
 # A reply that takes longer gets the fallback line instead of more silence.
 LLM_TIMEOUT_SECONDS = 12
+# Where a streamed reply is cut into spoken pieces. The Workers build of Pipecat has no
+# sentence tokenizer, so the TTS service can't aggregate streamed text itself.
+SENTENCE_END = re.compile(r"[.!?]+[\"')\]]*\s")
+MIN_SPOKEN_CHARS = 12
 
 
 class WorkersAIAdapter(BaseLLMAdapter):
@@ -207,17 +212,25 @@ class WorkersAILLM(LLMService):
             await self.push_frame(start)
             self.control.llm_pending = True
             hold_on = self.create_task(self._hold_on(generation), "workers-ai-hold-on")
+            # A streamed text reply has already been sent on to speech as it arrived.
+            streamed = getattr(self.model, "streaming", False)
             try:
-                result = await run_inference(
-                    self.env.AI,
-                    self.model.model_id,
-                    params,
-                    self._request_options,
-                    log=self.log.bind(generation=generation),
-                    is_current=lambda: not self._closing and generation == self.control.generation,
-                    timeout=LLM_TIMEOUT_SECONDS,
-                )
-                usage = self.model.get_usage(result)
+                if streamed:
+                    reply, usage = await self._stream(params, generation, record)
+                else:
+                    result = await run_inference(
+                        self.env.AI,
+                        self.model.model_id,
+                        params,
+                        self._request_options,
+                        log=self.log.bind(generation=generation),
+                        is_current=lambda: (
+                            not self._closing and generation == self.control.generation
+                        ),
+                        timeout=LLM_TIMEOUT_SECONDS,
+                    )
+                    usage = self.model.get_usage(result)
+                    reply = self.model.parse_response(result)
                 record["usage"] = usage
                 if usage:
                     self.log.info(
@@ -226,7 +239,6 @@ class WorkersAILLM(LLMService):
                         elapsed_ms=round((time.monotonic() - started) * 1000, 1),
                         **usage,
                     )
-                reply = self.model.parse_response(result)
                 if isinstance(reply, TextReply):
                     # Preview, speech, and spoken context share the same plain text.
                     text = (await self._text_filter.filter(reply.text)).strip()
@@ -236,6 +248,7 @@ class WorkersAILLM(LLMService):
                 if isinstance(reply, ToolReply) and remaining <= 0:
                     raise ValueError("Tool call limit reached")
             except Exception as exc:
+                streamed = False
                 record["outcome"] = "fallback"
                 self.summary["errors"].append({"type": type(exc).__name__})
                 fields = exception_fields(exc.__cause__ or exc)
@@ -301,9 +314,10 @@ class WorkersAILLM(LLMService):
             text = reply.text
             self.speech_history.set_text(generation, text)
             await self._call_event_handler("on_response_text", text, generation)
-            speech = TTSSpeakFrame(text=text, append_to_context=True)
-            speech.workers_generation = generation
-            await self.push_frame(speech)
+            if not streamed:
+                speech = TTSSpeakFrame(text=text, append_to_context=True)
+                speech.workers_generation = generation
+                await self.push_frame(speech)
             await self._end_response(generation)
             if record["outcome"] == "pending":
                 record["outcome"] = "emitted"
@@ -324,6 +338,85 @@ class WorkersAILLM(LLMService):
         finally:
             record["elapsed_ms"] = round((time.monotonic() - started) * 1000, 1)
             self.control.llm_pending = False
+
+    async def _stream(self, params, generation, record):
+        """Read a streamed completion, sending text on to speech as it arrives.
+
+        Returns the complete reply (text or tool calls) and its token usage.
+        """
+        response = await run_inference(
+            self.env.AI,
+            self.model.model_id,
+            params,
+            self._request_options,
+            log=self.log.bind(generation=generation),
+            is_current=lambda: not self._closing and generation == self.control.generation,
+            timeout=LLM_TIMEOUT_SECONDS,
+            raw=True,
+        )
+        native = getattr(response, "js_response", response)
+        if native.body is None:
+            raise InferenceError(ErrorCategory.SERVER)
+        reader = native.body.getReader()
+        started = time.monotonic()
+        buffer = b""
+        pending = ""
+        text, calls, usage = [], {}, {}
+        while True:
+            async with asyncio.timeout(LLM_TIMEOUT_SECONDS):
+                part = await reader.read()
+            if part.done:
+                break
+            buffer += part.value.to_bytes()
+            while b"\n" in buffer:
+                line, buffer = buffer.split(b"\n", 1)
+                line = line.strip()
+                if not line.startswith(b"data:") or line[5:].strip() == b"[DONE]":
+                    continue
+                try:
+                    chunk = json.loads(line[5:])
+                except ValueError:
+                    continue
+                if isinstance(chunk.get("usage"), dict) and chunk["usage"].get("prompt_tokens"):
+                    usage = self.model.get_usage(chunk)
+                choices = chunk.get("choices") or []
+                delta = (choices[0].get("delta") or {}) if choices else {}
+                content = delta.get("content")
+                if isinstance(content, str) and content:
+                    if not text:
+                        record["first_text_ms"] = round((time.monotonic() - started) * 1000, 1)
+                    text.append(content)
+                    self.speech_history.set_text(generation, "".join(text))
+                    pending += content.replace("*", "").replace("#", "").replace("`", "")
+                    while match := next(
+                        (
+                            m
+                            for m in SENTENCE_END.finditer(pending)
+                            if m.start() >= MIN_SPOKEN_CHARS
+                        ),
+                        None,
+                    ):
+                        await self._speak(pending[: match.end()], generation)
+                        pending = pending[match.end() :]
+                for call in delta.get("tool_calls") or []:
+                    entry = calls.setdefault(
+                        call.get("index", len(calls)),
+                        {"id": None, "function": {"name": "", "arguments": ""}},
+                    )
+                    entry["id"] = call.get("id") or entry["id"]
+                    function = call.get("function") or {}
+                    entry["function"]["name"] += function.get("name") or ""
+                    entry["function"]["arguments"] += function.get("arguments") or ""
+        await self._speak(pending, generation)
+        tool_calls = [calls[index] for index in sorted(calls)]
+        return reply_from("".join(text), tool_calls or None), usage
+
+    async def _speak(self, piece, generation):
+        if not piece.strip() or generation != self.control.generation:
+            return
+        speech = TTSSpeakFrame(text=piece.strip(), append_to_context=True)
+        speech.workers_generation = generation
+        await self.push_frame(speech)
 
     async def _hold_on(self, generation):
         await asyncio.sleep(HOLD_ON_SECONDS)

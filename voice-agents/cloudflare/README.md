@@ -66,7 +66,7 @@ Coval puts the simulation ID in the first WebSocket message, so every span is co
 | `llm_tool_call` | `function.name`, `function.arguments` (sensitive keys redacted), `tool.error`, `tool.dependency_unavailable`, `tool.latency_ms` |
 | `<vertical>.workflow.<tool>` | `workflow.step`, `tool.error` |
 
-All timings are measured, not synthetic. Replies aren't streamed, so `llm` time to first byte is the whole reply.
+All timings are measured, not synthetic. For a streamed text reply, `llm` time to first byte is the first token; for a reply that only calls tools, it is the whole reply.
 
 ## Deploy
 
@@ -118,7 +118,8 @@ Every agent also gets an `end_call` tool: the agent says its goodbye line and ha
 ## Limits
 
 - English only: Flux turn detection and the Aura voices are English (Aura also has Spanish).
-- Replies are generated whole before they're spoken, which adds the LLM's full response time to each turn.
+- Replies stream from the model and are spoken a sentence at a time. The Workers build of Pipecat has no sentence tokenizer, so `services/llm.py` cuts sentences itself.
+- A turn that needs a tool waits for two model rounds before speaking; there are no fillers, matching the Vapi agents these replace.
 - The bundled Pipecat build supports hosted services and Flux turn detection only, not local VAD or Smart Turn. See [vendor/README.md](vendor/README.md).
 - A call ends after its agent's maximum duration (10 minutes by default) or 30 seconds of silence.
 
