@@ -473,6 +473,9 @@ class WorkersAILLM(LLMService):
             await self._speak(pending, generation)
             spoken.append(pending)
         tool_calls = [calls[index] for index in sorted(calls)]
+        if not tool_calls and not SPEAKABLE.search("".join(spoken)):
+            # gpt-oss sometimes ends a turn after tool results with no text at all; retry it.
+            raise DegenerateReply("Model streamed an empty reply")
         # The conversation keeps only what was voiced, so a cut-off reply stays cut off.
         return reply_from("".join(spoken), tool_calls or None), usage
 
