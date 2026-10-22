@@ -450,9 +450,7 @@ class WorkersAILLM(LLMService):
                         pending = pending[match.end() :]
                         spoken.append(sentence)
                         await self._speak(sentence, generation)
-                        finished = sentence.rstrip().endswith("?") or (
-                            len(spoken) >= MAX_SPOKEN_SENTENCES
-                        )
+                        finished = "?" in match.group() or (len(spoken) >= MAX_SPOKEN_SENTENCES)
                     self.speech_history.set_text(generation, "".join(spoken) + pending)
                 for call in delta.get("tool_calls") or []:
                     entry = calls.setdefault(
