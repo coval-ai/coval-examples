@@ -45,9 +45,10 @@ ABBREVIATION = re.compile(
 )
 # A spoken reply ends at its first question or after this many sentences; anything the model
 # writes past that (often the caller's side of the conversation) is dropped, not voiced.
-MAX_SPOKEN_SENTENCES = 4
-# Stage directions the model sometimes writes, e.g. "[pauses]" or "*Call ends*".
-STAGE_DIRECTION = re.compile(r"\[[^\]]*\]|\*[^*]+\*")
+MAX_SPOKEN_SENTENCES = 6
+# Stage directions and control tokens the model sometimes writes: "[pauses]", "*Call ends*",
+# "<|end_of_call|>".
+STAGE_DIRECTION = re.compile(r"\[[^\]]*\]|\*[^*]+\*|(?:<|&lt;)\|[^|]*\|(?:>|&gt;)")
 # Markdown bold ("**Margherita**") keeps its words; only single-starred text is a stage direction.
 BOLD = re.compile(r"\*\*([^*]+)\*\*")
 # gpt-oss occasionally voices its tool-call channel or a note to itself; drop the whole piece.
