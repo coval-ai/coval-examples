@@ -104,3 +104,8 @@ def test_request_without_question_mark_counts_as_a_question():
     assert llm.REQUEST.search("Could you please provide the address for your Honda CR-V.")
     assert llm.REQUEST.search("What is your policy number.")
     assert not llm.REQUEST.search("I can help with that.")
+
+
+def test_end_markers_are_not_spoken():
+    marked = "Could you confirm the phone number on file for you?--- End of conversation ---"
+    assert llm.STAGE_DIRECTION.sub("", marked) == "Could you confirm the phone number on file for you?"

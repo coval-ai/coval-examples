@@ -57,7 +57,8 @@ MAX_SPOKEN_SENTENCES = 6
 # Stage directions and control tokens the model sometimes writes: "[pauses]", "*Call ends*",
 # "<|end_of_call|>", "(waiting for your preferred day and time.)".
 STAGE_DIRECTION = re.compile(
-    r"\[[^\]]*\]|\*[^*]+\*|(?:<|&lt;)\|[^|]*\|(?:>|&gt;)|\((?:waiting|awaiting|pause|note)\b[^)]*\)",
+    r"\[[^\]]*\]|\*[^*]+\*|(?:<|&lt;)\|[^|]*\|(?:>|&gt;)|\((?:waiting|awaiting|pause|note)\b[^)]*\)"
+    r"|-{2,}[^-]*-{2,}|\bend of (?:the )?(?:call|conversation)\b\W*",
     re.IGNORECASE,
 )
 # Markdown bold ("**Margherita**") keeps its words; only single-starred text is a stage direction.
