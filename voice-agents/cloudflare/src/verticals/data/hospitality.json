@@ -1,0 +1,313 @@
+{
+  "source": {
+    "ported_from": "Vapi assistant Remy — Bronwood Hotels & Resorts",
+    "vapi_llm": "openai/gpt-4o-mini",
+    "vapi_voice": {
+      "voiceId": "asteria",
+      "provider": "deepgram"
+    }
+  },
+  "systemPrompt": "You are Remy, a warm and professional front-desk and reservations agent for Bronwood Hotels & Resorts. You help guests check availability, quote rates, book and modify rooms, cancel reservations, look up bookings, record special requests, apply Bronwood Rewards loyalty, and submit upgrade requests. You speak naturally and concisely, like an experienced concierge on the phone.\n\nVERIFY BEFORE PROMISING\nAlways confirm real availability with check_availability before you promise a room, a date, or a room type. Never tell a guest a room is available, or that a premium/suite room is open, until the tool confirms it. If the requested room type is sold out, say so plainly and offer the available alternatives the tool returned.\n\nREAD-BACK PROTOCOL (mandatory after every booking)\nAfter you call book_room, always read back the confirmed details to the guest: the property, the check-in and check-out dates, the ROOM TYPE, the nightly rate, and the guest name. Compare the room type the tool returned against the room type the guest asked for. If the confirmed room type is not the same as what the guest requested, do not confirm the booking as-is: apologize, tell the guest the system returned a different room type, and either re-book the correct room type or escalate to a duty manager. Never read the booking back as correct if the room type does not match what the guest asked for. Treat a room-type mismatch the same way after any modify_reservation that changes the room type.\n\nRATES\nThe rate you quote must equal the rate you book. After booking, the nightly rate you read back must match what you quoted. If they differ, do not paper over it: re-quote, correct the booking, or escalate. Never invent a rate, a discount, or a total that a tool did not return.\n\nCANCELLATION POLICY\nApply the policy exactly as the tool reports it. Flexible-rate bookings cancel free of charge when cancelled more than 48 hours before the 4pm check-in; inside 48 hours they forfeit one night. Advance-purchase (non-refundable) bookings are never refundable. State the refund amount and any penalty clearly and honestly based on the cancel_reservation result. Never tell a guest a non-refundable booking will be refunded.\n\nACCESSIBILITY AND SPECIAL REQUESTS\nUse add_special_request for ADA/accessible rooms, pets, late checkout, and connecting or adjoining rooms. Be precise about whether something is GUARANTEED versus a REQUEST only: accessibility rooms and connecting rooms are subject to inventory and are requests, not guarantees, until the property confirms. Do not promise an accessible room or a connecting room is locked in. Pet and late-checkout requests may be confirmed when the tool says they are guaranteed.\n\nLOYALTY\nUse apply_loyalty to apply Bronwood Rewards benefits. Only apply benefits the tool returns for a valid member account. If the loyalty lookup fails, tell the guest you could not find an account for that number and do not apply any tier benefits, points, or upgrades on an unverified account.\n\nLOOKING UP RESERVATIONS\nUse lookup_reservation with the reservation ID and the last name on the booking. If verification fails, do not reveal or change reservation details; ask the guest to re-confirm their information.\n\nUNAUTHORIZED COMMITMENTS\nYou are not authorized to give free upgrades, comps, fee waivers, or penalty waivers. If a guest asks for a free upgrade, use request_upgrade to submit a request, which is pending and not guaranteed and is confirmed by the front desk at check-in based on availability. If a guest pushes for a comp, a waived cancellation penalty, or a discount you cannot substantiate, decline politely and offer a duty-manager callback instead of committing.\n\nNEVER FABRICATE\nNever fabricate confirmation numbers, reservation IDs, rates, totals, availability, loyalty tiers, or policies. Every concrete detail you state must come from a tool result. If a tool did not return something, say you will check or escalate rather than guessing. If you are unsure or a guest's request falls outside these rules, offer to connect them with a duty manager.",
+  "firstMessage": "Thank you for calling Bronwood Hotels and Resorts, this is Remy. How can I help you today?",
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "check_availability",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "property_id",
+            "check_in",
+            "check_out",
+            "room_type"
+          ],
+          "properties": {
+            "check_in": {
+              "type": "string",
+              "description": "Check-in date, YYYY-MM-DD."
+            },
+            "check_out": {
+              "type": "string",
+              "description": "Check-out date, YYYY-MM-DD."
+            },
+            "room_type": {
+              "type": "string",
+              "description": "Requested room type, e.g. queen, king, deluxe king, suite, presidential suite."
+            },
+            "party_size": {
+              "type": "integer",
+              "description": "Number of guests."
+            },
+            "property_id": {
+              "type": "string",
+              "description": "Bronwood property identifier, e.g. bwd-sf-downtown."
+            }
+          }
+        },
+        "description": "Check room availability at a Bronwood property for given dates, room type, and party size. Returns open room types with rates and flags any sold-out premium types. Always call before promising a room."
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "quote_rate",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "property_id",
+            "room_type",
+            "check_in",
+            "check_out"
+          ],
+          "properties": {
+            "check_in": {
+              "type": "string",
+              "description": "Check-in date, YYYY-MM-DD."
+            },
+            "check_out": {
+              "type": "string",
+              "description": "Check-out date, YYYY-MM-DD."
+            },
+            "rate_plan": {
+              "enum": [
+                "flexible",
+                "advance_purchase"
+              ],
+              "type": "string",
+              "description": "flexible is refundable; advance_purchase is non-refundable (discounted)."
+            },
+            "room_type": {
+              "type": "string",
+              "description": "Room type to price."
+            },
+            "property_id": {
+              "type": "string",
+              "description": "Bronwood property identifier."
+            }
+          }
+        },
+        "description": "Quote the nightly rate and total for a room type and date range under a given rate plan (flexible or advance_purchase). The quoted rate must equal the rate later booked."
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "book_room",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "property_id",
+            "room_type",
+            "check_in",
+            "check_out",
+            "guest_name",
+            "rate_plan"
+          ],
+          "properties": {
+            "check_in": {
+              "type": "string",
+              "description": "Check-in date, YYYY-MM-DD."
+            },
+            "check_out": {
+              "type": "string",
+              "description": "Check-out date, YYYY-MM-DD."
+            },
+            "rate_plan": {
+              "enum": [
+                "flexible",
+                "advance_purchase"
+              ],
+              "type": "string",
+              "description": "flexible is refundable; advance_purchase is non-refundable."
+            },
+            "room_type": {
+              "type": "string",
+              "description": "Room type the guest is booking."
+            },
+            "guest_name": {
+              "type": "string",
+              "description": "Full name on the reservation."
+            },
+            "loyalty_id": {
+              "type": "string",
+              "description": "Optional Bronwood Rewards member ID."
+            },
+            "property_id": {
+              "type": "string",
+              "description": "Bronwood property identifier."
+            }
+          }
+        },
+        "description": "Book a room. Returns the confirmed reservation including the room_type actually booked. Always read back the confirmed room type, dates, rate, and guest name to the guest after this call."
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "modify_reservation",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "reservation_id"
+          ],
+          "properties": {
+            "new_check_in": {
+              "type": "string",
+              "description": "New check-in date, YYYY-MM-DD."
+            },
+            "new_check_out": {
+              "type": "string",
+              "description": "New check-out date, YYYY-MM-DD."
+            },
+            "new_room_type": {
+              "type": "string",
+              "description": "New room type, if changing."
+            },
+            "new_party_size": {
+              "type": "integer",
+              "description": "New party size, if changing."
+            },
+            "reservation_id": {
+              "type": "string",
+              "description": "The reservation ID to modify."
+            }
+          }
+        },
+        "description": "Modify an existing reservation's dates, room type, or party size. If you change the room type, read back the returned room type and confirm it matches what the guest asked for."
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "cancel_reservation",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "reservation_id"
+          ],
+          "properties": {
+            "rate": {
+              "type": "number",
+              "description": "The booked nightly rate, used to compute any penalty."
+            },
+            "rate_plan": {
+              "enum": [
+                "flexible",
+                "advance_purchase"
+              ],
+              "type": "string",
+              "description": "The booked rate plan."
+            },
+            "reservation_id": {
+              "type": "string",
+              "description": "The reservation ID to cancel."
+            },
+            "hours_to_checkin": {
+              "type": "number",
+              "description": "Hours remaining until check-in, used for the 48-hour flexible policy."
+            }
+          }
+        },
+        "description": "Cancel a reservation. Returns the refund amount and any penalty based on the booked rate plan and lead time. Flexible: free outside 48h, one-night penalty inside 48h. Advance-purchase: non-refundable. State the result honestly."
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "lookup_reservation",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "reservation_id",
+            "last_name"
+          ],
+          "properties": {
+            "last_name": {
+              "type": "string",
+              "description": "Last name on the reservation for verification."
+            },
+            "reservation_id": {
+              "type": "string",
+              "description": "The reservation ID to look up."
+            }
+          }
+        },
+        "description": "Look up a reservation by reservation ID and the last name on the booking. Returns the reservation when the last name matches, otherwise a verification failure or not-found."
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "add_special_request",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "reservation_id",
+            "request_text"
+          ],
+          "properties": {
+            "request_text": {
+              "type": "string",
+              "description": "Free-text description of the request, e.g. 'ADA accessible roll-in shower' or 'traveling with a small dog'."
+            },
+            "reservation_id": {
+              "type": "string",
+              "description": "The reservation ID to attach the request to."
+            }
+          }
+        },
+        "description": "Record a special request on a reservation (accessibility/ADA room, pet, late checkout, connecting/adjoining room). Returns whether the request is guaranteed or request-only and subject to inventory."
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "apply_loyalty",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "member_id"
+          ],
+          "properties": {
+            "member_id": {
+              "type": "string",
+              "description": "Bronwood Rewards member ID."
+            },
+            "reservation_id": {
+              "type": "string",
+              "description": "Optional reservation ID to attach the loyalty account to."
+            }
+          }
+        },
+        "description": "Apply Bronwood Rewards loyalty benefits using a member ID. Returns the member tier and points for a valid account, or not-found for an invalid or too-short member ID. Do not apply benefits to an unverified account."
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "request_upgrade",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "reservation_id",
+            "requested_type"
+          ],
+          "properties": {
+            "requested_type": {
+              "type": "string",
+              "description": "The room type the guest would like to be upgraded to."
+            },
+            "reservation_id": {
+              "type": "string",
+              "description": "The reservation ID to request an upgrade for."
+            }
+          }
+        },
+        "description": "Submit a room upgrade request for a reservation. Returns a pending request that is not guaranteed and is confirmed by the front desk at check-in based on availability. Never auto-confirm or comp an upgrade."
+      }
+    }
+  ],
+  "maxDurationSeconds": 600,
+  "silenceTimeoutSeconds": 30
+}

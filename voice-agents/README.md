@@ -1,6 +1,6 @@
 # Voice Agent OTel Examples
 
-Three reference implementations for adding OpenTelemetry tracing to voice agents connected to Coval. Each agent emits structured spans that Coval ingests to power latency metrics, STT accuracy scoring, and conversation analytics.
+Reference implementations for adding OpenTelemetry tracing to voice agents connected to Coval. Each agent emits structured spans that Coval ingests to power latency metrics, STT accuracy scoring, and conversation analytics.
 
 ## Implementations
 
@@ -10,6 +10,7 @@ Three reference implementations for adding OpenTelemetry tracing to voice agents
 | [Pipecat](./pipecat/) | Real-time — emits spans during the live call via frame processors | Pipecat Cloud | `body.coval.simulationOutputId` (PCC start request) |
 | [LiveKit](./livekit/) | Real-time — emits spans during the live call via session events | LiveKit Cloud + SIP dispatch | `sip.h.X-Coval-Simulation-Id` participant attribute |
 | [Twilio](./twilio/) | Webhook server — builds spans post-hoc at call end from ConversationRelay events | Fly.io HTTP server | Pre-call webhook (`POST /register-simulation`) via `pre_call_webhook_url` agent config |
+| [Cloudflare](./cloudflare/) | Real-time — Pipecat in a Durable Object per call; spans built from measured STT/LLM/TTS/tool timings at call end | Cloudflare Workers (Workers AI for STT, LLM and TTS), Coval WebSocket (Voice) agent type | `initialization_json` `{"simulation_id": "{{simulation_id}}"}` (first WebSocket message) |
 
 ## When to use each
 
@@ -18,6 +19,8 @@ Three reference implementations for adding OpenTelemetry tracing to voice agents
 **Pipecat** — you want spans emitted inline during the call and are using or open to Pipecat Cloud. Pipecat's frame processor model makes it straightforward to instrument STT, LLM, and TTS stages as frames flow through the pipeline. Provides real Deepgram confidence values and real STT/TTS TTFBs.
 
 **LiveKit** — you want spans emitted inline during the call and prefer the LiveKit Agents SDK. Uses LiveKit's metrics events rather than frame processors. Provides real STT/TTS TTFBs.
+
+**Cloudflare** — you want the whole agent (speech, model, voice and hosting) on Cloudflare, with no phone numbers or third-party voice platform. Coval connects straight to the Worker over WebSocket, so correlation is exact and every timing is measured. It is English-only for now (Flux turn detection, Aura voices). This is the stack behind Coval's demo organizations, with nine ready-made agents and their failure modes.
 
 **Twilio** — you are using Twilio Programmable Voice with ConversationRelay and want the simplest integration. Spans are built post-hoc from a turn log at call end. LLM TTFB is real; STT and TTS TTFBs are synthetic (Twilio handles those providers internally). Because Twilio routes over PSTN and strips SIP headers, trace correlation uses a pre-call webhook instead of `X-Coval-Simulation-Id`.
 
