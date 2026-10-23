@@ -108,4 +108,13 @@ def test_request_without_question_mark_counts_as_a_question():
 
 def test_end_markers_are_not_spoken():
     marked = "Could you confirm the phone number on file for you?--- End of conversation ---"
-    assert llm.STAGE_DIRECTION.sub("", marked) == "Could you confirm the phone number on file for you?"
+    assert (
+        llm.STAGE_DIRECTION.sub("", marked) == "Could you confirm the phone number on file for you?"
+    )
+
+
+def test_hotel_tools_refuse_past_check_in_dates():
+    from verticals import hospitality
+
+    assert hospitality.check_availability({"check_in": "2025-05-06"}, {})["error"] == "DATE_IN_PAST"
+    assert hospitality.past_date_error("2099-05-06") is None

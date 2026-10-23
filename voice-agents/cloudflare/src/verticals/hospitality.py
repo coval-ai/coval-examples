@@ -8,8 +8,9 @@ the time. A requested premium room type sells out 45% of the time.
 
 import random
 import uuid
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
+from agent.config import UTC_OFFSET_MINUTES
 from verticals.base import ToolOutcome, Vertical, load_assistant
 from verticals.registry import register
 
@@ -59,6 +60,22 @@ def nights_between(check_in: str, check_out: str) -> int:
         return 1
 
 
+def past_date_error(check_in):
+    """gpt-oss books guests into last year when they give a date without one; refuse it."""
+    try:
+        requested = datetime.strptime(str(check_in), "%Y-%m-%d").date()
+    except ValueError:
+        return None
+    today = (datetime.now(UTC) + timedelta(minutes=UTC_OFFSET_MINUTES)).date()
+    if requested >= today:
+        return None
+    return {
+        "error": "DATE_IN_PAST",
+        "message": f"{check_in} is before today ({today.isoformat()}). Use the next "
+        f"{requested:%B} {requested.day} on or after today and confirm the year with the guest.",
+    }
+
+
 def nightly_rate(room_type: str, rate_plan: str) -> float:
     base = RATE_CARD.get((room_type or "").lower().strip(), 229.0)
     # Advance-purchase (non-refundable) is ~12% off; flexible is full price.
@@ -70,6 +87,8 @@ def nightly_rate(room_type: str, rate_plan: str) -> float:
 def check_availability(args, _state):
     property_id = args.get("property_id", "bwd-sf-downtown")
     check_in = args.get("check_in", "2026-07-10")
+    if error := past_date_error(check_in):
+        return error
     check_out = args.get("check_out", "2026-07-12")
     room_type = args.get("room_type", "king")
     party_size = args.get("party_size", 2)
@@ -109,6 +128,8 @@ def quote_rate(args, _state):
     property_id = args.get("property_id", "bwd-sf-downtown")
     room_type = args.get("room_type", "king")
     check_in = args.get("check_in", "2026-07-10")
+    if error := past_date_error(check_in):
+        return error
     check_out = args.get("check_out", "2026-07-12")
     rate_plan = args.get("rate_plan", "flexible")
     if (rate_plan or "").lower().strip() not in ("flexible", "advance_purchase"):
@@ -140,6 +161,8 @@ def book_room(args, _state):
     property_id = args.get("property_id", "bwd-sf-downtown")
     room_type_requested = args.get("room_type", "king")
     check_in = args.get("check_in", "2026-07-10")
+    if error := past_date_error(check_in):
+        return error
     check_out = args.get("check_out", "2026-07-12")
     guest_name = args.get("guest_name", "Guest")
     rate_plan = args.get("rate_plan", "flexible")
@@ -190,6 +213,8 @@ def book_room(args, _state):
 
 def modify_reservation(args, _state):
     """A room-type change here can also trigger the silent downgrade."""
+    if error := past_date_error(args.get("new_check_in")):
+        return error
     new_room_type_requested = args.get("new_room_type")
     new_room_type_returned = new_room_type_requested
     if new_room_type_requested:
