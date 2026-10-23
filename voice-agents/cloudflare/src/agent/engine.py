@@ -9,6 +9,7 @@ import asyncio
 import base64
 import json
 import time
+from array import array
 from types import SimpleNamespace
 
 from js import WebSocketPair
@@ -24,6 +25,10 @@ from services.flux import BYTES_PER_SECOND, FluxBridge
 from services.stt import AudioInputBacklog
 from tracing import CallTracer, redact_arguments
 from verticals.base import CallRecord, CallTurn, ToolOutcome, ToolWindow
+
+# 16-bit PCM peak (about -30 dBFS) that counts as the caller making sound.
+CALLER_SOUND_PEAK = 1000
+CALLER_SOUND_HOLD_SECONDS = 3
 
 # Four seconds of 20 ms Coval audio frames, matching the recognizer's own queue limit.
 MAX_QUEUED_FRAMES = 200
@@ -57,6 +62,7 @@ class CovalEngine:
         self.simulation_id = None
         self.started_at = time.time()
         self.tools_running = 0
+        self.last_caller_sound = 0.0
         self.last_activity = time.monotonic()
         self.flux_bytes = 0
         self.hang_up_generation = None
@@ -234,6 +240,10 @@ class CovalEngine:
                 pcm = pcm[:-1]
             if pcm:
                 self.flux_bytes += len(pcm)
+                # Flux reports a turn only once words are recognized; raw level shows the caller
+                # has started speaking, so the silence check-in never talks over them.
+                if max(map(abs, array("h", pcm)[::8]), default=0) > CALLER_SOUND_PEAK:
+                    self.last_caller_sound = time.monotonic()
                 await self.pipeline_input.queue_audio(pcm)
 
     async def _start(self):
@@ -279,10 +289,12 @@ class CovalEngine:
                 self.last_activity = time.monotonic()
             if self.user_speaking:
                 nudged = False
-            quiet = time.monotonic() - self.last_activity
+            now = time.monotonic()
+            quiet = now - max(self.last_activity, self.last_caller_sound)
+            caller_audible = now - self.last_caller_sound < CALLER_SOUND_HOLD_SECONDS
             if time.time() - self.started_at > self.vertical.max_duration_seconds:
                 self._stop_soon("exceeded-max-duration")
-            elif not nudged and quiet > silence / 2:
+            elif not nudged and quiet > silence / 2 and not caller_audible:
                 # Check in once before hanging up on a silent caller.
                 nudged = True
                 await self.tts.queue_frame(
