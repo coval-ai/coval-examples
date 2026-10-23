@@ -120,6 +120,7 @@ Every agent also gets an `end_call` tool: the agent says its goodbye line and ha
 - English only: Flux turn detection and the Aura voices are English (Aura also has Spanish).
 - Replies stream from the model and are spoken a sentence at a time. The Workers build of Pipecat has no sentence tokenizer, so `services/llm.py` cuts sentences itself.
 - A turn that needs a tool waits for two model rounds before speaking; there are no fillers, matching the Vapi agents these replace.
+- Workers AI latency varies by hour. If `gpt-oss-120b` sends nothing within 2 seconds, the reply is requested from `gpt-oss-20b` instead (`FALLBACK_LLM_MODEL` in `src/agent/config.py`); the `llm` span's `llm.model` records which model answered.
 - The bundled Pipecat build supports hosted services and Flux turn detection only, not local VAD or Smart Turn. See [vendor/README.md](vendor/README.md).
 - A call ends after its agent's maximum duration (10 minutes by default) or 30 seconds of silence.
 

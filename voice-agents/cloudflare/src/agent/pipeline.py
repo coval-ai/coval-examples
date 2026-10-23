@@ -23,7 +23,7 @@ from pipecat.turns.user_turn_strategies import ExternalUserTurnStrategies
 from pipecat.utils.errors import ErrorCategory
 from pipecat.workers.runner import WorkerRunner
 
-from agent.config import LLM_MODEL, system_prompt
+from agent.config import FALLBACK_LLM_MODEL, LLM_MODEL, system_prompt
 from agent.speech_history import SpeechHistory
 from agent.tools import END_CALL, build_tools
 from services.flux import MAX_TRANSCRIPT_CHARS
@@ -59,6 +59,7 @@ def _make_services(env, stats, control, settings, *, resources, speech_history, 
             stats["llm"],
             control,
             model=get_model(LLM_MODEL),
+            fallback_model=get_model(FALLBACK_LLM_MODEL),
             call_id=resources.call_id,
             gateway=resources.gateway,
             utc_offset_minutes=settings.utc_offset_minutes,

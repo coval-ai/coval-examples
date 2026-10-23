@@ -152,6 +152,11 @@ _MODELS: dict[str, WorkersAIModel] = {
             request_options={"reasoning_effort": "low"},
             streaming=True,
         ),
+        ChatCompletionsModel(
+            "@cf/openai/gpt-oss-20b",
+            request_options={"reasoning_effort": "low"},
+            streaming=True,
+        ),
     )
 }
 

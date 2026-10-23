@@ -25,6 +25,7 @@ from pipecat.services.settings import LLMSettings
 from pipecat.utils.errors import ErrorCategory
 from pipecat.utils.text.markdown_text_filter import MarkdownTextFilter
 
+from agent.config import FIRST_TOKEN_SECONDS
 from agent.speech_history import SpeechHistory
 from server.observability import exception_fields, log
 from services.inference import InferenceError, run_inference
@@ -62,6 +63,10 @@ INTERNAL = re.compile(
 # Unicode hyphens and dashes ("555‑0142") read as words or quantities; Aura reads "-" digit by digit.
 DASHES = str.maketrans({"\u2010": "-", "\u2011": "-", "\u2012": "-", "\u2013": "-"})
 SPEAKABLE = re.compile(r"[A-Za-z0-9]")
+
+
+class SlowFirstToken(TimeoutError):
+    """The model sent nothing within FIRST_TOKEN_SECONDS; the fallback model gets the request."""
 
 
 class DegenerateReply(ValueError):
@@ -152,6 +157,7 @@ class WorkersAILLM(LLMService):
         *,
         model: WorkersAIModel,
         speech_history: SpeechHistory,
+        fallback_model: WorkersAIModel | None = None,
         call_id=None,
         gateway=None,
         utc_offset_minutes=0,
@@ -164,6 +170,7 @@ class WorkersAILLM(LLMService):
         )
         self.env = env
         self.model = model
+        self.fallback_model = fallback_model
         self.summary = summary
         self.control = control
         self.speech_history = speech_history
@@ -256,12 +263,12 @@ class WorkersAILLM(LLMService):
             try:
                 if streamed:
                     try:
-                        reply, usage = await self._stream(params, generation, record)
+                        reply, usage = await self._stream_with_fallback(params, generation, record)
                     except DegenerateReply:
                         # One fresh attempt; a second wordless reply falls back below.
                         record["degenerate_retries"] = record.get("degenerate_retries", 0) + 1
                         self.log.warning("llm_degenerate_reply", generation=generation)
-                        reply, usage = await self._stream(params, generation, record)
+                        reply, usage = await self._stream_with_fallback(params, generation, record)
                 else:
                     result = await run_inference(
                         self.env.AI,
@@ -384,34 +391,63 @@ class WorkersAILLM(LLMService):
             record["elapsed_ms"] = round((time.monotonic() - started) * 1000, 1)
             self.control.llm_pending = False
 
-    async def _stream(self, params, generation, record):
+    async def _stream_with_fallback(self, params, generation, record):
+        if self.fallback_model is None:
+            return await self._stream(params, generation, record, self.model)
+        try:
+            return await self._stream(
+                params, generation, record, self.model, first_chunk_seconds=FIRST_TOKEN_SECONDS
+            )
+        except SlowFirstToken:
+            record["fallback_model"] = self.fallback_model.model_id
+            self.log.warning("llm_slow_first_token", generation=generation)
+            return await self._stream(params, generation, record, self.fallback_model)
+
+    async def _stream(self, params, generation, record, model, first_chunk_seconds=None):
         """Read a streamed completion, sending text on to speech as it arrives.
 
-        Returns the complete reply (text or tool calls) and its token usage.
+        Returns the complete reply (text or tool calls) and its token usage. With
+        first_chunk_seconds, raises SlowFirstToken if the model sends nothing by then.
         """
-        response = await run_inference(
-            self.env.AI,
-            self.model.model_id,
-            params,
-            self._request_options,
-            log=self.log.bind(generation=generation),
-            is_current=lambda: not self._closing and generation == self.control.generation,
-            timeout=LLM_TIMEOUT_SECONDS,
-            raw=True,
-        )
-        native = getattr(response, "js_response", response)
-        if native.body is None:
-            raise InferenceError(ErrorCategory.SERVER)
-        reader = native.body.getReader()
-        started = time.monotonic()
+        record["model"] = model.model_id
+        reader = None
+        try:
+            async with asyncio.timeout(first_chunk_seconds):
+                response = await run_inference(
+                    self.env.AI,
+                    model.model_id,
+                    params,
+                    self._request_options,
+                    log=self.log.bind(generation=generation),
+                    is_current=lambda: not self._closing and generation == self.control.generation,
+                    timeout=LLM_TIMEOUT_SECONDS,
+                    raw=True,
+                )
+                native = getattr(response, "js_response", response)
+                if native.body is None:
+                    raise InferenceError(ErrorCategory.SERVER)
+                reader = native.body.getReader()
+                # Timed from the response, as before the fallback, so first-word times stay comparable.
+                started = time.monotonic()
+                first = await reader.read()
+        except TimeoutError:
+            if reader is not None:
+                try:
+                    await reader.cancel()
+                except Exception:
+                    pass
+            raise SlowFirstToken() from None
         buffer = b""
         pending = ""
         finished = False
         asked = False
         text, spoken, calls, usage = [], [], {}, {}
         while not (finished and not calls):
-            async with asyncio.timeout(LLM_TIMEOUT_SECONDS):
-                part = await reader.read()
+            if first is not None:
+                part, first = first, None
+            else:
+                async with asyncio.timeout(LLM_TIMEOUT_SECONDS):
+                    part = await reader.read()
             if part.done:
                 break
             buffer += part.value.to_bytes()
@@ -425,7 +461,7 @@ class WorkersAILLM(LLMService):
                 except ValueError:
                     continue
                 if isinstance(chunk.get("usage"), dict) and chunk["usage"].get("prompt_tokens"):
-                    usage = self.model.get_usage(chunk)
+                    usage = model.get_usage(chunk)
                 choices = chunk.get("choices") or []
                 delta = (choices[0].get("delta") or {}) if choices else {}
                 content = delta.get("content")

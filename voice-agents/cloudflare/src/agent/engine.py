@@ -448,7 +448,7 @@ class CovalEngine:
                     record["started_at"] + elapsed,
                     parent=span,
                     **{
-                        "llm.model": LLM_MODEL,
+                        "llm.model": record.get("model", LLM_MODEL),
                         "llm.finish_reason": "tool_calls"
                         if record.get("outcome") == "tools"
                         else "stop",

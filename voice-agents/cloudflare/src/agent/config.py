@@ -2,6 +2,10 @@
 live in its vertical module (see verticals/)."""
 
 LLM_MODEL = "@cf/openai/gpt-oss-120b"
+# When LLM_MODEL sends nothing for FIRST_TOKEN_SECONDS (Workers AI capacity varies by hour), the
+# reply is requested again from this smaller model in the same family, which takes the same prompt.
+FALLBACK_LLM_MODEL = "@cf/openai/gpt-oss-20b"
+FIRST_TOKEN_SECONDS = 2.0
 TTS_MODEL = "@cf/deepgram/aura-2-en"
 # Used when the AI_GATEWAY_ID variable is unset. Cloudflare creates this
 # gateway on first use; named gateways must exist before requests use them.
