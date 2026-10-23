@@ -118,3 +118,15 @@ def test_hotel_tools_refuse_past_check_in_dates():
 
     assert hospitality.check_availability({"check_in": "2025-05-06"}, {})["error"] == "DATE_IN_PAST"
     assert hospitality.past_date_error("2099-05-06") is None
+
+
+def test_speech_normalization_round_five():
+    assert llm.spell_codes("Call 1-eight-zero-zero now.") == "Call 1-eight-zero-zero now."
+    assert llm.spell_codes("Card ending in 4412.") == "Card ending in 4 4 1 2."
+    assert llm.spell_codes("Check-in 2027-07-04.") == "Check-in July 4, 2027."
+    assert llm.spell_codes("123 Main Ave NE") == "123 Main Ave Northeast"
+    assert llm.spell_codes("ID BWD-20261023-1234.") == (
+        "ID B W D dash 2 0 2 6 1 0 2 3 dash 1 2 3 4."
+    )
+    spoken = 'Have a safe trip. {"tool":"end_call","arguments":{}}'
+    assert llm.STAGE_DIRECTION.sub("", spoken).strip() == "Have a safe trip."

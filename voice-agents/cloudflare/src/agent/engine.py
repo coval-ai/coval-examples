@@ -99,7 +99,12 @@ class CovalEngine:
             if self.hang_up_generation is not None and event.get("generation") == (
                 self.hang_up_generation
             ):
-                self._stop_soon("assistant-ended-call")
+                if self.user_speaking:
+                    # The caller started talking over the goodbye; keep the call open.
+                    self.hang_up_generation = None
+                    self.event("hang_up_deferred")
+                else:
+                    self._stop_soon("assistant-ended-call")
         elif kind == "clear":
             self.interruptions += 1
 

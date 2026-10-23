@@ -58,7 +58,9 @@ MAX_SPOKEN_SENTENCES = 6
 # "<|end_of_call|>", "(waiting for your preferred day and time.)".
 STAGE_DIRECTION = re.compile(
     r"\[[^\]]*\]|\*[^*]+\*|(?:<|&lt;)\|[^|]*\|(?:>|&gt;)|\((?:waiting|awaiting|pause|note)\b[^)]*\)"
-    r"|-{2,}[^-]*-{2,}|\bend of (?:the )?(?:call|conversation)\b\W*",
+    r"|-{2,}[^-]*-{2,}|\bend of (?:the )?(?:call|conversation)\b\W*"
+    # Tool-call JSON the model sometimes writes as text: {"tool":"end_call","arguments":{}}.
+    r"|\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}",
     re.IGNORECASE,
 )
 # Markdown bold ("**Margherita**") keeps its words; only single-starred text is a stage direction.
@@ -73,6 +75,21 @@ INTERNAL = re.compile(
 CODE = re.compile(r"\b(?:[A-Za-z]+-)*[A-Za-z]*\d[A-Za-z0-9]*(?:-[A-Za-z0-9]+)*\b")
 
 
+LAST_FOUR = re.compile(
+    r"\b((?:ending|ends)(?: in| with)?|last four(?: digits)?(?: are| of)?)\s+(\d{4})\b", re.I
+)
+ISO_DATE = re.compile(r"\b(\d{4})-(\d{2})-(\d{2})\b")
+# "1234 Main Ave NE" otherwise reads as "Avenue, Nebraska".
+DIRECTION = re.compile(
+    r"\b(Ave|Avenue|St|Street|Rd|Road|Blvd|Boulevard|Way|Dr|Drive|Pl|Place|Ln|Lane|Ct|Court|Pkwy)\.?\s+"
+    r"(NE|NW|SE|SW)\b"
+)
+DIRECTIONS = {"NE": "Northeast", "NW": "Northwest", "SE": "Southeast", "SW": "Southwest"}
+MONTHS = (
+    "January February March April May June July August September October November December".split()
+)
+
+
 def spell_codes(text: str) -> str:
     def spell(match):
         token = match.group()
@@ -80,8 +97,20 @@ def spell_codes(text: str) -> str:
             return token  # short numbers and four-digit years read naturally
         parts = token.split("-")
         joiner = ", " if all(part.isdigit() for part in parts) else " dash "
-        return joiner.join(" ".join(part.upper() if part.isalpha() else part) for part in parts)
+        # Capitalized code segments are spelled; spelled-out words ("eight") stay words.
+        return joiner.join(
+            " ".join(part) if part.isdigit() or part.isupper() else part for part in parts
+        )
 
+    def iso_date(match):
+        year, month, day = (int(group) for group in match.groups())
+        if not 1 <= month <= 12 or not 1 <= day <= 31:
+            return match.group()
+        return f"{MONTHS[month - 1]} {day}, {year}"
+
+    text = ISO_DATE.sub(iso_date, text)
+    text = DIRECTION.sub(lambda m: f"{m.group(1)} {DIRECTIONS[m.group(2)]}", text)
+    text = LAST_FOUR.sub(lambda m: f"{m.group(1)} {' '.join(m.group(2))}", text)
     return CODE.sub(spell, text)
 
 
@@ -552,8 +581,8 @@ class WorkersAILLM(LLMService):
     async def _speak(self, piece, generation):
         if INTERNAL.search(piece):
             return
-        piece = spell_codes(BOLD.sub(r"\1", piece.translate(DASHES)))
-        piece = STAGE_DIRECTION.sub("", piece)
+        piece = STAGE_DIRECTION.sub("", BOLD.sub(r"\1", piece.translate(DASHES)))
+        piece = spell_codes(piece)
         piece = piece.replace("*", "").replace("#", "").replace("`", "")
         if not SPEAKABLE.search(piece) or generation != self.control.generation:
             return
