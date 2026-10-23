@@ -1,10 +1,8 @@
 # Coval Examples
 
-[![Docs](https://img.shields.io/badge/Documentation-blue)](https://docs.coval.dev/api-reference/v1/introduction)
-
-<p align="center">
-  <img src="coval-logo.png" alt="Coval Logo" width="200">
-</p>
+[![Documentation](https://img.shields.io/badge/Documentation-blue?logo=readthedocs&logoColor=white)](https://docs.coval.dev/api-reference/v1/introduction)
+[![Coval SDK](https://img.shields.io/badge/Coval_SDK-7c3aed?logo=github&logoColor=white)](https://github.com/coval-ai/coval-sdk)
+[![Coval Agent SDK](https://img.shields.io/badge/Coval_Agent_SDK-0d9488?logo=github&logoColor=white)](https://github.com/coval-ai/coval-agent-sdk)
 
 Examples for evaluating and monitoring AI agents with Coval's API and OpenTelemetry tracing.
 
