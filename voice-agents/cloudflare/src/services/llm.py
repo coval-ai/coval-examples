@@ -60,6 +60,23 @@ INTERNAL = re.compile(
     r"\bcommentary\b|\bto=functions\b|waiting for (?:the )?(?:user|caller)|^\W*end of (?:the )?call\W*$",
     re.IGNORECASE,
 )
+# Codes and IDs with at least four digits ("RX-CONF-99231", "BM-2241", "555-339-2121", "84761"). Aura reads
+# a digit run as a quantity ("ninety nine thousand..."), so they are spelled out a character at a time.
+CODE = re.compile(r"\b(?:[A-Za-z]+-)*[A-Za-z]*\d[A-Za-z0-9]*(?:-[A-Za-z0-9]+)*\b")
+
+
+def spell_codes(text: str) -> str:
+    def spell(match):
+        token = match.group()
+        if sum(ch.isdigit() for ch in token) < 4 or (token.isdigit() and len(token) == 4):
+            return token  # short numbers and four-digit years read naturally
+        parts = token.split("-")
+        joiner = ", " if all(part.isdigit() for part in parts) else " dash "
+        return joiner.join(" ".join(part.upper() if part.isalpha() else part) for part in parts)
+
+    return CODE.sub(spell, text)
+
+
 # Unicode hyphens and dashes ("555‑0142") read as words or quantities; Aura reads "-" digit by digit.
 DASHES = str.maketrans({"\u2010": "-", "\u2011": "-", "\u2012": "-", "\u2013": "-"})
 SPEAKABLE = re.compile(r"[A-Za-z0-9]")
@@ -527,7 +544,7 @@ class WorkersAILLM(LLMService):
     async def _speak(self, piece, generation):
         if INTERNAL.search(piece):
             return
-        piece = BOLD.sub(r"\1", piece.translate(DASHES))
+        piece = spell_codes(BOLD.sub(r"\1", piece.translate(DASHES)))
         piece = STAGE_DIRECTION.sub("", piece)
         piece = piece.replace("*", "").replace("#", "").replace("`", "")
         if not SPEAKABLE.search(piece) or generation != self.control.generation:

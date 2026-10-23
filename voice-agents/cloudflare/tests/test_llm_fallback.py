@@ -89,3 +89,12 @@ async def test_prompt_first_token_keeps_primary_model(monkeypatch):
     assert requested == ["@cf/openai/gpt-oss-120b"]
     assert record["model"] == "@cf/openai/gpt-oss-120b"
     assert "fallback_model" not in record
+
+
+def test_codes_are_spelled_out_for_speech():
+    assert llm.spell_codes("Your code is RX-CONF-99231.") == (
+        "Your code is R X dash C O N F dash 9 9 2 3 1."
+    )
+    assert llm.spell_codes("Call 555-339-2121.") == "Call 5 5 5, 3 3 9, 2 1 2 1."
+    unchanged = "In 2026 on I-280 at 10:00AM, $48.60 for 1,250 points on October 29th."
+    assert llm.spell_codes(unchanged) == unchanged
