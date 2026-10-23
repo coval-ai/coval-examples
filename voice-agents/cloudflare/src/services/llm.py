@@ -44,6 +44,13 @@ MIN_SPOKEN_CHARS = 12
 ABBREVIATION = re.compile(
     r"(?:\b(?:Dr|Mr|Mrs|Ms|St|Jr|Sr|vs|etc|e\.g|i\.e|a\.m|p\.m)|\b[A-Za-z])\.$"
 )
+# A request written without a "?" ("Could you please provide your address.") still waits for the caller.
+REQUEST = re.compile(
+    r"^\W*(?:could|can|would|will|may|do|does|did)\s+(?:you|i|we)\b"
+    r"|^\W*(?:what|which|when|where|who|how)\s+(?:is|are|was|were|do|does|did|would|should|can)\b"
+    r"|^\W*please\s+(?:provide|share|tell|confirm|give|spell|say|read)\b",
+    re.IGNORECASE,
+)
 # A spoken reply ends at its first question or after this many sentences; anything the model
 # writes past that (often the caller's side of the conversation) is dropped, not voiced.
 MAX_SPOKEN_SENTENCES = 6
@@ -507,7 +514,7 @@ class WorkersAILLM(LLMService):
                         pending = pending[match.end() :]
                         spoken.append(sentence)
                         await self._speak(sentence, generation)
-                        asked = "?" in match.group()
+                        asked = "?" in match.group() or bool(REQUEST.search(sentence))
                         finished = asked or len(spoken) >= MAX_SPOKEN_SENTENCES
                     self.speech_history.set_text(generation, "".join(spoken) + pending)
                 for call in delta.get("tool_calls") or []:

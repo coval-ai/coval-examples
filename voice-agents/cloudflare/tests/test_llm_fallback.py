@@ -98,3 +98,9 @@ def test_codes_are_spelled_out_for_speech():
     assert llm.spell_codes("Call 555-339-2121.") == "Call 5 5 5, 3 3 9, 2 1 2 1."
     unchanged = "In 2026 on I-280 at 10:00AM, $48.60 for 1,250 points on October 29th."
     assert llm.spell_codes(unchanged) == unchanged
+
+
+def test_request_without_question_mark_counts_as_a_question():
+    assert llm.REQUEST.search("Could you please provide the address for your Honda CR-V.")
+    assert llm.REQUEST.search("What is your policy number.")
+    assert not llm.REQUEST.search("I can help with that.")
