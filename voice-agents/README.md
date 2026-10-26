@@ -11,6 +11,7 @@ Reference implementations for adding OpenTelemetry tracing to voice agents conne
 | [LiveKit](./livekit/) | Real-time — emits spans during the live call via session events | LiveKit Cloud + SIP dispatch | `sip.h.X-Coval-Simulation-Id` participant attribute |
 | [Twilio](./twilio/) | Webhook server — builds spans post-hoc at call end from ConversationRelay events | Fly.io HTTP server | Pre-call webhook (`POST /register-simulation`) via `pre_call_webhook_url` agent config |
 | [Cloudflare](./cloudflare/) | Real-time — Pipecat in a Durable Object per call; spans built from measured STT/LLM/TTS/tool timings at call end | Cloudflare Workers (Workers AI for STT, LLM and TTS), Coval WebSocket (Voice) agent type | `initialization_json` `{"simulation_id": "{{simulation_id}}"}` (first WebSocket message) |
+| [Rime Prism](./rime-prism/) | Real-time — a bridge between Coval's WebSocket transport and Prism (speech-to-speech) turns Prism's realtime events into spans during the call | Fly.io HTTP/WebSocket server, Coval WebSocket (Voice) agent type | `initialization_json` `{"simulation_id": "{{simulation_id}}"}` (first WebSocket message) |
 
 ## When to use each
 
@@ -21,6 +22,8 @@ Reference implementations for adding OpenTelemetry tracing to voice agents conne
 **LiveKit** — you want spans emitted inline during the call and prefer the LiveKit Agents SDK. Uses LiveKit's metrics events rather than frame processors. Provides real STT/TTS TTFBs.
 
 **Cloudflare** — you want the whole agent (speech, model, voice and hosting) on Cloudflare, with no phone numbers or third-party voice platform. Coval connects straight to the Worker over WebSocket, so correlation is exact and every timing is measured. It is English-only for now (Flux turn detection, Aura voices). This is the stack behind Coval's demo organizations, with nine ready-made agents and their failure modes.
+
+**Rime Prism** — you are building on Rime's speech-to-speech model and want traces of what it did on each turn. The bridge reads Prism's WebSocket events and exports caller turns, replies (with status, cancellation reason and time to first audio), tool calls and errors, plus the Prism session ID so a call can be matched with Rime's records. Times are measured where the bridge receives events, so they include network time. Prism's events do not report separate speech-to-text, model and voice stages, so there are no `stt`, `llm` and `tts` spans.
 
 **Twilio** — you are using Twilio Programmable Voice with ConversationRelay and want the simplest integration. Spans are built post-hoc from a turn log at call end. LLM TTFB is real; STT and TTS TTFBs are synthetic (Twilio handles those providers internally). Because Twilio routes over PSTN and strips SIP headers, trace correlation uses a pre-call webhook instead of `X-Coval-Simulation-Id`.
 
