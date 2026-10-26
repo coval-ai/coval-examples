@@ -1,0 +1,27 @@
+[project]
+name = "coval-agent-sdk-hospitality"
+version = "0.1.0"
+description = "Remy, Coval's hospitality demo voice agent, connected to Coval simulations with the Coval Agent SDK"
+requires-python = ">=3.12"
+dependencies = [
+    "coval-agent-sdk[tracing]>=0.1.1,<0.2",
+    "coval-sdk>=0.9.5,<0.10",
+    "pipecat-ai[deepgram,openai]>=1.14,<1.15",
+    "python-dotenv>=1.0",
+]
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "N", "UP", "B"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
