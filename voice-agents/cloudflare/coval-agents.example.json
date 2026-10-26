@@ -1,0 +1,7 @@
+{
+  "_doc": "One entry per Coval agent to create. org must be a key in COVAL_API_KEYS; slug is a deployed agent (GET /agents). source_agent_id (optional) is an existing Coval agent to copy metrics, prompt and descriptive metadata from, such as the agent this one replaces. scripts/coval_agents.py fills in cloudflare_agent_id.",
+  "twins": [
+    { "org": "my-retail-org", "slug": "retail", "source_agent_id": "<existing agent id>" },
+    { "org": "my-sandbox-org", "slug": "nurse-bronancy", "display_name": "Nurse Bronancy (Cloudflare)" }
+  ]
+}
