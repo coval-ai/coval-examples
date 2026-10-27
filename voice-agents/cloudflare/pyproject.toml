@@ -19,7 +19,7 @@ pipecat-ai = { path = "vendor/pipecat_ai-1.12.0+workersprofile.5-py3-none-any.wh
 docopt = { path = "vendor/docopt-0.6.2-py3-none-any.whl" }
 
 [dependency-groups]
-dev = ["workers-py==1.17.6", "pytest>=8,<10", "pytest-asyncio>=1,<2", "ruff>=0.14,<1", "websockets>=15,<16"]
+dev = ["workers-py==1.17.6", "pytest>=9.2.0,<10", "pytest-asyncio>=1,<2", "ruff>=0.14,<1", "websockets>=15,<16"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
