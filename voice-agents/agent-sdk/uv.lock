@@ -411,7 +411,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "coval-agent-sdk", extras = ["tracing"], specifier = ">=0.1.1,<0.2" },
-    { name = "coval-sdk", specifier = ">=0.9.5,<0.10" },
+    { name = "coval-sdk", specifier = ">=0.9.10,<0.10" },
     { name = "pipecat-ai", extras = ["deepgram", "openai"], specifier = ">=1.14,<1.15" },
     { name = "python-dotenv", specifier = ">=1.0" },
 ]
@@ -424,7 +424,7 @@ dev = [
 
 [[package]]
 name = "coval-sdk"
-version = "0.9.5"
+version = "0.9.10"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic" },
@@ -432,9 +432,9 @@ dependencies = [
     { name = "typing-extensions" },
     { name = "urllib3" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/62/ad/f74d62e75ad7c333fc8d60f679034deffcbc5ecb6944ac3fccbf86ee3aba/coval_sdk-0.9.5.tar.gz", hash = "sha256:08123f23f383a1e08b0b5e1ad0540287eedee88cadd25c957cb8dbb353f6e547", size = 436949, upload-time = "2026-10-26T16:30:52.166Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/21/11/494d080fd5a4cb9d2830eb7aa81b993e870b481a8d2b76cd4be406852592/coval_sdk-0.9.10.tar.gz", hash = "sha256:8fc3767b50c85af86d9ee936422c3c572be0efac01d21bc7782e4f6f8cc24c2a", size = 448610, upload-time = "2026-10-27T19:34:39.056Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/31/3a/161f6f714353036536757c7f16a544325c21e951e453c46711d4a23a8241/coval_sdk-0.9.5-py3-none-any.whl", hash = "sha256:f9d8931ad425c2558be39b326ec5423d5987e8d555aadb3d8a23952629541053", size = 1234333, upload-time = "2026-10-26T16:30:50.262Z" },
+    { url = "https://files.pythonhosted.org/packages/e3/1c/780b6f991ea3e001b9976c55319833dacda6a0c930cc955453fd9fd74837/coval_sdk-0.9.10-py3-none-any.whl", hash = "sha256:3114d89a7b43431ee8b90a998f09aff7b0a12e4c1168ffca509b1916d16ff82c", size = 1262527, upload-time = "2026-10-27T19:34:37.206Z" },
 ]
 
 [[package]]

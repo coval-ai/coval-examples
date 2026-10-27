@@ -5,7 +5,7 @@ description = "Remy, Coval's hospitality demo voice agent, connected to Coval si
 requires-python = ">=3.12"
 dependencies = [
     "coval-agent-sdk[tracing]>=0.1.1,<0.2",
-    "coval-sdk>=0.9.5,<0.10",
+    "coval-sdk>=0.9.10,<0.10",
     "pipecat-ai[deepgram,openai]>=1.14,<1.15",
     "python-dotenv>=1.0",
 ]
