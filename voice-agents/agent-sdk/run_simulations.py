@@ -40,8 +40,6 @@ from remy.agent import Cloudflare, run_conversation
 QUEUED = {"PENDING", "IN QUEUE"}
 FINISHED = {"COMPLETED", "FAILED", "CANCELLED", "SKIPPED", "DELETED"}
 POLL_SECONDS = 2
-# coval-sdk calls have no timeout by default; a poll must not hang the run.
-REQUEST_TIMEOUT_SECONDS = 30
 
 
 def _text(status) -> str:
@@ -108,7 +106,6 @@ def _simulations(coval: CovalClient, run_id: str) -> list:
             items_field="simulations",
             filter=f'run_id="{run_id}"',
             page_size=100,
-            _request_timeout=REQUEST_TIMEOUT_SECONDS,
         )
     )
 
@@ -126,9 +123,7 @@ async def _run_attached(coval: CovalClient, voice, cloudflare: Cloudflare, run_i
     while time.monotonic() < deadline:
         try:
             simulations = await asyncio.to_thread(_simulations, coval, run_id)
-            run = await asyncio.to_thread(
-                coval.runs.get_run, run_id, _request_timeout=REQUEST_TIMEOUT_SECONDS
-            )
+            run = await asyncio.to_thread(coval.runs.get_run, run_id)
         except Exception as error:  # A failed poll is retried on the next one.
             logger.warning(f"Polling run {run_id} failed: {error!r}")
             await asyncio.sleep(POLL_SECONDS)
