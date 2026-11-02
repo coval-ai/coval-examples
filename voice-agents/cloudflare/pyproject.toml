@@ -6,7 +6,7 @@ license-files = ["LICENSE", "NOTICE.md"]
 requires-python = ">=3.14"
 # Same runtime set as Cloudflare's support-voice-agent template, which pylock.toml resolves for Workers.
 dependencies = [
-  "pipecat-ai==1.12.0+workersprofile.5",
+  "pipecat-ai==1.12.0+workersprofile.6",
   "docopt==0.6.2",
   "itsdangerous==2.2.0",
   "httpx2==2.13.1",
@@ -15,7 +15,7 @@ dependencies = [
 ]
 
 [tool.uv.sources]
-pipecat-ai = { path = "vendor/pipecat_ai-1.12.0+workersprofile.5-py3-none-any.whl" }
+pipecat-ai = { path = "vendor/pipecat_ai-1.12.0+workersprofile.6-py3-none-any.whl" }
 docopt = { path = "vendor/docopt-0.6.2-py3-none-any.whl" }
 
 [dependency-groups]

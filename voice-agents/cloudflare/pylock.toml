@@ -134,14 +134,9 @@ version = "3.25.0"
 wheels = [{ url = "https://files.pythonhosted.org/packages/43/ee/c7387195e39970a20fa914f13ad36d1b7216a23c5bfd1b8daf6d5f00af31/openai-3.25.0-py3-none-any.whl", upload-time = 2026-10-06T18:04:03Z, size = 2140042, hashes = { sha256 = "31ae9e63134f0bdb4440feca994ceeb0feeeaec88197e0fc011fcc49ff491e70" } }]
 
 [[packages]]
-name = "pillow"
-version = "12.2.0"
-wheels = [{ url = "https://cdn.jsdelivr.net/pyodide/v314.0.7/full/pillow-12.2.0-cp314-cp314-pyemscripten_2026_0_wasm32.whl", hashes = { sha256 = "e29838b7a756e4ee0f27a9cfa9a387ee0dfa2e9dd44be2dd595130b9f9d93ac3" } }]
-
-[[packages]]
 name = "pipecat-ai"
-version = "1.12.0+workersprofile.5"
-archive = { path = "vendor/pipecat_ai-1.12.0+workersprofile.5-py3-none-any.whl", hashes = { sha256 = "7507b5acdef5a88263dec1aa1724480255cf1cba46dc34e52bec4868bd67c836" } }
+version = "1.12.0+workersprofile.6"
+archive = { path = "vendor/pipecat_ai-1.12.0+workersprofile.6-py3-none-any.whl", hashes = { sha256 = "b0d28ca7e3c3d6029484df38e0662419b904b954e048c26aca6b4154c41ca1c8" } }
 
 [[packages]]
 name = "propcache"
