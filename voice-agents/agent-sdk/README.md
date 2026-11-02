@@ -33,6 +33,8 @@ uv sync
 cp env.example .env   # then fill it in
 ```
 
+This example requires Agent SDK 0.1.3 or newer. It keeps individual connection failures isolated when using `CovalVoiceClient.run()` and reports abrupt socket loss as a failure. After updating an existing checkout, run `uv sync` and restart the agent process to load the new version.
+
 In Coval, pick a workspace with a voice persona and a test set (and optionally a run template), then create the agent:
 
 ```bash
