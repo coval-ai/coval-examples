@@ -8,7 +8,7 @@ The bundled Pipecat package targets hosted AI services and Flux turn detection. 
 
 Installing the stock package or enabling provider extras can pull in unsupported native dependencies. Keep the [compatibility patch](pipecat.patch), [profile builder](../scripts/build_pipecat.py), and dependency locks together when updating Pipecat. `pylock.toml` resolves the Workers runtime; `uv.lock` resolves native development and tests.
 
-The deployment excludes the unused OpenAI SDK, Pillow, and type stubs. The patch defers Pillow imports until image encoding or resizing is used, so an audio-only pipeline can start without it. Remove the relevant [bundle exclusions](../wrangler.jsonc) when adding an OpenAI service or image handling.
+The deployment excludes the unused OpenAI SDK, Pillow, and type stubs. The profile requires patched Pillow 13 for native development and omits it on emscripten. The patch defers Pillow imports until image encoding or resizing is used, so an audio-only pipeline can start without it. When adding image handling, provide a compatible patched Pillow build for Workers and update the profile requirement and [bundle exclusions](../wrangler.jsonc). Remove the OpenAI SDK exclusion when adding an OpenAI service.
 
 ## Rebuild Pipecat
 

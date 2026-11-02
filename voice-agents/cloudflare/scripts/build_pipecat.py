@@ -15,7 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REVISION = "1559a684b1ee9771b36454b72418d7364b518e7f"
-VERSION = "1.12.0+workersprofile.5"
+VERSION = "1.12.0+workersprofile.6"
 EXCLUDED_DEPENDENCIES = {"sentencex", "onnxruntime", "loudness", "numba", "resampy", "soundfile"}
 EXCLUDED_ASSETS = {
     "pipecat/audio/turn/smart_turn/data/smart-turn-v3.2-cpu.onnx",
@@ -43,6 +43,8 @@ def build(source: Path, output: Path) -> Path:
             requirement = {
                 "soxr": "soxr==0.5.0.post1",
                 "pydantic": "pydantic==2.12.5",
+                # Image handling is excluded from the audio-only Workers bundle.
+                "pillow": "Pillow>=13,<14; sys_platform != 'emscripten'",
             }.get(name, requirement)
             if requirement not in requirements:
                 requirements.append(requirement)
